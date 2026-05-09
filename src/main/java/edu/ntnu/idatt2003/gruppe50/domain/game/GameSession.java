@@ -102,6 +102,14 @@ public final class GameSession {
     return exchange;
   }
 
+  public LocalDate getRunStartedAt() {
+    return runStartedAt;
+  }
+
+  public LocalDate getLastPlayed() {
+    return lastPlayed;
+  }
+
   private void ensureActive() {
     if (state == GameSessionState.FINISHED) {
       throw new GameSessionFinishedException();
