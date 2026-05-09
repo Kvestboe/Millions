@@ -7,6 +7,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * Aggregate root for a single game run.
+ * <p>
+ * A game session owns the player and exchange state, and enforces lifecycle
+ * rules through {@link GameSessionState}.
+ * </p>
+ */
 public final class GameSession {
   private final UUID gameId;
   private final Player player;
@@ -31,6 +38,14 @@ public final class GameSession {
     this.lastPlayed = lastPlayed;
   }
 
+  /**
+   * Creates a new active game session with generated id and current dates.
+   *
+   * @param player player participating in the session
+   * @param exchange exchange used for trading in the session
+   * @return newly created active session
+   * @throws IllegalArgumentException if {@code player} or {@code exchange} is null
+   */
   public static GameSession createNew(Player player, Exchange exchange) {
     Validate.notNull(player, "Player");
     Validate.notNull(exchange, "Exchange");
@@ -45,6 +60,18 @@ public final class GameSession {
     );
   }
 
+  /**
+   * Recreates a game session from already saved data.
+   *
+   * @param gameId saved session id
+   * @param player saved player state
+   * @param exchange saved exchange state
+   * @param state saved session state
+   * @param runStartedAt date the run started
+   * @param lastPlayed date the session was last opened
+   * @return rehydrated session
+   * @throws IllegalArgumentException if any argument is null
+   */
   public static GameSession rehydrate(
       UUID gameId,
       Player player,
@@ -62,49 +89,103 @@ public final class GameSession {
     return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed);
   }
 
+  /**
+   * Marks the session as opened today.
+   */
   public void markOpened() {
     lastPlayed = LocalDate.now();
   }
 
+  /**
+   * Buys shares through the exchange for this session's player.
+   *
+   * @param symbol stock symbol to buy
+   * @param quantity quantity to buy
+   * @throws GameSessionFinishedException if the session is finished
+   */
   public void buy(String symbol, BigDecimal quantity) {
     ensureActive();
     exchange.buy(symbol, quantity, player);
   }
 
+  /**
+   * Sells one owned share through the exchange for this session's player.
+   *
+   * @param shareId identifier of owned share to sell
+   * @throws GameSessionFinishedException if the session is finished
+   */
   public void sell(UUID shareId) {
     ensureActive();
     exchange.sell(shareId, player);
   }
 
+  /**
+   * Advances the exchange one week.
+   *
+   * @throws GameSessionFinishedException if the session is finished
+   */
   public void advanceWeek() {
     ensureActive();
     exchange.advance();
   }
 
+  /**
+   * Marks the session as finished.
+   */
   public void finish() {
     state = GameSessionState.FINISHED;
   }
 
+  /**
+   * Returns current session state.
+   *
+   * @return current state
+   */
   public GameSessionState getState() {
     return state;
   }
 
+  /**
+   * Returns unique session id.
+   *
+   * @return session id
+   */
   public UUID getGameId() {
     return gameId;
   }
 
+  /**
+   * Returns player bound to this session.
+   *
+   * @return session player
+   */
   public Player getPlayer() {
     return player;
   }
 
+  /**
+   * Returns exchange bound to this session.
+   *
+   * @return session exchange
+   */
   public Exchange getExchange() {
     return exchange;
   }
 
+  /**
+   * Returns date the session run started.
+   *
+   * @return run start date
+   */
   public LocalDate getRunStartedAt() {
     return runStartedAt;
   }
 
+  /**
+   * Returns date the session was last opened.
+   *
+   * @return last played date
+   */
   public LocalDate getLastPlayed() {
     return lastPlayed;
   }
