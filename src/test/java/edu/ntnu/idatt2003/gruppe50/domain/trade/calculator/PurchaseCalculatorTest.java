@@ -1,8 +1,7 @@
-package edu.ntnu.idatt2003.gruppe50.calculator;
+package edu.ntnu.idatt2003.gruppe50.domain.trade.calculator;
 
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.PurchaseCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

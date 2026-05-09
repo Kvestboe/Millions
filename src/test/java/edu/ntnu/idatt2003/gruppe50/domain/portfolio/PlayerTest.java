@@ -1,10 +1,7 @@
-package edu.ntnu.idatt2003.gruppe50.model;
+package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import org.junit.jupiter.api.BeforeEach;

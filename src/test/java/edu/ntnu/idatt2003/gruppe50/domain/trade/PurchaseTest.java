@@ -1,10 +1,9 @@
-package edu.ntnu.idatt2003.gruppe50.transaction;
+package edu.ntnu.idatt2003.gruppe50.domain.trade;
 
 import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.PurchaseCalculator;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
