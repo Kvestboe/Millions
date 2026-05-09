@@ -1,9 +1,9 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.navigation;
 
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.Page;
+import java.util.EnumMap;
+import java.util.Map;
 import javafx.scene.layout.StackPane;
-
-import java.util.*;
 
 public final class NavigationManager {
 

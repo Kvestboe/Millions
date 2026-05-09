@@ -2,7 +2,6 @@ package edu.ntnu.idatt2003.gruppe50.application;
 
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 

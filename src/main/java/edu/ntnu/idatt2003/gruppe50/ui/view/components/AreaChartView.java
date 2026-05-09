@@ -1,11 +1,10 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components;
 
+import java.math.BigDecimal;
+import java.util.List;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 public class AreaChartView {
   private final AreaChart<Number, Number> chart;

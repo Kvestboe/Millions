@@ -4,7 +4,6 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-
 import java.util.UUID;
 
 public final class StartGameSessionUseCase {
@@ -21,5 +20,6 @@ public final class StartGameSessionUseCase {
   }
 
   public record Request(Player player, Exchange exchange) {}
+
   public record Response(UUID gameId) {}
 }

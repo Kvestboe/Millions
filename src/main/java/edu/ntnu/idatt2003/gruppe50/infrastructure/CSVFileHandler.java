@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.infrastructure;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
@@ -69,7 +68,9 @@ public class CSVFileHandler {
   public static void writeToFile(Path path, List<Stock> stocks) {
     try (Writer writer = Files.newBufferedWriter(path)) {
       for (Stock stock : stocks) {
-        writer.write(stock.getSymbol() + "," + stock.getCompany() + "," + stock.getSalesPrice() + "\n");
+        writer.write(
+            stock.getSymbol() + "," + stock.getCompany() + "," + stock.getSalesPrice() + "\n"
+        );
       }
     } catch (IOException e) {
       throw new RuntimeException("No path found by: " + path, e);

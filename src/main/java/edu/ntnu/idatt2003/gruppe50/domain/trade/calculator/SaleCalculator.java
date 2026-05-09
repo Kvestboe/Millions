@@ -2,7 +2,6 @@ package edu.ntnu.idatt2003.gruppe50.domain.trade.calculator;
 
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 import java.math.BigDecimal;
 
 /**
@@ -61,7 +60,8 @@ public class SaleCalculator implements TransactionCalculator {
    */
   @Override
   public BigDecimal calculateTax() {
-    BigDecimal profit = calculateGross().subtract(calculateCommission()).subtract(purchasePrice.multiply(quantity));
+    BigDecimal profit =
+        calculateGross().subtract(calculateCommission()).subtract(purchasePrice.multiply(quantity));
 
     if (profit.compareTo(BigDecimal.ZERO) > 0) {
       return profit.multiply(BigDecimal.valueOf(0.3));

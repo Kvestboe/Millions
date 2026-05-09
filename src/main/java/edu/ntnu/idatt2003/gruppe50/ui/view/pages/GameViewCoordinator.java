@@ -6,19 +6,21 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-
 import java.util.EnumMap;
 import java.util.Map;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 
 public class GameViewCoordinator {
   private final GameController gameController;
   private final PortfolioQueryController portfolioQueryController;
   private final MarketController marketController;
 
-  public GameViewCoordinator(GameController gameController, PortfolioQueryController portfolioQueryController, MarketController
-                              marketController) {
+  public GameViewCoordinator(
+      GameController gameController,
+      PortfolioQueryController portfolioQueryController,
+      MarketController marketController
+  ) {
     this.gameController = gameController;
     this.portfolioQueryController = portfolioQueryController;
     this.marketController = marketController;

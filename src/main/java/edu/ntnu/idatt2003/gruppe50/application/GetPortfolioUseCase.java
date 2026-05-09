@@ -4,7 +4,6 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -50,6 +49,7 @@ public final class GetPortfolioUseCase {
       BigDecimal netWorth,
       List<ShareDto> shares
   ) {}
+
   public record ShareDto(
       UUID shareId,
       String symbol,

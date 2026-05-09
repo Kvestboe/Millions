@@ -2,7 +2,6 @@ package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 

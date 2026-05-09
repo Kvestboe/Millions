@@ -3,7 +3,6 @@ package edu.ntnu.idatt2003.gruppe50.application;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-
 import java.util.UUID;
 
 public final class LoadGameSessionUseCase {
@@ -24,5 +23,6 @@ public final class LoadGameSessionUseCase {
   }
 
   public record Request(UUID gameId) {}
+
   public record Response(UUID gameId, GameSessionState state) {}
 }

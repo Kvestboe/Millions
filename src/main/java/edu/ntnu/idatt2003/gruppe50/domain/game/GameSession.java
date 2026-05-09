@@ -3,7 +3,6 @@ package edu.ntnu.idatt2003.gruppe50.domain.game;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
