@@ -6,14 +6,12 @@ import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 
-import java.math.BigDecimal;
 import java.util.List;
+
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
 
 public class TestDataFactory {
 
-  public static BigDecimal bd(double number) {
-    return BigDecimal.valueOf(number);
-  }
 
   public static Player createDefaultPlayer() {
     return new Player("Test player", bd(10000));
