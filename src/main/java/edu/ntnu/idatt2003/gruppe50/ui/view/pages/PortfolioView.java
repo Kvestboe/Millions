@@ -51,11 +51,6 @@ public class PortfolioView extends VBox implements Page {
     return this;
   }
 
-  @Override
-  public String getTitle() {
-    return "Portfolio";
-  }
-
   private VBox createCardContainer(PortfolioData portfolio) {
     // Make label for the different player values
     Label netWorthLabel = new Label(portfolio.netWorth().toString());

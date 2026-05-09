@@ -43,7 +43,7 @@ public class GameViewCoordinator {
     pages.put(PageId.DASHBOARD, new DashBoardView());
     pages.put(PageId.MARKET, new MarketView(marketController));
     pages.put(PageId.PORTFOLIO, new PortfolioView(portfolioQueryController, gameController));
-    // pages.put(PageId.TRANSACTIONS, new TransactionsView());
+    pages.put(PageId.TRANSACTIONS, new TransactionsView());
 
     return pages;
   }

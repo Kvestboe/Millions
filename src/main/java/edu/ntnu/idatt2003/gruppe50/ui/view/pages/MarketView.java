@@ -50,16 +50,6 @@ public class MarketView implements Page {
   }
 
   /**
-   * Returns the title of this page.
-   *
-   * @return "Market"
-   */
-  @Override
-  public String getTitle() {
-    return "Market";
-  }
-
-  /**
    * Builds and returns the root layout of the market screen.
    * Adds title, search field and stock table to a {@link VBox}.
    *
