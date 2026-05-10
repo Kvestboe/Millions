@@ -57,7 +57,7 @@ public class NewGameView {
 
     Scene scene = new Scene(root, 1280, 900);
     scene.getStylesheets().add(
-        getClass().getResource("/css/newGame.css").toExternalForm()
+        getClass().getResource("/css/styles.css").toExternalForm()
     );
     return scene;
   }

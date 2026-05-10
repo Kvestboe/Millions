@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
@@ -14,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 public class GameViewCoordinator {
   private final GameController gameController;
   private final PortfolioQueryController portfolioQueryController;
+  private final DashboardQueryController dashboardQueryController = null;
   private final MarketController marketController;
 
   public GameViewCoordinator(
@@ -36,13 +38,17 @@ public class GameViewCoordinator {
 
     navManager.navigateTo(PageId.DASHBOARD);
 
-    return new Scene(root, 600, 400);
+    Scene scene = new Scene(root, 600, 400);
+    scene.getStylesheets().add(
+        getClass().getResource("/css/styles.css").toExternalForm()
+    );
+    return scene;
   }
 
   private Map<PageId, Page> buildPages() {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
-    pages.put(PageId.DASHBOARD, new DashBoardView());
+    pages.put(PageId.DASHBOARD, new DashboardView(dashboardQueryController));
     pages.put(PageId.MARKET, new MarketView(marketController));
     pages.put(PageId.PORTFOLIO, new PortfolioView(portfolioQueryController, gameController));
     pages.put(PageId.TRANSACTIONS, new TransactionsView());

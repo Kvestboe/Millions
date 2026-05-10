@@ -1,0 +1,11 @@
+@import "newGame.css";
+@import "market.css";
+@import "portfolio.css";
+
+.card {
+    -fx-background-color: pink;
+}
+
+.card-title {
+
+}
