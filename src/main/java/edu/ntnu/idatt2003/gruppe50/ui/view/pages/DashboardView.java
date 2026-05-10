@@ -2,10 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.CardFactory.createCard;
 
@@ -20,7 +17,11 @@ public class DashboardView extends BorderPane implements Page {
     GridPane grid = createGrid();
 
     grid.add(buildMarketEventCard(), 0, 0, 3, 1);
-    grid.add(buildMarketEventCard(), 3, 0, 2, 1);
+    grid.add(buildTradingLogCard(), 3, 0, 2, 1);
+    grid.add(buildTimelineCard(), 0, 1, 2, 1);
+    grid.add(buildStatusCard(), 3, 1, 2, 1);
+    grid.add(buildWatchlistCard(), 0, 2, 2, 1);
+    grid.add(buildMoversCard(), 2, 2, 3, 1);
     this.setCenter(grid);
   }
 
@@ -32,12 +33,19 @@ public class DashboardView extends BorderPane implements Page {
 
   private GridPane createGrid() {
     GridPane grid = new GridPane();
+    grid.getStyleClass().add("grid");
 
     // Define the different card widths
     for (int i = 0; i < 5; i++) {
       ColumnConstraints col = new ColumnConstraints();
       col.setPercentWidth(20);
       grid.getColumnConstraints().add(col);
+    }
+
+    for (int i = 0; i < 3; i++) {
+      RowConstraints row = new RowConstraints();
+      row.setPercentHeight(i == 1 ? 25 : 37.5);
+      grid.getRowConstraints().add(row);
     }
 
     return grid;
@@ -52,7 +60,7 @@ public class DashboardView extends BorderPane implements Page {
   }
 
   private VBox buildTimelineCard() {
-    return createCard("Trading log");
+    return createCard("Timeline");
   }
 
   private VBox buildStatusCard() {
