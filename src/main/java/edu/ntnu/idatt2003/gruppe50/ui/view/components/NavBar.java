@@ -54,7 +54,7 @@ public class NavBar extends HBox {
     Button btn = new Button(pageId.getLabel());
     btn.getStyleClass().add("nav-button");
 
-    btn.setOnAction(e -> {
+    btn.setOnMousePressed(_ -> {
       setActive(pageId);
       listener.onNavSelectedItem(pageId);
     });
