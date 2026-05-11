@@ -79,25 +79,4 @@ public final class GetPortfolioUseCase {
       List<ShareDto> shares
   ) {}
 
-  /**
-   * Share row DTO for portfolio responses.
-   *
-   * @param shareId unique share id
-   * @param symbol stock symbol
-   * @param stock company name
-   * @param quantity owned quantity
-   * @param purchasePrice original unit purchase price
-   * @param currentPrice current unit market price
-   * @param currentShareValue current gross value of this share position
-   */
-  public record ShareDto(
-      UUID shareId,
-      String symbol,
-      String stock,
-      BigDecimal quantity,
-      BigDecimal purchasePrice,
-      BigDecimal currentPrice,
-      BigDecimal currentShareValue
-  ) {}
-
 }
