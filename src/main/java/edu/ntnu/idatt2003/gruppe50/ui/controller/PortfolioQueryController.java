@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.ui.mapper.ShareDataMapper;
 import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import java.util.List;
@@ -23,15 +24,7 @@ public final class PortfolioQueryController {
     // Although the shares are in the response already, it is more according to clean architecture
     // to make clean new list of shares since it should be independent of application
     List<ShareData> shares = response.shares().stream()
-        .map(s -> new ShareData(
-            s.shareId(),
-            s.symbol(),
-            s.stock(),
-            s.quantity(),
-            s.purchasePrice(),
-            s.currentPrice(),
-            s.currentShareValue()
-        )).toList();
+        .map(ShareDataMapper::mapShare).toList();
 
     return new PortfolioData(response.cash(), response.portfolioValue(), response.netWorth(), shares, List.of());
   }
