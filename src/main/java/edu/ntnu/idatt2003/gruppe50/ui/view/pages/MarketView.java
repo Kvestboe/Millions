@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
+import java.math.BigDecimal;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Parent;
@@ -12,8 +13,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
-import java.math.BigDecimal;
 
 /**
  * View for the market screen, displaying all stocks listed on the exchange.
@@ -47,16 +46,6 @@ public class MarketView implements Page {
   @Override
   public Parent getView() {
     return root;
-  }
-
-  /**
-   * Returns the title of this page.
-   *
-   * @return "Market"
-   */
-  @Override
-  public String getTitle() {
-    return "Market";
   }
 
   /**

@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.shared.observer;
 
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import java.util.List;
  */
 public abstract class Observable {
   private final List<Observer> observers = new ArrayList<>();
-
 
   /**
    * Adds an observer to the list.

@@ -66,9 +66,9 @@ public class TransactionArchive {
       throw new IllegalArgumentException("Week cannot be negative");
     }
 
-    return transactions.stream().
-        filter(transaction -> transaction.getWeek() == week).
-        toList();
+    return transactions.stream()
+        .filter(transaction -> transaction.getWeek() == week)
+        .toList();
   }
 
   /**
@@ -114,9 +114,9 @@ public class TransactionArchive {
    * @return the number of unique weeks containing transactions
    */
   public int countDistinctWeeks() {
-    return (int) transactions.stream().
-        map(Transaction::getWeek).
-        distinct().
-        count();
+    return (int) transactions.stream()
+        .map(Transaction::getWeek)
+        .distinct()
+        .count();
   }
 }

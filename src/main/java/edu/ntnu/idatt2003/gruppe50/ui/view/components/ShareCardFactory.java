@@ -18,7 +18,8 @@ public class ShareCardFactory {
     VBox purchasePriceContainer = new VBox(new Label("Purchase price:"), purchasePriceLabel);
     VBox currentPriceContainer = new VBox(new Label("Current price:", currentPriceLabel));
 
-    HBox informationContainer = new HBox(quantityContainer, purchasePriceContainer, currentPriceContainer);
+    HBox informationContainer =
+        new HBox(quantityContainer, purchasePriceContainer, currentPriceContainer);
 
     // Create the share card
     return new VBox(stockCompanyLabel, informationContainer);

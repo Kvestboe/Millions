@@ -1,9 +1,7 @@
-package edu.ntnu.idatt2003.gruppe50.model;
+package edu.ntnu.idatt2003.gruppe50.domain.market;
 
-import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Sale;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;

@@ -1,9 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import edu.ntnu.idatt2003.gruppe50.shared.Parse;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import java.io.File;
-
-import edu.ntnu.idatt2003.gruppe50.shared.Parse;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

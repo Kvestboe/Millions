@@ -2,10 +2,12 @@ package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
 import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.SaleCalculator;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 import java.math.BigDecimal;
-import java.util.*;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
 /**
  * Represents a portfolio containing shares owned by a user.
@@ -55,7 +57,6 @@ public class Portfolio {
     return List.copyOf(shares.values());
   }
 
-
   /**
    * Returns all shares in the portfolio with the given symbol.
    *
@@ -90,8 +91,9 @@ public class Portfolio {
   public boolean contains(Share shareToCheck) {
     Validate.notNull(shareToCheck, "Share to check");
     return shares.values().stream()
-        .anyMatch(share ->
-            share.getShareId().equals(shareToCheck.getShareId()));
+        .anyMatch(
+            share -> share.getShareId().equals(shareToCheck.getShareId())
+        );
   }
 
   public boolean contains(UUID shareId) {
@@ -109,8 +111,7 @@ public class Portfolio {
    * @return the portfolio net worth as {@link BigDecimal}
    */
   public BigDecimal getNetWorth() {
-    return shares.values().stream()
-        .map(a -> new SaleCalculator(a).calculateTotal())
+    return shares.values().stream().map(a -> new SaleCalculator(a).calculateTotal())
         // First parameter is start value, second parameter is the accumulative value
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }

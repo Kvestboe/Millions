@@ -7,6 +7,7 @@ public enum PageId {
   TRANSACTIONS("Transactions");
 
   private final String label;
+
   PageId(String label) {
     this.label = label;
   }

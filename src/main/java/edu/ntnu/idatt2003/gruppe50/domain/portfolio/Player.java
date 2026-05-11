@@ -3,7 +3,6 @@ package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 import java.math.BigDecimal;
 
 /**

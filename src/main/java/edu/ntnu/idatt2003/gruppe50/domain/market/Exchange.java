@@ -2,13 +2,18 @@ package edu.ntnu.idatt2003.gruppe50.domain.market;
 
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
-import edu.ntnu.idatt2003.gruppe50.shared.observer.Observable;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -40,11 +45,7 @@ public class Exchange extends Observable {
     Validate.notNull(factory, "Factory");
 
     this.name = name;
-    stockMap = stocks.stream()
-        .collect(Collectors.toMap(
-            Stock::getSymbol,
-            v -> v
-        ));
+    stockMap = stocks.stream().collect(Collectors.toMap(Stock::getSymbol, v -> v));
 
     week = 1;
     random = new Random();
@@ -74,7 +75,7 @@ public class Exchange extends Observable {
    *
    * @param symbol the stock symbol
    * @return {@code true} if the exchange contains a stock with the given symbol,
-   * {@code false} otherwise
+   *{@code false} otherwise
    * @throws IllegalArgumentException if {@code symbol} is null or blank
    */
   public boolean hasStock(String symbol) {
@@ -109,9 +110,12 @@ public class Exchange extends Observable {
     Validate.notBlank(searchTerm, "Searchterm");
 
     return stockMap.values().stream()
-        .filter(stock ->
-            stock.getSymbol().toLowerCase().contains(searchTerm.toLowerCase()) ||
-                stock.getCompany().toLowerCase().contains(searchTerm.toLowerCase())
+        .filter(
+            stock -> stock.getSymbol()
+                .toLowerCase()
+                .contains(searchTerm.toLowerCase())
+                || stock.getCompany().toLowerCase()
+                .contains(searchTerm.toLowerCase())
         ).toList();
   }
 
@@ -144,8 +148,8 @@ public class Exchange extends Observable {
   /**
    * Sells a share the player holds.
    *
-   * @param shareId  the share to be sold
-   * @param player the player
+   * @param shareId the share to be sold
+   * @param player  the player
    * @return a sale
    * @throws IllegalArgumentException if {@code share} or {@code player} is null
    */
@@ -190,9 +194,10 @@ public class Exchange extends Observable {
   public List<Stock> getGainers(int limit) {
     Validate.positiveInt(limit, "Limit");
     return stockMap.values().stream()
-        .sorted((a, b) -> b.getLatestPriceChange().compareTo(a.getLatestPriceChange()))
-        .limit(limit)
-        .toList();
+        .sorted(
+            (a, b) -> b.getLatestPriceChange()
+                .compareTo(a.getLatestPriceChange())
+        ).limit(limit).toList();
   }
 
   /**
@@ -205,13 +210,13 @@ public class Exchange extends Observable {
   public List<Stock> getLosers(int limit) {
     Validate.positiveInt(limit, "Limit");
     return stockMap.values().stream()
-        .sorted((a, b) -> a.getLatestPriceChange().compareTo(b.getLatestPriceChange()))
-        .limit(limit)
-        .toList();
+        .sorted(Comparator.comparing(Stock::getLatestPriceChange))
+        .limit(limit).toList();
   }
 
   /**
    * Returns a list of all the stocks in the exchange.
+   *
    * @return list with all stocks
    */
   public List<Stock> getStocks() {
