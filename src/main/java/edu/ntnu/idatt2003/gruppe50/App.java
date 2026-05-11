@@ -7,6 +7,7 @@ import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
@@ -14,10 +15,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.*;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.NewGameView;
 
@@ -40,6 +38,7 @@ public class App extends Application {
   private final SellShareUseCase sellShare = new SellShareUseCase(sessions);
   private final AdvanceWeekUseCase advanceWeek = new AdvanceWeekUseCase(sessions);
   private final GetPortfolioUseCase getPortfolio = new GetPortfolioUseCase(sessions);
+  private final GetTransactionsUseCase getTransactions = new GetTransactionsUseCase(sessions);
 
   public static void main(String[] args) {
     launch(args);
@@ -83,8 +82,16 @@ public class App extends Application {
         new PortfolioQueryController(gameId, getPortfolio);
     MarketController marketController =
         new MarketController(session.getExchange(), session.getPlayer());
+    TransactionQueryController transactionQueryController =
+        new TransactionQueryController(gameId, getTransactions);
+
     GameViewCoordinator gameViewCoordinator =
-        new GameViewCoordinator(gameController, portfolioQueryController, marketController);
+        new GameViewCoordinator(
+            gameController,
+            portfolioQueryController,
+            marketController,
+            transactionQueryController
+        );
 
     stage.setScene(gameViewCoordinator.getScene());
     stage.show();
