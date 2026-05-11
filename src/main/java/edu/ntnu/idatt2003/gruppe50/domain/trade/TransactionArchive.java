@@ -55,7 +55,7 @@ public class TransactionArchive {
   }
 
   public List<Transaction> getTransactions() {
-    return transactions;
+    return List.copyOf(transactions);
   }
 
   /**
