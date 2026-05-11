@@ -10,6 +10,15 @@ import javafx.scene.layout.VBox;
  */
 public class CardFactory {
 
+
+  public static VBox createCard(Node... content) {
+    VBox card = new VBox();
+    card.getStyleClass().add("card");
+
+    card.getChildren().addAll(content);
+    return card;
+  }
+
   /**
    * Creates a card with a title label.
    *

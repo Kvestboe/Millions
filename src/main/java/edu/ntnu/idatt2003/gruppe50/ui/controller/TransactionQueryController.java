@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.TransactionType;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.mapper.TransactionDataMapper;
@@ -32,7 +33,7 @@ public final class TransactionQueryController implements Observer {
     return transactions;
   }
 
-  public List<TransactionData> onSearch(String query) {
+  public List<TransactionData> onSearch(String query, TransactionType type) {
     String term = query.toLowerCase(Locale.ROOT);
     return transactions.stream()
         .filter(transaction ->
@@ -40,6 +41,7 @@ public final class TransactionQueryController implements Observer {
                 || transaction.share().stock().toLowerCase(Locale.ROOT).contains(term)
                 || transaction.type().name().toLowerCase(Locale.ROOT).contains(term)
         )
+        .filter(transaction -> type == null || transaction.type() == type)
         .toList();
   }
 
