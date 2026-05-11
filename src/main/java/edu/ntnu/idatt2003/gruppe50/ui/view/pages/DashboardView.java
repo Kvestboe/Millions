@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.CardFactory.createCard;
@@ -16,12 +17,13 @@ public class DashboardView extends BorderPane implements Page {
 
     GridPane grid = createGrid();
 
-    grid.add(buildMarketEventCard(), 0, 0, 3, 1);
-    grid.add(buildTradingLogCard(), 3, 0, 2, 1);
+    grid.add(buildTradingLogCard(), 0, 0, 3, 1);
+    grid.add(buildMarketEventCard(), 3, 0, 2, 1);
     grid.add(buildTimelineCard(), 0, 1, 2, 1);
     grid.add(buildStatusCard(), 3, 1, 2, 1);
     grid.add(buildWatchlistCard(), 0, 2, 2, 1);
     grid.add(buildMoversCard(), 2, 2, 3, 1);
+    grid.add(buildAdvanceButton(), 2, 1, 1, 1);
     this.setCenter(grid);
   }
 
@@ -73,5 +75,16 @@ public class DashboardView extends BorderPane implements Page {
 
   private VBox buildMoversCard() {
     return createCard("This week's movers");
+  }
+
+  private Button buildAdvanceButton() {
+    Button btn = new Button("Advance\nWeek");
+    btn.getStyleClass().add("advance-button");
+
+    btn.setMaxWidth(Double.MAX_VALUE);
+    btn.setMaxHeight(Double.MAX_VALUE);
+//    btn.minWidthProperty().bind(btn.heightProperty());
+//    btn.maxWidthProperty().bind(btn.heightProperty());
+    return btn;
   }
 }
