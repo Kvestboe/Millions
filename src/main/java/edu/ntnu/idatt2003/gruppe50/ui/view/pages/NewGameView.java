@@ -31,6 +31,7 @@ public class NewGameView {
   private Button startBtn;
   private final NewGameController controller;
   private final Label errorLabel = new Label();
+  private final Runnable onBack;
 
   /**
    * Constructs a new NewGameView.
@@ -38,9 +39,10 @@ public class NewGameView {
    * @param stage      the primary stage used for displaying file dialogs
    * @param controller the controller handling game startup logic
    */
-  public NewGameView(Stage stage, NewGameController controller) {
+  public NewGameView(Stage stage, NewGameController controller, Runnable onBack) {
     this.stage = stage;
     this.controller = controller;
+    this.onBack = onBack;
     loadDefaultFile();
   }
 
@@ -53,7 +55,11 @@ public class NewGameView {
     BorderPane root = new BorderPane();
     root.getStyleClass().add("root-bg");
 
+    Button backBtn = new Button("Back");
+    backBtn.setOnAction(e -> onBack.run());
+
     StackPane center = new StackPane(createCardBox());
+    root.setTop(backBtn);
     root.setCenter(center);
 
     Scene scene = new Scene(root, 1280, 900);

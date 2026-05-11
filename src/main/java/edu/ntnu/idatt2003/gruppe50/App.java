@@ -10,8 +10,10 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
+import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.NewGameView;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.util.UUID;
@@ -38,10 +40,7 @@ public class App extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     this.stage = stage;
-    NewGameController controller = new NewGameController(startGameSession, this::switchToGame);
-    NewGameView newGame = new NewGameView(stage, controller);
-    stage.setScene(newGame.getScene());
-    stage.show();
+    showMainMenu();
   }
 
   public void switchToGame(UUID gameId) {
@@ -54,4 +53,20 @@ public class App extends Application {
     GameViewCoordinator gameViewCoordinator = new GameViewCoordinator(gameController, portfolioQueryController, marketController);
     stage.setScene(gameViewCoordinator.getScene());
   }
+
+  private void showMainMenu() {
+    MainMenuView menu = new MainMenuView(
+        this::showNewGame,
+        Platform::exit
+    );
+    stage.setScene(menu.getScene());
+    stage.show();
+  }
+
+  private void showNewGame() {
+    NewGameController controller = new NewGameController(startGameSession, this::switchToGame);
+    NewGameView newGame = new NewGameView(stage, controller, this::showMainMenu);
+    stage.setScene(newGame.getScene());
+  }
+
 }
