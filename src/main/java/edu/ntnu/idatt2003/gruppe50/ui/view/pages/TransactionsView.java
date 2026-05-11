@@ -2,7 +2,6 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
-import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionHistoryData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnDefinition;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -50,7 +49,6 @@ public class TransactionsView extends BorderPane implements Page {
   }
 
   private void refreshTransactions() {
-    TransactionHistoryData transactionHistory = queryController.getTransactions();
-    transactions.setAll(transactionHistory.transactionData());
+    transactions.setAll(queryController.getTransactions());
   }
 }

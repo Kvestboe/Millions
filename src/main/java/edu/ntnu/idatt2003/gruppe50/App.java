@@ -83,7 +83,7 @@ public class App extends Application {
     MarketController marketController =
         new MarketController(session.getExchange(), session.getPlayer());
     TransactionQueryController transactionQueryController =
-        new TransactionQueryController(gameId, getTransactions);
+        new TransactionQueryController(gameId, getTransactions, session.getExchange());
 
     GameViewCoordinator gameViewCoordinator =
         new GameViewCoordinator(
