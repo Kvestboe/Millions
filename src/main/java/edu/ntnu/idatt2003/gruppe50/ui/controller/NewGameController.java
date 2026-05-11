@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
-import edu.ntnu.idatt2003.gruppe50.application.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;

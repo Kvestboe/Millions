@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
-import edu.ntnu.idatt2003.gruppe50.application.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import java.util.List;

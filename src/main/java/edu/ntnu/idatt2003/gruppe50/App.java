@@ -1,12 +1,12 @@
 package edu.ntnu.idatt2003.gruppe50;
 
-import edu.ntnu.idatt2003.gruppe50.application.AdvanceWeekUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.BuyShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
-import edu.ntnu.idatt2003.gruppe50.application.GetPortfolioUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.LoadGameSessionUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.SellShareUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;

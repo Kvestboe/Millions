@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.gruppe50.application;
+package edu.ntnu.idatt2003.gruppe50.application.command;
 
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;

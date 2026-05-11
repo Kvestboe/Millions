@@ -1,14 +1,14 @@
-package edu.ntnu.idatt2003.gruppe50.application;
+package edu.ntnu.idatt2003.gruppe50.application.command;
 
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * Buys shares inside a game session and saves the updated state.
+ * Advances game session by one week and saves the change.
  */
-public final class BuyShareUseCase {
+public final class AdvanceWeekUseCase {
   private final GameSessionRepository repository;
 
   /**
@@ -16,31 +16,28 @@ public final class BuyShareUseCase {
    *
    * @param repository repository used to load and save game sessions
    */
-  public BuyShareUseCase(GameSessionRepository repository) {
+  public AdvanceWeekUseCase(GameSessionRepository repository) {
     this.repository = repository;
   }
 
   /**
-   * Executes a buy operation for an existing game session.
+   * Executes the use case for a given game id.
    *
-   * @param request input with game id, symbol and quantity
+   * @param request input request containing game id
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public void execute(Request request) {
-    GameSession session = repository.findById(request.gameId())
+    GameSession session = repository.findById(request.gameId)
         .orElseThrow(GameSessionNotFoundException::new);
 
-    session.buy(request.symbol(), request.quantity());
+    session.advanceWeek();
     repository.save(session);
   }
 
   /**
-   * Input for buying shares in a session.
+   * Input for advancing a session week.
    *
    * @param gameId id of the game session
-   * @param symbol stock symbol to buy
-   * @param quantity quantity to buy
    */
-  public record Request(UUID gameId, String symbol, BigDecimal quantity) {}
-
+  public record Request(UUID gameId) {}
 }

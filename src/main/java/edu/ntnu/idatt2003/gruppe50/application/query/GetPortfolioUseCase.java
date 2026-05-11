@@ -1,5 +1,6 @@
-package edu.ntnu.idatt2003.gruppe50.application;
+package edu.ntnu.idatt2003.gruppe50.application.query;
 
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;

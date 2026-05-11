@@ -1,13 +1,15 @@
-package edu.ntnu.idatt2003.gruppe50.application;
+package edu.ntnu.idatt2003.gruppe50.application.command;
 
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * Sells an owned share inside a game session and saves updated state.
+ * Buys shares inside a game session and saves the updated state.
  */
-public final class SellShareUseCase {
+public final class BuyShareUseCase {
   private final GameSessionRepository repository;
 
   /**
@@ -15,29 +17,31 @@ public final class SellShareUseCase {
    *
    * @param repository repository used to load and save game sessions
    */
-  public SellShareUseCase(GameSessionRepository repository) {
+  public BuyShareUseCase(GameSessionRepository repository) {
     this.repository = repository;
   }
 
   /**
-   * Executes a sell operation for an existing game session.
+   * Executes a buy operation for an existing game session.
    *
-   * @param request input with game id and owned share id
+   * @param request input with game id, symbol and quantity
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public void execute(Request request) {
     GameSession session = repository.findById(request.gameId())
         .orElseThrow(GameSessionNotFoundException::new);
 
-    session.sell(request.shareId());
+    session.buy(request.symbol(), request.quantity());
     repository.save(session);
   }
 
   /**
-   * Input for selling one share in a session.
+   * Input for buying shares in a session.
    *
    * @param gameId id of the game session
-   * @param shareId id of the owned share to sell
+   * @param symbol stock symbol to buy
+   * @param quantity quantity to buy
    */
-  public record Request(UUID gameId, UUID shareId) {}
+  public record Request(UUID gameId, String symbol, BigDecimal quantity) {}
+
 }
