@@ -5,8 +5,6 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
-
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
