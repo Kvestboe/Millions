@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import java.util.List;
@@ -20,11 +21,14 @@ public class TransactionsView extends BorderPane implements Page {
   private final TransactionQueryController queryController;
   private final ObservableList<TransactionData> transactions = FXCollections.observableArrayList();
   private final TableView<TransactionData> table;
+  private final TextField searchField;
 
   public TransactionsView(TransactionQueryController queryController) {
     this.queryController = queryController;
     this.table = makeTransactionTable();
+    this.searchField = createSearchField();
     this.table.setItems(transactions);
+    setTop(searchField);
     setCenter(table);
   }
 
@@ -48,7 +52,23 @@ public class TransactionsView extends BorderPane implements Page {
     return transactionTable;
   }
 
+  private TextField createSearchField() {
+    TextField field = new TextField();
+    field.setPromptText("Search by symbol, company or type...");
+    field.textProperty().addListener((obs, oldVal, newVal) -> applySearch(newVal));
+    field.setMaxWidth(Double.MAX_VALUE);
+    return field;
+  }
+
+  private void applySearch(String query) {
+    if (query == null || query.isBlank()) {
+      table.getItems().setAll(queryController.getTransactions());
+    } else {
+      table.getItems().setAll(queryController.onSearch(query));
+    }
+  }
+
   private void refreshTransactions() {
-    transactions.setAll(queryController.getTransactions());
+    applySearch(searchField.getText());
   }
 }

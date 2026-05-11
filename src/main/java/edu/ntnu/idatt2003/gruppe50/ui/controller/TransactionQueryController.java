@@ -8,6 +8,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 // This class should not be a direct observer of exchange, this leads to tighter coupling.
@@ -29,6 +30,17 @@ public final class TransactionQueryController implements Observer {
 
   public ObservableList<TransactionData> getTransactions() {
     return transactions;
+  }
+
+  public List<TransactionData> onSearch(String query) {
+    String term = query.toLowerCase(Locale.ROOT);
+    return transactions.stream()
+        .filter(transaction ->
+            transaction.share().symbol().toLowerCase(Locale.ROOT).contains(term)
+                || transaction.share().stock().toLowerCase(Locale.ROOT).contains(term)
+                || transaction.type().name().toLowerCase(Locale.ROOT).contains(term)
+        )
+        .toList();
   }
 
   @Override
