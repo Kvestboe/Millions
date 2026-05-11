@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.gruppe50.ui.view.components;
+package edu.ntnu.idatt2003.gruppe50.ui.view.components.factory;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
