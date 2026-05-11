@@ -1,9 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.*;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -16,16 +13,19 @@ public class GameViewCoordinator {
   private final GameController gameController;
   private final PortfolioQueryController portfolioQueryController;
   private final DashboardQueryController dashboardQueryController = null;
+  private final TransactionQueryController transactionQueryController;
   private final MarketController marketController;
 
   public GameViewCoordinator(
       GameController gameController,
       PortfolioQueryController portfolioQueryController,
-      MarketController marketController
+      MarketController marketController,
+      TransactionQueryController transactionQueryController
   ) {
     this.gameController = gameController;
     this.portfolioQueryController = portfolioQueryController;
     this.marketController = marketController;
+    this.transactionQueryController = transactionQueryController;
   }
 
   public Scene getScene() {
@@ -51,7 +51,7 @@ public class GameViewCoordinator {
     pages.put(PageId.DASHBOARD, new DashboardView(dashboardQueryController));
     pages.put(PageId.MARKET, new MarketView(marketController));
     pages.put(PageId.PORTFOLIO, new PortfolioView(portfolioQueryController, gameController));
-    pages.put(PageId.TRANSACTIONS, new TransactionsView());
+    pages.put(PageId.TRANSACTIONS, new TransactionsView(transactionQueryController));
 
     return pages;
   }

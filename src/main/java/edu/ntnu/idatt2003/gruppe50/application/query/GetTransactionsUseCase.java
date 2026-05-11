@@ -48,13 +48,4 @@ public final class GetTransactionsUseCase {
     List<TransactionDto> transactionDtoArchive
   ) {}
 
-  private record TransactionDto(
-    ShareDto share,
-    int week,
-    TransactionType calculator,
-    boolean committed,
-    BigDecimal taxFee,
-    BigDecimal commissionFee,
-    BigDecimal total
-  ){}
 }
