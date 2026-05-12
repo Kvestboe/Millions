@@ -22,6 +22,21 @@ public final class NavigationManager {
     contentArea.getChildren().setAll(page.getView());
   }
 
+  /**
+   * Shows a page directly, without registering it under a {@link PageId}.
+   * Used for dynamic pages such as stock detail views where one instance
+   * is created per piece of data.
+   *
+   * @param page the page to show
+   * @throws IllegalArgumentException if {@code page} is null
+   */
+  public void show(Page page) {
+    if (page == null) {
+      throw new IllegalArgumentException("Page cannot be null");
+    }
+    contentArea.getChildren().setAll(page.getView());
+  }
+
   public StackPane getContentArea() {
     return contentArea;
   }

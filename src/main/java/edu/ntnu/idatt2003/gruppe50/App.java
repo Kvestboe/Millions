@@ -75,23 +75,20 @@ public class App extends Application {
   public void switchToGame(UUID gameId) {
     loadGameSession.execute(new LoadGameSessionUseCase.Request(gameId));
     GameSession session = sessions.findById(gameId).orElseThrow(GameSessionNotFoundException::new);
-
-    GameController gameController =
-        new GameController(session.getGameId(), buyShare, sellShare, advanceWeek);
-    PortfolioQueryController portfolioQueryController =
-        new PortfolioQueryController(gameId, getPortfolio, session.getExchange());
-    MarketController marketController =
-        new MarketController(session.getExchange(), session.getPlayer());
+    GameController gameController = new GameController(session.getGameId(), buyShare, sellShare, advanceWeek);
+    PortfolioQueryController portfolioQueryController = new PortfolioQueryController(gameId, getPortfolio, session.getExchange());
     TransactionQueryController transactionQueryController =
         new TransactionQueryController(gameId, getTransactions, session.getExchange());
+    GameViewCoordinator gameViewCoordinator = new GameViewCoordinator(
+        gameController,
+        portfolioQueryController,
+        transactionQueryController,
+        buyShare,
+        gameId,
+        session.getExchange(),
+        session.getPlayer()
+    );
 
-    GameViewCoordinator gameViewCoordinator =
-        new GameViewCoordinator(
-            gameController,
-            portfolioQueryController,
-            marketController,
-            transactionQueryController
-        );
 
     stage.setScene(gameViewCoordinator.getScene());
     stage.show();
