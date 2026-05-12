@@ -1,16 +1,15 @@
 package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class PlayerTest {
   private Player player;
@@ -154,10 +153,10 @@ public class PlayerTest {
     assertEquals("Investor", player.getStatus(ex));
   }
 
-
   // helper method
   private Exchange exchangeAtWeek(int week) {
-    Exchange ex = new Exchange("OSL", List.of(new Stock("AAPL", "Apple", bd(100))), new TransactionFactory());
+    Exchange ex =
+        new Exchange("OSL", List.of(new Stock("AAPL", "Apple", bd(100))), new TransactionFactory());
     for (int i = 0; i < week; i++) {
       ex.advance();
     }
@@ -168,9 +167,8 @@ public class PlayerTest {
     return BigDecimal.valueOf(num);
   }
 
-  //Helper method
+  // Helper method
   private BigDecimal bd(String value) {
     return new BigDecimal(value);
   }
-
 }

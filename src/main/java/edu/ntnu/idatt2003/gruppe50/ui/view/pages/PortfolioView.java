@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
@@ -31,8 +30,6 @@ public class PortfolioView extends VBox implements Page, Observer {
   private final TableView<ShareData> table = new TableView<>();
   private final AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
 
-
-
   public PortfolioView(PortfolioQueryController queryController, GameController gameController) {
     this.queryController = queryController;
 
@@ -56,7 +53,6 @@ public class PortfolioView extends VBox implements Page, Observer {
     queryController.addObserver(this);
     refresh();
   }
-
 
   @Override
   public Parent getView() {
@@ -91,22 +87,19 @@ public class PortfolioView extends VBox implements Page, Observer {
     netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
-
   }
-
 
   private void createHoldingsTable() {
     table.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
     table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     table.getColumns().addAll(
-        createColumn("Symbol",         ShareData::symbol),
-        createColumn("Company",        ShareData::stock),
-        createColumn("Quantity",       s -> s.quantity().toString()),
-        createColumn("Purchase price", s -> s.purchasePrice().toString()),
-        createColumn("Current value",  s -> s.currentShareValue().toString()),
-        createGainColumn(),
-        createPercentColumn()
-    );
+            createColumn("Symbol", ShareData::symbol),
+            createColumn("Company", ShareData::stock),
+            createColumn("Quantity", s -> s.quantity().toString()),
+            createColumn("Purchase price", s -> s.purchasePrice().toString()),
+            createColumn("Current value", s -> s.currentShareValue().toString()),
+            createGainColumn(),
+            createPercentColumn());
   }
 
   private TableColumn<ShareData, String> createColumn(
@@ -192,6 +185,4 @@ public class PortfolioView extends VBox implements Page, Observer {
     table.getItems().setAll(p.shares());
     netWorthChart.display("Net Worth", p.netWorthHistory());
   }
-
-
 }

@@ -1,14 +1,13 @@
 package edu.ntnu.idatt2003.gruppe50.shared;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 @DisplayName("Validate")
 class ValidateTest {
@@ -26,10 +25,8 @@ class ValidateTest {
     @Test
     @DisplayName("Throws when value is null")
     void throwsForNull() {
-      IllegalArgumentException ex = assertThrows(
-          IllegalArgumentException.class,
-          () -> Validate.notNull(null, "myField")
-      );
+      IllegalArgumentException ex =
+          assertThrows(IllegalArgumentException.class, () -> Validate.notNull(null, "myField"));
       assertEquals("myField cannot be null", ex.getMessage());
     }
   }
@@ -47,25 +44,21 @@ class ValidateTest {
     @Test
     @DisplayName("Throws when value is null")
     void throwsForNull() {
-      IllegalArgumentException ex = assertThrows(
-          IllegalArgumentException.class,
-          () -> Validate.notBlank(null, "myField")
-      );
+      IllegalArgumentException ex =
+          assertThrows(IllegalArgumentException.class, () -> Validate.notBlank(null, "myField"));
       assertEquals("myField cannot be null or blank", ex.getMessage());
     }
 
     @Test
     @DisplayName("Throws when value is empty string")
     void throwsForEmptyString() {
-      assertThrows(IllegalArgumentException.class,
-          () -> Validate.notBlank("", "myField"));
+      assertThrows(IllegalArgumentException.class, () -> Validate.notBlank("", "myField"));
     }
 
     @Test
     @DisplayName("Throws when value is whitespace only")
     void throwsForBlankString() {
-      assertThrows(IllegalArgumentException.class,
-          () -> Validate.notBlank("   ", "myField"));
+      assertThrows(IllegalArgumentException.class, () -> Validate.notBlank("   ", "myField"));
     }
   }
 
@@ -82,25 +75,23 @@ class ValidateTest {
     @Test
     @DisplayName("Throws when value is null")
     void throwsForNull() {
-      IllegalArgumentException ex = assertThrows(
-          IllegalArgumentException.class,
-          () -> Validate.positive(null, "capital")
-      );
+      IllegalArgumentException ex =
+          assertThrows(IllegalArgumentException.class, () -> Validate.positive(null, "capital"));
       assertEquals("capital must be positive", ex.getMessage());
     }
 
     @Test
     @DisplayName("Throws when value is zero")
     void throwsForZero() {
-      assertThrows(IllegalArgumentException.class,
-          () -> Validate.positive(BigDecimal.ZERO, "capital"));
+      assertThrows(
+          IllegalArgumentException.class, () -> Validate.positive(BigDecimal.ZERO, "capital"));
     }
 
     @Test
     @DisplayName("Throws when value is negative")
     void throwsForNegative() {
-      assertThrows(IllegalArgumentException.class,
-          () -> Validate.positive(new BigDecimal("-1"), "capital"));
+      assertThrows(
+          IllegalArgumentException.class, () -> Validate.positive(new BigDecimal("-1"), "capital"));
     }
   }
 
@@ -117,18 +108,15 @@ class ValidateTest {
     @Test
     @DisplayName("Throws when value is zero")
     void throwsForZero() {
-      IllegalArgumentException ex = assertThrows(
-          IllegalArgumentException.class,
-          () -> Validate.positiveInt(0, "quantity")
-      );
+      IllegalArgumentException ex =
+          assertThrows(IllegalArgumentException.class, () -> Validate.positiveInt(0, "quantity"));
       assertEquals("quantity must be positive", ex.getMessage());
     }
 
     @Test
     @DisplayName("Throws when value is negative")
     void throwsForNegative() {
-      assertThrows(IllegalArgumentException.class,
-          () -> Validate.positiveInt(-5, "quantity"));
+      assertThrows(IllegalArgumentException.class, () -> Validate.positiveInt(-5, "quantity"));
     }
   }
 
@@ -145,18 +133,15 @@ class ValidateTest {
     @Test
     @DisplayName("Throws when collection is null")
     void throwsForNull() {
-      IllegalArgumentException ex = assertThrows(
-          IllegalArgumentException.class,
-          () -> Validate.notEmpty(null, "list")
-      );
+      IllegalArgumentException ex =
+          assertThrows(IllegalArgumentException.class, () -> Validate.notEmpty(null, "list"));
       assertEquals("list cannot be null or empty", ex.getMessage());
     }
 
     @Test
     @DisplayName("Throws when collection is empty")
     void throwsForEmpty() {
-      assertThrows(IllegalArgumentException.class,
-          () -> Validate.notEmpty(List.of(), "list"));
+      assertThrows(IllegalArgumentException.class, () -> Validate.notEmpty(List.of(), "list"));
     }
   }
 
@@ -171,42 +156,45 @@ class ValidateTest {
     @Test
     @DisplayName("Does not throw for valid inputs")
     void doesNotThrowForValidInputs() {
-      assertDoesNotThrow(() ->
-          Validate.validateInput(validName, validCapital, validFile));
+      assertDoesNotThrow(() -> Validate.validateInput(validName, validCapital, validFile));
     }
 
     @Test
     @DisplayName("Throws when player name is blank")
     void throwsForBlankPlayerName() {
-      assertThrows(IllegalArgumentException.class,
+      assertThrows(
+          IllegalArgumentException.class,
           () -> Validate.validateInput("  ", validCapital, validFile));
     }
 
     @Test
     @DisplayName("Throws when player name is null")
     void throwsForNullPlayerName() {
-      assertThrows(IllegalArgumentException.class,
+      assertThrows(
+          IllegalArgumentException.class,
           () -> Validate.validateInput(null, validCapital, validFile));
     }
 
     @Test
     @DisplayName("Throws when starting capital is zero")
     void throwsForZeroCapital() {
-      assertThrows(IllegalArgumentException.class,
+      assertThrows(
+          IllegalArgumentException.class,
           () -> Validate.validateInput(validName, BigDecimal.ZERO, validFile));
     }
 
     @Test
     @DisplayName("Throws when starting capital is null")
     void throwsForNullCapital() {
-      assertThrows(IllegalArgumentException.class,
-          () -> Validate.validateInput(validName, null, validFile));
+      assertThrows(
+          IllegalArgumentException.class, () -> Validate.validateInput(validName, null, validFile));
     }
 
     @Test
     @DisplayName("Throws when stock file is null")
     void throwsForNullFile() {
-      assertThrows(IllegalArgumentException.class,
+      assertThrows(
+          IllegalArgumentException.class,
           () -> Validate.validateInput(validName, validCapital, null));
     }
   }

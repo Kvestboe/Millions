@@ -13,6 +13,7 @@ import java.util.function.Consumer;
  * such as searching and navigating to stock detail.
  */
 public class MarketController {
+
   private final Exchange exchange;
   private final Player player;
   private final Consumer<Stock> onStockSelectedCallback;
@@ -23,15 +24,18 @@ public class MarketController {
    * @param exchange the exchange to retrieve stocks from
    * @param player the current player
    */
-  public MarketController(Exchange exchange, Player player, Consumer<Stock> onStockSelectedCallback) {
+  public MarketController(
+      Exchange exchange,
+      Player player,
+      Consumer<Stock> onStockSelectedCallback
+  ) {
     this.exchange = exchange;
     this.player = player;
     this.onStockSelectedCallback = onStockSelectedCallback;
   }
 
   /**
-   * Searches for stocks matching the given query.
-   * Matches on both symbol and company name.
+   * Searches for stocks matching the given query. Matches on both symbol and company name.
    *
    * @param query the search term
    * @return a list of matching {@link Stock} objects

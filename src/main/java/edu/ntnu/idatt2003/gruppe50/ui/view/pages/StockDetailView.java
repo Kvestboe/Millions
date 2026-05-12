@@ -3,6 +3,8 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import java.math.BigDecimal;
+import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Button;
@@ -10,20 +12,17 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import java.math.BigDecimal;
-import java.util.List;
 
 public class StockDetailView extends VBox implements Page {
 
-  private Stock stock;
   private final StockDetailController controller;
+  private final Stock stock;
 
   public StockDetailView(Stock stock, StockDetailController controller) {
     this.stock = stock;
     this.controller = controller;
 
     Button backBtn = new Button("Back");
-
 
     getChildren().addAll(
         backBtn,
@@ -99,9 +98,7 @@ public class StockDetailView extends VBox implements Page {
     Button buy = new Button("Buy");
     buy.setMaxWidth(Double.MAX_VALUE);
     HBox.setHgrow(buy, Priority.ALWAYS);
-    buy.setOnAction(e -> {
-      controller.buy(stock.getSymbol(), BigDecimal.valueOf(1));
-    });
+    buy.setOnAction(_ -> controller.buy(stock.getSymbol(), BigDecimal.valueOf(1)));
 
     Button sell = new Button("Sell");
     sell.setMaxWidth(Double.MAX_VALUE);
@@ -110,6 +107,4 @@ public class StockDetailView extends VBox implements Page {
     buttonRow.getChildren().addAll(buy, sell);
     return buttonRow;
   }
-
-
 }

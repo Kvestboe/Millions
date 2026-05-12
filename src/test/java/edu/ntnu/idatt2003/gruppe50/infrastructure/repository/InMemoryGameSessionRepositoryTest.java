@@ -1,14 +1,13 @@
 package edu.ntnu.idatt2003.gruppe50.infrastructure.repository;
 
-import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
-import java.util.UUID;
-
 import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
 import static org.junit.jupiter.api.Assertions.*;
+
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
+import java.util.Optional;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class InMemoryGameSessionRepositoryTest {
 

@@ -1,18 +1,15 @@
 package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class PortfolioTest {
   private Portfolio portfolio;
@@ -31,7 +28,6 @@ class PortfolioTest {
     share2 = new Share(stock, bd("10"), bd("320"));
     share3 = new Share(stock2, bd("10"), bd("400"));
   }
-
 
   @Test
   void addShare_addsToList_returnsTrue() {
@@ -118,10 +114,7 @@ class PortfolioTest {
 
     Comparator<Share> byId = Comparator.comparing(Share::getShareId);
 
-    assertEquals(
-        expected.stream().sorted(byId).toList(),
-        actual.stream().sorted(byId).toList()
-    );
+    assertEquals(expected.stream().sorted(byId).toList(), actual.stream().sorted(byId).toList());
   }
 
   @Test
@@ -157,14 +150,12 @@ class PortfolioTest {
 
   @Test
   void contains_nullShare_throwsException() {
-    assertThrows(IllegalArgumentException.class,
-        () -> portfolio.contains((Share) null));
+    assertThrows(IllegalArgumentException.class, () -> portfolio.contains((Share) null));
   }
 
   @Test
   void contains_nullUUID_throwsException() {
-    assertThrows(IllegalArgumentException.class,
-        () -> portfolio.contains((UUID) null));
+    assertThrows(IllegalArgumentException.class, () -> portfolio.contains((UUID) null));
   }
 
   @Test
@@ -175,9 +166,8 @@ class PortfolioTest {
     assertEquals(bd("8815.350"), portfolio.getNetWorth());
   }
 
-  //Helper method
+  // Helper method
   private static BigDecimal bd(String value) {
     return new BigDecimal(value);
   }
-
 }

@@ -1,17 +1,16 @@
 package edu.ntnu.idatt2003.gruppe50.domain.game;
 
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-
 import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
 import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultExchange;
 import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultPlayer;
 import static org.junit.jupiter.api.Assertions.*;
+
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GameSessionTest {
 
@@ -35,17 +34,13 @@ public class GameSessionTest {
   @Test
   void createNew_nullPlayer_throwsException() {
     assertThrows(
-        IllegalArgumentException.class,
-        () -> GameSession.createNew(null, createDefaultExchange())
-    );
+        IllegalArgumentException.class, () -> GameSession.createNew(null, createDefaultExchange()));
   }
 
   @Test
   void createNew_nullExchange_throwsException() {
     assertThrows(
-        IllegalArgumentException.class,
-        () -> GameSession.createNew(createDefaultPlayer(), null)
-    );
+        IllegalArgumentException.class, () -> GameSession.createNew(createDefaultPlayer(), null));
   }
 
   @Test
@@ -54,15 +49,15 @@ public class GameSessionTest {
     LocalDate runStartedAt = LocalDate.now().minusDays(10);
     LocalDate lastPlayed = LocalDate.now().minusDays(2);
 
-    GameSession rehydrated = GameSession.rehydrate(
-        gameId,
-        createDefaultPlayer(),
-        createDefaultExchange(),
-        GameSessionState.FINISHED,
-        runStartedAt,
-        lastPlayed,
-        List.of(bd(20))
-    );
+    GameSession rehydrated =
+        GameSession.rehydrate(
+            gameId,
+            createDefaultPlayer(),
+            createDefaultExchange(),
+            GameSessionState.FINISHED,
+            runStartedAt,
+            lastPlayed,
+            List.of(bd(20)));
 
     assertEquals(gameId, rehydrated.getGameId());
     assertEquals(GameSessionState.FINISHED, rehydrated.getState());
@@ -74,32 +69,30 @@ public class GameSessionTest {
   void rehydrate_nullGameId_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> GameSession.rehydrate(
-            null,
-            createDefaultPlayer(),
-            createDefaultExchange(),
-            GameSessionState.ACTIVE,
-            LocalDate.now(),
-            LocalDate.now(),
-            List.of(bd(20))
-        )
-    );
+        () ->
+            GameSession.rehydrate(
+                null,
+                createDefaultPlayer(),
+                createDefaultExchange(),
+                GameSessionState.ACTIVE,
+                LocalDate.now(),
+                LocalDate.now(),
+                List.of(bd(20))));
   }
 
   @Test
   void rehydrate_nullLastPlayed_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> GameSession.rehydrate(
-            UUID.randomUUID(),
-            createDefaultPlayer(),
-            createDefaultExchange(),
-            GameSessionState.ACTIVE,
-            LocalDate.now(),
-            null,
-            List.of(bd(20))
-        )
-    );
+        () ->
+            GameSession.rehydrate(
+                UUID.randomUUID(),
+                createDefaultPlayer(),
+                createDefaultExchange(),
+                GameSessionState.ACTIVE,
+                LocalDate.now(),
+                null,
+                List.of(bd(20))));
   }
 
   @Test
@@ -111,15 +104,15 @@ public class GameSessionTest {
 
   @Test
   void markOpened_updatesLastPlayedToToday() {
-    GameSession rehydrated = GameSession.rehydrate(
-        UUID.randomUUID(),
-        createDefaultPlayer(),
-        createDefaultExchange(),
-        GameSessionState.ACTIVE,
-        LocalDate.now().minusDays(10),
-        LocalDate.now().minusDays(1),
-        List.of(bd(20))
-    );
+    GameSession rehydrated =
+        GameSession.rehydrate(
+            UUID.randomUUID(),
+            createDefaultPlayer(),
+            createDefaultExchange(),
+            GameSessionState.ACTIVE,
+            LocalDate.now().minusDays(10),
+            LocalDate.now().minusDays(1),
+            List.of(bd(20)));
 
     rehydrated.markOpened();
 
@@ -130,10 +123,7 @@ public class GameSessionTest {
   void buy_whenFinished_throwsException() {
     session.finish();
 
-    assertThrows(
-        GameSessionFinishedException.class,
-        () -> session.buy("AAPL", bd(1))
-    );
+    assertThrows(GameSessionFinishedException.class, () -> session.buy("AAPL", bd(1)));
   }
 
   @Test
@@ -142,19 +132,13 @@ public class GameSessionTest {
     Share boughtShare = session.getPlayer().getPortfolio().getShares().getFirst();
     session.finish();
 
-    assertThrows(
-        GameSessionFinishedException.class,
-        () -> session.sell(boughtShare.getShareId())
-    );
+    assertThrows(GameSessionFinishedException.class, () -> session.sell(boughtShare.getShareId()));
   }
 
   @Test
   void advanceWeek_whenFinished_throwsException() {
     session.finish();
 
-    assertThrows(
-        GameSessionFinishedException.class,
-        session::advanceWeek
-    );
+    assertThrows(GameSessionFinishedException.class, session::advanceWeek);
   }
 }

@@ -1,15 +1,14 @@
 package edu.ntnu.idatt2003.gruppe50.domain.trade;
 
-import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.SaleCalculator;
+import static org.junit.jupiter.api.Assertions.*;
+
+import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.SaleCalculator;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class SaleTest {
   private Stock stock;
@@ -67,10 +66,7 @@ public class SaleTest {
 
   @Test
   void commit_throwsException_whenPlayerDoesNotOwnShare() {
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> sale.commit(player)
-    );
+    assertThrows(IllegalArgumentException.class, () -> sale.commit(player));
 
     assertFalse(sale.isCommitted());
   }
@@ -89,7 +85,8 @@ public class SaleTest {
 
     assertEquals(moneyBefore, player.getMoney());
     assertEquals(shareBefore, player.getPortfolio().getShares().size());
-    assertEquals(transactionArchiveBefore, player.getTransactionArchive().getTransactions(12).size());
+    assertEquals(
+        transactionArchiveBefore, player.getTransactionArchive().getTransactions(12).size());
   }
 
   @Test
@@ -106,14 +103,13 @@ public class SaleTest {
 
     assertEquals(moneyAfter, player.getMoney());
     assertEquals(shareBefore - 1, player.getPortfolio().getShares().size());
-    assertEquals(transactionArchiveBefore + 1, player.getTransactionArchive().getTransactions(12).size());
+    assertEquals(
+        transactionArchiveBefore + 1, player.getTransactionArchive().getTransactions(12).size());
     assertTrue(sale.isCommitted());
   }
 
-  //Helper method
+  // Helper method
   private static BigDecimal bd(String value) {
     return new BigDecimal(value);
   }
 }
-
-

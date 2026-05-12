@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public final class GameController {
+
   private final UUID gameId;
   private final BuyShareUseCase buyShare;
   private final SellShareUseCase sellShare;

@@ -4,12 +4,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-/**
- * Factory for easy and customizable card creation for different UI views.
- *
- */
+/** Factory for easy and customizable card creation for different UI views. */
 public class CardFactory {
-
 
   public static VBox createCard(Node... content) {
     VBox card = new VBox();
@@ -61,5 +57,4 @@ public class CardFactory {
     card.getChildren().addAll(content);
     return card;
   }
-
 }

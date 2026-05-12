@@ -2,9 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.shared;
 
 import java.math.BigDecimal;
 
-/**
- * Utility class for parsing user input into Java types.
- */
+/** Utility class for parsing user input into Java types. */
 public class Parse {
 
   /**

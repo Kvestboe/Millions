@@ -1,15 +1,14 @@
 package edu.ntnu.idatt2003.gruppe50.domain.trade;
 
-import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.PurchaseCalculator;
+import static org.junit.jupiter.api.Assertions.*;
+
+import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.PurchaseCalculator;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class PurchaseTest {
   private Share share;
@@ -63,7 +62,6 @@ public class PurchaseTest {
     assertThrows(IllegalArgumentException.class, () -> purchase.commit(null));
   }
 
-
   @Test
   void isCommitted_remainsFalse_whenCommitFails_dueToInsufficientFunds() {
     assertThrows(IllegalArgumentException.class, () -> purchase.commit(poorPlayer));
@@ -81,7 +79,8 @@ public class PurchaseTest {
 
     assertEquals(moneyBefore, richPlayer.getMoney());
     assertEquals(shareBefore, richPlayer.getPortfolio().getShares().size());
-    assertEquals(transactionArchiveBefore, richPlayer.getTransactionArchive().getTransactions(12).size());
+    assertEquals(
+        transactionArchiveBefore, richPlayer.getTransactionArchive().getTransactions(12).size());
   }
 
   @Test
@@ -96,10 +95,12 @@ public class PurchaseTest {
 
     assertEquals(moneyAfter, richPlayer.getMoney());
     assertEquals(shareBefore + 1, richPlayer.getPortfolio().getShares().size());
-    assertEquals(transactionArchiveBefore + 1, richPlayer.getTransactionArchive().getTransactions(12).size());
+    assertEquals(
+        transactionArchiveBefore + 1,
+        richPlayer.getTransactionArchive().getTransactions(12).size());
   }
 
-  //Helper method
+  // Helper method
   private static BigDecimal bd(String value) {
     return new BigDecimal(value);
   }

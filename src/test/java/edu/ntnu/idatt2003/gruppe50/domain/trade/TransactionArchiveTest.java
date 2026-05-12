@@ -1,13 +1,12 @@
 package edu.ntnu.idatt2003.gruppe50.domain.trade;
 
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import static org.junit.jupiter.api.Assertions.*;
+
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class TransactionArchiveTest {
   private Share share;
@@ -65,7 +64,7 @@ public class TransactionArchiveTest {
     assertEquals(1, archive.countDistinctWeeks());
   }
 
-  //Helper method
+  // Helper method
   private static BigDecimal bd(String value) {
     return new BigDecimal(value);
   }

@@ -7,17 +7,18 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
 public class AreaChartView {
+
   private final AreaChart<Number, Number> chart;
   private final XYChart.Series<Number, Number> series;
 
-  public AreaChartView(String xLabel, String yLabel){
-    NumberAxis xAxis = new NumberAxis();
-    NumberAxis yAxis = new NumberAxis();
+  public AreaChartView(String xlabel, String ylabel) {
+    NumberAxis xaxis = new NumberAxis();
+    NumberAxis yaxis = new NumberAxis();
 
-    xAxis.setLabel(xLabel);
-    yAxis.setLabel(yLabel);
+    xaxis.setLabel(xlabel);
+    yaxis.setLabel(ylabel);
     series = new XYChart.Series<>();
-    chart = new AreaChart<>(xAxis, yAxis);
+    chart = new AreaChart<>(xaxis, yaxis);
     chart.getData().add(series);
     chart.setAnimated(false);
   }

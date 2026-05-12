@@ -7,28 +7,29 @@ import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 
 /**
  * Represents a financial transaction in the game.
- * <p>
- * A transaction is associated with a specific share and week.
+ *
+ * <p>A transaction is associated with a specific share and week.
  * Subclasses define how the transaction is committed.
  * A transaction can only be committed once.
- * </p>
  */
 public abstract class Transaction {
+
   private final Share share;
   private final int week;
   private final TransactionCalculator calculator;
   private boolean committed;
+
   // A good idea is that the transaction can be shown in the line chart,
   // so that you can see when you bought and sold.
 
   /**
    * Creates a new {@code Transaction}.
    *
-   * @param share      the share involved in the transaction
-   * @param week       the week number when the transaction occurred
+   * @param share the share involved in the transaction
+   * @param week the week number when the transaction occurred
    * @param calculator the calculator used in the transaction
-   * @throws IllegalArgumentException if {@code share} or {@code calculator} is {@code null},
-   *                                  or if {@code week} is not positive
+   * @throws IllegalArgumentException if {@code share} or {@code calculator} is
+   *     {@code null}, or if {@code week} is not positive
    */
   protected Transaction(Share share, int week, TransactionCalculator calculator) {
     Validate.notNull(share, "Share");
@@ -69,8 +70,7 @@ public abstract class Transaction {
   /**
    * Returns whether this transaction has been committed.
    *
-   * @return {@code true} if the transaction has been committed,
-   * {@code false} otherwise
+   * @return {@code true} if the transaction has been committed, {@code false} otherwise
    */
   public boolean isCommitted() {
     return committed;
@@ -78,9 +78,9 @@ public abstract class Transaction {
 
   /**
    * Commits (executes) this transaction for the given player.
-   * <p>
-   * Subclasses must implement this method and apply the transaction's
-   * effects to the given player.
+   *
+   * <p>Subclasses must implement this method and apply the
+   * transaction's effects to the given player.
    *
    * @param player the player for whom the transaction is committed
    */
@@ -93,4 +93,3 @@ public abstract class Transaction {
     this.committed = true;
   }
 }
-

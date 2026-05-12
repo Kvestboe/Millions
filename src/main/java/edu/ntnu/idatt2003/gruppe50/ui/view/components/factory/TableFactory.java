@@ -1,17 +1,14 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.factory;
 
+import java.util.List;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-
-import java.util.List;
 
 public final class TableFactory {
 
   private TableFactory() {}
 
-  public static <T> TableView<T> createTable(
-      List<ColumnDefinition<T, ?>> definitionList
-  ) {
+  public static <T> TableView<T> createTable(List<ColumnDefinition<T, ?>> definitionList) {
     TableView<T> table = new TableView<>();
 
     for (ColumnDefinition<T, ?> definition : definitionList) {
@@ -27,5 +24,4 @@ public final class TableFactory {
     column.setCellValueFactory(cell -> definition.getter().apply(cell.getValue()));
     return column;
   }
-
 }

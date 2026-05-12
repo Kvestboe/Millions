@@ -18,23 +18,22 @@ import java.util.stream.Collectors;
 
 /**
  * Represents the exchange for buying and selling shares.
- * <p>
- * The exchange updates every week with new
- * prices so the player can buy and sell unique stocks.
- * </p>
+ *
+ * <p>The exchange updates every week with new prices so the player can buy and sell unique stocks.
  */
 public class Exchange extends Observable {
+
   private final String name;
-  private int week;
   private final Map<String, Stock> stockMap;
   private final Random random;
   private final TransactionFactory factory;
+  private int week;
 
   /**
    * Creates a new {@code exchange} with a name and stocks represented by symbols.
    *
-   * @param name    The name of the exchange
-   * @param stocks  The stocks in the exchange
+   * @param name The name of the exchange
+   * @param stocks The stocks in the exchange
    * @param factory the transaction factory used
    * @throws IllegalArgumentException if any parameter is null or invalid
    */
@@ -74,8 +73,8 @@ public class Exchange extends Observable {
    * Checks if the stock is present in the exchange.
    *
    * @param symbol the stock symbol
-   * @return {@code true} if the exchange contains a stock with the given symbol,
-   *{@code false} otherwise
+   * @return {@code true} if the exchange contains a stock
+   *     with the given symbol, {@code false} otherwise
    * @throws IllegalArgumentException if {@code symbol} is null or blank
    */
   public boolean hasStock(String symbol) {
@@ -89,7 +88,7 @@ public class Exchange extends Observable {
    * @param symbol the stock symbol
    * @return stock from exchange
    * @throws IllegalArgumentException if {@code symbol} is null or blank
-   * @throws NoSuchElementException   if no stock with the given symbol exists
+   * @throws NoSuchElementException if no stock with the given symbol exists
    */
   public Stock getStock(String symbol) {
     Validate.notBlank(symbol, "Symbol");
@@ -122,13 +121,13 @@ public class Exchange extends Observable {
   /**
    * Buys a share from the exchange.
    *
-   * @param symbol   the stock symbol
+   * @param symbol the stock symbol
    * @param quantity the number of stocks
-   * @param player   the player
+   * @param player the player
    * @return a purchase
    * @throws IllegalArgumentException if {@code symbol} is null or blank, {@code quantity} is null
-   *                                  or negative, or {@code player} is null
-   * @throws NoSuchElementException   if no stock with the given symbol exists
+   *     or negative, or {@code player} is null
+   * @throws NoSuchElementException if no stock with the given symbol exists
    */
   public Transaction buy(String symbol, BigDecimal quantity, Player player) {
     Validate.positive(quantity, "Quantity");
@@ -149,14 +148,13 @@ public class Exchange extends Observable {
    * Sells a share the player holds.
    *
    * @param shareId the share to be sold
-   * @param player  the player
+   * @param player the player
    * @return a sale
    * @throws IllegalArgumentException if {@code share} or {@code player} is null
    */
   public Transaction sell(UUID shareId, Player player) {
     Validate.notNull(shareId, "Share id");
     Validate.notNull(player, "Player");
-
 
     Share share = player.getPortfolio().getShare(shareId);
     Transaction t = factory.createSale(share, this.week);
@@ -194,10 +192,9 @@ public class Exchange extends Observable {
   public List<Stock> getGainers(int limit) {
     Validate.positiveInt(limit, "Limit");
     return stockMap.values().stream()
-        .sorted(
-            (a, b) -> b.getLatestPriceChange()
-                .compareTo(a.getLatestPriceChange())
-        ).limit(limit).toList();
+        .sorted((a, b) -> b.getLatestPriceChange().compareTo(a.getLatestPriceChange()))
+        .limit(limit)
+        .toList();
   }
 
   /**

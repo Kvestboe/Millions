@@ -10,6 +10,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
 public class NavBar extends HBox {
+
   private static final PseudoClass ACTIVE = PseudoClass.getPseudoClass("active-nav");
   private final Map<PageId, Button> buttons = new EnumMap<>(PageId.class);
 
