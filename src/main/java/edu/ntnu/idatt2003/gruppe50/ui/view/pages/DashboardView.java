@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
@@ -8,8 +9,10 @@ import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory
 
 public class DashboardView extends BorderPane implements Page {
 
-  public DashboardView() {
+  private final GameController gameController;
 
+  public DashboardView(GameController gameController) {
+    this.gameController = gameController;
 
 
     GridPane grid = createGrid();
@@ -82,6 +85,10 @@ public class DashboardView extends BorderPane implements Page {
     btn.setMaxHeight(Double.MAX_VALUE);
 //    btn.minWidthProperty().bind(btn.heightProperty());
 //    btn.maxWidthProperty().bind(btn.heightProperty());
+
+    btn.setOnAction(e -> gameController.advanceWeek());
+
     return btn;
   }
 }
+
