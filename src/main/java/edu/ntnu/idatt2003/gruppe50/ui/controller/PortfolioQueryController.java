@@ -10,6 +10,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import java.util.List;
 import java.util.UUID;
 
+
 public final class PortfolioQueryController extends Observable implements Observer {
   private final UUID gameId;
   private final GetPortfolioUseCase getPortfolio;
@@ -40,15 +41,6 @@ public final class PortfolioQueryController extends Observable implements Observ
 
   @Override
   public void update() {
-    refresh();
-  }
-
-  private void refresh() {
-    GetPortfolioUseCase.Response response = getPortfolio.execute(
-        new GetPortfolioUseCase.Request(gameId)
-    );
-    List<ShareData> shares = response.shares().stream()
-        .map(ShareDataMapper::mapShare).toList();
-
+    notifyObservers();
   }
 }
