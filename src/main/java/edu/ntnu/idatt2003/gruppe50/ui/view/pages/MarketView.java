@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
 import java.math.BigDecimal;
 import javafx.beans.property.SimpleObjectProperty;
@@ -19,7 +20,7 @@ import javafx.scene.layout.VBox;
  * Provides a searchable table where the user can browse stocks and navigate
  * to individual stock detail pages.
  */
-public class MarketView implements Page {
+public class MarketView implements Page, Observer {
 
   private final MarketController controller;
   private final TextField searchField;
@@ -36,6 +37,8 @@ public class MarketView implements Page {
     this.table = createStockTable();
     this.searchField = createSearchField();
     this.root = createRoot();
+
+    controller.addObserver(this);
   }
 
   /**
@@ -190,5 +193,19 @@ public class MarketView implements Page {
         }
       }
     };
+  }
+
+  @Override
+  public void update() {
+    refresh();
+  }
+
+  private void refresh() {
+    String query = searchField.getText();
+    if (query == null || query.isBlank()) {
+      table.getItems().setAll(controller.getStocks());
+    } else {
+      table.getItems().setAll(controller.onSearch(query));
+    }
   }
 }

@@ -3,6 +3,9 @@ package edu.ntnu.idatt2003.gruppe50.ui.controller;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observable;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,7 +15,7 @@ import java.util.function.Consumer;
  * Handles retrieval of stocks from the exchange and user interactions
  * such as searching and navigating to stock detail.
  */
-public class MarketController {
+public class MarketController extends Observable implements Observer {
   private final Exchange exchange;
   private final Player player;
   private final Consumer<Stock> onStockSelectedCallback;
@@ -27,6 +30,7 @@ public class MarketController {
     this.exchange = exchange;
     this.player = player;
     this.onStockSelectedCallback = onStockSelectedCallback;
+    exchange.addObserver(this);
   }
 
   /**
@@ -57,5 +61,10 @@ public class MarketController {
    */
   public void onStockSelected(Stock stock) {
     onStockSelectedCallback.accept(stock);
+  }
+
+  @Override
+  public void update() {
+    notifyObservers();
   }
 }
