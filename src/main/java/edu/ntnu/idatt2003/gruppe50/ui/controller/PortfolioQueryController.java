@@ -1,19 +1,22 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.mapper.ShareDataMapper;
 import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import java.util.List;
 import java.util.UUID;
 
-public final class PortfolioQueryController {
+public final class PortfolioQueryController implements Observer {
   private final UUID gameId;
   private final GetPortfolioUseCase getPortfolio;
 
-  public PortfolioQueryController(UUID gameId, GetPortfolioUseCase getPortfolio) {
+  public PortfolioQueryController(UUID gameId, GetPortfolioUseCase getPortfolio, Exchange exchange) {
     this.gameId = gameId;
     this.getPortfolio = getPortfolio;
+    exchange.addObserver(this);
   }
 
   public PortfolioData getPortfolio() {
@@ -33,5 +36,19 @@ public final class PortfolioQueryController {
         shares,
         response.netWorthHistory()
     );
+  }
+
+  @Override
+  public void update() {
+    refresh();
+  }
+
+  private void refresh() {
+    GetPortfolioUseCase.Response response = getPortfolio.execute(
+        new GetPortfolioUseCase.Request(gameId)
+    );
+    List<ShareData> shares = response.shares().stream()
+        .map(ShareDataMapper::mapShare).toList();
+
   }
 }

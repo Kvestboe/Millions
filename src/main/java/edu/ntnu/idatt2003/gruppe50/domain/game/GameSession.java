@@ -146,6 +146,7 @@ public final class GameSession {
   public void advanceWeek() {
     ensureActive();
     exchange.advance();
+    netWorthHistory.add(player.getNetWorth());
   }
 
   /**

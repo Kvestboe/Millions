@@ -79,7 +79,7 @@ public class App extends Application {
     GameController gameController =
         new GameController(session.getGameId(), buyShare, sellShare, advanceWeek);
     PortfolioQueryController portfolioQueryController =
-        new PortfolioQueryController(gameId, getPortfolio);
+        new PortfolioQueryController(gameId, getPortfolio, session.getExchange());
     MarketController marketController =
         new MarketController(session.getExchange(), session.getPlayer());
     TransactionQueryController transactionQueryController =
