@@ -92,7 +92,7 @@ public class PortfolioView extends VBox implements Page, Observer {
     container.setMinWidth(200);
     container.setPrefWidth(200);
 
-    return new VBox(portfolioValueCard, cashBalanceCard, netWorthCard);
+    return container;
   }
 
   private AreaChart<Number, Number> createNetWorthChart(PortfolioData portfolio) {
