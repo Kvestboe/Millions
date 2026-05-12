@@ -75,8 +75,10 @@ public class GameViewCoordinator {
   }
 
   private void navigateToStockDetail(Stock stock) {
-    StockDetailController controller = new StockDetailController(gameId, buyShare);
-    StockDetailView view = new StockDetailView(stock, controller);
+    StockDetailController controller = new StockDetailController(
+        gameId, buyShare, portfolioQueryController);
+    StockDetailView view = new StockDetailView(
+        stock, controller, () -> navManager.navigateTo(PageId.MARKET));
     navManager.show(view);
   }
 }
