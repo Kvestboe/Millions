@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory.createCard;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.TransactionType;
+import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnDefinition;
@@ -51,23 +52,21 @@ public class TransactionsView extends BorderPane implements Page {
   }
 
   private TableView<TransactionData> makeTransactionTable() {
-    TableView<TransactionData> transactionTable =
-        TableFactory.createTable(
-            List.of(
-                new ColumnDefinition<>(
-                    "Symbol", t -> new ReadOnlyStringWrapper(t.share().symbol())),
-                new ColumnDefinition<>(
-                    "Company", t -> new ReadOnlyStringWrapper(t.share().stock())),
-                new ColumnDefinition<>("Type", t -> new ReadOnlyStringWrapper(t.type().name())),
-                new ColumnDefinition<>("Week", t -> new ReadOnlyObjectWrapper<>(t.week())),
-                new ColumnDefinition<>(
-                    "Commission", t -> new ReadOnlyStringWrapper(t.commissionFee().toString())),
-                new ColumnDefinition<>(
-                    "Tax", t -> new ReadOnlyStringWrapper(t.taxFee().toString())),
-                new ColumnDefinition<>(
-                    "Total", t -> new ReadOnlyStringWrapper(t.total().toString()))
-            )
-        );
+    TableView<TransactionData> transactionTable = TableFactory.createTable(List.of(
+        new ColumnDefinition<>("Symbol", t -> new ReadOnlyStringWrapper(t.share().symbol())),
+        new ColumnDefinition<>("Company", t -> new ReadOnlyStringWrapper(t.share().stock())),
+        new ColumnDefinition<>("Type", t -> new ReadOnlyStringWrapper(t.type().name())),
+        new ColumnDefinition<>("Week", t -> new ReadOnlyObjectWrapper<>(t.week())),
+        new ColumnDefinition<>("Commission", t ->
+            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.commissionFee()))
+        ),
+        new ColumnDefinition<>("Tax", t ->
+            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.taxFee()))
+        ),
+        new ColumnDefinition<>("Total", t ->
+            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.total()))
+        )
+    ));
     transactionTable.setPlaceholder(new Label("No transactions yet."));
     return transactionTable;
   }

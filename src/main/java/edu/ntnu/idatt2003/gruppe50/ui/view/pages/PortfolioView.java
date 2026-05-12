@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
@@ -33,7 +34,6 @@ public class PortfolioView extends VBox implements Page, Observer {
   public PortfolioView(PortfolioQueryController queryController, GameController gameController) {
     this.queryController = queryController;
 
-    // Lag komponenter
     Label title = new Label("Portfolio");
     Label holdingsTitle = new Label("My holdings");
 
@@ -93,13 +93,14 @@ public class PortfolioView extends VBox implements Page, Observer {
     table.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
     table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     table.getColumns().addAll(
-            createColumn("Symbol", ShareData::symbol),
-            createColumn("Company", ShareData::stock),
-            createColumn("Quantity", s -> s.quantity().toString()),
-            createColumn("Purchase price", s -> s.purchasePrice().toString()),
-            createColumn("Current value", s -> s.currentShareValue().toString()),
-            createGainColumn(),
-            createPercentColumn());
+        createColumn("Symbol",         ShareData::symbol),
+        createColumn("Company",        ShareData::stock),
+        createColumn("Quantity",       s -> MoneyFormat.format(s.quantity())),
+        createColumn("Purchase price", s -> MoneyFormat.formatCurrency(s.purchasePrice())),
+        createColumn("Current value",  s -> MoneyFormat.formatCurrency(s.currentShareValue())),
+        createGainColumn(),
+        createPercentColumn()
+    );
   }
 
   private TableColumn<ShareData, String> createColumn(
@@ -125,7 +126,7 @@ public class PortfolioView extends VBox implements Page, Observer {
           setText(null);
           setStyle("");
         } else {
-          setText((value.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + value + " kr");
+          setText(MoneyFormat.formatSignedCurrency(value));
           setStyle(gainStyle(value));
         }
       }
@@ -145,7 +146,7 @@ public class PortfolioView extends VBox implements Page, Observer {
           setText(null);
           setStyle("");
         } else {
-          setText((value.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + value + "%");
+          setText(MoneyFormat.formatSignedPercent(value));
           setStyle(gainStyle(value));
         }
       }
@@ -167,9 +168,12 @@ public class PortfolioView extends VBox implements Page, Observer {
   }
 
   private String gainStyle(BigDecimal value) {
-    return value.compareTo(BigDecimal.ZERO) >= 0
-        ? "-fx-text-fill: #4CAF50;"
-        : "-fx-text-fill: #E24B4A;";
+    if (value.compareTo(BigDecimal.ZERO) > 0) {
+      return "-fx-text-fill: #4CAF50;";
+    } else if (value.compareTo(BigDecimal.ZERO) < 0) {
+      return "-fx-text-fill: #E24B4A;";
+    }
+    return "-fx-text-fill: #E0E0E0;";
   }
 
   @Override
@@ -179,9 +183,9 @@ public class PortfolioView extends VBox implements Page, Observer {
 
   private void refresh() {
     PortfolioData p = queryController.getPortfolio();
-    netWorthLabel.setText(p.netWorth().toString());
-    portfolioValueLabel.setText(p.portfolioValue().toString());
-    playerCashLabel.setText(p.cash().toString());
+    netWorthLabel.setText(MoneyFormat.formatCurrency(p.netWorth()));
+    portfolioValueLabel.setText(MoneyFormat.formatCurrency(p.portfolioValue()));
+    playerCashLabel.setText(MoneyFormat.formatCurrency(p.cash()));
     table.getItems().setAll(p.shares());
     netWorthChart.display("Net Worth", p.netWorthHistory());
   }
