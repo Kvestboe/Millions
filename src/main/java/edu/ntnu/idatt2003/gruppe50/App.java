@@ -17,11 +17,13 @@ import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.*;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
+import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.NewGameView;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 /**
@@ -63,13 +65,8 @@ public class App extends Application {
 
       switchToGame(gameId);
     } else {
-      NewGameController controller = new NewGameController(startGameSession, this::switchToGame);
-      NewGameView newGame = new NewGameView(stage, controller);
-      stage.setScene(newGame.getScene());
-      stage.show();
-
+      showMainMenu();
     }
-
   }
 
   public void switchToGame(UUID gameId) {
@@ -93,4 +90,20 @@ public class App extends Application {
     stage.setScene(gameViewCoordinator.getScene());
     stage.show();
   }
+
+  private void showMainMenu() {
+    MainMenuView menu = new MainMenuView(
+        this::showNewGame,
+        Platform::exit
+    );
+    stage.setScene(menu.getScene());
+    stage.show();
+  }
+
+  private void showNewGame() {
+    NewGameController controller = new NewGameController(startGameSession, this::switchToGame);
+    NewGameView newGame = new NewGameView(stage, controller, this::showMainMenu);
+    stage.setScene(newGame.getScene());
+  }
+
 }
