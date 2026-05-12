@@ -88,9 +88,7 @@ public class PortfolioView extends VBox implements Page, Observer {
   }
 
   private AreaChart<Number, Number> createNetWorthChart(PortfolioData portfolio) {
-    AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
     netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
-    netWorthChart.appendPoint(1, BigDecimal.TEN);
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
 
@@ -161,9 +159,6 @@ public class PortfolioView extends VBox implements Page, Observer {
     });
     return col;
   }
-
-  // private TableColumn<ShareData, Void> createActionColumn() {
-  // }
 
   private BigDecimal calculateGain(ShareData shareData) {
     return shareData.currentShareValue()
