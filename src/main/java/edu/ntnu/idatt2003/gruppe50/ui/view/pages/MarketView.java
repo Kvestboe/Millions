@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
 import java.math.BigDecimal;
 import javafx.beans.property.SimpleObjectProperty;
@@ -139,8 +140,24 @@ public class MarketView implements Page {
     col.setCellValueFactory(data ->
         new SimpleObjectProperty<>(data.getValue().getSalesPrice())
     );
+    col.setCellFactory(c -> createMoneyCell());
     col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
     return col;
+  }
+
+  private TableCell<Stock, BigDecimal> createMoneyCell() {
+    return new TableCell<>() {
+      @Override
+      protected void updateItem(BigDecimal value, boolean empty) {
+        super.updateItem(value, empty);
+
+        if (empty || value == null) {
+          setText(null);
+        } else {
+          setText(MoneyFormat.formatCurrency(value));
+        }
+      }
+    };
   }
 
   private TableColumn<Stock, BigDecimal> createChangeColumn() {
@@ -148,9 +165,26 @@ public class MarketView implements Page {
     col.setCellValueFactory(data ->
         new SimpleObjectProperty<>(data.getValue().getLatestPriceChange())
     );
-    col.setCellFactory(c -> createColoredCell());
+    col.setCellFactory(c -> createColoredCurrencyCell());
     col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
     return col;
+  }
+
+  private TableCell<Stock, BigDecimal> createColoredCurrencyCell() {
+    return new TableCell<>() {
+      @Override
+      protected void updateItem(BigDecimal value, boolean empty) {
+        super.updateItem(value, empty);
+
+        if (empty || value == null) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText(MoneyFormat.formatSignedCurrency(value));
+          setStyle(gainStyle(value));
+        }
+      }
+    };
   }
 
   private TableColumn<Stock, BigDecimal> createPercentChangeColumn() {
@@ -158,37 +192,34 @@ public class MarketView implements Page {
     col.setCellValueFactory(data ->
         new SimpleObjectProperty<>(data.getValue().getLatestPriceChangePercent())
     );
-    col.setCellFactory(c -> createColoredCell());
+    col.setCellFactory(c -> createColoredPercentCell());
     col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
     return col;
   }
 
-  /**
-   * Creates a table cell that displays a {@link BigDecimal} value with
-   * color coding based on its sign. Positive values are green,
-   * negative values are red, and zero is white.
-   *
-   * @return a configured {@link TableCell}
-   */
-  private TableCell<Stock, BigDecimal> createColoredCell() {
+  private TableCell<Stock, BigDecimal> createColoredPercentCell() {
     return new TableCell<>() {
       @Override
       protected void updateItem(BigDecimal value, boolean empty) {
         super.updateItem(value, empty);
+
         if (empty || value == null) {
           setText(null);
           setStyle("");
         } else {
-          setText(value.toString());
-          if (value.compareTo(BigDecimal.ZERO) > 0) {
-            setStyle("-fx-text-fill: #4CAF50;");
-          } else if (value.compareTo(BigDecimal.ZERO) < 0) {
-            setStyle("-fx-text-fill: #EF5350;");
-          } else {
-            setStyle("-fx-text-fill: #E0E0E0;");
-          }
+          setText(MoneyFormat.formatSignedPercent(value));
+          setStyle(gainStyle(value));
         }
       }
     };
+  }
+
+  private String gainStyle(BigDecimal value) {
+    if (value.compareTo(BigDecimal.ZERO) > 0) {
+      return "-fx-text-fill: #4CAF50;";
+    } else if (value.compareTo(BigDecimal.ZERO) < 0) {
+      return "-fx-text-fill: #EF5350;";
+    }
+    return "-fx-text-fill: #E0E0E0;";
   }
 }

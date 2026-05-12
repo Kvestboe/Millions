@@ -41,21 +41,46 @@ public final class MoneyFormat {
     if (value == null) {
       return "";
     }
+
     BigDecimal scaled = value.setScale(2, RoundingMode.HALF_UP);
-    return (scaled.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + scaled.toPlainString();
+
+    if (scaled.compareTo(BigDecimal.ZERO) > 0) {
+      return "+" + scaled.toPlainString();
+    }
+
+    return scaled.toPlainString();
   }
 
   /**
    * Formats a value as a currency amount in Norwegian kroner.
    *
-   * <p>The returned value includes a sign prefix and the {@code kr} suffix.
-   * If the given value is {@code null}, the result will be {@code " kr"}.If the given value is
-   * {@code null}, an empty string is returned.</p>
+   * <p>The returned value does not include a sign prefix.</p>
+   *
+   * <p>If the given value is {@code null}, an empty string is returned.</p>
    *
    * @param value the currency value to format
-   * @return the formatted currency value
+   * @return the formatted currency value, or an empty string if the value is {@code null}
    */
+
   public static String formatCurrency(BigDecimal value) {
+    if (value == null) {
+      return "";
+    }
+    return format(value) + " kr";
+  }
+
+  /**
+   * Formats a value as a signed currency amount in Norwegian kroner.
+   *
+   * <p>Positive values and zero are prefixed with {@code +}. Negative values keep
+   * their minus sign.</p>
+   *
+   * <p>If the given value is {@code null}, an empty string is returned.</p>
+   *
+   * @param value the currency value to format
+   * @return the formatted signed currency value, or an empty string if the value is {@code null}
+   */
+  public static String formatSignedCurrency(BigDecimal value) {
     if (value == null) {
       return "";
     }
@@ -63,19 +88,21 @@ public final class MoneyFormat {
   }
 
   /**
-   * Formats a value as a percentage.
+   * Formats a value as a signed percentage.
    *
-   * <p>The returned value includes a sign prefix and the {@code %} suffix.
-   * If the given value is {@code null}, the result will be {@code "%"}.If the given value is
-   * {@code null}, an empty string is returned.</p>
+   * <p>Positive values and zero are prefixed with {@code +}. Negative values keep
+   * their minus sign.</p>
+   *
+   * <p>If the given value is {@code null}, an empty string is returned.</p>
    *
    * @param value the percentage value to format
-   * @return the formatted percentage value
+   * @return the formatted signed percentage value, or an empty string if the value is {@code null}
    */
-  public static String formatPercent(BigDecimal value) {
+  public static String formatSignedPercent(BigDecimal value) {
     if (value == null) {
       return "";
     }
     return formatSigned(value) + "%";
   }
+
 }
