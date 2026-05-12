@@ -7,6 +7,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Controller for the market screen.
@@ -16,6 +17,7 @@ import java.util.List;
 public class MarketController {
   private final Exchange exchange;
   private final Player player;
+  private final Consumer<Stock> onStockSelectedCallback;
 
   /**
    * Creates a new MarketController.
@@ -23,9 +25,10 @@ public class MarketController {
    * @param exchange the exchange to retrieve stocks from
    * @param player the current player
    */
-  public MarketController(Exchange exchange, Player player) {
+  public MarketController(Exchange exchange, Player player, Consumer<Stock> onStockSelectedCallback) {
     this.exchange = exchange;
     this.player = player;
+    this.onStockSelectedCallback = onStockSelectedCallback;
   }
 
   /**
@@ -55,6 +58,6 @@ public class MarketController {
    * @param stock the selected {@link Stock}
    */
   public void onStockSelected(Stock stock) {
-    // naviger til stock detail
+    onStockSelectedCallback.accept(stock);
   }
 }

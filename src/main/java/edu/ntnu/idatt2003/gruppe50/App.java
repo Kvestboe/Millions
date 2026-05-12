@@ -49,9 +49,14 @@ public class App extends Application {
     GameSession session = sessions.findById(gameId).orElseThrow(GameSessionNotFoundException::new);
     GameController gameController = new GameController(session.getGameId(), buyShare, sellShare, advanceWeek);
     PortfolioQueryController portfolioQueryController = new PortfolioQueryController(gameId, getPortfolio);
-    MarketController marketController = new MarketController(session.getExchange(), session.getPlayer());
-
-    GameViewCoordinator gameViewCoordinator = new GameViewCoordinator(gameController, portfolioQueryController, marketController);
+    GameViewCoordinator gameViewCoordinator = new GameViewCoordinator(
+        gameController,
+        portfolioQueryController,
+        buyShare,
+        gameId,
+        session.getExchange(),
+        session.getPlayer()
+    );
     stage.setScene(gameViewCoordinator.getScene());
   }
 }
