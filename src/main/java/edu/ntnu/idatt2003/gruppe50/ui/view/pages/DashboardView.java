@@ -86,6 +86,7 @@ public class DashboardView extends BorderPane implements Page {
 
     btn.setMaxWidth(Double.MAX_VALUE);
     btn.setMaxHeight(Double.MAX_VALUE);
+    btn.setOnAction(e -> gameController.advanceWeek());
     return btn;
   }
 }
