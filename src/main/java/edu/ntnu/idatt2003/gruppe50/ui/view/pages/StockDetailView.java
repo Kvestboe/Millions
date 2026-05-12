@@ -1,9 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import com.sun.glass.ui.HeaderButtonOverlay;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
-import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
@@ -12,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
 import java.math.BigDecimal;
 import java.util.List;
 

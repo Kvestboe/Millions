@@ -48,7 +48,7 @@ public class App extends Application {
   public void start(Stage stage) throws Exception {
     this.stage = stage;
 
-    boolean bypassMenu = Boolean.parseBoolean(System.getProperty("skipMenu", "true"));
+    boolean bypassMenu = Boolean.parseBoolean(System.getProperty("skipMenu", "false"));
 
     if (bypassMenu) {
       var stocks = CSVFileHandler.readLines(

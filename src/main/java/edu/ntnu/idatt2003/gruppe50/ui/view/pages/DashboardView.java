@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;

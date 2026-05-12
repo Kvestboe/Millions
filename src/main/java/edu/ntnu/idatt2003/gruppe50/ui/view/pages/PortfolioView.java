@@ -9,7 +9,6 @@ import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.function.Function;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -95,10 +94,6 @@ public class PortfolioView extends VBox implements Page, Observer {
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
 
-    // ACTUAL LOGIC
-    // LineChartView netWorthChart = new LineChartView("Week", "Net Worth");
-    // netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
-    // return netWorthChart.getChart();
   }
 
 
