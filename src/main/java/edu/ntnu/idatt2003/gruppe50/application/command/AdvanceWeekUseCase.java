@@ -5,10 +5,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.UUID;
 
-/**
- * Advances game session by one week and saves the change.
- */
+/** Advances game session by one week and saves the change. */
 public final class AdvanceWeekUseCase {
+
   private final GameSessionRepository repository;
 
   /**
@@ -27,8 +26,8 @@ public final class AdvanceWeekUseCase {
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public void execute(Request request) {
-    GameSession session = repository.findById(request.gameId)
-        .orElseThrow(GameSessionNotFoundException::new);
+    GameSession session =
+        repository.findById(request.gameId).orElseThrow(GameSessionNotFoundException::new);
 
     session.advanceWeek();
     repository.save(session);

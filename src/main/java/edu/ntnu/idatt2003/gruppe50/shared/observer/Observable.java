@@ -6,9 +6,11 @@ import java.util.List;
 
 /**
  * Abstract base class for observable objects in the Observer pattern.
- * Maintains a list of observers and notifies them of state changes.
+ *
+ * <p>Maintains a list of observers and notifies them of state changes.
  */
 public abstract class Observable {
+
   private final List<Observer> observers = new ArrayList<>();
 
   /**
@@ -22,7 +24,7 @@ public abstract class Observable {
   }
 
   /**
-   * Removes an observer from the list
+   * Removes an observer from the list.
    *
    * @param o the observer to remove
    */
@@ -31,9 +33,7 @@ public abstract class Observable {
     observers.remove(o);
   }
 
-  /**
-   * Updates all the observers.
-   */
+  /** Updates all the observers. */
   public void notifyObservers() {
     for (Observer o : observers) {
       o.update();

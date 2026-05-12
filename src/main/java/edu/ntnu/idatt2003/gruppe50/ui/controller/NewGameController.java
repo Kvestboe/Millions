@@ -20,6 +20,7 @@ import java.util.function.Consumer;
  * game objects ({@link Player} and {@link Exchange}).
  */
 public final class NewGameController {
+
   private final StartGameSessionUseCase startGameSession;
   private final Consumer<UUID> onGameStarted;
 
@@ -30,12 +31,13 @@ public final class NewGameController {
 
   /**
    * Initializes and starts a new game with the provided input.
-   * Parses the capital string, validates all input, loads stocks
-   * from file, and creates the player and exchange.
+   *
+   * <p>Parses the capital string, validate all input,
+   * loads stocks from file, and creates the player and exchange.
    *
    * @param playerName the name of the player
-   * @param capital    the starting capital as a string, e.g. "10000" or "10000kr"
-   * @param stockFile  the CSV file containing stock data
+   * @param capital the starting capital as a string, e.g. "10000" or "10000kr"
+   * @param stockFile the CSV file containing stock data
    * @throws IllegalArgumentException if any input is invalid
    */
   public void onStartGame(String playerName, String capital, File stockFile) {

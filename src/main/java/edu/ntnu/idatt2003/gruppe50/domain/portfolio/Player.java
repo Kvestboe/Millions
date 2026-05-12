@@ -7,23 +7,23 @@ import java.math.BigDecimal;
 
 /**
  * Represents a player in the game, holding information about the player's progress.
- * <p>
- * The Player holds a given amount of money and has a
+ *
+ * <p>The Player holds a given amount of money and has a
  * portfolio {@link Portfolio} of shares with a record
  * of transactions {@link TransactionArchive} of transactions.
- * </p>
  */
 public class Player {
+
   private final String name;
   private final BigDecimal startingMoney;
-  private BigDecimal money;
   private final Portfolio portfolio;
   private final TransactionArchive transactionArchive;
+  private BigDecimal money;
 
   /**
    * Creates a new {@code Player} with the given name and starting money of given amount.
    *
-   * @param name          The player's name
+   * @param name The player's name
    * @param startingMoney The amount of money the player starts with
    * @throws IllegalArgumentException If any argument is null or invalid
    */
@@ -98,10 +98,9 @@ public class Player {
 
   /**
    * Calculates the players total amount of money.
-   * <p>
-   * The total amount of money is the money they have on their account
+   *
+   * <p>The total amount of money is the money they have on their account
    * as well as the money would theoretically have if they sold all stocks.
-   * </p>
    *
    * @return the players net worth as {@link BigDecimal}
    */
@@ -111,10 +110,9 @@ public class Player {
 
   /**
    * Returns the players status.
-   * <p>
-   * Calculates the players status based on their net worth
+   *
+   * <p>Calculates the players status based on their net worth
    * and for how many weeks they have played.
-   * </p>
    *
    * @param exchange the exchange the user is trading their stocks in
    * @return the players status title as a string

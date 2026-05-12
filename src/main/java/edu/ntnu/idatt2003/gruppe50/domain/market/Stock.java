@@ -11,6 +11,7 @@ import java.util.List;
  * A stock has a symbol, company and a history of sale prices.
  */
 public class Stock {
+
   private final String symbol;
   private final String company;
   private final List<BigDecimal> prices;
@@ -18,8 +19,8 @@ public class Stock {
   /**
    * Creates a new {@code Stock} with an initial sales price.
    *
-   * @param symbol     the stock symbol (e.g. AAPL)
-   * @param company    the company name (e.g. Apple)
+   * @param symbol the stock symbol (e.g. AAPL)
+   * @param company the company name (e.g. Apple)
    * @param salesPrice the initial sales price
    * @throws IllegalArgumentException if any argument is invalid
    */
@@ -87,9 +88,7 @@ public class Stock {
    * @return the highest value as a {@link BigDecimal}
    */
   public BigDecimal getHighestPrice() {
-    return prices.stream()
-        .max(BigDecimal::compareTo)
-        .orElseThrow();
+    return prices.stream().max(BigDecimal::compareTo).orElseThrow();
   }
 
   /**
@@ -105,10 +104,8 @@ public class Stock {
 
   /**
    * Calculates the price change.
-   * <p>
-   * The price change is the difference between the
-   * latest price minus the previous one.
-   * </p>
+   *
+   * <p>The price change is the difference between the latest price minus the previous one.
    *
    * @return the price change as {@link BigDecimal}
    */
@@ -126,7 +123,6 @@ public class Stock {
    *
    * @return the percentage price change as a {@link BigDecimal} with two decimal places
    */
-
   public BigDecimal getLatestPriceChangePercent() {
     if (prices.size() < 2) {
       return BigDecimal.ZERO;
@@ -136,5 +132,4 @@ public class Stock {
     BigDecimal percent = change.divide(previousPrice, 2, RoundingMode.HALF_UP);
     return percent.multiply(new BigDecimal("100"));
   }
-
 }

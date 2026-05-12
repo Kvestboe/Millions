@@ -31,8 +31,6 @@ public class PortfolioView extends VBox implements Page, Observer {
   private final TableView<ShareData> table = new TableView<>();
   private final AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
 
-
-
   public PortfolioView(PortfolioQueryController queryController, GameController gameController) {
     this.queryController = queryController;
 
@@ -55,7 +53,6 @@ public class PortfolioView extends VBox implements Page, Observer {
     queryController.addObserver(this);
     refresh();
   }
-
 
   @Override
   public Parent getView() {
@@ -90,9 +87,7 @@ public class PortfolioView extends VBox implements Page, Observer {
     netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
-
   }
-
 
   private void createHoldingsTable() {
     table.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));

@@ -1,20 +1,19 @@
 package edu.ntnu.idatt2003.gruppe50.domain.market;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Sale;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ExchangeTest {
   private Stock aapl, kog, eqnr;
@@ -32,22 +31,29 @@ public class ExchangeTest {
 
   @Test
   void constructor_nullName_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> new Exchange(null, List.of(aapl), new TransactionFactory()));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> new Exchange(null, List.of(aapl), new TransactionFactory()));
   }
 
   @Test
   void constructor_blankName_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> new Exchange("", List.of(aapl), new TransactionFactory()));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> new Exchange("", List.of(aapl), new TransactionFactory()));
   }
 
   @Test
   void constructor_nullStocks_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> new Exchange("Test", null, new TransactionFactory()));
+    assertThrows(
+        IllegalArgumentException.class, () -> new Exchange("Test", null, new TransactionFactory()));
   }
 
   @Test
   void constructor_emptyList_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> new Exchange("Test", new ArrayList<>(), new TransactionFactory()));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> new Exchange("Test", new ArrayList<>(), new TransactionFactory()));
   }
 
   @Test
@@ -92,7 +98,8 @@ public class ExchangeTest {
 
   @Test
   void getStock_nullSymbol_throwsHasStockException() {
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> exchange.getStock(null));
+    Exception exception =
+        assertThrows(IllegalArgumentException.class, () -> exchange.getStock(null));
     assertEquals("Symbol cannot be null or blank", exception.getMessage());
   }
 
@@ -113,17 +120,20 @@ public class ExchangeTest {
 
   @Test
   void buy_nonExistingSymbol_throwsException() {
-    assertThrows(NoSuchElementException.class, () -> exchange.buy("MSFT", new BigDecimal("1"), player));
+    assertThrows(
+        NoSuchElementException.class, () -> exchange.buy("MSFT", new BigDecimal("1"), player));
   }
 
   @Test
   void buy_negativeQuantity_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> exchange.buy("AAPL", new BigDecimal("-5"), player));
+    assertThrows(
+        IllegalArgumentException.class, () -> exchange.buy("AAPL", new BigDecimal("-5"), player));
   }
 
   @Test
   void buy_nullPlayer_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> exchange.buy("AAPL", new BigDecimal("1"), null));
+    assertThrows(
+        IllegalArgumentException.class, () -> exchange.buy("AAPL", new BigDecimal("1"), null));
   }
 
   @Test
@@ -152,7 +162,8 @@ public class ExchangeTest {
   @Test
   void sell_validSale_returnsTransaction() {
     exchange.buy("AAPL", bd(1), player);
-    Transaction t = exchange.sell(player.getPortfolio().getShares("AAPL").getFirst().getShareId(), player);
+    Transaction t =
+        exchange.sell(player.getPortfolio().getShares("AAPL").getFirst().getShareId(), player);
     assertNotNull(t);
     assertInstanceOf(Sale.class, t);
   }
@@ -246,4 +257,3 @@ public class ExchangeTest {
     return BigDecimal.valueOf(num);
   }
 }
-

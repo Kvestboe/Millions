@@ -8,13 +8,11 @@ import java.util.Collection;
  * Utility class providing static validation methods for common input checks.
  *
  * <p>All methods throw {@link IllegalArgumentException} if validation fails,
- * with a descriptive message identifying the invalid field by name.</p>
+ * with a descriptive message identifying the invalid field by name.
  */
 public class Validate {
 
-  /**
-   * Private constructor to prevent instantiation of this utility class.
-   */
+  /** Private constructor to prevent instantiation of this utility class. */
   private Validate() {
     throw new UnsupportedOperationException("Utility class");
   }
@@ -23,7 +21,7 @@ public class Validate {
    * Validates that the given object is not {@code null}.
    *
    * @param value the object to check
-   * @param name  the name of the field, used in the exception message
+   * @param name the name of the field, used in the exception message
    * @throws IllegalArgumentException if {@code value} is {@code null}
    */
   public static void notNull(Object value, String name) {
@@ -36,7 +34,7 @@ public class Validate {
    * Validates that the given string is neither {@code null} nor blank.
    *
    * @param value the string to check
-   * @param name  the name of the field, used in the exception message
+   * @param name the name of the field, used in the exception message
    * @throws IllegalArgumentException if {@code value} is {@code null} or blank
    */
   public static void notBlank(String value, String name) {
@@ -49,7 +47,7 @@ public class Validate {
    * Validates that the given {@link BigDecimal} is not {@code null} and strictly positive.
    *
    * @param value the value to check
-   * @param name  the name of the field, used in the exception message
+   * @param name the name of the field, used in the exception message
    * @throws IllegalArgumentException if {@code value} is {@code null} or less than or equal to zero
    */
   public static void positive(BigDecimal value, String name) {
@@ -62,7 +60,7 @@ public class Validate {
    * Validates that the given {@code int} is strictly positive.
    *
    * @param value the value to check
-   * @param name  the name of the field, used in the exception message
+   * @param name the name of the field, used in the exception message
    * @throws IllegalArgumentException if {@code value} is less than or equal to zero
    */
   public static void positiveInt(int value, String name) {
@@ -75,7 +73,7 @@ public class Validate {
    * Validates that the given {@link Collection} is not {@code null} and not empty.
    *
    * @param value the collection to check
-   * @param name  the name of the field, used in the exception message
+   * @param name the name of the field, used in the exception message
    * @throws IllegalArgumentException if {@code value} is {@code null} or empty
    */
   public static void notEmpty(Collection<?> value, String name) {

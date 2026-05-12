@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.shared.observer;
 
-/**
- * Contract for all observer objects
- */
+/** Contract for all observer objects. */
 public interface Observer {
 
   /**

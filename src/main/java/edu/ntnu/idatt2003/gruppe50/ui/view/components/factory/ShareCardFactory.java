@@ -6,6 +6,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class ShareCardFactory {
+
   public static VBox createShareCard(Share share) {
     // Create share labels
     Label stockCompanyLabel = new Label(share.getStock().getCompany());
@@ -23,6 +24,5 @@ public class ShareCardFactory {
 
     // Create the share card
     return new VBox(stockCompanyLabel, informationContainer);
-
   }
 }

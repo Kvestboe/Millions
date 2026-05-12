@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.application;
 
+import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
@@ -7,13 +10,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
-
-import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class StartGameSessionUseCaseTest {
 
@@ -49,22 +48,22 @@ public class StartGameSessionUseCaseTest {
   void execute_nullPlayer_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> startSession.execute(new StartGameSessionUseCase.Request(null, exchange))
-    );
+        () -> startSession.execute(new StartGameSessionUseCase.Request(null, exchange)));
   }
 
   @Test
   void execute_nullExchange_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> startSession.execute(new StartGameSessionUseCase.Request(player, null))
-    );
+        () -> startSession.execute(new StartGameSessionUseCase.Request(player, null)));
   }
 
   @Test
   void execute_twoRequests_returnsDifferentGameIds() {
-    UUID firstId = startSession.execute(new StartGameSessionUseCase.Request(player, exchange)).gameId();
-    UUID secondId = startSession.execute(new StartGameSessionUseCase.Request(player, exchange)).gameId();
+    UUID firstId =
+        startSession.execute(new StartGameSessionUseCase.Request(player, exchange)).gameId();
+    UUID secondId =
+        startSession.execute(new StartGameSessionUseCase.Request(player, exchange)).gameId();
 
     assertNotEquals(firstId, secondId);
   }

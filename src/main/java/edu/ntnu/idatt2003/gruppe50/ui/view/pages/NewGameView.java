@@ -23,19 +23,20 @@ import javafx.stage.Stage;
  * Provides input fields for player name, starting capital, and stock data file.
  */
 public class NewGameView {
+
   private final Stage stage;
+  private final NewGameController controller;
+  private final Label errorLabel = new Label();
+  private final Runnable onBack;
   private File selectedFile;
   private TextField nameField;
   private TextField capitalField;
   private Button startBtn;
-  private final NewGameController controller;
-  private final Label errorLabel = new Label();
-  private final Runnable onBack;
 
   /**
    * Constructs a new NewGameView.
    *
-   * @param stage      the primary stage used for displaying file dialogs
+   * @param stage the primary stage used for displaying file dialogs
    * @param controller the controller handling game startup logic
    */
   public NewGameView(Stage stage, NewGameController controller, Runnable onBack) {
@@ -55,16 +56,14 @@ public class NewGameView {
     root.getStyleClass().add("root-bg");
 
     Button backBtn = new Button("Back");
-    backBtn.setOnAction(e -> onBack.run());
+    backBtn.setOnAction(_ -> onBack.run());
 
     StackPane center = new StackPane(createCardBox());
     root.setTop(backBtn);
     root.setCenter(center);
 
     Scene scene = new Scene(root, 1280, 900);
-    scene.getStylesheets().add(
-        getClass().getResource("/css/styles.css").toExternalForm()
-    );
+    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }
 
@@ -119,9 +118,7 @@ public class NewGameView {
     TextField textField = new TextField();
     textField.setPromptText(placeholder);
     textField.getStyleClass().add("input-field");
-    textField.textProperty().addListener((observable, oldValue, newValue) -> {
-      updateStartButton();
-    });
+    textField.textProperty().addListener((_, _, _) -> updateStartButton());
     return textField;
   }
 
@@ -163,33 +160,29 @@ public class NewGameView {
     Button btn = new Button("Start Game");
     btn.getStyleClass().add("button-disabled");
     btn.setMaxWidth(Double.MAX_VALUE);
-    btn.setOnAction(e -> {
-      String error = validate();
-      if (error != null) {
-        showError(error);
-      } else {
-        errorLabel.setVisible(false);
-        controller.onStartGame(
-            nameField.getText(),
-            capitalField.getText(),
-            selectedFile
-        );
-      }
-    });
+    btn.setOnAction(_ -> {
+          String error = validate();
+          if (error != null) {
+            showError(error);
+          } else {
+            errorLabel.setVisible(false);
+            controller.onStartGame(nameField.getText(), capitalField.getText(), selectedFile);
+          }
+        });
     return btn;
   }
 
   private Button createAddButton(Label fileNameLabel) {
     Button addButton = new Button("+");
     addButton.getStyleClass().add("add-button");
-    addButton.setOnAction(e -> {
-      File file = handleFilePicker();
-      if (file != null) {
-        selectedFile = file;
-        fileNameLabel.setText(file.getName());
-        updateStartButton();
-      }
-    });
+    addButton.setOnAction(_ -> {
+          File file = handleFilePicker();
+          if (file != null) {
+            selectedFile = file;
+            fileNameLabel.setText(file.getName());
+            updateStartButton();
+          }
+        });
     return addButton;
   }
 
@@ -206,7 +199,8 @@ public class NewGameView {
       return;
     }
 
-    boolean allFilled = !nameField.getText().isBlank()
+    boolean allFilled =
+        !nameField.getText().isBlank()
         && isValidCapital(capitalField.getText())
         && selectedFile != null;
 
@@ -257,8 +251,8 @@ public class NewGameView {
       }
       File tempFile = File.createTempFile("stocks", ".csv");
       tempFile.deleteOnExit();
-      java.nio.file.Files.copy(inputStream, tempFile.toPath(),
-          java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+      java.nio.file.Files
+          .copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
       selectedFile = tempFile;
     } catch (Exception e) {
       selectedFile = null;

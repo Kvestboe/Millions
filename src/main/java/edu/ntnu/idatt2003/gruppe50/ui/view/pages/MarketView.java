@@ -17,7 +17,8 @@ import javafx.scene.layout.VBox;
 
 /**
  * View for the market screen, displaying all stocks listed on the exchange.
- * Provides a searchable table where the user can browse stocks and navigate
+ *
+ * <p>Provides a searchable table where the user can browse stocks and navigate
  * to individual stock detail pages.
  */
 public class MarketView implements Page {
@@ -50,8 +51,8 @@ public class MarketView implements Page {
   }
 
   /**
-   * Builds and returns the root layout of the market screen.
-   * Adds title, search field and stock table to a {@link VBox}.
+   * Builds and returns the root layout of the market screen. Adds title, search field and stock
+   * table to a {@link VBox}.
    *
    * @return a configured {@link VBox} containing all UI components
    */
@@ -66,7 +67,8 @@ public class MarketView implements Page {
 
   /**
    * Creates and configures the search field.
-   * Filters the stock table in real time based on symbol or company name.
+   *
+   * <p>Filters the stock table in real time based on symbol or company name.
    *
    * @return a configured {@link TextField}
    */
@@ -74,7 +76,7 @@ public class MarketView implements Page {
     TextField field = new TextField();
     field.setPromptText("Search by symbol or company...");
 
-    field.textProperty().addListener((obs, oldVal, newVal) -> {
+    field.textProperty().addListener((_, _, newVal) -> {
       if (newVal == null || newVal.isBlank()) {
         table.getItems().setAll(controller.getStocks());
       } else {
@@ -107,7 +109,7 @@ public class MarketView implements Page {
     table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     table.setMaxWidth(Double.MAX_VALUE);
     table.setMaxHeight(Double.MAX_VALUE);
-    table.setOnMouseClicked(event -> {
+    table.setOnMouseClicked(_ -> {
       Stock selected = table.getSelectionModel().getSelectedItem();
       if (selected != null) {
         controller.onStockSelected(selected);

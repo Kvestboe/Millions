@@ -1,10 +1,9 @@
 package edu.ntnu.idatt2003.gruppe50.shared;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class ParseTest {
 
@@ -30,28 +29,23 @@ class ParseTest {
 
   @Test
   void throwsForBlankInput() {
-    assertThrows(IllegalArgumentException.class,
-        () -> Parse.parseBigDecimal(""));
+    assertThrows(IllegalArgumentException.class, () -> Parse.parseBigDecimal(""));
   }
 
   @Test
   void throwsForInputWithNoDigits() {
-    assertThrows(IllegalArgumentException.class,
-        () -> Parse.parseBigDecimal("abc"));
+    assertThrows(IllegalArgumentException.class, () -> Parse.parseBigDecimal("abc"));
   }
 
   @Test
   void throwsCorrectMessageForNoDigits() {
-    IllegalArgumentException ex = assertThrows(
-        IllegalArgumentException.class,
-        () -> Parse.parseBigDecimal("abc")
-    );
+    IllegalArgumentException ex =
+        assertThrows(IllegalArgumentException.class, () -> Parse.parseBigDecimal("abc"));
     assertEquals("Starting capital must be a valid number", ex.getMessage());
   }
 
   @Test
   void throwsNumberFormatExceptionForMultipleDecimalPoints() {
-    assertThrows(NumberFormatException.class,
-        () -> Parse.parseBigDecimal("1.2.3"));
+    assertThrows(NumberFormatException.class, () -> Parse.parseBigDecimal("1.2.3"));
   }
 }

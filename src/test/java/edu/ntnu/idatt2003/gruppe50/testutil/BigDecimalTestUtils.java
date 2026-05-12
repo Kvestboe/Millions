@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.testutil;
 
-import java.math.BigDecimal;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.math.BigDecimal;
 
 public class BigDecimalTestUtils {
 

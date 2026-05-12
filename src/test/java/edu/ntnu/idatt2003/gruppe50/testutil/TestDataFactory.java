@@ -1,17 +1,15 @@
 package edu.ntnu.idatt2003.gruppe50.testutil;
 
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
+
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
-
 import java.util.List;
 
-import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
-
 public class TestDataFactory {
-
 
   public static Player createDefaultPlayer() {
     return new Player("Test player", bd(10000));
@@ -27,10 +25,7 @@ public class TestDataFactory {
 
   public static Exchange createDefaultExchange() {
     return new Exchange(
-        "Test exchange",
-        List.of(createKOGStock(), createAAPLStock()),
-        new TransactionFactory()
-    );
+        "Test exchange", List.of(createKOGStock(), createAAPLStock()), new TransactionFactory());
   }
 
   public static GameSession createDefaultGameSession() {
