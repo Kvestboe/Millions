@@ -66,7 +66,7 @@ public class GameViewCoordinator {
         this::navigateToStockDetail
     );
 
-    pages.put(PageId.DASHBOARD, new DashboardView());
+    pages.put(PageId.DASHBOARD, new DashboardView(gameController));
     pages.put(PageId.MARKET, new MarketView(marketController));
     pages.put(PageId.PORTFOLIO, new PortfolioView(portfolioQueryController, gameController));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(transactionQueryController));
