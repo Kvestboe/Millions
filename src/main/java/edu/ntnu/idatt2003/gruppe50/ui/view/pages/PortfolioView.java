@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
@@ -22,29 +23,40 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.function.Function;
 
-public class PortfolioView extends VBox implements Page {
+public class PortfolioView extends VBox implements Page, Observer {
+
+  private final PortfolioQueryController queryController;
+  private final Label netWorthLabel = new Label();
+  private final Label portfolioValueLabel = new Label();
+  private final Label playerCashLabel = new Label();
+  private final TableView<ShareData> table = new TableView<>();
+  private final AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
+
+
 
   public PortfolioView(PortfolioQueryController queryController, GameController gameController) {
-    PortfolioData portfolio = queryController.getPortfolio();
+    this.queryController = queryController;
 
-    // ─── Lag komponenter ─────────────────────────────────
     Label title = new Label("Portfolio");
-    VBox cardContainer = createCardContainer(portfolio);
-    AreaChart<Number,Number> chart = createNetWorthChart(portfolio);
     Label holdingsTitle = new Label("My holdings");
-    TableView<ShareData> table = createHoldingsTable(portfolio.shares());
 
-    // ─── Bygg layout ─────────────────────────────────────
+    VBox cardContainer = createCardContainer();      // bruker feltene
+    AreaChart<Number, Number> chart = createNetWorthChart();
+    createHoldingsTable();                     // setter kolonner én gang
+
     HBox topSection = new HBox(16, cardContainer, chart);
     HBox.setHgrow(chart, Priority.ALWAYS);
 
-    // ─── Style og CSS ────────────────────────────────────
     title.getStyleClass().add("page-title");
     holdingsTitle.getStyleClass().add("section-title");
     this.getStyleClass().add("portfolio-view");
     this.getChildren().addAll(title, topSection, holdingsTitle, table);
     this.getStylesheets().add(getClass().getResource("/css/portfolio.css").toExternalForm());
+
+    queryController.addObserver(this);
+    refresh();
   }
+
 
   @Override
   public Parent getView() {
@@ -56,16 +68,10 @@ public class PortfolioView extends VBox implements Page {
     return "Portfolio";
   }
 
-  private VBox createCardContainer(PortfolioData portfolio) {
-    // Make label for the different player values
-    Label netWorthLabel = new Label(portfolio.netWorth().toString());
-    Label portfolioValueLabel = new Label(portfolio.portfolioValue().toString());
-    Label playerCashLabel = new Label(portfolio.cash().toString());
-
-    // Make cards for the player information
-    VBox netWorthCard = new VBox(new Label("Net worth:"), netWorthLabel);
+  private VBox createCardContainer() {
+    VBox netWorthCard       = new VBox(new Label("Net worth:"),       netWorthLabel);
     VBox portfolioValueCard = new VBox(new Label("Portfolio value:"), portfolioValueLabel);
-    VBox cashBalanceCard = new VBox(new Label("Cash balance:"), playerCashLabel);
+    VBox cashBalanceCard    = new VBox(new Label("Cash balance:"),    playerCashLabel);
 
     VBox.setVgrow(portfolioValueCard, Priority.ALWAYS);
     VBox.setVgrow(cashBalanceCard, Priority.ALWAYS);
@@ -83,40 +89,30 @@ public class PortfolioView extends VBox implements Page {
     container.setMinWidth(200);
     container.setPrefWidth(200);
 
-    return container;
+    return new VBox(portfolioValueCard, cashBalanceCard, netWorthCard);
   }
 
 
-  private AreaChart<Number,Number> createNetWorthChart(PortfolioData portfolio) {
-    // Add temporary net worth line chart
-    AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
-    List<BigDecimal> history = List.of(BigDecimal.ONE, BigDecimal.TWO, BigDecimal.TEN);
-    netWorthChart.display("Net Worth Chart", history);
+  private AreaChart<Number, Number> createNetWorthChart() {
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
-
-    //ACTUAL LOGIC
-//    LineChartView netWorthChart = new LineChartView("Week", "Net Worth");
-//    netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
-//    return netWorthChart.getChart();
   }
 
-  private TableView<ShareData> createHoldingsTable(List<ShareData> shares) {
-    TableView<ShareData> table = new TableView<>();
+
+  private void createHoldingsTable() {
     table.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
     table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     table.getColumns().addAll(
-        createColumn("Symbol", ShareData::symbol),
-        createColumn("Company", ShareData::stock),
-        createColumn("Quantity", shareData -> shareData.quantity().toString()),
-        createColumn("Purchase price", shareData -> shareData.purchasePrice().toString()),
-        createColumn("Current value", shareData -> shareData.currentShareValue().toString()),
+        createColumn("Symbol",         ShareData::symbol),
+        createColumn("Company",        ShareData::stock),
+        createColumn("Quantity",       s -> s.quantity().toString()),
+        createColumn("Purchase price", s -> s.purchasePrice().toString()),
+        createColumn("Current value",  s -> s.currentShareValue().toString()),
         createGainColumn(),
         createPercentColumn()
     );
-    table.getItems().addAll(shares);
-    return table;
   }
+
 
   private TableColumn<ShareData, String> createColumn(String title, Function<ShareData, String> extractor) {
     TableColumn<ShareData, String> col = new TableColumn<>(title);
@@ -186,4 +182,20 @@ public class PortfolioView extends VBox implements Page {
         ? "-fx-text-fill: #4CAF50;"
         : "-fx-text-fill: #E24B4A;";
   }
+
+  @Override
+  public void update() {
+    refresh();
+  }
+
+  private void refresh() {
+    PortfolioData p = queryController.getPortfolio();
+    netWorthLabel.setText(p.netWorth().toString());
+    portfolioValueLabel.setText(p.portfolioValue().toString());
+    playerCashLabel.setText(p.cash().toString());
+    table.getItems().setAll(p.shares());
+    netWorthChart.display("Net Worth", p.netWorthHistory());
+  }
+
+
 }

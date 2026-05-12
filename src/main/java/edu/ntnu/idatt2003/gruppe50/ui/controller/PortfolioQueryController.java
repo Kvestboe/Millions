@@ -1,19 +1,26 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observable;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 
 import java.util.List;
 import java.util.UUID;
 
-public final class PortfolioQueryController {
+public final class PortfolioQueryController extends Observable implements Observer {
   private final UUID gameId;
   private final GetPortfolioUseCase getPortfolio;
 
   public PortfolioQueryController(UUID gameId, GetPortfolioUseCase getPortfolio) {
     this.gameId = gameId;
     this.getPortfolio = getPortfolio;
+  }
+
+  @Override
+  public void update() {
+    notifyObservers();
   }
 
   public PortfolioData getPortfolio() {
