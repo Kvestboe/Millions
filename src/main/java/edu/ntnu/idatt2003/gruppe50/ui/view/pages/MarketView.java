@@ -59,9 +59,6 @@ public class MarketView implements Page {
     title.getStyleClass().add("market-title");
     VBox box = new VBox(10, title, searchField, table);
     VBox.setVgrow(table, Priority.ALWAYS);
-    box.getStylesheets().add(
-        getClass().getResource("/css/market.css").toExternalForm()
-    );
     box.getStyleClass().add("market-root");
     return box;
   }
