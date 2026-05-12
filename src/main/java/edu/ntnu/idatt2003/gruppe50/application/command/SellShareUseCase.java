@@ -1,13 +1,14 @@
-package edu.ntnu.idatt2003.gruppe50.application;
+package edu.ntnu.idatt2003.gruppe50.application.command;
 
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.UUID;
 
 /**
- * Advances game session by one week and saves the change.
+ * Sells an owned share inside a game session and saves updated state.
  */
-public final class AdvanceWeekUseCase {
+public final class SellShareUseCase {
   private final GameSessionRepository repository;
 
   /**
@@ -15,28 +16,29 @@ public final class AdvanceWeekUseCase {
    *
    * @param repository repository used to load and save game sessions
    */
-  public AdvanceWeekUseCase(GameSessionRepository repository) {
+  public SellShareUseCase(GameSessionRepository repository) {
     this.repository = repository;
   }
 
   /**
-   * Executes the use case for a given game id.
+   * Executes a sell operation for an existing game session.
    *
-   * @param request input request containing game id
+   * @param request input with game id and owned share id
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public void execute(Request request) {
-    GameSession session = repository.findById(request.gameId)
+    GameSession session = repository.findById(request.gameId())
         .orElseThrow(GameSessionNotFoundException::new);
 
-    session.advanceWeek();
+    session.sell(request.shareId());
     repository.save(session);
   }
 
   /**
-   * Input for advancing a session week.
+   * Input for selling one share in a session.
    *
    * @param gameId id of the game session
+   * @param shareId id of the owned share to sell
    */
-  public record Request(UUID gameId) {}
+  public record Request(UUID gameId, UUID shareId) {}
 }

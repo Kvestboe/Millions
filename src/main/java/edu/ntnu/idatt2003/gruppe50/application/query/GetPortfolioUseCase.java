@@ -1,5 +1,6 @@
-package edu.ntnu.idatt2003.gruppe50.application;
+package edu.ntnu.idatt2003.gruppe50.application.query;
 
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
@@ -42,18 +43,12 @@ public final class GetPortfolioUseCase {
     BigDecimal netWorth = player.getNetWorth(); // the value of all player assets
 
     List<ShareDto> shares = portfolio.getShares().stream()
-        .map(share -> new ShareDto(
-            share.getShareId(),
-            share.getStock().getSymbol(),
-            share.getStock().getCompany(),
-            share.getQuantity(),
-            share.getPurchasePrice(),
-            share.getStock().getSalesPrice(),
-            share.getStock().getSalesPrice().multiply(share.getQuantity())
-        ))
+        .map(DtoMapper::createShareDto)
         .toList();
 
-    return new Response(cash, portfolioValue, netWorth, shares);
+    List<BigDecimal> netWorthHistory = session.getNetWorthHistory();
+
+    return new Response(cash, portfolioValue, netWorth, shares, netWorthHistory);
   }
 
   /**
@@ -75,28 +70,8 @@ public final class GetPortfolioUseCase {
       BigDecimal cash,
       BigDecimal portfolioValue,
       BigDecimal netWorth,
-      List<ShareDto> shares
-  ) {}
-
-  /**
-   * Share row DTO for portfolio responses.
-   *
-   * @param shareId unique share id
-   * @param symbol stock symbol
-   * @param stock company name
-   * @param quantity owned quantity
-   * @param purchasePrice original unit purchase price
-   * @param currentPrice current unit market price
-   * @param currentShareValue current gross value of this share position
-   */
-  public record ShareDto(
-      UUID shareId,
-      String symbol,
-      String stock,
-      BigDecimal quantity,
-      BigDecimal purchasePrice,
-      BigDecimal currentPrice,
-      BigDecimal currentShareValue
+      List<ShareDto> shares,
+      List<BigDecimal> netWorthHistory
   ) {}
 
 }

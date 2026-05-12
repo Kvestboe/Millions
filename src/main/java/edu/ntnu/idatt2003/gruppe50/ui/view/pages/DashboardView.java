@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 
-import static edu.ntnu.idatt2003.gruppe50.ui.view.components.CardFactory.createCard;
+import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory.createCard;
 
 public class DashboardView extends BorderPane implements Page {
 

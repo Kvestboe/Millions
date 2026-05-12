@@ -54,6 +54,10 @@ public class TransactionArchive {
     return transactions.isEmpty();
   }
 
+  public List<Transaction> getTransactions() {
+    return List.copyOf(transactions);
+  }
+
   /**
    * Returns all transactions that occurred in the specified week.
    *

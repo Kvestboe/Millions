@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.application;
 
+import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
@@ -51,7 +53,7 @@ public class GetPortfolioUseCaseTest {
     assertBigDecimalEquals(bd(9988), response.netWorth());
 
     assertEquals(1, response.shares().size());
-    GetPortfolioUseCase.ShareDto share = response.shares().getFirst();
+    ShareDto share = response.shares().getFirst();
 
     assertNotNull(share.shareId());
     assertEquals("AAPL", share.symbol());

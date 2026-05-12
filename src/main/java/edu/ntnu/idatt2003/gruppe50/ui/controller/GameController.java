@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
-import edu.ntnu.idatt2003.gruppe50.application.AdvanceWeekUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.BuyShareUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.SellShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import java.math.BigDecimal;
 import java.util.UUID;
 

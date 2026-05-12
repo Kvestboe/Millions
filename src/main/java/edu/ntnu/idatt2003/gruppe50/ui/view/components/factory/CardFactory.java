@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.gruppe50.ui.view.components;
+package edu.ntnu.idatt2003.gruppe50.ui.view.components.factory;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -9,6 +9,15 @@ import javafx.scene.layout.VBox;
  *
  */
 public class CardFactory {
+
+
+  public static VBox createCard(Node... content) {
+    VBox card = new VBox();
+    card.getStyleClass().add("card");
+
+    card.getChildren().addAll(content);
+    return card;
+  }
 
   /**
    * Creates a card with a title label.
