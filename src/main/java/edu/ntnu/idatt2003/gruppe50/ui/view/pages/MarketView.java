@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
+import java.math.BigDecimal;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Parent;
@@ -12,8 +13,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
-import java.math.BigDecimal;
 
 /**
  * View for the market screen, displaying all stocks listed on the exchange.
@@ -50,16 +49,6 @@ public class MarketView implements Page {
   }
 
   /**
-   * Returns the title of this page.
-   *
-   * @return "Market"
-   */
-  @Override
-  public String getTitle() {
-    return "Market";
-  }
-
-  /**
    * Builds and returns the root layout of the market screen.
    * Adds title, search field and stock table to a {@link VBox}.
    *
@@ -70,9 +59,6 @@ public class MarketView implements Page {
     title.getStyleClass().add("market-title");
     VBox box = new VBox(10, title, searchField, table);
     VBox.setVgrow(table, Priority.ALWAYS);
-    box.getStylesheets().add(
-        getClass().getResource("/css/market.css").toExternalForm()
-    );
     box.getStyleClass().add("market-root");
     return box;
   }

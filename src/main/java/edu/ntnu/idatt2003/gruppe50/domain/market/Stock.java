@@ -1,12 +1,10 @@
 package edu.ntnu.idatt2003.gruppe50.domain.market;
 
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Represents a stock traded on the market.<br>

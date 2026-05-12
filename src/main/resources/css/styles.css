@@ -1,0 +1,65 @@
+@import "newGame.css";
+@import "market.css";
+@import "portfolio.css";
+
+/*.grid {*/
+/*    -fx-padding: 10;*/
+/*    -fx-vgap: 10;*/
+/*    -fx-hgap: 10;*/
+/*    -fx-background-color: #1C1C1C;*/
+/*}*/
+
+/*.card {*/
+/*    -fx-background-color: #7a54a0;*/
+/*    -fx-border-width: 1px;*/
+/*    -fx-border-color: black;*/
+/*    -fx-border-radius: 10;*/
+/*    -fx-background-radius: 10;*/
+/*}*/
+
+/*.card-title {*/
+/*    -fx-font-size: 16px;*/
+/*    -fx-font-weigh: bold;*/
+/*    -fx-text-fill: white;*/
+/*    -fx-padding: 6px;*/
+/*}*/
+
+.grid {
+    -fx-background-color: #1C1C1C;
+    -fx-padding: 24;
+    -fx-hgap: 16;
+    -fx-vgap: 16;
+}
+
+.card {
+    -fx-background-color: #2A2A2A;
+    -fx-background-radius: 7;
+    -fx-border-color: #000000;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 16;
+}
+
+.card-title {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 12 0;
+    -fx-border-color: transparent transparent #f1f1f1 transparent;
+    -fx-border-width: 1;
+}
+
+.advance-button {
+    -fx-background-color: #00C896;
+    -fx-text-fill: #0D0F14;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 16;
+}
+
+.advance-button:hover {
+    -fx-background-color: #00E6AD;
+    -fx-effect: dropshadow(gaussian, #00C89660, 20, 0.4, 0, 0);
+}

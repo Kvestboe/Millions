@@ -1,10 +1,9 @@
 package edu.ntnu.idatt2003.gruppe50.domain.trade;
 
-import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.TransactionCalculator;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.TransactionCalculator;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 
 /**
  * Represents a financial transaction in the game.
@@ -19,7 +18,8 @@ public abstract class Transaction {
   private final int week;
   private final TransactionCalculator calculator;
   private boolean committed;
-  // A good idea is that the transaction can be shown in the line chart, so that you can see when you bought and sold.
+  // A good idea is that the transaction can be shown in the line chart,
+  // so that you can see when you bought and sold.
 
   /**
    * Creates a new {@code Transaction}.

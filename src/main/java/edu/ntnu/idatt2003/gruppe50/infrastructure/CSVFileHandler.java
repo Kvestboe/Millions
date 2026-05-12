@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.infrastructure;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
@@ -11,6 +10,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility for reading and writing stock CSV files.
+ */
 public class CSVFileHandler {
 
   /**
@@ -65,11 +67,17 @@ public class CSVFileHandler {
    * Code gotten from code-example from lecture material.
    * <a href="https://gitlab.com/atleolso/file-handling/-/blob/master/src/main/java/edu/ntnu/idatt2003/TextFiles.java">...</a>
    * </p>
+   *
+   * @param path   destination path for the CSV file
+   * @param stocks stocks to write
+   * @throws RuntimeException if the file cannot be written
    */
   public static void writeToFile(Path path, List<Stock> stocks) {
     try (Writer writer = Files.newBufferedWriter(path)) {
       for (Stock stock : stocks) {
-        writer.write(stock.getSymbol() + "," + stock.getCompany() + "," + stock.getSalesPrice() + "\n");
+        writer.write(
+            stock.getSymbol() + "," + stock.getCompany() + "," + stock.getSalesPrice() + "\n"
+        );
       }
     } catch (IOException e) {
       throw new RuntimeException("No path found by: " + path, e);

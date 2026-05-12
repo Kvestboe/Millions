@@ -7,6 +7,10 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.function.Function;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Parent;
@@ -18,10 +22,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
-import java.util.function.Function;
 
 public class PortfolioView extends VBox implements Page, Observer {
 
@@ -37,7 +37,10 @@ public class PortfolioView extends VBox implements Page, Observer {
   public PortfolioView(PortfolioQueryController queryController, GameController gameController) {
     this.queryController = queryController;
 
+    // Lag komponenter
     Label title = new Label("Portfolio");
+    VBox cardContainer = createCardContainer(portfolio);
+    AreaChart<Number, Number> chart = createNetWorthChart(portfolio);
     Label holdingsTitle = new Label("My holdings");
 
     VBox cardContainer = createCardContainer();      // bruker feltene
@@ -92,10 +95,17 @@ public class PortfolioView extends VBox implements Page, Observer {
     return new VBox(portfolioValueCard, cashBalanceCard, netWorthCard);
   }
 
-
-  private AreaChart<Number, Number> createNetWorthChart() {
+  private AreaChart<Number, Number> createNetWorthChart(PortfolioData portfolio) {
+    AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
+    netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
+    netWorthChart.appendPoint(1, BigDecimal.TEN);
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
+
+    // ACTUAL LOGIC
+    // LineChartView netWorthChart = new LineChartView("Week", "Net Worth");
+    // netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
+    // return netWorthChart.getChart();
   }
 
 
@@ -113,32 +123,35 @@ public class PortfolioView extends VBox implements Page, Observer {
     );
   }
 
-
-  private TableColumn<ShareData, String> createColumn(String title, Function<ShareData, String> extractor) {
+  private TableColumn<ShareData, String> createColumn(
+      String title,
+      Function<ShareData, String> extractor
+  ) {
     TableColumn<ShareData, String> col = new TableColumn<>(title);
-    col.setCellValueFactory(data -> new SimpleStringProperty(extractor.apply(data.getValue()))
+    col.setCellValueFactory(
+        data -> new SimpleStringProperty(extractor.apply(data.getValue()))
     );
     return col;
   }
 
   private TableColumn<ShareData, BigDecimal> createGainColumn() {
     TableColumn<ShareData, BigDecimal> col = new TableColumn<>("Gain/Loss");
-      col.setCellValueFactory(data ->
-          new SimpleObjectProperty<>(calculateGain(data.getValue())));
-      col.setCellFactory(column -> new TableCell<>() {
-        @Override
-        protected void updateItem(BigDecimal value, boolean empty) {
-          super.updateItem(value, empty);
-          if (empty || value == null) {
-            setText(null);
-            setStyle("");
-          } else {
-            setText((value.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + value + " kr");
-            setStyle(gainStyle(value));
-          }
+    col.setCellValueFactory(data ->
+        new SimpleObjectProperty<>(calculateGain(data.getValue())));
+    col.setCellFactory(column -> new TableCell<>() {
+      @Override
+      protected void updateItem(BigDecimal value, boolean empty) {
+        super.updateItem(value, empty);
+        if (empty || value == null) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText((value.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + value + " kr");
+          setStyle(gainStyle(value));
         }
-      });
-      return col;
+      }
+    });
+    return col;
   }
 
   private TableColumn<ShareData, BigDecimal> createPercentColumn() {
@@ -161,8 +174,8 @@ public class PortfolioView extends VBox implements Page, Observer {
     return col;
   }
 
-//  private TableColumn<ShareData, Void> createActionColumn() {
-//  }
+  // private TableColumn<ShareData, Void> createActionColumn() {
+  // }
 
   private BigDecimal calculateGain(ShareData shareData) {
     return shareData.currentShareValue()

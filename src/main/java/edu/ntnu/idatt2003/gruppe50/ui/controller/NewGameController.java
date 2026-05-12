@@ -1,11 +1,11 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
-import edu.ntnu.idatt2003.gruppe50.application.StartGameSessionUseCase;
-import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
+import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
 import edu.ntnu.idatt2003.gruppe50.shared.Parse;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.io.File;
@@ -24,10 +24,9 @@ public final class NewGameController {
   private final Consumer<UUID> onGameStarted;
 
   public NewGameController(StartGameSessionUseCase startGameSession, Consumer<UUID> onGameStarted) {
-    this.startGameSession= startGameSession;
+    this.startGameSession = startGameSession;
     this.onGameStarted = onGameStarted;
   }
-
 
   /**
    * Initializes and starts a new game with the provided input.
@@ -35,8 +34,8 @@ public final class NewGameController {
    * from file, and creates the player and exchange.
    *
    * @param playerName the name of the player
-   * @param capital the starting capital as a string, e.g. "10000" or "10000kr"
-   * @param stockFile the CSV file containing stock data
+   * @param capital    the starting capital as a string, e.g. "10000" or "10000kr"
+   * @param stockFile  the CSV file containing stock data
    * @throws IllegalArgumentException if any input is invalid
    */
   public void onStartGame(String playerName, String capital, File stockFile) {
@@ -47,9 +46,8 @@ public final class NewGameController {
     Player player = createPlayer(playerName, startingCapital);
     Exchange exchange = createExchange(stocks);
 
-    UUID gameId = startGameSession
-        .execute(new StartGameSessionUseCase.Request(player, exchange))
-        .gameId();
+    UUID gameId =
+        startGameSession.execute(new StartGameSessionUseCase.Request(player, exchange)).gameId();
 
     onGameStarted.accept(gameId);
   }

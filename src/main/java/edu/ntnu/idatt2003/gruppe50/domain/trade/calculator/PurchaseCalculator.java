@@ -2,7 +2,6 @@ package edu.ntnu.idatt2003.gruppe50.domain.trade.calculator;
 
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 import java.math.BigDecimal;
 
 /**
@@ -68,6 +67,5 @@ public class PurchaseCalculator implements TransactionCalculator {
   public BigDecimal calculateTotal() {
     return calculateGross().add(calculateCommission()).add(calculateTax());
   }
-
 
 }

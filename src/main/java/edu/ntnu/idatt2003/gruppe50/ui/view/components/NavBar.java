@@ -1,14 +1,13 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components;
 
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
+import java.util.EnumMap;
+import java.util.Map;
 import javafx.css.PseudoClass;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 public class NavBar extends HBox {
   private static final PseudoClass ACTIVE = PseudoClass.getPseudoClass("active-nav");
@@ -55,7 +54,7 @@ public class NavBar extends HBox {
     Button btn = new Button(pageId.getLabel());
     btn.getStyleClass().add("nav-button");
 
-    btn.setOnAction(e -> {
+    btn.setOnMousePressed(_ -> {
       setActive(pageId);
       listener.onNavSelectedItem(pageId);
     });
