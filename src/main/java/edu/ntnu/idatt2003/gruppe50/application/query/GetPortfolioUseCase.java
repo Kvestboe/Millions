@@ -43,18 +43,12 @@ public final class GetPortfolioUseCase {
     BigDecimal netWorth = player.getNetWorth(); // the value of all player assets
 
     List<ShareDto> shares = portfolio.getShares().stream()
-        .map(share -> new ShareDto(
-            share.getShareId(),
-            share.getStock().getSymbol(),
-            share.getStock().getCompany(),
-            share.getQuantity(),
-            share.getPurchasePrice(),
-            share.getStock().getSalesPrice(),
-            share.getStock().getSalesPrice().multiply(share.getQuantity())
-        ))
+        .map(DtoMapper::createShareDto)
         .toList();
 
-    return new Response(cash, portfolioValue, netWorth, shares);
+    List<BigDecimal> netWorthHistory = session.getNetWorthHistory();
+
+    return new Response(cash, portfolioValue, netWorth, shares, netWorthHistory);
   }
 
   /**
@@ -76,7 +70,8 @@ public final class GetPortfolioUseCase {
       BigDecimal cash,
       BigDecimal portfolioValue,
       BigDecimal netWorth,
-      List<ShareDto> shares
+      List<ShareDto> shares,
+      List<BigDecimal> netWorthHistory
   ) {}
 
 }

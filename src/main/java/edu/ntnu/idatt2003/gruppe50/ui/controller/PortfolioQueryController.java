@@ -26,6 +26,12 @@ public final class PortfolioQueryController {
     List<ShareData> shares = response.shares().stream()
         .map(ShareDataMapper::mapShare).toList();
 
-    return new PortfolioData(response.cash(), response.portfolioValue(), response.netWorth(), shares, List.of());
+    return new PortfolioData(
+        response.cash(),
+        response.portfolioValue(),
+        response.netWorth(),
+        shares,
+        response.netWorthHistory()
+    );
   }
 }

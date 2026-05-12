@@ -5,6 +5,8 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -21,6 +23,7 @@ public final class GameSession {
   private GameSessionState state;
   private final LocalDate runStartedAt;
   private LocalDate lastPlayed;
+  private List<BigDecimal> netWorthHistory;
 
   private GameSession(
       UUID gameId,
@@ -36,6 +39,20 @@ public final class GameSession {
     this.state = state;
     this.runStartedAt = runStartedAt;
     this.lastPlayed = lastPlayed;
+    this.netWorthHistory = new ArrayList<>(List.of(player.getNetWorth()));
+  }
+
+  private GameSession(
+      UUID gameId,
+      Player player,
+      Exchange exchange,
+      GameSessionState state,
+      LocalDate runStartedAt,
+      LocalDate lastPlayed,
+      List<BigDecimal> netWorthHistory
+  ) {
+    this(gameId, player, exchange, state, runStartedAt, lastPlayed);
+    this.netWorthHistory = netWorthHistory;
   }
 
   /**
@@ -78,7 +95,8 @@ public final class GameSession {
       Exchange exchange,
       GameSessionState state,
       LocalDate runStartedAt,
-      LocalDate lastPlayed
+      LocalDate lastPlayed,
+      List<BigDecimal> netWorthHistory
   ) {
     Validate.notNull(gameId, "Game id");
     Validate.notNull(player, "Player");
@@ -86,7 +104,8 @@ public final class GameSession {
     Validate.notNull(state, "Game state");
     Validate.notNull(runStartedAt, "Run started at date");
     Validate.notNull(lastPlayed, "Last played date");
-    return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed);
+    Validate.notNull(netWorthHistory, "Net worth history");
+    return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed, netWorthHistory);
   }
 
   /**
@@ -188,6 +207,10 @@ public final class GameSession {
    */
   public LocalDate getLastPlayed() {
     return lastPlayed;
+  }
+
+  public List<BigDecimal> getNetWorthHistory() {
+    return List.copyOf(netWorthHistory);
   }
 
   private void ensureActive() {

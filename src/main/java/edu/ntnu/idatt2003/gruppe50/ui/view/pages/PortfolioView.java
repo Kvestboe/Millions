@@ -80,10 +80,9 @@ public class PortfolioView extends VBox implements Page {
   }
 
   private AreaChart<Number, Number> createNetWorthChart(PortfolioData portfolio) {
-    // Add temporary net worth line chart
     AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
-    List<BigDecimal> history = List.of(BigDecimal.ONE, BigDecimal.TWO, BigDecimal.TEN);
-    netWorthChart.display("Net Worth Chart", history);
+    netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
+    netWorthChart.appendPoint(1, BigDecimal.TEN);
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
 

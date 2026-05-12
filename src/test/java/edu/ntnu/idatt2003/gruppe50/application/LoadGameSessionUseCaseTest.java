@@ -9,8 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
 import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -70,7 +72,8 @@ public class LoadGameSessionUseCaseTest {
         session.getExchange(),
         GameSessionState.ACTIVE,
         LocalDate.now().minusDays(10),
-        yesterday
+        yesterday,
+        List.of(bd(20))
     );
     repository.save(existingSession);
 

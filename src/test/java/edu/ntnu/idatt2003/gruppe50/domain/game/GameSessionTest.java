@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
@@ -59,7 +60,8 @@ public class GameSessionTest {
         createDefaultExchange(),
         GameSessionState.FINISHED,
         runStartedAt,
-        lastPlayed
+        lastPlayed,
+        List.of(bd(20))
     );
 
     assertEquals(gameId, rehydrated.getGameId());
@@ -78,7 +80,8 @@ public class GameSessionTest {
             createDefaultExchange(),
             GameSessionState.ACTIVE,
             LocalDate.now(),
-            LocalDate.now()
+            LocalDate.now(),
+            List.of(bd(20))
         )
     );
   }
@@ -93,7 +96,8 @@ public class GameSessionTest {
             createDefaultExchange(),
             GameSessionState.ACTIVE,
             LocalDate.now(),
-            null
+            null,
+            List.of(bd(20))
         )
     );
   }
@@ -113,7 +117,8 @@ public class GameSessionTest {
         createDefaultExchange(),
         GameSessionState.ACTIVE,
         LocalDate.now().minusDays(10),
-        LocalDate.now().minusDays(1)
+        LocalDate.now().minusDays(1),
+        List.of(bd(20))
     );
 
     rehydrated.markOpened();
