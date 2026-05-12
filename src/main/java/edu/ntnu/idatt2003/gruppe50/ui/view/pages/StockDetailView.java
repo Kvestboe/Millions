@@ -41,11 +41,6 @@ public class StockDetailView extends VBox implements Page {
     return this;
   }
 
-  @Override
-  public String getTitle() {
-    return "Stock Detail";
-  }
-
   private VBox createHeader() {
     VBox header = new VBox(10);
     HBox nameBox = new HBox(10);

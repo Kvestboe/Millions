@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.application.BuyShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
@@ -21,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 public class GameViewCoordinator {
   private final GameController gameController;
   private final PortfolioQueryController portfolioQueryController;
+  private final TransactionQueryController transactionQueryController;
   private final BuyShareUseCase buyShare;
   private final UUID gameId;
   private final Exchange exchange;
@@ -28,9 +29,10 @@ public class GameViewCoordinator {
   private NavigationManager navManager;
 
   public GameViewCoordinator(GameController gameController,
-                             PortfolioQueryController portfolioQueryController,
+                             PortfolioQueryController portfolioQueryController, TransactionQueryController transactionQueryController,
                              BuyShareUseCase buyShare,
                              UUID gameId, Exchange exchange, Player player) {
+    this.transactionQueryController = transactionQueryController;
     this.exchange = exchange;
     this.player = player;
     this.gameController = gameController;
@@ -64,7 +66,7 @@ public class GameViewCoordinator {
         this::navigateToStockDetail
     );
 
-    pages.put(PageId.DASHBOARD, new DashboardView(dashboardQueryController));
+    pages.put(PageId.DASHBOARD, new DashboardView());
     pages.put(PageId.MARKET, new MarketView(marketController));
     pages.put(PageId.PORTFOLIO, new PortfolioView(portfolioQueryController, gameController));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(transactionQueryController));

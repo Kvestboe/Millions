@@ -9,10 +9,8 @@ import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory
 
 public class DashboardView extends BorderPane implements Page {
 
-  private final DashboardQueryController controller;
+  public DashboardView() {
 
-  public DashboardView(DashboardQueryController controller) {
-    this.controller = controller;
 
 
     GridPane grid = createGrid();

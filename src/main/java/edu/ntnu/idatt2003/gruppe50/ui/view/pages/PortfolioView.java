@@ -39,12 +39,10 @@ public class PortfolioView extends VBox implements Page, Observer {
 
     // Lag komponenter
     Label title = new Label("Portfolio");
-    VBox cardContainer = createCardContainer(portfolio);
-    AreaChart<Number, Number> chart = createNetWorthChart(portfolio);
     Label holdingsTitle = new Label("My holdings");
 
     VBox cardContainer = createCardContainer();      // bruker feltene
-    AreaChart<Number, Number> chart = createNetWorthChart();
+    AreaChart<Number, Number> chart = createNetWorthChart(queryController.getPortfolio());
     createHoldingsTable();                     // setter kolonner én gang
 
     HBox topSection = new HBox(16, cardContainer, chart);
@@ -64,11 +62,6 @@ public class PortfolioView extends VBox implements Page, Observer {
   @Override
   public Parent getView() {
     return this;
-  }
-
-  @Override
-  public String getTitle() {
-    return "Portfolio";
   }
 
   private VBox createCardContainer() {
