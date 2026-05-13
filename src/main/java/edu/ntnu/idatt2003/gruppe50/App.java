@@ -83,15 +83,18 @@ public class App extends Application {
         new PortfolioQueryController(gameId, getPortfolio, session.getExchange());
     TransactionQueryController transactionQueryController =
         new TransactionQueryController(gameId, getTransactions, session.getExchange());
-    GameViewCoordinator gameViewCoordinator =
-        new GameViewCoordinator(
-            gameController,
-            portfolioQueryController,
-            transactionQueryController,
-            buyShare,
-            gameId,
-            session.getExchange(),
-            session.getPlayer());
+    GameViewCoordinator gameViewCoordinator = new GameViewCoordinator(
+        gameController,
+        portfolioQueryController,
+        transactionQueryController,
+        buyShare,
+        sellShare,
+        gameId,
+        session.getExchange(),
+        session.getPlayer(),
+        getPortfolio
+    );
+
 
     stage.setScene(gameViewCoordinator.getScene());
     stage.show();
