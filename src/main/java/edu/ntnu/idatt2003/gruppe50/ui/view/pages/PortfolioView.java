@@ -8,11 +8,8 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnDefinition;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import java.util.List;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Label;
@@ -90,48 +87,17 @@ public class PortfolioView extends VBox implements Page, Observer {
 
   private TableView<ShareData> createHoldingsTable() {
     TableView<ShareData> holdingsTable = createTable(List.of(
-        new ColumnDefinition<>("Symbol", s-> new ReadOnlyStringWrapper(s.symbol())),
-        new ColumnDefinition<>("Company", s-> new ReadOnlyStringWrapper(s.stock())),
-        new ColumnDefinition<>("Quantity", s -> new ReadOnlyStringWrapper(MoneyFormat.format(s.quantity()))),
-        new ColumnDefinition<>("Purchase price", s -> new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(s.purchasePrice()))),
-        new ColumnDefinition<>("Current value", s -> new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(s.currentShareValue()))),
+        ColumnPresets.text("Symbol", ShareData::symbol),
+        ColumnPresets.text("Company", ShareData::stock),
+        ColumnPresets.bigDecimal("Quantity", ShareData::quantity),
+        ColumnPresets.currency("Purchase price", ShareData::purchasePrice),
+        ColumnPresets.currency("Current value", ShareData::currentShareValue),
+        ColumnPresets.signedCurrency("Gain/Loss", ShareData::gain),
+        ColumnPresets.signedPercent("Change %", ShareData::percentageGain)
 
-        new ColumnDefinition<>(
-            "Gain/Loss",
-            s -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedCurrency(calculateGain(s))),
-            (cell, row) -> cell.setStyle(gainStyle(calculateGain(row)))
-        ),
-
-        new ColumnDefinition<>(
-            "Change %",
-            s -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedPercent(calculatePercent(s))),
-            (cell, row) -> cell.setStyle(gainStyle(calculatePercent(row)))
-        )
     ));
     holdingsTable.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
     return holdingsTable;
-  }
-
-  private BigDecimal calculateGain(ShareData shareData) {
-    return shareData.currentShareValue()
-        .subtract(shareData.purchasePrice()
-            .multiply(shareData.quantity()));
-  }
-
-  private BigDecimal calculatePercent(ShareData shareData) {
-    return shareData.currentPrice()
-        .subtract(shareData.purchasePrice())
-        .divide(shareData.purchasePrice(), 2, RoundingMode.HALF_UP)
-        .multiply(BigDecimal.valueOf(100));
-  }
-
-  private String gainStyle(BigDecimal value) {
-    if (value.compareTo(BigDecimal.ZERO) > 0) {
-      return "-fx-text-fill: #4CAF50;";
-    } else if (value.compareTo(BigDecimal.ZERO) < 0) {
-      return "-fx-text-fill: #E24B4A;";
-    }
-    return "-fx-text-fill: #E0E0E0;";
   }
 
   @Override

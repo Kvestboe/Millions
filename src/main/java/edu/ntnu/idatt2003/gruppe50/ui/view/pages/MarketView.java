@@ -3,13 +3,9 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory.createTable;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
-import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnDefinition;
-import java.math.BigDecimal;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import java.util.List;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -100,22 +96,12 @@ public class MarketView implements Page, Observer {
    */
   private TableView<Stock> createMarketTable() {
     TableView<Stock> marketTable = createTable(List.of(
+        ColumnPresets.text("Symbol", Stock::getSymbol),
+        ColumnPresets.text("Company", Stock::getCompany),
+        ColumnPresets.currency("Price", Stock::getSalesPrice),
+        ColumnPresets.signedCurrency("+/- (kr)", Stock::getLatestPriceChange),
+        ColumnPresets.signedPercent("+/- (%)", Stock::getLatestPriceChangePercent)
 
-        new ColumnDefinition<>("Symbol", s -> new ReadOnlyStringWrapper(s.getSymbol())),
-        new ColumnDefinition<>("Company", s -> new ReadOnlyObjectWrapper<>(s.getCompany())),
-        new ColumnDefinition<>("Price", s -> new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(s.getSalesPrice()))),
-
-        new ColumnDefinition<>(
-            "+/- (kr)",
-            s -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedCurrency(s.getLatestPriceChange())),
-            (col, row) -> col.setStyle(gainStyle(row.getLatestPriceChange()))
-        ),
-
-        new ColumnDefinition<>(
-            "+/- (%)",
-            s -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedPercent(s.getLatestPriceChangePercent())),
-            (col, row) -> col.setStyle(gainStyle(row.getLatestPriceChange()))
-        )
     ));
     marketTable.getItems().addAll(controller.getStocks());
     marketTable.setOnMousePressed(_ -> {
@@ -127,17 +113,7 @@ public class MarketView implements Page, Observer {
     return marketTable;
   }
 
-
-  private String gainStyle(BigDecimal value) {
-    if (value.compareTo(BigDecimal.ZERO) > 0) {
-      return "-fx-text-fill: #4CAF50;";
-    } else if (value.compareTo(BigDecimal.ZERO) < 0) {
-      return "-fx-text-fill: #EF5350;";
-    }
-    return "-fx-text-fill: #E0E0E0;";
-  }
-  
-    @Override
+  @Override
   public void update() {
     refresh();
   }

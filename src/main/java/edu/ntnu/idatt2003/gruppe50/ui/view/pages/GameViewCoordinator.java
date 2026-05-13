@@ -33,10 +33,17 @@ public class GameViewCoordinator {
   private NavigationManager navManager;
   private final GetPortfolioUseCase getPortfolio;
 
-  public GameViewCoordinator(GameController gameController,
-                             PortfolioQueryController portfolioQueryController, TransactionQueryController transactionQueryController,
-                             BuyShareUseCase buyShare, SellShareUseCase sellShare,
-                             UUID gameId, Exchange exchange, Player player, GetPortfolioUseCase getPortfolio) {
+  public GameViewCoordinator(
+      GameController gameController,
+      PortfolioQueryController portfolioQueryController,
+      TransactionQueryController transactionQueryController,
+      BuyShareUseCase buyShare,
+      SellShareUseCase sellShare,
+      UUID gameId,
+      Exchange exchange,
+      Player player,
+      GetPortfolioUseCase getPortfolio
+  ) {
     this.transactionQueryController = transactionQueryController;
     this.sellShare = sellShare;
     this.exchange = exchange;

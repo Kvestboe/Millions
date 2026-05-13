@@ -4,6 +4,8 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Sale;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public final class DtoMapper {
 
@@ -15,7 +17,15 @@ public final class DtoMapper {
             share.getQuantity(),
             share.getPurchasePrice(),
             share.getStock().getSalesPrice(),
-            share.getStock().getSalesPrice().multiply(share.getQuantity())
+            share.getStock().getSalesPrice().multiply(share.getQuantity()),
+            share.getStock()
+                .getSalesPrice()
+                .subtract(share.getPurchasePrice())
+                .multiply(share.getQuantity()),
+            share.getStock()
+                .getSalesPrice().subtract(share.getPurchasePrice())
+                .divide(share.getPurchasePrice(), 2, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100))
     );
   }
 

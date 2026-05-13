@@ -3,14 +3,11 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory.createCard;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.TransactionType;
-import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnDefinition;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;
 import java.util.List;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
@@ -34,7 +31,7 @@ public class TransactionsView extends BorderPane implements Page {
 
   public TransactionsView(TransactionQueryController queryController) {
     this.queryController = queryController;
-    this.table = makeTransactionTable();
+    this.table = createTransactionTable();
     this.searchField = createSearchField();
     this.allFilterButton = new RadioButton("All");
     this.purchaseFilterButton = new RadioButton("Purchase");
@@ -51,21 +48,15 @@ public class TransactionsView extends BorderPane implements Page {
     return this;
   }
 
-  private TableView<TransactionData> makeTransactionTable() {
+  private TableView<TransactionData> createTransactionTable() {
     TableView<TransactionData> transactionTable = TableFactory.createTable(List.of(
-        new ColumnDefinition<>("Symbol", t -> new ReadOnlyStringWrapper(t.share().symbol())),
-        new ColumnDefinition<>("Company", t -> new ReadOnlyStringWrapper(t.share().stock())),
-        new ColumnDefinition<>("Type", t -> new ReadOnlyStringWrapper(t.type().name())),
-        new ColumnDefinition<>("Week", t -> new ReadOnlyObjectWrapper<>(t.week())),
-        new ColumnDefinition<>("Commission", t ->
-            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.commissionFee()))
-        ),
-        new ColumnDefinition<>("Tax", t ->
-            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.taxFee()))
-        ),
-        new ColumnDefinition<>("Total", t ->
-            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.total()))
-        )
+        ColumnPresets.text("Symbol", t -> t.share().symbol()),
+        ColumnPresets.text("Company", t -> t.share().stock()),
+        ColumnPresets.text("Type", t -> t.type().name()),
+        ColumnPresets.integer("Week", TransactionData::week),
+        ColumnPresets.currency("Commision", TransactionData::commissionFee),
+        ColumnPresets.currency("Tax", TransactionData::taxFee),
+        ColumnPresets.currency("Total", TransactionData::total)
     ));
     transactionTable.setPlaceholder(new Label("No transactions yet."));
     return transactionTable;
