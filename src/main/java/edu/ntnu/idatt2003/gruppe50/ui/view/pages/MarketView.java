@@ -1,16 +1,17 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory.createTable;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnDefinition;
 import java.math.BigDecimal;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import java.util.List;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
@@ -36,7 +37,7 @@ public class MarketView implements Page, Observer {
    */
   public MarketView(MarketController controller) {
     this.controller = controller;
-    this.table = createStockTable();
+    this.table = createMarketTable();
     this.searchField = createSearchField();
     this.root = createRoot();
 
@@ -91,133 +92,41 @@ public class MarketView implements Page, Observer {
   }
 
   /**
-   * Creates and configures the stock table with columns for symbol, company,
+   * Creates and configures the market table with columns for symbol, company,
    * price, absolute change and percentage change. Populates the table with
    * stocks from the exchange and registers a click listener for navigation.
    *
    * @return a configured {@link TableView} populated with stocks
    */
-  private TableView<Stock> createStockTable() {
-    TableView<Stock> table = new TableView<>();
+  private TableView<Stock> createMarketTable() {
+    TableView<Stock> marketTable = createTable(List.of(
 
-    table.getColumns().addAll(
-        createSymbolColumn(),
-        createCompanyColumn(),
-        createPriceColumn(),
-        createChangeColumn(),
-        createPercentChangeColumn()
-    );
+        new ColumnDefinition<>("Symbol", s -> new ReadOnlyStringWrapper(s.getSymbol())),
+        new ColumnDefinition<>("Company", s -> new ReadOnlyObjectWrapper<>(s.getCompany())),
+        new ColumnDefinition<>("Price", s -> new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(s.getSalesPrice()))),
 
-    table.getItems().addAll(controller.getStocks());
-    table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    table.setMaxWidth(Double.MAX_VALUE);
-    table.setMaxHeight(Double.MAX_VALUE);
-    table.setOnMouseClicked(_ -> {
+        new ColumnDefinition<>(
+            "+/- (kr)",
+            s -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedCurrency(s.getLatestPriceChange())),
+            (col, row) -> col.setStyle(gainStyle(row.getLatestPriceChange()))
+        ),
+
+        new ColumnDefinition<>(
+            "+/- (%)",
+            s -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedPercent(s.getLatestPriceChangePercent())),
+            (col, row) -> col.setStyle(gainStyle(row.getLatestPriceChange()))
+        )
+    ));
+    marketTable.getItems().addAll(controller.getStocks());
+    marketTable.setOnMousePressed(_ -> {
       Stock selected = table.getSelectionModel().getSelectedItem();
       if (selected != null) {
         controller.onStockSelected(selected);
       }
     });
-
-    return table;
+    return marketTable;
   }
 
-  private TableColumn<Stock, String> createSymbolColumn() {
-    TableColumn<Stock, String> col = new TableColumn<>("Symbol");
-    col.setCellValueFactory(data ->
-        new SimpleStringProperty(data.getValue().getSymbol())
-    );
-    col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
-    return col;
-  }
-
-  private TableColumn<Stock, String> createCompanyColumn() {
-    TableColumn<Stock, String> col = new TableColumn<>("Company");
-    col.setCellValueFactory(data ->
-        new SimpleStringProperty(data.getValue().getCompany())
-    );
-    col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
-    return col;
-  }
-
-  private TableColumn<Stock, BigDecimal> createPriceColumn() {
-    TableColumn<Stock, BigDecimal> col = new TableColumn<>("Price");
-    col.setCellValueFactory(data ->
-        new SimpleObjectProperty<>(data.getValue().getSalesPrice())
-    );
-    col.setCellFactory(c -> createMoneyCell());
-    col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
-    return col;
-  }
-
-  private TableCell<Stock, BigDecimal> createMoneyCell() {
-    return new TableCell<>() {
-      @Override
-      protected void updateItem(BigDecimal value, boolean empty) {
-        super.updateItem(value, empty);
-
-        if (empty || value == null) {
-          setText(null);
-        } else {
-          setText(MoneyFormat.formatCurrency(value));
-        }
-      }
-    };
-  }
-
-  private TableColumn<Stock, BigDecimal> createChangeColumn() {
-    TableColumn<Stock, BigDecimal> col = new TableColumn<>("+/- (kr)");
-    col.setCellValueFactory(data ->
-        new SimpleObjectProperty<>(data.getValue().getLatestPriceChange())
-    );
-    col.setCellFactory(c -> createColoredCurrencyCell());
-    col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
-    return col;
-  }
-
-  private TableCell<Stock, BigDecimal> createColoredCurrencyCell() {
-    return new TableCell<>() {
-      @Override
-      protected void updateItem(BigDecimal value, boolean empty) {
-        super.updateItem(value, empty);
-
-        if (empty || value == null) {
-          setText(null);
-          setStyle("");
-        } else {
-          setText(MoneyFormat.formatSignedCurrency(value));
-          setStyle(gainStyle(value));
-        }
-      }
-    };
-  }
-
-  private TableColumn<Stock, BigDecimal> createPercentChangeColumn() {
-    TableColumn<Stock, BigDecimal> col = new TableColumn<>("+/- (%)");
-    col.setCellValueFactory(data ->
-        new SimpleObjectProperty<>(data.getValue().getLatestPriceChangePercent())
-    );
-    col.setCellFactory(c -> createColoredPercentCell());
-    col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
-    return col;
-  }
-
-  private TableCell<Stock, BigDecimal> createColoredPercentCell() {
-    return new TableCell<>() {
-      @Override
-      protected void updateItem(BigDecimal value, boolean empty) {
-        super.updateItem(value, empty);
-
-        if (empty || value == null) {
-          setText(null);
-          setStyle("");
-        } else {
-          setText(MoneyFormat.formatSignedPercent(value));
-          setStyle(gainStyle(value));
-        }
-      }
-    };
-  }
 
   private String gainStyle(BigDecimal value) {
     if (value.compareTo(BigDecimal.ZERO) > 0) {
