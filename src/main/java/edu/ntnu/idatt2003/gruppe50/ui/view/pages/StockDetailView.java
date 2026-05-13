@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
@@ -8,6 +9,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Button;
@@ -98,7 +101,12 @@ public class StockDetailView extends VBox implements Page {
     HBox.setHgrow(buy, Priority.ALWAYS);
     buy.setOnAction(e -> handleBuy());
 
-    return new HBox(10, quantityField, buy);
+    Button sell = new Button("Sell");
+    sell.setMaxWidth(Double.MAX_VALUE);
+    HBox.setHgrow(sell, Priority.ALWAYS);
+    sell.setOnAction(e -> handleSell());
+
+    return new HBox(10, quantityField, buy, sell);
   }
 
   private void handleBuy() {
@@ -111,6 +119,17 @@ public class StockDetailView extends VBox implements Page {
       // TODO: vis feilmelding til bruker
     }
   }
+
+  private void handleSell() {
+    Optional<UUID> sold = controller.sellOneOf(stock.getSymbol());
+    if (sold.isEmpty()) {
+      // vis melding: "Du eier ingen aksjer av dette selskapet"
+      return;
+    }
+    refreshHolding();
+  }
+
+
 
   private void refreshHolding() {
     Optional<ShareData> holding = controller.getHolding(stock.getSymbol());

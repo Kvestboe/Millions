@@ -85,9 +85,11 @@ public class App extends Application {
         portfolioQueryController,
         transactionQueryController,
         buyShare,
+        sellShare,
         gameId,
         session.getExchange(),
-        session.getPlayer()
+        session.getPlayer(),
+        getPortfolio
     );
 
 
