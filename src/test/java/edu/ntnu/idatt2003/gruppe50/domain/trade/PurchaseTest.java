@@ -19,7 +19,7 @@ public class PurchaseTest {
   @BeforeEach
   void setup() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("330"));
-    share = new Share(stock, new BigDecimal("5"), bd("310"));
+    share = new Share(stock, new BigDecimal("5"), bd("310"), 1);
     purchase = new Purchase(share, 12);
     richPlayer = new Player("Test", bd("20000"));
     poorPlayer = new Player("Test2", bd("1"));
@@ -49,7 +49,7 @@ public class PurchaseTest {
   @Test
   void constructor_validArguments_createsShare() {
     Stock stock2 = new Stock("AAPL", "Apple", new BigDecimal("265"));
-    Share share2 = new Share(stock2, new BigDecimal("3"), new BigDecimal("250"));
+    Share share2 = new Share(stock2, new BigDecimal("3"), new BigDecimal("250"), 1);
     Purchase purchase2 = new Purchase(share2, 12);
 
     assertEquals(share2, purchase2.getShare());

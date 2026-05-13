@@ -15,7 +15,7 @@ public class TransactionArchiveTest {
   @BeforeEach
   void setup() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("330"));
-    share = new Share(stock, bd("5"), bd("310"));
+    share = new Share(stock, bd("5"), bd("310"), 1);
     archive = new TransactionArchive();
   }
 

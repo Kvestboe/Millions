@@ -4,10 +4,12 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class Exchange extends Observable {
   private final Random random;
   private final TransactionFactory factory;
   private int week;
+  private final List<LimitOrder> pendingOrders = new ArrayList<>();
 
   /**
    * Creates a new {@code exchange} with a name and stocks represented by symbols.
@@ -134,7 +137,7 @@ public class Exchange extends Observable {
     Validate.notNull(player, "Player");
 
     Stock stock = getStock(symbol);
-    Share share = new Share(stock, quantity, stock.getSalesPrice());
+    Share share = new Share(stock, quantity, stock.getSalesPrice(), this.week);
 
     Transaction t = factory.createPurchase(share, this.week);
     t.commit(player);
@@ -219,4 +222,41 @@ public class Exchange extends Observable {
     return new ArrayList<>(stockMap.values());
   }
 
+  /**
+   * Places a pending limit order on the exchange. The order will be
+   * checked against the market price and executed when its trigger
+   * condition is met.
+   *
+   * @param order the order to place
+   * @throws IllegalArgumentException if {@code order} is null
+   */
+  public void placeOrder(LimitOrder order) {
+    Validate.notNull(order, "Order");
+    pendingOrders.add(order);
+    notifyObservers();
+  }
+
+  /**
+   * Cancels a pending limit order. If the order is not currently
+   * pending, this method has no effect.
+   *
+   * @param order the order to cancel
+   * @return true if the order was removed, false otherwise
+   */
+  public boolean cancelOrder(LimitOrder order) {
+    boolean removed = pendingOrders.remove(order);
+    if (removed) {
+      notifyObservers();
+    }
+    return removed;
+  }
+
+  /**
+   * Returns an unmodifiable view of all currently pending limit orders.
+   *
+   * @return the pending orders
+   */
+  public List<LimitOrder> getPendingOrders() {
+    return Collections.unmodifiableList(pendingOrders);
+  }
 }
