@@ -240,4 +240,5 @@ public class MarketView implements Page, Observer {
     } else {
       table.getItems().setAll(controller.onSearch(query));
     }
+  }
 }
