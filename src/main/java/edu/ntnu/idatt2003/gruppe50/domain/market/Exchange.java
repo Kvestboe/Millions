@@ -172,8 +172,7 @@ public class Exchange extends Observable {
     this.week++;
 
     stockMap.replaceAll((_, stock) -> {
-      double change = -0.2 + random.nextDouble() * 0.4;
-      BigDecimal multiplier = BigDecimal.valueOf(1 + change);
+      BigDecimal multiplier = BigDecimal.valueOf(Math.exp((random.nextDouble() - 0.5) * 0.4));
 
       BigDecimal newPrice = stock.getSalesPrice().multiply(multiplier);
       stock.addNewSalesPrice(newPrice);
