@@ -1,0 +1,108 @@
+.market-root {
+    -fx-background-color: #1C1C1C;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+}
+
+.market-title {
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
+}
+
+.text-field {
+    -fx-background-color: #242424;
+    -fx-border-color: #333333;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: #E0E0E0;
+    -fx-prompt-text-fill: #555555;
+    -fx-font-size: 14;
+    -fx-padding: 12 16;
+}
+
+.table-view {
+    -fx-background-color: #242424;
+    -fx-border-color: #2A2A2A;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #1C1C1C;
+}
+
+.table-view .column-header-background .filler {
+    -fx-background-color: #1C1C1C;
+}
+
+.table-view .column-header {
+    -fx-background-color: #1C1C1C;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #555555;
+    -fx-font-size: 11;
+}
+
+
+.table-view .table-row-cell {
+    -fx-background-color: #242424;
+    -fx-border-color: #222222;
+}
+
+.table-view .table-row-cell:even {
+    -fx-background-color: #242424;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #2A2A2A;
+}
+
+.table-view .table-row-cell:empty {
+    -fx-background-color: #1C1C1C;
+    -fx-border-color: transparent;
+}
+
+.table-view .table-row-cell:filled:hover {
+    -fx-background-color: #3A3A3A;
+    -fx-cursor: hand;
+}
+
+.table-view .table-row-cell:filled:pressed {
+    -fx-background-color: #2A2A2A;
+}
+
+
+.table-view .table-cell {
+    -fx-text-fill: #E0E0E0;
+    -fx-border-color: transparent;
+    -fx-font-size: 14;
+    -fx-padding: 10 16;
+    -fx-alignment: center;
+}
+
+
+.scroll-bar {
+    -fx-background-color: #1C1C1C;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #333333;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #444444;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-opacity: 0;
+}
+
+.scroll-bar:vertical {
+    -fx-opacity: 0;
+}
+
+.scroll-bar:vertical:hover {
+    -fx-opacity: 1;
+}
