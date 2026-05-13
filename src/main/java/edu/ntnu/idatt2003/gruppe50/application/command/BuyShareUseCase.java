@@ -6,10 +6,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-/**
- * Buys shares inside a game session and saves the updated state.
- */
+/** Buys shares inside a game session and saves the updated state. */
 public final class BuyShareUseCase {
+
   private final GameSessionRepository repository;
 
   /**
@@ -28,8 +27,8 @@ public final class BuyShareUseCase {
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public void execute(Request request) {
-    GameSession session = repository.findById(request.gameId())
-        .orElseThrow(GameSessionNotFoundException::new);
+    GameSession session =
+        repository.findById(request.gameId()).orElseThrow(GameSessionNotFoundException::new);
 
     session.buy(request.symbol(), request.quantity());
     repository.save(session);
@@ -43,5 +42,4 @@ public final class BuyShareUseCase {
    * @param quantity quantity to buy
    */
   public record Request(UUID gameId, String symbol, BigDecimal quantity) {}
-
 }

@@ -26,7 +26,11 @@ public class MarketController extends Observable implements Observer {
    * @param exchange the exchange to retrieve stocks from
    * @param player the current player
    */
-  public MarketController(Exchange exchange, Player player, Consumer<Stock> onStockSelectedCallback) {
+  public MarketController(
+      Exchange exchange,
+      Player player,
+      Consumer<Stock> onStockSelectedCallback
+  ) {
     this.exchange = exchange;
     this.player = player;
     this.onStockSelectedCallback = onStockSelectedCallback;
@@ -34,8 +38,7 @@ public class MarketController extends Observable implements Observer {
   }
 
   /**
-   * Searches for stocks matching the given query.
-   * Matches on both symbol and company name.
+   * Searches for stocks matching the given query. Matches on both symbol and company name.
    *
    * @param query the search term
    * @return a list of matching {@link Stock} objects

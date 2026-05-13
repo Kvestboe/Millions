@@ -1,13 +1,12 @@
 package edu.ntnu.idatt2003.gruppe50.domain.trade.calculator;
 
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import static org.junit.jupiter.api.Assertions.*;
+
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class SaleCalculatorTest {
   private Share share;
@@ -60,7 +59,7 @@ public class SaleCalculatorTest {
     assertEquals(bd("495"), calc.calculateTotal().stripTrailingZeros());
   }
 
-  //Helper method
+  // Helper method
   private static BigDecimal bd(String value) {
     return new BigDecimal(value);
   }

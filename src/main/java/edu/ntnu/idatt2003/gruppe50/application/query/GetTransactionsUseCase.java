@@ -1,17 +1,17 @@
 package edu.ntnu.idatt2003.gruppe50.application.query;
 
+import static edu.ntnu.idatt2003.gruppe50.application.query.DtoMapper.createShareDto;
+import static edu.ntnu.idatt2003.gruppe50.application.query.DtoMapper.defineTransactionType;
+
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import java.util.List;
 import java.util.UUID;
 
-import static edu.ntnu.idatt2003.gruppe50.application.query.DtoMapper.createShareDto;
-import static edu.ntnu.idatt2003.gruppe50.application.query.DtoMapper.defineTransactionType;
-
 public final class GetTransactionsUseCase {
+
   private final GameSessionRepository repository;
 
   public GetTransactionsUseCase(GameSessionRepository repository) {
@@ -19,9 +19,8 @@ public final class GetTransactionsUseCase {
   }
 
   public Response execute(Request request) {
-    GameSession session = repository.findById(request.gameId).orElseThrow(
-        GameSessionNotFoundException::new
-    );
+    GameSession session =
+        repository.findById(request.gameId).orElseThrow(GameSessionNotFoundException::new);
 
     TransactionArchive archive = session.getPlayer().getTransactionArchive();
 
@@ -37,13 +36,9 @@ public final class GetTransactionsUseCase {
         )).toList();
 
     return new Response(transactionDtoArchive);
-
   }
 
   public record Request(UUID gameId) {}
 
-  public record Response(
-    List<TransactionDto> transactionDtoArchive
-  ) {}
-
+  public record Response(List<TransactionDto> transactionDtoArchive) {}
 }

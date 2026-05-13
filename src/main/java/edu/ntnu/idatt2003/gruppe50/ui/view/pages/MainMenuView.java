@@ -1,7 +1,5 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,7 +7,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-public class MainMenuView{
+public class MainMenuView {
 
   private final Runnable onNewGame;
   private final Runnable onQuit;
@@ -32,9 +30,7 @@ public class MainMenuView{
     root.setCenter(center);
 
     Scene scene = new Scene(root, 1280, 900);
-    scene.getStylesheets().add(
-        getClass().getResource("/css/newGame.css").toExternalForm()
-    );
+    scene.getStylesheets().add(getClass().getResource("/css/newGame.css").toExternalForm());
     return scene;
   }
 
@@ -61,15 +57,14 @@ public class MainMenuView{
     Button continueBtn = new Button("Continue");
 
     Button newGame = new Button("New Game");
-    newGame.setOnAction(e -> onNewGame.run());
+    newGame.setOnAction(_ -> onNewGame.run());
 
     Button loadGame = new Button("Load Game");
 
     Button settings = new Button("Settings");
 
     Button quit = new Button("Quit");
-    quit.setOnAction(e -> onQuit.run());
-
+    quit.setOnAction(_ -> onQuit.run());
 
     buttonBox.getChildren().addAll(continueBtn, newGame, loadGame, settings, quit);
     return buttonBox;

@@ -40,5 +40,4 @@ public final class NavigationManager {
   public StackPane getContentArea() {
     return contentArea;
   }
-
 }

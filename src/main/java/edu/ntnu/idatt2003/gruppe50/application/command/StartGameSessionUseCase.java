@@ -6,10 +6,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.UUID;
 
-/**
- * Starts a new game session from player and exchange input.
- */
+/** Starts a new game session from player and exchange input. */
 public final class StartGameSessionUseCase {
+
   private final GameSessionRepository repository;
 
   /**

@@ -5,10 +5,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.UUID;
 
-/**
- * Sells an owned share inside a game session and saves updated state.
- */
+/** Sells an owned share inside a game session and saves updated state. */
 public final class SellShareUseCase {
+
   private final GameSessionRepository repository;
 
   /**
@@ -27,8 +26,8 @@ public final class SellShareUseCase {
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public void execute(Request request) {
-    GameSession session = repository.findById(request.gameId())
-        .orElseThrow(GameSessionNotFoundException::new);
+    GameSession session =
+        repository.findById(request.gameId()).orElseThrow(GameSessionNotFoundException::new);
 
     session.sell(request.shareId());
     repository.save(session);

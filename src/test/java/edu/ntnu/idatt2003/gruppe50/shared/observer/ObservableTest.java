@@ -1,15 +1,14 @@
 package edu.ntnu.idatt2003.gruppe50.shared.observer;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class ObservableTest {
 
@@ -22,7 +21,6 @@ class ObservableTest {
     exchange = new Exchange("TestExchange", List.of(stock), new TransactionFactory());
     observer = new TestObserver();
   }
-
 
   @Test
   void addObserver_notifiesObserverOnUpdate() {

@@ -5,12 +5,13 @@ import java.util.List;
 
 /**
  * Represents an archive that stores all registered transactions.
- * <p>
- * The archive provides methods for retrieving transactions by week
+ *
+ * <p>The archive provides methods for retrieving transactions by week
  * and by transaction type (purchase or sale), as well as utilities
  * for querying the stored transaction history.
  */
 public class TransactionArchive {
+
   private final List<Transaction> transactions;
 
   /**
@@ -22,13 +23,11 @@ public class TransactionArchive {
 
   /**
    * Registers a transaction in the archive.
-   * <p>
-   * A transaction cannot be {@code null} and duplicate transactions
-   * are not allowed.
+   *
+   * <p>A transaction cannot be {@code null} and duplicate transactions are not allowed.
    *
    * @param transaction the transaction to register
-   * @return {@code true} if the transaction was added,
-   * {@code false} if it was already present
+   * @return {@code true} if the transaction was added, {@code false} if it was already present
    * @throws IllegalArgumentException if {@code transaction} is {@code null}
    */
   public boolean add(Transaction transaction) {
@@ -47,8 +46,7 @@ public class TransactionArchive {
   /**
    * Checks if the archive contains any transactions.
    *
-   * @return {@code true} if the archive contains no transactions,
-   * {@code false} otherwise
+   * @return {@code true} if the archive contains no transactions, {@code false} otherwise
    */
   public boolean isEmpty() {
     return transactions.isEmpty();
@@ -112,8 +110,8 @@ public class TransactionArchive {
   }
 
   /**
-   * Counts the number of distinct weeks in which at least one transaction
-   * has been registered.
+   * Counts the number of distinct weeks in which at
+   * least one transaction has been registered.
    *
    * @return the number of unique weeks containing transactions
    */

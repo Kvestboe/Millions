@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface GameSessionRepository {
+
   Optional<GameSession> findById(UUID gameId);
 
   void save(GameSession session);

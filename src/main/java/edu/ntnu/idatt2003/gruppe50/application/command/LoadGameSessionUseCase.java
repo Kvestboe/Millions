@@ -6,10 +6,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.UUID;
 
-/**
- * Loads a game session, marks it as opened, and returns summary state.
- */
+/** Loads a game session, marks it as opened, and returns summary state. */
 public final class LoadGameSessionUseCase {
+
   private final GameSessionRepository repository;
 
   /**
@@ -29,8 +28,8 @@ public final class LoadGameSessionUseCase {
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public Response execute(Request request) {
-    GameSession session = repository.findById(request.gameId())
-        .orElseThrow(GameSessionNotFoundException::new);
+    GameSession session =
+        repository.findById(request.gameId()).orElseThrow(GameSessionNotFoundException::new);
 
     session.markOpened();
     repository.save(session);
