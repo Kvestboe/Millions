@@ -8,8 +8,22 @@ import java.math.BigDecimal;
 
 public class LimitSellOrder extends LimitOrder{
 
-  public LimitSellOrder(Stock stock, Player player, BigDecimal targetPrice, BigDecimal quantity) {
-    super(stock, player, targetPrice, quantity);
+  /**
+   * Creates a new sell order with an explicit expiry week.
+   */
+  public LimitSellOrder(Stock stock, Player player, BigDecimal targetPrice,
+                       BigDecimal quantity, int currentWeek, int expiryWeek) {
+    super(stock, player, targetPrice, quantity, currentWeek, expiryWeek);
+  }
+
+  /**
+   * Creates a new sell order with the default duration of
+   * {@link LimitOrder#DEFAULT_DURATION_WEEKS} weeks.
+   */
+  public LimitSellOrder(Stock stock, Player player, BigDecimal targetPrice,
+                       BigDecimal quantity, int currentWeek) {
+    this(stock, player, targetPrice, quantity, currentWeek,
+        currentWeek + DEFAULT_DURATION_WEEKS);
   }
 
   @Override
@@ -19,6 +33,6 @@ public class LimitSellOrder extends LimitOrder{
 
   @Override
   public void execute(Exchange exchange) {
-
+    exchange.sellQuantity(getStock(), getQuantity(), getPlayer());
   }
 }

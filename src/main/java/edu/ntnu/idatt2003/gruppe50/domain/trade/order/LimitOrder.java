@@ -19,6 +19,10 @@ public abstract class LimitOrder {
   private final Player player;
   private final BigDecimal targetPrice;
   private final BigDecimal quantity;
+  private final int expiryWeek;
+
+  public static final int DEFAULT_DURATION_WEEKS = 6;
+  public static final int MAX_DURATION_WEEKS = 12;
 
   /**
    * Creates a new limit order.
@@ -31,17 +35,31 @@ public abstract class LimitOrder {
    * @throws IllegalArgumentException if {@code targetPrice} or {@code quantity}
    *                                  is not positive
    */
-  protected LimitOrder(Stock stock, Player player, BigDecimal targetPrice, BigDecimal quantity) {
+  protected LimitOrder(Stock stock, Player player, BigDecimal targetPrice, BigDecimal quantity,int currentWeek, int expiryWeek) {
     Validate.notNull(stock, "stock");
     Validate.notNull(player, "player");
     Validate.notNull(targetPrice, "targetPrice");
     Validate.positive(targetPrice, "targetPrice");
     Validate.positive(quantity, "quantity");
+    Validate.positiveInt(currentWeek, "Current week");
+    Validate.positiveInt(expiryWeek, "Expiry week");
+    if (expiryWeek <= currentWeek) {
+      throw new IllegalArgumentException(
+          "Expiry week must be after current week (current: "
+              + currentWeek + ", expiry: " + expiryWeek + ")");
+    }
+    int duration = expiryWeek - currentWeek;
+    if (duration > MAX_DURATION_WEEKS) {
+      throw new IllegalArgumentException(
+          "Order duration cannot exceed " + MAX_DURATION_WEEKS
+              + " weeks (requested: " + duration + ")");
+    }
 
     this.stock = stock;
     this.player = player;
     this.targetPrice = targetPrice;
     this.quantity = quantity;
+    this.expiryWeek = expiryWeek;
   }
 
   public Stock getStock() {
@@ -58,6 +76,14 @@ public abstract class LimitOrder {
 
   public BigDecimal getQuantity() {
     return quantity;
+  }
+
+  public int getExpiryWeek() {
+    return expiryWeek;
+  }
+
+  public boolean isExpired(int currentWeek) {
+    return currentWeek > expiryWeek;
   }
 
   /**

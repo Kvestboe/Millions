@@ -187,7 +187,7 @@ public class Exchange extends Observable {
    * @throws IllegalStateException if the player does not own enough shares of
    *     the given stock
    */
-  //LAG TEST
+  //LAG TESTER
   public List<Transaction> sellQuantity(Stock stock, BigDecimal quantity, Player player) {
     Validate.notNull(stock, "Stock");
     Validate.positive(quantity, "Quantity");
@@ -247,7 +247,9 @@ public class Exchange extends Observable {
   }
 
   /**
-   * Advances a week and randomizes stock prices.
+   * Advances a week and randomizes stock prices. Pending limit orders are
+   * checked: expired orders are removed, and orders whose trigger condition
+   * is met are executed.
    */
   public void advance() {
     this.week++;
@@ -259,7 +261,51 @@ public class Exchange extends Observable {
       stock.addNewSalesPrice(newPrice);
       return stock;
     });
+
+    processPendingOrders();
+
     notifyObservers();
+  }
+
+  /**
+   * Processes all pending limit orders for the current week.
+   *
+   * <p>For each order:
+   * <ul>
+   *   <li>If the order has expired, it is removed without execution.</li>
+   *   <li>If the order's trigger condition is met at the current price,
+   *       it is executed and removed. If execution fails (e.g. insufficient
+   *       funds or shares), the failure is logged and the order is removed.</li>
+   *   <li>Otherwise, the order remains pending.</li>
+   * </ul>
+   */
+  private void processPendingOrders() {
+    List<LimitOrder> toRemove = new ArrayList<>();
+
+    for (LimitOrder order : pendingOrders) {
+      if (order.isExpired(this.week)) {
+        // TODO: notify player that order expired
+        System.err.println("Order expired for " + order.getPlayer().getName()
+            + " on " + order.getStock().getSymbol());
+        toRemove.add(order);
+        continue;
+      }
+
+      BigDecimal currentPrice = order.getStock().getSalesPrice();
+      if (order.shouldTrigger(currentPrice)) {
+        try {
+          order.execute(this);
+        } catch (RuntimeException e) {
+          // TODO: notify player that order triggered but could not be executed
+          System.err.println("Order triggered but failed for "
+              + order.getPlayer().getName() + " on " + order.getStock().getSymbol()
+              + ": " + e.getMessage());
+        }
+        toRemove.add(order);
+      }
+    }
+
+    pendingOrders.removeAll(toRemove);
   }
 
   /**
