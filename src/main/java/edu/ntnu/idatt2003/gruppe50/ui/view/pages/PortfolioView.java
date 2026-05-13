@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory.createTable;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
@@ -7,16 +8,14 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnDefinition;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.function.Function;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import java.util.List;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -28,7 +27,7 @@ public class PortfolioView extends VBox implements Page, Observer {
   private final Label netWorthLabel = new Label();
   private final Label portfolioValueLabel = new Label();
   private final Label playerCashLabel = new Label();
-  private final TableView<ShareData> table = new TableView<>();
+  private final TableView<ShareData> holdingsTable;
   private final AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
 
   public PortfolioView(PortfolioQueryController queryController, GameController gameController) {
@@ -39,7 +38,7 @@ public class PortfolioView extends VBox implements Page, Observer {
 
     VBox cardContainer = createCardContainer();      // bruker feltene
     AreaChart<Number, Number> chart = createNetWorthChart(queryController.getPortfolio());
-    createHoldingsTable();                     // setter kolonner én gang
+    holdingsTable = createHoldingsTable();                     // setter kolonner én gang
 
     HBox topSection = new HBox(16, cardContainer, chart);
     HBox.setHgrow(chart, Priority.ALWAYS);
@@ -47,7 +46,7 @@ public class PortfolioView extends VBox implements Page, Observer {
     title.getStyleClass().add("page-title");
     holdingsTitle.getStyleClass().add("section-title");
     this.getStyleClass().add("portfolio-view");
-    this.getChildren().addAll(title, topSection, holdingsTitle, table);
+    this.getChildren().addAll(title, topSection, holdingsTitle, holdingsTable);
     this.getStylesheets().add(getClass().getResource("/css/portfolio.css").toExternalForm());
 
     queryController.addObserver(this);
@@ -89,69 +88,28 @@ public class PortfolioView extends VBox implements Page, Observer {
     return netWorthChart.getChart();
   }
 
-  private void createHoldingsTable() {
-    table.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
-    table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    table.getColumns().addAll(
-        createColumn("Symbol",         ShareData::symbol),
-        createColumn("Company",        ShareData::stock),
-        createColumn("Quantity",       s -> MoneyFormat.format(s.quantity())),
-        createColumn("Purchase price", s -> MoneyFormat.formatCurrency(s.purchasePrice())),
-        createColumn("Current value",  s -> MoneyFormat.formatCurrency(s.currentShareValue())),
-        createGainColumn(),
-        createPercentColumn()
-    );
-  }
+  private TableView<ShareData> createHoldingsTable() {
+    TableView<ShareData> holdingsTable = createTable(List.of(
+        new ColumnDefinition<>("Symbol", s-> new ReadOnlyStringWrapper(s.symbol())),
+        new ColumnDefinition<>("Company", s-> new ReadOnlyStringWrapper(s.stock())),
+        new ColumnDefinition<>("Quantity", s -> new ReadOnlyStringWrapper(MoneyFormat.format(s.quantity()))),
+        new ColumnDefinition<>("Purchase price", s -> new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(s.purchasePrice()))),
+        new ColumnDefinition<>("Current value", s -> new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(s.currentShareValue()))),
 
-  private TableColumn<ShareData, String> createColumn(
-      String title,
-      Function<ShareData, String> extractor
-  ) {
-    TableColumn<ShareData, String> col = new TableColumn<>(title);
-    col.setCellValueFactory(
-        data -> new SimpleStringProperty(extractor.apply(data.getValue()))
-    );
-    return col;
-  }
+        new ColumnDefinition<>(
+            "Gain/Loss",
+            s -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedCurrency(calculateGain(s))),
+            (cell, row) -> cell.setStyle(gainStyle(calculateGain(row)))
+        ),
 
-  private TableColumn<ShareData, BigDecimal> createGainColumn() {
-    TableColumn<ShareData, BigDecimal> col = new TableColumn<>("Gain/Loss");
-    col.setCellValueFactory(data ->
-        new SimpleObjectProperty<>(calculateGain(data.getValue())));
-    col.setCellFactory(column -> new TableCell<>() {
-      @Override
-      protected void updateItem(BigDecimal value, boolean empty) {
-        super.updateItem(value, empty);
-        if (empty || value == null) {
-          setText(null);
-          setStyle("");
-        } else {
-          setText(MoneyFormat.formatSignedCurrency(value));
-          setStyle(gainStyle(value));
-        }
-      }
-    });
-    return col;
-  }
-
-  private TableColumn<ShareData, BigDecimal> createPercentColumn() {
-    TableColumn<ShareData, BigDecimal> col = new TableColumn<>("Change %");
-    col.setCellValueFactory(data ->
-        new SimpleObjectProperty<>(calculatePercent(data.getValue())));
-    col.setCellFactory(column -> new TableCell<>() {
-      @Override
-      protected void updateItem(BigDecimal value, boolean empty) {
-        super.updateItem(value, empty);
-        if (empty || value == null) {
-          setText(null);
-          setStyle("");
-        } else {
-          setText(MoneyFormat.formatSignedPercent(value));
-          setStyle(gainStyle(value));
-        }
-      }
-    });
-    return col;
+        new ColumnDefinition<>(
+            "Change %",
+            s -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedPercent(calculatePercent(s))),
+            (cell, row) -> cell.setStyle(gainStyle(calculatePercent(row)))
+        )
+    ));
+    holdingsTable.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
+    return holdingsTable;
   }
 
   private BigDecimal calculateGain(ShareData shareData) {
@@ -186,7 +144,7 @@ public class PortfolioView extends VBox implements Page, Observer {
     netWorthLabel.setText(MoneyFormat.formatCurrency(p.netWorth()));
     portfolioValueLabel.setText(MoneyFormat.formatCurrency(p.portfolioValue()));
     playerCashLabel.setText(MoneyFormat.formatCurrency(p.cash()));
-    table.getItems().setAll(p.shares());
+    holdingsTable.getItems().setAll(p.shares());
     netWorthChart.display("Net Worth", p.netWorthHistory());
   }
 }
