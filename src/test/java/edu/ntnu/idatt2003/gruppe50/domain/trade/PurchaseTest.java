@@ -7,6 +7,8 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.PurchaseCalculator;
 import java.math.BigDecimal;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,19 +22,19 @@ public class PurchaseTest {
   void setup() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("330"));
     share = new Share(stock, new BigDecimal("5"), bd("310"), 1);
-    purchase = new Purchase(share, 12);
+    purchase = new Purchase(share, 12, UUID.randomUUID());
     richPlayer = new Player("Test", bd("20000"));
     poorPlayer = new Player("Test2", bd("1"));
   }
 
   @Test
   void constructor_nullShare_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> new Purchase(null, 12));
+    assertThrows(IllegalArgumentException.class, () -> new Purchase(null, 12, UUID.randomUUID()));
   }
 
   @Test
   void constructor_negativeWeek_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> new Purchase(share, -12));
+    assertThrows(IllegalArgumentException.class, () -> new Purchase(share, -12, UUID.randomUUID()));
   }
 
   @Test
@@ -50,7 +52,7 @@ public class PurchaseTest {
   void constructor_validArguments_createsShare() {
     Stock stock2 = new Stock("AAPL", "Apple", new BigDecimal("265"));
     Share share2 = new Share(stock2, new BigDecimal("3"), new BigDecimal("250"), 1);
-    Purchase purchase2 = new Purchase(share2, 12);
+    Purchase purchase2 = new Purchase(share2, 12, UUID.randomUUID());
 
     assertEquals(share2, purchase2.getShare());
     assertEquals(12, purchase2.getWeek());

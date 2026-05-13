@@ -5,6 +5,8 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.TransactionCalculator;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 
+import java.util.UUID;
+
 /**
  * Represents a financial transaction in the game.
  *
@@ -17,6 +19,7 @@ public abstract class Transaction {
   private final Share share;
   private final int week;
   private final TransactionCalculator calculator;
+  private final UUID batchId;
   private boolean committed;
 
   /**
@@ -28,13 +31,15 @@ public abstract class Transaction {
    * @throws IllegalArgumentException if {@code share} or {@code calculator} is
    *     {@code null}, or if {@code week} is not positive
    */
-  protected Transaction(Share share, int week, TransactionCalculator calculator) {
+  protected Transaction(Share share, int week, TransactionCalculator calculator, UUID batchId) {
     Validate.notNull(share, "Share");
     Validate.positiveInt(week, "Week");
     Validate.notNull(calculator, "Calculator");
+    Validate.notNull(batchId, "Batch id");
     this.share = share;
     this.week = week;
     this.calculator = calculator;
+    this.batchId = batchId;
   }
 
   /**
@@ -62,6 +67,16 @@ public abstract class Transaction {
    */
   public TransactionCalculator getCalculator() {
     return calculator;
+  }
+
+  /**
+   * Returns the batch id that groups this transaction with others from
+   * the same logical action.
+   *
+   * @return the batch id
+   */
+  public UUID getBatchId() {
+    return batchId;
   }
 
   /**
