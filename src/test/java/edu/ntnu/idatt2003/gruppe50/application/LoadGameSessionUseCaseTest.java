@@ -1,21 +1,20 @@
 package edu.ntnu.idatt2003.gruppe50.application;
 
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
+import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-
-import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
-import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class LoadGameSessionUseCaseTest {
 
@@ -46,8 +45,7 @@ public class LoadGameSessionUseCaseTest {
 
     assertThrows(
         GameSessionNotFoundException.class,
-        () -> loadSession.execute(new LoadGameSessionUseCase.Request(unkownId))
-    );
+        () -> loadSession.execute(new LoadGameSessionUseCase.Request(unkownId)));
   }
 
   @Test
@@ -60,21 +58,20 @@ public class LoadGameSessionUseCaseTest {
 
     assertEquals(session.getGameId(), response.gameId());
     assertEquals(GameSessionState.FINISHED, response.state());
-
   }
 
   @Test
   void execute_validRequest_updatesLastPlayed() {
     LocalDate yesterday = LocalDate.now().minusDays(1);
-    GameSession existingSession = GameSession.rehydrate(
-        UUID.randomUUID(),
-        session.getPlayer(),
-        session.getExchange(),
-        GameSessionState.ACTIVE,
-        LocalDate.now().minusDays(10),
-        yesterday,
-        List.of(bd(20))
-    );
+    GameSession existingSession =
+        GameSession.rehydrate(
+            UUID.randomUUID(),
+            session.getPlayer(),
+            session.getExchange(),
+            GameSessionState.ACTIVE,
+            LocalDate.now().minusDays(10),
+            yesterday,
+            List.of(bd(20)));
     repository.save(existingSession);
 
     assertEquals(yesterday, existingSession.getLastPlayed());

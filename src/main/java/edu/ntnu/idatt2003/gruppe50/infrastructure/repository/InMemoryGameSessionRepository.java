@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public final class InMemoryGameSessionRepository implements GameSessionRepository {
+
   private final Map<UUID, GameSession> sessions = new HashMap<>();
 
   @Override

@@ -1,20 +1,19 @@
 package edu.ntnu.idatt2003.gruppe50.application;
 
-import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
-import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
-import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.util.UUID;
-
 import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.assertBigDecimalEquals;
 import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
 import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
+import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
+import java.math.BigDecimal;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BuyShareUseCaseTest {
 
@@ -45,8 +44,7 @@ public class BuyShareUseCaseTest {
 
     assertThrows(
         GameSessionNotFoundException.class,
-        () -> buyShare.execute(new BuyShareUseCase.Request(unknownId, "AAPL", bd(2)))
-    );
+        () -> buyShare.execute(new BuyShareUseCase.Request(unknownId, "AAPL", bd(2))));
   }
 
   @Test
@@ -56,8 +54,7 @@ public class BuyShareUseCaseTest {
 
     assertThrows(
         IllegalArgumentException.class,
-        () -> buyShare.execute(new BuyShareUseCase.Request(session.getGameId(), "AAPL", bd(0)))
-    );
+        () -> buyShare.execute(new BuyShareUseCase.Request(session.getGameId(), "AAPL", bd(0))));
 
     GameSession repositorySession = repository.findById(session.getGameId()).orElseThrow();
     assertEquals(moneyBefore, repositorySession.getPlayer().getMoney());

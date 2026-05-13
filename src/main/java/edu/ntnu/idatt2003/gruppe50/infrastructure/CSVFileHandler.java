@@ -10,27 +10,22 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Utility for reading and writing stock CSV files.
- */
+/** Utility for reading and writing stock CSV files. */
+@SuppressWarnings("AbbreviationAsWordInName")
 public class CSVFileHandler {
 
   /**
    * Reads stock data from a CSV file and returns a list of {@link Stock} objects.
-   * <p>
-   * Lines starting with {@code #} or blank lines are ignored.
-   * Each valid line must be on the form {@code symbol,name,price}.
-   * </p>
    *
-   * <p>
-   * Code gotten from code-example from lecture material.
-   * <a href="https://gitlab.com/atleolso/file-handling/-/blob/master/src/main/java/edu/ntnu/idatt2003/TextFiles.java">...</a>
-   * </p>
+   * <p>Lines starting with {@code #} or blank lines are ignored.
+   * Each valid line must be on the form {@code symbol,name,price}.
+   *
+   * <p>Code gotten from code-example from lecture material. <a
+   * href="https://gitlab.com/atleolso/file-handling/-/blob/master/src/main/java/edu/ntnu/idatt2003/TextFiles.java">...</a>
    *
    * @param path the path to the CSV file
    * @return a list of stocks read from the file
    * @throws RuntimeException if the file cannot be found or read
-   *
    */
   public static List<Stock> readLines(Path path) {
     try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
@@ -38,10 +33,14 @@ public class CSVFileHandler {
       List<Stock> stocks = new ArrayList<>();
 
       while ((line = bufferedReader.readLine()) != null) {
-        if (line.isBlank() || line.startsWith("#")) continue;
+        if (line.isBlank() || line.startsWith("#")) {
+          continue;
+        }
 
         String[] parts = line.split(",");
-        if (parts.length != 3) continue;
+        if (parts.length != 3) {
+          continue;
+        }
 
         String symbol = parts[0];
         String company = parts[1];
@@ -58,17 +57,15 @@ public class CSVFileHandler {
 
   /**
    * Writes a list of {@link Stock} objects to a CSV file.
-   * <p>
-   * Each stock is written on the form {@code symbol,name,price}.
-   * </p>
-   * <p>
-   * Try-with-resource closes the stream automatically.
-   * <p>
-   * Code gotten from code-example from lecture material.
-   * <a href="https://gitlab.com/atleolso/file-handling/-/blob/master/src/main/java/edu/ntnu/idatt2003/TextFiles.java">...</a>
-   * </p>
    *
-   * @param path   destination path for the CSV file
+   * <p>Each stock is written on the form {@code symbol,name,price}.
+   *
+   * <p>Try-with-resource closes the stream automatically.
+   *
+   * <p>Code gotten from code-example from lecture material. <a
+   * href="https://gitlab.com/atleolso/file-handling/-/blob/master/src/main/java/edu/ntnu/idatt2003/TextFiles.java">...</a>
+   *
+   * @param path destination path for the CSV file
    * @param stocks stocks to write
    * @throws RuntimeException if the file cannot be written
    */
@@ -76,12 +73,10 @@ public class CSVFileHandler {
     try (Writer writer = Files.newBufferedWriter(path)) {
       for (Stock stock : stocks) {
         writer.write(
-            stock.getSymbol() + "," + stock.getCompany() + "," + stock.getSalesPrice() + "\n"
-        );
+            stock.getSymbol() + "," + stock.getCompany() + "," + stock.getSalesPrice() + "\n");
       }
     } catch (IOException e) {
       throw new RuntimeException("No path found by: " + path, e);
     }
   }
-
 }

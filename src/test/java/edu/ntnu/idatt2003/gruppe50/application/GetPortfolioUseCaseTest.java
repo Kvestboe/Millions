@@ -1,20 +1,19 @@
 package edu.ntnu.idatt2003.gruppe50.application;
 
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.assertBigDecimalEquals;
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
+import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
+import static org.junit.jupiter.api.Assertions.*;
+
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
 import java.util.UUID;
-
-import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.assertBigDecimalEquals;
-import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
-import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GetPortfolioUseCaseTest {
 
@@ -32,7 +31,8 @@ public class GetPortfolioUseCaseTest {
 
   @Test
   void execute_validRequest_returnsPortfolio() {
-    GetPortfolioUseCase.Response response = getPortfolio.execute(new GetPortfolioUseCase.Request(session.getGameId()));
+    GetPortfolioUseCase.Response response =
+        getPortfolio.execute(new GetPortfolioUseCase.Request(session.getGameId()));
 
     assertBigDecimalEquals(bd(10000), response.cash());
     assertBigDecimalEquals(BigDecimal.ZERO, response.portfolioValue());
@@ -70,7 +70,6 @@ public class GetPortfolioUseCaseTest {
 
     assertThrows(
         GameSessionNotFoundException.class,
-        () -> getPortfolio.execute(new GetPortfolioUseCase.Request(unknownId))
-    );
+        () -> getPortfolio.execute(new GetPortfolioUseCase.Request(unknownId)));
   }
 }

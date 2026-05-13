@@ -9,10 +9,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Retrieves portfolio-related data for a game session.
- */
+/** Retrieves portfolio-related data for a game session. */
 public final class GetPortfolioUseCase {
+
   private final GameSessionRepository repository;
 
   /**
@@ -32,8 +31,8 @@ public final class GetPortfolioUseCase {
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public Response execute(Request request) {
-    GameSession session = repository.findById(request.gameId())
-        .orElseThrow(GameSessionNotFoundException::new);
+    GameSession session =
+        repository.findById(request.gameId()).orElseThrow(GameSessionNotFoundException::new);
 
     Player player = session.getPlayer();
     Portfolio portfolio = player.getPortfolio();
@@ -71,7 +70,5 @@ public final class GetPortfolioUseCase {
       BigDecimal portfolioValue,
       BigDecimal netWorth,
       List<ShareDto> shares,
-      List<BigDecimal> netWorthHistory
-  ) {}
-
+      List<BigDecimal> netWorthHistory) {}
 }

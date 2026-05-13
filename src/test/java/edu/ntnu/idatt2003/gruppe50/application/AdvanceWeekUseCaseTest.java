@@ -1,17 +1,16 @@
 package edu.ntnu.idatt2003.gruppe50.application;
 
+import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
+import static org.junit.jupiter.api.Assertions.*;
+
 import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionFinishedException;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
-
-import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class AdvanceWeekUseCaseTest {
 
@@ -34,7 +33,7 @@ public class AdvanceWeekUseCaseTest {
     advanceWeek.execute(new AdvanceWeekUseCase.Request(session.getGameId()));
 
     GameSession repositorySession = repository.findById(session.getGameId()).orElseThrow();
-    assertEquals(week+1, repositorySession.getExchange().getWeek());
+    assertEquals(week + 1, repositorySession.getExchange().getWeek());
   }
 
   @Test
@@ -43,8 +42,7 @@ public class AdvanceWeekUseCaseTest {
 
     assertThrows(
         GameSessionNotFoundException.class,
-        () -> advanceWeek.execute(new AdvanceWeekUseCase.Request(unknownId))
-    );
+        () -> advanceWeek.execute(new AdvanceWeekUseCase.Request(unknownId)));
   }
 
   @Test
@@ -54,8 +52,7 @@ public class AdvanceWeekUseCaseTest {
 
     assertThrows(
         GameSessionFinishedException.class,
-        () -> advanceWeek.execute(new AdvanceWeekUseCase.Request(session.getGameId()))
-    );
+        () -> advanceWeek.execute(new AdvanceWeekUseCase.Request(session.getGameId())));
 
     GameSession repositorySession = repository.findById(session.getGameId()).orElseThrow();
     assertEquals(week, repositorySession.getExchange().getWeek());

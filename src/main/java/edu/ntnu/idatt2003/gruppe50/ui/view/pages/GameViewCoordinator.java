@@ -10,7 +10,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.*;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
 public class GameViewCoordinator {
+
   private final GameController gameController;
   private final PortfolioQueryController portfolioQueryController;
   private final TransactionQueryController transactionQueryController;
@@ -58,19 +59,14 @@ public class GameViewCoordinator {
     navManager.navigateTo(PageId.DASHBOARD);
 
     Scene scene = new Scene(root, 600, 400);
-    scene.getStylesheets().add(
-        getClass().getResource("/css/styles.css").toExternalForm()
-    );
+    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }
 
   private Map<PageId, Page> buildPages() {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
-    MarketController marketController = new MarketController(
-        exchange,
-        player,
-        this::navigateToStockDetail
-    );
+    MarketController marketController =
+        new MarketController(exchange, player, this::navigateToStockDetail);
 
     pages.put(PageId.DASHBOARD, new DashboardView(gameController));
     pages.put(PageId.MARKET, new MarketView(marketController));

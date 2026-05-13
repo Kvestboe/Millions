@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.Sale;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 
 public final class DtoMapper {
+
   static ShareDto createShareDto(Share share) {
     return new ShareDto(
             share.getShareId(),

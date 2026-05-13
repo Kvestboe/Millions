@@ -7,12 +7,11 @@ import java.util.UUID;
 
 /**
  * Represents a holding of a specific stock.
- * <p>
- * A share consists of a stock, the quantity owned
- * and the purchase price per unit.
- * </p>
+ *
+ * <p>A share consists of a stock, the quantity owned and the purchase price per unit.
  */
 public class Share {
+
   private final UUID shareId;
   private final Stock stock;
   private final BigDecimal quantity;
@@ -21,8 +20,8 @@ public class Share {
   /**
    * Creates a new {@code Share} with the given stock, quantity and purchase price.
    *
-   * @param stock         the stock that is owned
-   * @param quantity      the number of units owned
+   * @param stock the stock that is owned
+   * @param quantity the number of units owned
    * @param purchasePrice the purchase price per unit
    * @throws IllegalArgumentException if any argument is null, zero or negative.
    */
@@ -60,7 +59,7 @@ public class Share {
   }
 
   /**
-   * Returns the purchase price per unit for this stock
+   * Returns the purchase price per unit for this stock.
    *
    * @return purchase price
    */
@@ -68,4 +67,3 @@ public class Share {
     return purchasePrice;
   }
 }
-

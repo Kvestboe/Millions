@@ -1,6 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
+import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
 import java.math.BigDecimal;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,10 +18,11 @@ import javafx.scene.layout.VBox;
 
 /**
  * View for the market screen, displaying all stocks listed on the exchange.
- * Provides a searchable table where the user can browse stocks and navigate
+ *
+ * <p>Provides a searchable table where the user can browse stocks and navigate
  * to individual stock detail pages.
  */
-public class MarketView implements Page {
+public class MarketView implements Page, Observer {
 
   private final MarketController controller;
   private final TextField searchField;
@@ -36,6 +39,8 @@ public class MarketView implements Page {
     this.table = createStockTable();
     this.searchField = createSearchField();
     this.root = createRoot();
+
+    controller.addObserver(this);
   }
 
   /**
@@ -49,8 +54,8 @@ public class MarketView implements Page {
   }
 
   /**
-   * Builds and returns the root layout of the market screen.
-   * Adds title, search field and stock table to a {@link VBox}.
+   * Builds and returns the root layout of the market screen. Adds title, search field and stock
+   * table to a {@link VBox}.
    *
    * @return a configured {@link VBox} containing all UI components
    */
@@ -65,7 +70,8 @@ public class MarketView implements Page {
 
   /**
    * Creates and configures the search field.
-   * Filters the stock table in real time based on symbol or company name.
+   *
+   * <p>Filters the stock table in real time based on symbol or company name.
    *
    * @return a configured {@link TextField}
    */
@@ -73,7 +79,7 @@ public class MarketView implements Page {
     TextField field = new TextField();
     field.setPromptText("Search by symbol or company...");
 
-    field.textProperty().addListener((obs, oldVal, newVal) -> {
+    field.textProperty().addListener((_, _, newVal) -> {
       if (newVal == null || newVal.isBlank()) {
         table.getItems().setAll(controller.getStocks());
       } else {
@@ -106,7 +112,7 @@ public class MarketView implements Page {
     table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     table.setMaxWidth(Double.MAX_VALUE);
     table.setMaxHeight(Double.MAX_VALUE);
-    table.setOnMouseClicked(event -> {
+    table.setOnMouseClicked(_ -> {
       Stock selected = table.getSelectionModel().getSelectedItem();
       if (selected != null) {
         controller.onStockSelected(selected);
@@ -139,8 +145,24 @@ public class MarketView implements Page {
     col.setCellValueFactory(data ->
         new SimpleObjectProperty<>(data.getValue().getSalesPrice())
     );
+    col.setCellFactory(c -> createMoneyCell());
     col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
     return col;
+  }
+
+  private TableCell<Stock, BigDecimal> createMoneyCell() {
+    return new TableCell<>() {
+      @Override
+      protected void updateItem(BigDecimal value, boolean empty) {
+        super.updateItem(value, empty);
+
+        if (empty || value == null) {
+          setText(null);
+        } else {
+          setText(MoneyFormat.formatCurrency(value));
+        }
+      }
+    };
   }
 
   private TableColumn<Stock, BigDecimal> createChangeColumn() {
@@ -148,9 +170,26 @@ public class MarketView implements Page {
     col.setCellValueFactory(data ->
         new SimpleObjectProperty<>(data.getValue().getLatestPriceChange())
     );
-    col.setCellFactory(c -> createColoredCell());
+    col.setCellFactory(c -> createColoredCurrencyCell());
     col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
     return col;
+  }
+
+  private TableCell<Stock, BigDecimal> createColoredCurrencyCell() {
+    return new TableCell<>() {
+      @Override
+      protected void updateItem(BigDecimal value, boolean empty) {
+        super.updateItem(value, empty);
+
+        if (empty || value == null) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText(MoneyFormat.formatSignedCurrency(value));
+          setStyle(gainStyle(value));
+        }
+      }
+    };
   }
 
   private TableColumn<Stock, BigDecimal> createPercentChangeColumn() {
@@ -158,37 +197,48 @@ public class MarketView implements Page {
     col.setCellValueFactory(data ->
         new SimpleObjectProperty<>(data.getValue().getLatestPriceChangePercent())
     );
-    col.setCellFactory(c -> createColoredCell());
+    col.setCellFactory(c -> createColoredPercentCell());
     col.setMaxWidth(1f * Integer.MAX_VALUE * 20);
     return col;
   }
 
-  /**
-   * Creates a table cell that displays a {@link BigDecimal} value with
-   * color coding based on its sign. Positive values are green,
-   * negative values are red, and zero is white.
-   *
-   * @return a configured {@link TableCell}
-   */
-  private TableCell<Stock, BigDecimal> createColoredCell() {
+  private TableCell<Stock, BigDecimal> createColoredPercentCell() {
     return new TableCell<>() {
       @Override
       protected void updateItem(BigDecimal value, boolean empty) {
         super.updateItem(value, empty);
+
         if (empty || value == null) {
           setText(null);
           setStyle("");
         } else {
-          setText(value.toString());
-          if (value.compareTo(BigDecimal.ZERO) > 0) {
-            setStyle("-fx-text-fill: #4CAF50;");
-          } else if (value.compareTo(BigDecimal.ZERO) < 0) {
-            setStyle("-fx-text-fill: #EF5350;");
-          } else {
-            setStyle("-fx-text-fill: #E0E0E0;");
-          }
+          setText(MoneyFormat.formatSignedPercent(value));
+          setStyle(gainStyle(value));
         }
       }
     };
+  }
+
+  private String gainStyle(BigDecimal value) {
+    if (value.compareTo(BigDecimal.ZERO) > 0) {
+      return "-fx-text-fill: #4CAF50;";
+    } else if (value.compareTo(BigDecimal.ZERO) < 0) {
+      return "-fx-text-fill: #EF5350;";
+    }
+    return "-fx-text-fill: #E0E0E0;";
+  }
+  
+    @Override
+  public void update() {
+    refresh();
+  }
+
+  private void refresh() {
+    String query = searchField.getText();
+    if (query == null || query.isBlank()) {
+      table.getItems().setAll(controller.getStocks());
+    } else {
+      table.getItems().setAll(controller.onSearch(query));
+    }
   }
 }

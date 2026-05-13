@@ -15,6 +15,7 @@ import java.util.UUID;
  * The portfolio maintains a collection of {@link Share} objects.
  */
 public class Portfolio {
+
   private final Map<UUID, Share> shares;
 
   /**
@@ -29,7 +30,7 @@ public class Portfolio {
    *
    * @param share The new share
    * @return {@code true} if the share was added successfully,
-   * {@code false} if the share could not be added
+   *     {@code false} if the share could not be added
    */
   public boolean addShare(Share share) {
     Validate.notNull(share, "Share");
@@ -37,11 +38,11 @@ public class Portfolio {
   }
 
   /**
-   * Removes a  share from the portfolio.
+   * Removes a share from the portfolio.
    *
    * @param shareId The share to remove
-   * @return {@code true} if the share was removed successfully,
-   * {@code false} if the share could not be removed
+   * @return {@code true} if the share was removed successfully, {@code false} if the share could
+   *     not be removed
    */
   public boolean removeShare(UUID shareId) {
     Validate.notNull(shareId, "Share id");
@@ -61,8 +62,7 @@ public class Portfolio {
    * Returns all shares in the portfolio with the given symbol.
    *
    * @param symbol the share symbol to filter by
-   * @return a list of all shares with the given symbol,
-   * or an empty list if none are found
+   * @return a list of all shares with the given symbol, or an empty list if none are found
    * @throws IllegalArgumentException if symbol is null or blank
    */
   public List<Share> getShares(String symbol) {
@@ -75,25 +75,24 @@ public class Portfolio {
   public Share getShare(UUID shareId) {
     Validate.notNull(shareId, "Share id");
     Share share = shares.get(shareId);
-    if (share == null) throw new NoSuchElementException("No share by that id: " + shareId);
+    if (share == null) {
+      throw new NoSuchElementException("No share by that id: " + shareId);
+    }
     return share;
   }
 
   /**
-   * Checks whether the portfolio contains at least
-   * one share with the same stock as the given
-   * share
+   * Checks whether the portfolio contains at least one
+   * share with the same stock as the given share.
    *
    * @param shareToCheck the share whose stock is used for the check
    * @return {@code true} if the portfolio contains at least one share
-   * with the same stock as {@code shareToCheck}, {@code false} otherwise
+   *     with the same stock as {@code shareToCheck}, {@code false} otherwise
    */
   public boolean contains(Share shareToCheck) {
     Validate.notNull(shareToCheck, "Share to check");
     return shares.values().stream()
-        .anyMatch(
-            share -> share.getShareId().equals(shareToCheck.getShareId())
-        );
+        .anyMatch(share -> share.getShareId().equals(shareToCheck.getShareId()));
   }
 
   public boolean contains(UUID shareId) {
@@ -103,15 +102,15 @@ public class Portfolio {
 
   /**
    * Calculates the portfolio net worth.
-   * <p>
-   * Calculates the amount of money the portfolio is worth
-   * if the player were to sell all their stocks.
-   * </p>
+   *
+   * <p>Calculates the amount of money the portfolio is
+   * worth if the player were to sell all their stocks.
    *
    * @return the portfolio net worth as {@link BigDecimal}
    */
   public BigDecimal getNetWorth() {
-    return shares.values().stream().map(a -> new SaleCalculator(a).calculateTotal())
+    return shares.values().stream()
+        .map(a -> new SaleCalculator(a).calculateTotal())
         // First parameter is start value, second parameter is the accumulative value
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }

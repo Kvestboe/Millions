@@ -11,17 +11,17 @@ import java.util.UUID;
 
 /**
  * Aggregate root for a single game run.
- * <p>
- * A game session owns the player and exchange state, and enforces lifecycle
- * rules through {@link GameSessionState}.
- * </p>
+ *
+ * <p>A game session owns the player and exchange state,
+ * and enforces lifecycle rules through {@link GameSessionState}.
  */
 public final class GameSession {
+
   private final UUID gameId;
   private final Player player;
   private final Exchange exchange;
-  private GameSessionState state;
   private final LocalDate runStartedAt;
+  private GameSessionState state;
   private LocalDate lastPlayed;
   private List<BigDecimal> netWorthHistory;
 

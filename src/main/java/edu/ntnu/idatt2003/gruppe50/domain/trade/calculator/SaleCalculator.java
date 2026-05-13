@@ -9,6 +9,7 @@ import java.math.BigDecimal;
  * the relevant fees when selling shares.
  */
 public class SaleCalculator implements TransactionCalculator {
+
   private final BigDecimal purchasePrice;
   private final BigDecimal salesPrice;
   private final BigDecimal quantity;
@@ -18,7 +19,7 @@ public class SaleCalculator implements TransactionCalculator {
    * share which can calculate the belonging fees.
    *
    * @param share the share being sold, the purchase price and
-   *              quantity is used to determine profit.
+   *     quantity is used to determine profit.
    * @throws IllegalArgumentException if {@code share} is null
    */
   public SaleCalculator(Share share) {
@@ -51,10 +52,9 @@ public class SaleCalculator implements TransactionCalculator {
 
   /**
    * Calculates the tax applied to the sale of the shares.
-   * <p>
-   * Validates that the transaction is profitable, and
-   * will not tax the player if the player lost money.
-   * </p>
+   *
+   * <p>Validates that the transaction is profitable,
+   * and will not tax the player if the player lost money.
    *
    * @return the tax amount as a {@link BigDecimal}
    */
@@ -73,10 +73,9 @@ public class SaleCalculator implements TransactionCalculator {
   /**
    * Calculates the total amount won or lost by the sale
    * of the share.
-   * <p>
-   * The amount the player received by the transaction
+   *
+   * <p>The amount the player received by the transaction
    * after deductions such as commission and tax.
-   * </p>
    *
    * @return the net amount from the sale as {@link BigDecimal}
    */
@@ -84,5 +83,4 @@ public class SaleCalculator implements TransactionCalculator {
   public BigDecimal calculateTotal() {
     return calculateGross().subtract(calculateCommission()).subtract(calculateTax());
   }
-
 }
