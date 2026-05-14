@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
-import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -130,7 +130,7 @@ public class StockDetailView extends VBox implements Page {
 
 
   private void refreshHolding() {
-    Optional<ShareData> holding = controller.getHolding(stock.symbol());
+    Optional<ShareDto> holding = controller.getHolding(stock.symbol());
     if (holding.isEmpty()) {
       myHoldingBox.setVisible(false);
       myHoldingBox.setManaged(false);
@@ -139,7 +139,7 @@ public class StockDetailView extends VBox implements Page {
     myHoldingBox.setVisible(true);
     myHoldingBox.setManaged(true);
 
-    ShareData s = holding.get();
+    ShareDto s = holding.get();
     quantityLabel.setText(s.quantity().toString());
     gavLabel.setText(s.purchasePrice() + " kr");
     quantityLabel.setText(s.quantity().setScale(0, RoundingMode.HALF_UP).toString());
