@@ -46,4 +46,9 @@ public class LimitBuyOrder extends LimitOrder {
   public void execute(Exchange exchange) {
     exchange.buy(getStock().getSymbol(), getQuantity(), getPlayer());
   }
+
+  @Override
+  public String label() {
+    return "Buy at target price";
+  }
 }

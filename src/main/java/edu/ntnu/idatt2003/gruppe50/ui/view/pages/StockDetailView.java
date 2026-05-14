@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView;
@@ -110,7 +111,7 @@ public class StockDetailView extends StackPane implements Page {
   private void handleBuy() {
     OrderFormView popup = new OrderFormView(
         controller.gameId(),
-        OrderFormView.Side.BUY,
+        OrderSide.BUY,
         stock,
         this::closePopup,
         this::handleConfirmedOrder,
@@ -123,7 +124,7 @@ public class StockDetailView extends StackPane implements Page {
   private void handleSell() {
     OrderFormView popup = new OrderFormView(
         controller.gameId(),
-        OrderFormView.Side.SELL,
+        OrderSide.SELL,
         stock,
         this::closePopup,
         this::handleConfirmedOrder,

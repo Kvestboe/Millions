@@ -3,6 +3,8 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
 import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
+import edu.ntnu.idatt2003.gruppe50.application.query.OrderType;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,28 +14,25 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
-
 import java.math.BigDecimal;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class OrderInputView extends VBox{
 
-  private final OrderFormView.Side side;
-//  private final Stock stock;
+  private final OrderSide side;
   private final StockDto stock;
   private final Consumer<DraftOrder> onNext;
   private final Runnable onCancel;
 
-  private final ChoiceBox<OrderFormView.OrderType> orderTypeBox = new ChoiceBox<>();
+  private final ChoiceBox<OrderType> orderTypeBox = new ChoiceBox<>();
   private final TextField quantityField = new TextField();
   private final TextField targetPriceField = new TextField();
   private final ChoiceBox<Integer> durationBox = new ChoiceBox<>();
   private final VBox limitFieldsBox = new VBox(10);
   private final Label errorLabel = new Label();
 
-//  public OrderInputView(OrderFormView.Side side, Stock stock, Consumer<DraftOrder> onNext, Runnable onCancel) {
-  public OrderInputView(OrderFormView.Side side, StockDto stock, Consumer<DraftOrder> onNext, Runnable onCancel) {
+  public OrderInputView(OrderSide side, StockDto stock, Consumer<DraftOrder> onNext, Runnable onCancel) {
     this.side = side;
     this.stock = stock;
     this.onNext = onNext;
@@ -41,7 +40,7 @@ public class OrderInputView extends VBox{
 
     setSpacing(15);
 
-    Label title = new Label((side == OrderFormView.Side.BUY ? "Buy" : "Sell") + " " + stock.company());
+    Label title = new Label((side == OrderSide.BUY ? "Buy" : "Sell") + " " + stock.company());
     title.getStyleClass().add("popup-title");
 
     errorLabel.getStyleClass().add("popup-error");
@@ -57,20 +56,20 @@ public class OrderInputView extends VBox{
   }
 
   private VBox buildForm() {
-    if (side == OrderFormView.Side.BUY) {
+    if (side == OrderSide.BUY) {
       orderTypeBox.setItems(FXCollections.observableArrayList(
-          OrderFormView.OrderType.MARKET,
-          OrderFormView.OrderType.TARGET_PRICE
+          OrderType.MARKET,
+          OrderType.TARGET_PRICE
       ));
     } else {
       orderTypeBox.setItems(FXCollections.observableArrayList(
-          OrderFormView.OrderType.MARKET,
-          OrderFormView.OrderType.TARGET_PRICE,
-          OrderFormView.OrderType.STOP_LOSS
+          OrderType.MARKET,
+          OrderType.TARGET_PRICE,
+          OrderType.STOP_LOSS
       ));
     }
 
-    orderTypeBox.setValue(OrderFormView.OrderType.MARKET);
+    orderTypeBox.setValue(OrderType.MARKET);
 
     orderTypeBox.setMaxWidth(Double.MAX_VALUE);
     orderTypeBox.valueProperty().addListener(
@@ -78,16 +77,16 @@ public class OrderInputView extends VBox{
     );
     orderTypeBox.setConverter(new StringConverter<>() {
       @Override
-      public String toString(OrderFormView.OrderType orderType) {
+      public String toString(OrderType orderType) {
         if (orderType == null) {
           return "";
         }
 
-        return getOrderTypeLabel(orderType);
+        return DraftOrder.label(side, orderType);
       }
 
       @Override
-      public OrderFormView.OrderType fromString(String string) {
+      public OrderType fromString(String string) {
         return null;
       }
     });
@@ -128,7 +127,7 @@ public class OrderInputView extends VBox{
 
   private void updateTargetFieldsVisibility() {
     boolean showTargetFields =
-        orderTypeBox.getValue() != OrderFormView.OrderType.MARKET;
+        orderTypeBox.getValue() != OrderType.MARKET;
 
     limitFieldsBox.setVisible(showTargetFields);
     limitFieldsBox.setManaged(showTargetFields);
@@ -172,7 +171,7 @@ public class OrderInputView extends VBox{
 
       DraftOrder draftOrder;
 
-      if (orderTypeBox.getValue() == OrderFormView.OrderType.MARKET) {
+      if (orderTypeBox.getValue() == OrderType.MARKET) {
         draftOrder = new DraftOrder(
             side,
             orderTypeBox.getValue(),
@@ -208,31 +207,4 @@ public class OrderInputView extends VBox{
     errorLabel.setManaged(true);
   }
 
-  private String getOrderTypeLabel(OrderFormView.OrderType orderType) {
-    if (side == OrderFormView.Side.BUY) {
-      if (orderType == OrderFormView.OrderType.MARKET) {
-        return "Buy now";
-      }
-
-      if (orderType == OrderFormView.OrderType.TARGET_PRICE) {
-        return "Buy at target price";
-      }
-    }
-
-    if (side == OrderFormView.Side.SELL) {
-      if (orderType == OrderFormView.OrderType.MARKET) {
-        return "Sell now";
-      }
-
-      if (orderType == OrderFormView.OrderType.TARGET_PRICE) {
-        return "Sell at target price";
-      }
-
-      if (orderType == OrderFormView.OrderType.STOP_LOSS) {
-        return "Stop loss";
-      }
-    }
-
-    return orderType.toString();
-  }
 }

@@ -6,8 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.PurchaseCalculator;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.SaleCalculator;
-import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
@@ -26,28 +25,27 @@ public final class PreviewOrderUseCase {
     GameSession session =
         repository.findById(request.gameId).orElseThrow(GameSessionNotFoundException::new);
 
-    DraftOrder draftOrder = request.draftOrder();
 
-    BigDecimal price = draftOrder.isLimit()
-        ? draftOrder.targetPrice()
-        : draftOrder.stock().salesPrice();
+    BigDecimal price = request.targetPrice() != null
+        ? request.targetPrice()
+        : session.getExchange().getStock(request.symbol()).getSalesPrice();
 
 
-    BigDecimal subTotal = price.multiply(draftOrder.quantity());
+    BigDecimal subTotal = price.multiply(request.quantity());
     BigDecimal commission;
     BigDecimal tax;
     BigDecimal total;
 
-    if (draftOrder.side() == OrderFormView.Side.BUY) {
-      PurchaseCalculator calculator = new PurchaseCalculator(price, draftOrder.quantity());
+    if (request.side() == OrderSide.BUY) {
+      PurchaseCalculator calculator = new PurchaseCalculator(price, request.quantity());
       commission = calculator.calculateCommission();
       tax = calculator.calculateTax();
       total = calculator.calculateTotal();
     } else {
-      BigDecimal remaining = draftOrder.quantity();
+      BigDecimal remaining = request.quantity();
       BigDecimal costBasis = BigDecimal.ZERO;
 
-      for (Share lot : session.getPlayer().getPortfolio().getShares(draftOrder.stock().symbol()).stream()
+      for (Share lot : session.getPlayer().getPortfolio().getShares(request.symbol()).stream()
           .sorted(Comparator.comparingInt(Share::getPurchaseWeek))
           .toList()) {
         if (remaining.compareTo(BigDecimal.ZERO) <= 0) {
@@ -62,8 +60,8 @@ public final class PreviewOrderUseCase {
         throw new IllegalStateException("Player does not own enough shares");
       }
 
-      BigDecimal purchasePrice = costBasis.divide(draftOrder.quantity(), 10, RoundingMode.HALF_UP);
-      SaleCalculator calculator = new SaleCalculator(purchasePrice, price, draftOrder.quantity());
+      BigDecimal purchasePrice = costBasis.divide(request.quantity(), 10, RoundingMode.HALF_UP);
+      SaleCalculator calculator = new SaleCalculator(purchasePrice, price, request.quantity());
       commission = calculator.calculateCommission();
       tax = calculator.calculateTax();
       total = calculator.calculateTotal();
@@ -74,7 +72,14 @@ public final class PreviewOrderUseCase {
     return new Response(price, subTotal, commission, tax, total, week);
   }
 
-  public record Request(UUID gameId, DraftOrder draftOrder) {}
+
+  public record Request(
+      UUID gameId,
+      String symbol,
+      BigDecimal quantity,
+      OrderSide side,
+      BigDecimal targetPrice
+  ) {}
 
   public record Response(
       BigDecimal price,

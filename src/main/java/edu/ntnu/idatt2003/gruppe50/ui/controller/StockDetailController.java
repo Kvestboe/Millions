@@ -9,7 +9,8 @@ import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
+import edu.ntnu.idatt2003.gruppe50.application.query.OrderType;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase.Request;
 import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
@@ -29,7 +30,6 @@ public class StockDetailController {
   private final PlaceStopLossOrderUseCase placeStopLossOrder;
   private final PreviewOrderUseCase previewOrderUseCase;
 
-//  public StockDetailController(UUID gameId, BuyShareUseCase buyShare, SellShareUseCase sellShare, PortfolioQueryController portfolioQueryController, GetPortfolioUseCase getPortfolio) {
   public StockDetailController(
       UUID gameId,
       BuyShareUseCase buyShare,
@@ -69,7 +69,7 @@ public class StockDetailController {
   }
 
   public void placeMarketOrder(DraftOrder draftOrder) {
-    if (draftOrder.side() == OrderFormView.Side.BUY) {
+    if (draftOrder.side() == OrderSide.BUY) {
       buyShare.execute(new BuyShareUseCase.Request(
           gameId,
           draftOrder.stock().symbol(),
@@ -85,8 +85,8 @@ public class StockDetailController {
   }
 
   public void placeLimitOrder(DraftOrder draftOrder) {
-    if (draftOrder.side() == OrderFormView.Side.BUY
-        && draftOrder.orderType() == OrderFormView.OrderType.TARGET_PRICE) {
+    if (draftOrder.side() == OrderSide.BUY
+        && draftOrder.orderType() == OrderType.TARGET_PRICE) {
 
       placeBuyLimitOrder.execute(new PlaceBuyLimitOrderUseCase.Request(
           gameId,
@@ -98,8 +98,8 @@ public class StockDetailController {
       return;
     }
 
-    if (draftOrder.side() == OrderFormView.Side.SELL
-        && draftOrder.orderType() == OrderFormView.OrderType.TARGET_PRICE) {
+    if (draftOrder.side() == OrderSide.SELL
+        && draftOrder.orderType() == OrderType.TARGET_PRICE) {
 
       placeSellLimitOrder.execute(new PlaceSellLimitOrderUseCase.Request(
           gameId,
@@ -111,8 +111,8 @@ public class StockDetailController {
       return;
     }
 
-    if (draftOrder.side() == OrderFormView.Side.SELL
-        && draftOrder.orderType() == OrderFormView.OrderType.STOP_LOSS) {
+    if (draftOrder.side() == OrderSide.SELL
+        && draftOrder.orderType() == OrderType.STOP_LOSS) {
 
       placeStopLossOrder.execute(new PlaceStopLossOrderUseCase.Request(
           gameId,

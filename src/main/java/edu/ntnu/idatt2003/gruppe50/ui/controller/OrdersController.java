@@ -21,7 +21,15 @@ public class OrdersController {
 
   public List<OrderData> getPendingOrders() {
     return getPendingOrders.execute(gameId).stream()
-        .map(this::toOrderData)
+        .map(dto -> new OrderData(
+            dto.type(),
+            dto.symbol(),
+            dto.company(),
+            dto.quantity(),
+            dto.targetPrice(),
+            dto.createdWeek(),
+            dto.expiryWeek()
+        ))
         .toList();
   }
 

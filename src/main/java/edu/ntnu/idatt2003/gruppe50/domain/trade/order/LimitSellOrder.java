@@ -41,4 +41,9 @@ public class LimitSellOrder extends LimitOrder{
   public void execute(Exchange exchange) {
     exchange.sellQuantity(getStock(), getQuantity(), getPlayer());
   }
+
+  @Override
+  public String label() {
+    return "Sell at target price";
+  }
 }

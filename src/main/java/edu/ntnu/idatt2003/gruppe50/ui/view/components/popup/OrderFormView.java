@@ -1,8 +1,10 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase.Request;
 import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import java.util.UUID;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,27 +16,17 @@ import java.util.function.Consumer;
 
 public class OrderFormView extends StackPane {
 
-  public enum Side { BUY, SELL }
-
-  public enum OrderType {
-    MARKET,
-    TARGET_PRICE,
-    STOP_LOSS
-  }
-
   private final UUID gameId;
-  private final Side side;
-//  private final Stock stock;
+  private final OrderSide side;
   private final StockDto stock;
   private final Runnable onClose;
   private final Consumer<DraftOrder> onConfirmOrder;
   private final VBox card;
   private final PreviewOrderUseCase previewOrder;
 
-//  public OrderFormView(Side side, Stock stock, Runnable onClose, Consumer<DraftOrder> onConfirmOrder) {
   public OrderFormView(
       UUID gameId,
-      Side side,
+      OrderSide side,
       StockDto stock,
       Runnable onClose,
       Consumer<DraftOrder> onConfirmOrder,
@@ -76,10 +68,16 @@ public class OrderFormView extends StackPane {
   }
 
   private void showConfirmation(DraftOrder draftOrder) {
-//    OrderPreview preview = OrderPreview.from(draftOrder);
-    OrderPreview preview = OrderPreview.getOrderPreview(gameId, draftOrder, previewOrder);
+    PreviewOrderUseCase.Response preview = previewOrder.execute(new Request(
+        gameId,
+        draftOrder.stock().symbol(),
+        draftOrder.quantity(),
+        draftOrder.side(),
+        draftOrder.targetPrice()
+    ));
 
     OrderConfirmationView confirmationView = new OrderConfirmationView(
+        draftOrder,
         preview,
         this::showInput,
         this::confirmOrder
