@@ -5,6 +5,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.PurchaseCalculator;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * Represents a transaction where a player buys shares.
@@ -14,10 +15,19 @@ import java.math.BigDecimal;
  */
 public class Purchase extends Transaction {
 
-  public Purchase(Share share, int week) {
-    super(share, week, new PurchaseCalculator(share));
+  /**
+   * Creates a new {@code Purchase} transaction.
+   *
+   * @param share the share being purchased
+   * @param week the week the purchase takes place
+   * @param batchId the id grouping this transaction with others
+   *     from the same user action
+   * @throws IllegalArgumentException if {@code share} or {@code batchId} is
+   *     {@code null}, or if {@code week} is not positive
+   */
+  public Purchase(Share share, int week, UUID batchId) {
+    super(share, week, new PurchaseCalculator(share), batchId);
   }
-
   /**
    * Commits this purchase transaction for the specified player.
    *

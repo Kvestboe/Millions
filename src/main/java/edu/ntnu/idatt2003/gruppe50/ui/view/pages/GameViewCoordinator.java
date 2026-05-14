@@ -40,8 +40,16 @@ public class GameViewCoordinator {
     pages.put(PageId.MARKET, new MarketView(bundle.market()));
     pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game()));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
+    pages.put(PageId.ORDERS, new OrdersView(ordersController));
 
     return pages;
   }
 
+  private void navigateToStockDetail(Stock stock) {
+    StockDetailController controller = new StockDetailController(
+        gameId, buyShare, sellShare, portfolioQueryController, getPortfolio, buyLimitOrder, sellLimitOrder, stopLossOrder);
+    StockDetailView view = new StockDetailView(
+        stock, controller, () -> navManager.navigateTo(PageId.MARKET));
+    navManager.show(view);
+  }
 }

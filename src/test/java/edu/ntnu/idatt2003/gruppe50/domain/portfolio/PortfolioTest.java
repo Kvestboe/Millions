@@ -24,9 +24,9 @@ class PortfolioTest {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("330"));
     Stock stock2 = new Stock("AAPL", "Apple", bd("400"));
 
-    share1 = new Share(stock, bd("5"), bd("310"));
-    share2 = new Share(stock, bd("10"), bd("320"));
-    share3 = new Share(stock2, bd("10"), bd("400"));
+    share1 = new Share(stock, bd("5"), bd("310"), 1);
+    share2 = new Share(stock, bd("10"), bd("320"), 1);
+    share3 = new Share(stock2, bd("10"), bd("400"), 1);
   }
 
   @Test

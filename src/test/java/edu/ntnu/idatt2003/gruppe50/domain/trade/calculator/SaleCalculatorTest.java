@@ -15,7 +15,7 @@ public class SaleCalculatorTest {
   @BeforeEach
   void setup() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("100"));
-    share = new Share(stock, bd("5"), bd("100"));
+    share = new Share(stock, bd("5"), bd("100"), 1);
     calc = new SaleCalculator(share);
   }
 
@@ -47,7 +47,7 @@ public class SaleCalculatorTest {
   @Test
   void calculateTax_profitableSale_tax30Percent() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("200"));
-    share = new Share(stock, bd("1"), bd("100"));
+    share = new Share(stock, bd("1"), bd("100"), 1);
     calc = new SaleCalculator(share);
     BigDecimal profit = bd("100").subtract(calc.calculateCommission());
 

@@ -32,7 +32,6 @@ public class App extends Application {
     stage.show();
   }
 
-
   private void showMainMenu() {
     MainMenuView menu = new MainMenuView(
         this::showNewGame,

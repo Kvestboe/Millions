@@ -4,7 +4,8 @@ public enum PageId {
   DASHBOARD("Dashboard"),
   MARKET("Market"),
   PORTFOLIO("Portfolio"),
-  TRANSACTIONS("Transactions");
+  TRANSACTIONS("Transactions"),
+  ORDERS("Orders");
 
   private final String label;
 

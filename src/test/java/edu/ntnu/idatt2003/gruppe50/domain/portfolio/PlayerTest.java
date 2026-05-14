@@ -104,7 +104,7 @@ public class PlayerTest {
   @Test
   void getNetWorth_returnsCashAndPortfolioValue() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("100"));
-    Share share = new Share(stock, bd("5"), bd("100"));
+    Share share = new Share(stock, bd("5"), bd("100"), 1);
     player.getPortfolio().addShare(share);
 
     BigDecimal expectedPrice = bd("595"); // money(100) + portfolioNetWorth(495)
