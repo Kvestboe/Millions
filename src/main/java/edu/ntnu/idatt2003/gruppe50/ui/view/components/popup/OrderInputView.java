@@ -1,7 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
 
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
+import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -19,7 +20,8 @@ import java.util.stream.IntStream;
 public class OrderInputView extends VBox{
 
   private final OrderFormView.Side side;
-  private final Stock stock;
+//  private final Stock stock;
+  private final StockDto stock;
   private final Consumer<DraftOrder> onNext;
   private final Runnable onCancel;
 
@@ -30,7 +32,8 @@ public class OrderInputView extends VBox{
   private final VBox limitFieldsBox = new VBox(10);
   private final Label errorLabel = new Label();
 
-  public OrderInputView(OrderFormView.Side side, Stock stock, Consumer<DraftOrder> onNext, Runnable onCancel) {
+//  public OrderInputView(OrderFormView.Side side, Stock stock, Consumer<DraftOrder> onNext, Runnable onCancel) {
+  public OrderInputView(OrderFormView.Side side, StockDto stock, Consumer<DraftOrder> onNext, Runnable onCancel) {
     this.side = side;
     this.stock = stock;
     this.onNext = onNext;
@@ -38,7 +41,7 @@ public class OrderInputView extends VBox{
 
     setSpacing(15);
 
-    Label title = new Label((side == OrderFormView.Side.BUY ? "Buy" : "Sell") + " " + stock.getCompany());
+    Label title = new Label((side == OrderFormView.Side.BUY ? "Buy" : "Sell") + " " + stock.company());
     title.getStyleClass().add("popup-title");
 
     errorLabel.getStyleClass().add("popup-error");

@@ -1,13 +1,16 @@
-package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
+package edu.ntnu.idatt2003.gruppe50.ui.model;
 
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView.OrderType;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView.Side;
 import java.math.BigDecimal;
 
 public record DraftOrder(
-    OrderFormView.Side side,
-    OrderFormView.OrderType orderType,
-    Stock stock,
+    Side side,
+    OrderType orderType,
+    StockDto stock,
     BigDecimal quantity,
     BigDecimal targetPrice,
     Integer duration

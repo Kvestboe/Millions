@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
 
+import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import java.util.function.Consumer;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import javafx.geometry.Pos;
@@ -40,7 +41,7 @@ public class OrderConfirmationView extends VBox {
     String orderTypeLabel = getOrderTypeLabel(draftOrder);
 
     VBox details = new VBox(8,
-        row("Stock", draftOrder.stock().getCompany()),
+        row("Stock", draftOrder.stock().company()),
         row("Order type", orderTypeLabel),
         row("Quantity", draftOrder.quantity().toString()),
         row("Price", MoneyFormat.formatCurrency(preview.price())),

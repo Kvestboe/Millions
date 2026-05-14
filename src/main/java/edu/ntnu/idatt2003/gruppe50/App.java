@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  * Hello world!
  *
  */
-public class App extends Application {
+public final class App extends Application {
 
   private final AppModule module = new AppModule();
   private Stage stage;

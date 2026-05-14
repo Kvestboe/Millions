@@ -11,8 +11,14 @@ public class LimitSellOrder extends LimitOrder{
   /**
    * Creates a new sell order with an explicit expiry week.
    */
-  public LimitSellOrder(Stock stock, Player player, BigDecimal targetPrice,
-                       BigDecimal quantity, int currentWeek, int expiryWeek) {
+  public LimitSellOrder(
+      Stock stock,
+      Player player,
+      BigDecimal targetPrice,
+      BigDecimal quantity,
+      int currentWeek,
+      int expiryWeek
+  ) {
     super(stock, player, targetPrice, quantity, currentWeek, expiryWeek);
   }
 

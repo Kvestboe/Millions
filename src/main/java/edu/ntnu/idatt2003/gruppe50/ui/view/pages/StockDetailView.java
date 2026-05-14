@@ -1,8 +1,11 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
@@ -13,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 
@@ -105,10 +109,12 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleBuy() {
     OrderFormView popup = new OrderFormView(
+        controller.gameId(),
         OrderFormView.Side.BUY,
         stock,
         this::closePopup,
-        this::handleConfirmedOrder
+        this::handleConfirmedOrder,
+        controller.previewOrderUseCase()
     );
 
     getChildren().add(popup);
@@ -116,10 +122,12 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleSell() {
     OrderFormView popup = new OrderFormView(
+        controller.gameId(),
         OrderFormView.Side.SELL,
         stock,
         this::closePopup,
-        this::handleConfirmedOrder
+        this::handleConfirmedOrder,
+        controller.previewOrderUseCase()
     );
 
     getChildren().add(popup);

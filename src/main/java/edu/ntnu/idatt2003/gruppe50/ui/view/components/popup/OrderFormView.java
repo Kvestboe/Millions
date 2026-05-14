@@ -1,6 +1,9 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
 
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import java.util.UUID;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Region;
@@ -19,17 +22,30 @@ public class OrderFormView extends StackPane {
     STOP_LOSS
   }
 
+  private final UUID gameId;
   private final Side side;
-  private final Stock stock;
+//  private final Stock stock;
+  private final StockDto stock;
   private final Runnable onClose;
   private final Consumer<DraftOrder> onConfirmOrder;
   private final VBox card;
+  private final PreviewOrderUseCase previewOrder;
 
-  public OrderFormView(Side side, Stock stock, Runnable onClose, Consumer<DraftOrder> onConfirmOrder) {
+//  public OrderFormView(Side side, Stock stock, Runnable onClose, Consumer<DraftOrder> onConfirmOrder) {
+  public OrderFormView(
+      UUID gameId,
+      Side side,
+      StockDto stock,
+      Runnable onClose,
+      Consumer<DraftOrder> onConfirmOrder,
+      PreviewOrderUseCase previewOrder
+  ) {
+    this.gameId = gameId;
     this.side = side;
     this.stock = stock;
     this.onClose = onClose;
     this.onConfirmOrder = onConfirmOrder;
+    this.previewOrder = previewOrder;
 
     Region backdrop = new Region();
     backdrop.getStyleClass().add("modal-backdrop");
@@ -60,7 +76,8 @@ public class OrderFormView extends StackPane {
   }
 
   private void showConfirmation(DraftOrder draftOrder) {
-    OrderPreview preview = OrderPreview.from(draftOrder);
+//    OrderPreview preview = OrderPreview.from(draftOrder);
+    OrderPreview preview = OrderPreview.getOrderPreview(gameId, draftOrder, previewOrder);
 
     OrderConfirmationView confirmationView = new OrderConfirmationView(
         preview,
