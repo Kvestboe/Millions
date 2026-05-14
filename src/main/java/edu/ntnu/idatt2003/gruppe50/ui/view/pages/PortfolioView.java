@@ -48,7 +48,6 @@ public class PortfolioView extends VBox implements Page, Observer {
     holdingsTitle.getStyleClass().add("section-title");
     this.getStyleClass().add("portfolio-view");
     this.getChildren().addAll(title, topSection, holdingsTitle, table);
-    this.getStylesheets().add(getClass().getResource("/css/portfolio.css").toExternalForm());
 
     queryController.addObserver(this);
     refresh();

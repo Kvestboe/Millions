@@ -24,6 +24,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.OrdersController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
+import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.NewGameView;
@@ -31,6 +32,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -51,6 +53,7 @@ public class App extends Application {
   private final PlaceSellLimitOrderUseCase sellLimitOrder = new PlaceSellLimitOrderUseCase(sessions);
   private final GetPendingOrdersUseCase getPendingOrders = new GetPendingOrdersUseCase(sessions);
   private final PlaceStopLossOrderUseCase stopLossOrder = new PlaceStopLossOrderUseCase(sessions);
+  private ThemeManager themeManager;
 
   private Stage stage;
 
@@ -61,6 +64,7 @@ public class App extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     this.stage = stage;
+    this.themeManager = new ThemeManager();
 
     String skipMenuParam = getParameters().getNamed().get("skipMenu");
     if (skipMenuParam == null) {
@@ -112,7 +116,9 @@ public class App extends Application {
     );
 
 
-    stage.setScene(gameViewCoordinator.getScene());
+    Scene scene = gameViewCoordinator.getScene();
+    themeManager.apply(scene);
+    stage.setScene(scene);
     stage.show();
   }
 
@@ -121,13 +127,17 @@ public class App extends Application {
         this::showNewGame,
         Platform::exit
     );
-    stage.setScene(menu.getScene());
+    Scene scene = menu.getScene();
+    themeManager.apply(scene);
+    stage.setScene(scene);
     stage.show();
   }
 
   private void showNewGame() {
     NewGameController controller = new NewGameController(startGameSession, this::switchToGame);
     NewGameView newGame = new NewGameView(stage, controller, this::showMainMenu);
-    stage.setScene(newGame.getScene());
+    Scene scene = newGame.getScene();
+    themeManager.apply(scene);
+    stage.setScene(scene);
   }
 }
