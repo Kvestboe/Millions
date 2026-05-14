@@ -166,6 +166,10 @@ public final class GameSession {
    * @throws GameSessionFinishedException if the session is finished
    */
   public void sell(String symbol, BigDecimal quantity) {
+    if (state == GameSessionState.FINISHED) {
+      throw new GameSessionFinishedException();
+    }
+
     Validate.notBlank(symbol, "Symbol");
     Validate.positive(quantity, "Quantity");
 
