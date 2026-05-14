@@ -29,8 +29,8 @@ public final class GameController {
     buyShare.execute(new BuyShareUseCase.Request(gameId, symbol, quantity));
   }
 
-  public void sell(UUID shareId) {
-    sellShare.execute(new SellShareUseCase.Request(gameId, shareId));
+  public void sell(String symbol, BigDecimal quantity) {
+    sellShare.execute(new SellShareUseCase.Request(gameId, symbol, quantity));
   }
 
   public void advanceWeek() {

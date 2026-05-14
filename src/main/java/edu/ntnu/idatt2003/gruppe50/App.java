@@ -4,8 +4,11 @@ import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetPendingOrdersUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
@@ -17,6 +20,7 @@ import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.OrdersController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
@@ -42,6 +46,10 @@ public class App extends Application {
   private final AdvanceWeekUseCase advanceWeek = new AdvanceWeekUseCase(sessions);
   private final GetPortfolioUseCase getPortfolio = new GetPortfolioUseCase(sessions);
   private final GetTransactionsUseCase getTransactions = new GetTransactionsUseCase(sessions);
+  private final PlaceBuyLimitOrderUseCase buyLimitOrder = new PlaceBuyLimitOrderUseCase(sessions);
+  private final PlaceSellLimitOrderUseCase sellLimitOrder = new PlaceSellLimitOrderUseCase(sessions);
+  private final GetPendingOrdersUseCase getPendingOrders = new GetPendingOrdersUseCase(sessions);
+
   private Stage stage;
 
   static void main(String[] args) {
@@ -83,6 +91,8 @@ public class App extends Application {
         new PortfolioQueryController(gameId, getPortfolio, session.getExchange());
     TransactionQueryController transactionQueryController =
         new TransactionQueryController(gameId, getTransactions, session.getExchange());
+    OrdersController ordersController =
+        new OrdersController(gameId, getPendingOrders);
     GameViewCoordinator gameViewCoordinator = new GameViewCoordinator(
         gameController,
         portfolioQueryController,
@@ -92,7 +102,10 @@ public class App extends Application {
         gameId,
         session.getExchange(),
         session.getPlayer(),
-        getPortfolio
+        getPortfolio,
+        buyLimitOrder,
+        sellLimitOrder,
+        ordersController
     );
 
 

@@ -20,6 +20,7 @@ public abstract class LimitOrder {
   private final BigDecimal targetPrice;
   private final BigDecimal quantity;
   private final int expiryWeek;
+  private final int currentWeek;
 
   public static final int DEFAULT_DURATION_WEEKS = 6;
   public static final int MAX_DURATION_WEEKS = 12;
@@ -60,6 +61,7 @@ public abstract class LimitOrder {
     this.targetPrice = targetPrice;
     this.quantity = quantity;
     this.expiryWeek = expiryWeek;
+    this.currentWeek = currentWeek;
   }
 
   public Stock getStock() {
@@ -76,6 +78,10 @@ public abstract class LimitOrder {
 
   public BigDecimal getQuantity() {
     return quantity;
+  }
+
+  public int getCreatedWeek() {
+    return currentWeek;
   }
 
   public int getExpiryWeek() {

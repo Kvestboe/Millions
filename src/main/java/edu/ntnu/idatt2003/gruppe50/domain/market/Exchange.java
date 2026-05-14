@@ -357,6 +357,9 @@ public class Exchange extends Observable {
   public void placeOrder(LimitOrder order) {
     Validate.notNull(order, "Order");
     pendingOrders.add(order);
+
+    System.out.println("Pending orders: " + pendingOrders.size());
+
     notifyObservers();
   }
 

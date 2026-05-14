@@ -1,7 +1,11 @@
 package edu.ntnu.idatt2003.gruppe50.domain.game;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
+import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -127,15 +131,73 @@ public final class GameSession {
     exchange.buy(symbol, quantity, player);
   }
 
+  public void placeBuyLimitOrder(
+      String symbol,
+      BigDecimal quantity,
+      BigDecimal targetPrice,
+      int duration
+  ) {
+    Validate.notBlank(symbol, "Symbol");
+    Validate.positive(quantity, "Quantity");
+    Validate.positive(targetPrice, "Target price");
+    Validate.positiveInt(duration, "Duration");
+
+    Stock stock = exchange.getStock(symbol);
+    int currentWeek = exchange.getWeek();
+    int expiryWeek = currentWeek + duration;
+
+    LimitBuyOrder order = new LimitBuyOrder(
+        stock,
+        player,
+        targetPrice,
+        quantity,
+        currentWeek,
+        expiryWeek
+    );
+
+    exchange.placeOrder(order);
+  }
+
   /**
    * Sells one owned share through the exchange for this session's player.
    *
    * @param shareId identifier of owned share to sell
    * @throws GameSessionFinishedException if the session is finished
    */
-  public void sell(UUID shareId) {
-    ensureActive();
-    exchange.sell(shareId, player);
+  public void sell(String symbol, BigDecimal quantity) {
+    Validate.notBlank(symbol, "Symbol");
+    Validate.positive(quantity, "Quantity");
+
+    Stock stock = exchange.getStock(symbol);
+
+    exchange.sellQuantity(stock, quantity, player);
+  }
+
+  public void placeSellLimitOrder(
+      String symbol,
+      BigDecimal quantity,
+      BigDecimal targetPrice,
+      int duration
+  ) {
+    Validate.notBlank(symbol, "Symbol");
+    Validate.positive(quantity, "Quantity");
+    Validate.positive(targetPrice, "Target price");
+    Validate.positiveInt(duration, "Duration");
+
+    Stock stock = exchange.getStock(symbol);
+    int currentWeek = exchange.getWeek();
+    int expiryWeek = currentWeek + duration;
+
+    LimitSellOrder order = new LimitSellOrder(
+        stock,
+        player,
+        targetPrice,
+        quantity,
+        currentWeek,
+        expiryWeek
+    );
+
+    exchange.placeOrder(order);
   }
 
   /**
@@ -218,5 +280,9 @@ public final class GameSession {
     if (state == GameSessionState.FINISHED) {
       throw new GameSessionFinishedException();
     }
+  }
+
+  public List<LimitOrder> getPendingOrders() {
+    return exchange.getPendingOrders();
   }
 }
