@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
@@ -16,6 +17,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
@@ -42,6 +44,7 @@ public class App extends Application {
   private final AdvanceWeekUseCase advanceWeek = new AdvanceWeekUseCase(sessions);
   private final GetPortfolioUseCase getPortfolio = new GetPortfolioUseCase(sessions);
   private final GetTransactionsUseCase getTransactions = new GetTransactionsUseCase(sessions);
+  private final GetMarketUseCase getMarket = new GetMarketUseCase(sessions);
   private Stage stage;
 
   static void main(String[] args) {
@@ -83,6 +86,8 @@ public class App extends Application {
         new PortfolioQueryController(gameId, getPortfolio, session.getExchange());
     TransactionQueryController transactionQueryController =
         new TransactionQueryController(gameId, getTransactions, session.getExchange());
+    MarketQueryController marketController =
+        new MarketQueryController(gameId, getMarket);
     GameViewCoordinator gameViewCoordinator = new GameViewCoordinator(
         gameController,
         portfolioQueryController,

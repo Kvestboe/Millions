@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.application.query;
 
+import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Sale;
@@ -38,4 +39,13 @@ public final class DtoMapper {
     }
     throw new IllegalStateException("The transaction type is not of sale or purchase");
   }
+
+  static StockDto createStockDto(Stock s) {
+    return new StockDto(
+        s.getSymbol(),
+        s.getCompany(),
+        s.getHistoricalPrices()
+    );
+  }
+
 }
