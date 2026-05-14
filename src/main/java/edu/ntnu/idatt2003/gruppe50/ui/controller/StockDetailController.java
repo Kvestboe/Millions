@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.controller;
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
@@ -21,8 +22,9 @@ public class StockDetailController {
   private final GetPortfolioUseCase getPortfolio;
   private final PlaceBuyLimitOrderUseCase placeBuyLimitOrder;
   private final PlaceSellLimitOrderUseCase placeSellLimitOrder;
+  private final PlaceStopLossOrderUseCase placeStopLossOrder;
 
-  public StockDetailController(UUID gameId, BuyShareUseCase buyShare, SellShareUseCase sellShare, PortfolioQueryController portfolioQueryController, GetPortfolioUseCase getPortfolio, PlaceBuyLimitOrderUseCase placeBuyLimitOrderUseCase, PlaceSellLimitOrderUseCase sellLimitOrder) {
+  public StockDetailController(UUID gameId, BuyShareUseCase buyShare, SellShareUseCase sellShare, PortfolioQueryController portfolioQueryController, GetPortfolioUseCase getPortfolio, PlaceBuyLimitOrderUseCase placeBuyLimitOrderUseCase, PlaceSellLimitOrderUseCase sellLimitOrder, PlaceStopLossOrderUseCase placeStopLossOrder) {
     this.gameId = gameId;
     this.buyShare = buyShare;
     this.sellShare = sellShare;
@@ -30,6 +32,7 @@ public class StockDetailController {
     this.getPortfolio = getPortfolio;
     this.placeBuyLimitOrder = placeBuyLimitOrderUseCase;
     this.placeSellLimitOrder = sellLimitOrder;
+    this.placeStopLossOrder = placeStopLossOrder;
   }
 
   public Optional<ShareData> getHolding(String symbol) {
@@ -63,7 +66,9 @@ public class StockDetailController {
   }
 
   public void placeLimitOrder(DraftOrder draftOrder) {
-    if (draftOrder.side() == OrderFormView.Side.BUY) {
+    if (draftOrder.side() == OrderFormView.Side.BUY
+        && draftOrder.orderType() == OrderFormView.OrderType.TARGET_PRICE) {
+
       placeBuyLimitOrder.execute(new PlaceBuyLimitOrderUseCase.Request(
           gameId,
           draftOrder.stock().getSymbol(),
@@ -71,7 +76,12 @@ public class StockDetailController {
           draftOrder.targetPrice(),
           draftOrder.duration()
       ));
-    } else {
+      return;
+    }
+
+    if (draftOrder.side() == OrderFormView.Side.SELL
+        && draftOrder.orderType() == OrderFormView.OrderType.TARGET_PRICE) {
+
       placeSellLimitOrder.execute(new PlaceSellLimitOrderUseCase.Request(
           gameId,
           draftOrder.stock().getSymbol(),
@@ -79,6 +89,22 @@ public class StockDetailController {
           draftOrder.targetPrice(),
           draftOrder.duration()
       ));
+      return;
     }
+
+    if (draftOrder.side() == OrderFormView.Side.SELL
+        && draftOrder.orderType() == OrderFormView.OrderType.STOP_LOSS) {
+
+      placeStopLossOrder.execute(new PlaceStopLossOrderUseCase.Request(
+          gameId,
+          draftOrder.stock().getSymbol(),
+          draftOrder.quantity(),
+          draftOrder.targetPrice(),
+          draftOrder.duration()
+      ));
+      return;
+    }
+
+    throw new IllegalArgumentException("Unsupported order type");
   }
 }

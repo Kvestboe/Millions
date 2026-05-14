@@ -37,10 +37,7 @@ public class OrderConfirmationView extends VBox {
   private VBox buildDetails() {
     DraftOrder draftOrder = preview.draftOrder();
 
-    String action = draftOrder.side() == OrderFormView.Side.BUY ? "buy" : "sell";
-    String orderTypeLabel = draftOrder.isLimit()
-        ? "Limit " + action
-        : "Market " + action;
+    String orderTypeLabel = getOrderTypeLabel(draftOrder);
 
     VBox details = new VBox(8,
         row("Stock", draftOrder.stock().getCompany()),
@@ -96,4 +93,32 @@ public class OrderConfirmationView extends VBox {
     return new HBox(l, spacer, v);
   }
 
+  private String getOrderTypeLabel(DraftOrder draftOrder) {
+    if (draftOrder.side() == OrderFormView.Side.BUY
+        && draftOrder.orderType() == OrderFormView.OrderType.MARKET) {
+      return "Buy now";
+    }
+
+    if (draftOrder.side() == OrderFormView.Side.BUY
+        && draftOrder.orderType() == OrderFormView.OrderType.TARGET_PRICE) {
+      return "Buy at target price";
+    }
+
+    if (draftOrder.side() == OrderFormView.Side.SELL
+        && draftOrder.orderType() == OrderFormView.OrderType.MARKET) {
+      return "Sell now";
+    }
+
+    if (draftOrder.side() == OrderFormView.Side.SELL
+        && draftOrder.orderType() == OrderFormView.OrderType.TARGET_PRICE) {
+      return "Sell at target price";
+    }
+
+    if (draftOrder.side() == OrderFormView.Side.SELL
+        && draftOrder.orderType() == OrderFormView.OrderType.STOP_LOSS) {
+      return "Stop loss";
+    }
+
+    return "Unknown order";
+  }
 }

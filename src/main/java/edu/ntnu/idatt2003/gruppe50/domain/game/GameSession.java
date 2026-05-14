@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.order.StopLossOrder;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -189,6 +190,33 @@ public final class GameSession {
     int expiryWeek = currentWeek + duration;
 
     LimitSellOrder order = new LimitSellOrder(
+        stock,
+        player,
+        targetPrice,
+        quantity,
+        currentWeek,
+        expiryWeek
+    );
+
+    exchange.placeOrder(order);
+  }
+
+  public void placeStopLossOrder(
+      String symbol,
+      BigDecimal quantity,
+      BigDecimal targetPrice,
+      int duration
+  ) {
+    Validate.notBlank(symbol, "Symbol");
+    Validate.positive(quantity, "Quantity");
+    Validate.positive(targetPrice, "Target price");
+    Validate.positiveInt(duration, "Duration");
+
+    Stock stock = exchange.getStock(symbol);
+    int currentWeek = exchange.getWeek();
+    int expiryWeek = currentWeek + duration;
+
+    StopLossOrder order = new StopLossOrder(
         stock,
         player,
         targetPrice,

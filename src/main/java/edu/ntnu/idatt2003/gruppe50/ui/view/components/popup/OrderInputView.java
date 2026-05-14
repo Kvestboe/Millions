@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.math.BigDecimal;
 import java.util.function.Consumer;
@@ -53,10 +54,40 @@ public class OrderInputView extends VBox{
   }
 
   private VBox buildForm() {
-    orderTypeBox.setItems(FXCollections.observableArrayList(OrderFormView.OrderType.values()));
+    if (side == OrderFormView.Side.BUY) {
+      orderTypeBox.setItems(FXCollections.observableArrayList(
+          OrderFormView.OrderType.MARKET,
+          OrderFormView.OrderType.TARGET_PRICE
+      ));
+    } else {
+      orderTypeBox.setItems(FXCollections.observableArrayList(
+          OrderFormView.OrderType.MARKET,
+          OrderFormView.OrderType.TARGET_PRICE,
+          OrderFormView.OrderType.STOP_LOSS
+      ));
+    }
+
     orderTypeBox.setValue(OrderFormView.OrderType.MARKET);
+
     orderTypeBox.setMaxWidth(Double.MAX_VALUE);
-    orderTypeBox.valueProperty().addListener((obs, oldVal, newVal) -> updateLimitVisibility());
+    orderTypeBox.valueProperty().addListener(
+        (obs, oldVal, newVal) -> updateTargetFieldsVisibility()
+    );
+    orderTypeBox.setConverter(new StringConverter<>() {
+      @Override
+      public String toString(OrderFormView.OrderType orderType) {
+        if (orderType == null) {
+          return "";
+        }
+
+        return getOrderTypeLabel(orderType);
+      }
+
+      @Override
+      public OrderFormView.OrderType fromString(String string) {
+        return null;
+      }
+    });
 
     quantityField.setPromptText("Quantity");
     targetPriceField.setPromptText("Target price (kr)");
@@ -70,7 +101,7 @@ public class OrderInputView extends VBox{
         new Label("Target price"), targetPriceField,
         new Label("Duration (weeks)"), durationBox
     );
-    updateLimitVisibility();
+    updateTargetFieldsVisibility();
 
     return new VBox(10,
         new Label("Order type"), orderTypeBox,
@@ -92,10 +123,12 @@ public class OrderInputView extends VBox{
     return actions;
   }
 
-  private void updateLimitVisibility() {
-    boolean isLimit = orderTypeBox.getValue() == OrderFormView.OrderType.LIMIT;
-    limitFieldsBox.setVisible(isLimit);
-    limitFieldsBox.setManaged(isLimit);
+  private void updateTargetFieldsVisibility() {
+    boolean showTargetFields =
+        orderTypeBox.getValue() != OrderFormView.OrderType.MARKET;
+
+    limitFieldsBox.setVisible(showTargetFields);
+    limitFieldsBox.setManaged(showTargetFields);
   }
 
   private BigDecimal parseQuantity() {
@@ -133,14 +166,30 @@ public class OrderInputView extends VBox{
   private void handleNext() {
     try {
       BigDecimal quantity = parseQuantity();
+
       DraftOrder draftOrder;
 
       if (orderTypeBox.getValue() == OrderFormView.OrderType.MARKET) {
-        draftOrder = new DraftOrder(side, stock, quantity, null, null);
+        draftOrder = new DraftOrder(
+            side,
+            orderTypeBox.getValue(),
+            stock,
+            quantity,
+            null,
+            null
+        );
       } else {
         BigDecimal targetPrice = parseTargetPrice();
-        int duration = durationBox.getValue();
-        draftOrder = new DraftOrder(side, stock, quantity, targetPrice, duration);
+        Integer duration = durationBox.getValue();
+
+        draftOrder = new DraftOrder(
+            side,
+            orderTypeBox.getValue(),
+            stock,
+            quantity,
+            targetPrice,
+            duration
+        );
       }
 
       onNext.accept(draftOrder);
@@ -154,5 +203,33 @@ public class OrderInputView extends VBox{
     errorLabel.setText(message);
     errorLabel.setVisible(true);
     errorLabel.setManaged(true);
+  }
+
+  private String getOrderTypeLabel(OrderFormView.OrderType orderType) {
+    if (side == OrderFormView.Side.BUY) {
+      if (orderType == OrderFormView.OrderType.MARKET) {
+        return "Buy now";
+      }
+
+      if (orderType == OrderFormView.OrderType.TARGET_PRICE) {
+        return "Buy at target price";
+      }
+    }
+
+    if (side == OrderFormView.Side.SELL) {
+      if (orderType == OrderFormView.OrderType.MARKET) {
+        return "Sell now";
+      }
+
+      if (orderType == OrderFormView.OrderType.TARGET_PRICE) {
+        return "Sell at target price";
+      }
+
+      if (orderType == OrderFormView.OrderType.STOP_LOSS) {
+        return "Stop loss";
+      }
+    }
+
+    return orderType.toString();
   }
 }

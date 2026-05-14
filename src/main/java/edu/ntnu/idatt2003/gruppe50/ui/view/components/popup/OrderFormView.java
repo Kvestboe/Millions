@@ -14,19 +14,9 @@ public class OrderFormView extends StackPane {
   public enum Side { BUY, SELL }
 
   public enum OrderType {
-    MARKET("Market order"),
-    LIMIT("Limit order");
-
-    private final String label;
-
-    OrderType(String label) {
-      this.label = label;
-    }
-
-    @Override
-    public String toString() {
-      return label;
-    }
+    MARKET,
+    TARGET_PRICE,
+    STOP_LOSS
   }
 
   private final Side side;

@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPendingOrdersUseCase;
@@ -49,6 +50,7 @@ public class App extends Application {
   private final PlaceBuyLimitOrderUseCase buyLimitOrder = new PlaceBuyLimitOrderUseCase(sessions);
   private final PlaceSellLimitOrderUseCase sellLimitOrder = new PlaceSellLimitOrderUseCase(sessions);
   private final GetPendingOrdersUseCase getPendingOrders = new GetPendingOrdersUseCase(sessions);
+  private final PlaceStopLossOrderUseCase stopLossOrder = new PlaceStopLossOrderUseCase(sessions);
 
   private Stage stage;
 
@@ -105,6 +107,7 @@ public class App extends Application {
         getPortfolio,
         buyLimitOrder,
         sellLimitOrder,
+        stopLossOrder,
         ordersController
     );
 
