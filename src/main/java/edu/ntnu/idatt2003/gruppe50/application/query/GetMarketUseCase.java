@@ -20,8 +20,8 @@ public class GetMarketUseCase {
          repository.findById(request.gameId()).orElseThrow(GameSessionNotFoundException::new);
 
      List<Stock> stocks = request.query() == null || request.query().isBlank()
-         ? session.getExchange().findStocks(request.query())
-         : session.getExchange().getStocks();
+         ? session.getExchange().getStocks()
+         : session.getExchange().findStocks(request.query());
 
      List<StockDto> stockDtos = stocks.stream()
          .map(DtoMapper::createStockDto)

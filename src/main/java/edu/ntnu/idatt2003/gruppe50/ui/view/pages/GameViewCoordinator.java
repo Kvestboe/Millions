@@ -2,12 +2,14 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase.Request;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
@@ -32,6 +34,7 @@ public class GameViewCoordinator {
   private final Player player;
   private NavigationManager navManager;
   private final GetPortfolioUseCase getPortfolio;
+  private final GetMarketUseCase getMarket;
 
   public GameViewCoordinator(
       GameController gameController,
@@ -42,7 +45,8 @@ public class GameViewCoordinator {
       UUID gameId,
       Exchange exchange,
       Player player,
-      GetPortfolioUseCase getPortfolio
+      GetPortfolioUseCase getPortfolio,
+      GetMarketUseCase getMarket
   ) {
     this.transactionQueryController = transactionQueryController;
     this.sellShare = sellShare;
@@ -53,6 +57,7 @@ public class GameViewCoordinator {
     this.buyShare = buyShare;
     this.gameId = gameId;
     this.getPortfolio = getPortfolio;
+    this.getMarket = getMarket;
   }
 
   public Scene getScene() {
@@ -72,22 +77,25 @@ public class GameViewCoordinator {
 
   private Map<PageId, Page> buildPages() {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
-    MarketController marketController =
-        new MarketController(exchange, player, this::navigateToStockDetail);
+    MarketQueryController marketQueryController =
+        new MarketQueryController(gameId, getMarket, exchange, this::navigateToStockDetail);
 
     pages.put(PageId.DASHBOARD, new DashboardView(gameController));
-    pages.put(PageId.MARKET, new MarketView(marketController));
+    pages.put(PageId.MARKET, new MarketView(marketQueryController));
     pages.put(PageId.PORTFOLIO, new PortfolioView(portfolioQueryController, gameController));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(transactionQueryController));
 
     return pages;
   }
 
-  private void navigateToStockDetail(Stock stock) {
+  private void navigateToStockDetail(String symbol) {
     StockDetailController controller = new StockDetailController(
-        gameId, buyShare, sellShare, portfolioQueryController, getPortfolio);
-    StockDetailView view = new StockDetailView(
-        stock, controller, () -> navManager.navigateTo(PageId.MARKET));
-    navManager.show(view);
+        gameId, buyShare, sellShare, portfolioQueryController, getPortfolio
+    );
+    StockDto stock = getMarket.execute(new Request(gameId, symbol)).stocks().getFirst();
+    StockDetailView detailView = new StockDetailView(
+        stock, controller, () -> navManager.navigateTo(PageId.MARKET)
+    );
+    navManager.show(detailView);
   }
 }

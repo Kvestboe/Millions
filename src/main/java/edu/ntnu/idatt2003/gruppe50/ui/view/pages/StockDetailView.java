@@ -1,17 +1,14 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Button;
@@ -24,7 +21,7 @@ import javafx.scene.layout.VBox;
 
 public class StockDetailView extends VBox implements Page {
 
-  private final Stock stock;
+  private final StockDto stock;
   private final StockDetailController controller;
   private final Runnable onBack;
 
@@ -35,7 +32,7 @@ public class StockDetailView extends VBox implements Page {
   private final TextField quantityField = new TextField();
   private final VBox myHoldingBox = new VBox(10);
 
-  public StockDetailView(Stock stock, StockDetailController controller, Runnable onBack) {
+  public StockDetailView(StockDto stock, StockDetailController controller, Runnable onBack) {
     this.stock = stock;
     this.controller = controller;
     this.onBack = onBack;
@@ -62,13 +59,13 @@ public class StockDetailView extends VBox implements Page {
     VBox header = new VBox(10);
 
     HBox nameBox = new HBox(10,
-        new Label(stock.getSymbol()),
-        new Label(stock.getCompany()));
+        new Label(stock.symbol()),
+        new Label(stock.company()));
 
     HBox priceBox = new HBox(10,
-        new Label(stock.getSalesPrice() + " kr"),
-        new Label(formatSigned(stock.getLatestPriceChange()) + " kr"),
-        new Label(formatSigned(stock.getLatestPriceChangePercent()) + "%"));
+        new Label(stock.salesPrice() + " kr"),
+        new Label(formatSigned(stock.priceChange()) + " kr"),
+        new Label(formatSigned(stock.percentChange()) + "%"));
 
     header.getChildren().addAll(nameBox, priceBox);
     return header;
@@ -76,7 +73,7 @@ public class StockDetailView extends VBox implements Page {
 
   private AreaChart<Number, Number> createStockChart() {
     AreaChartView stockChart = new AreaChartView("Week", "Price");
-    stockChart.display("Price development", stock.getHistoricalPrices());
+    stockChart.display("Price development", stock.prices());
     stockChart.getChart().setLegendVisible(false);
     return stockChart.getChart();
   }
@@ -113,7 +110,7 @@ public class StockDetailView extends VBox implements Page {
   private void handleBuy() {
     try {
       BigDecimal quantity = new BigDecimal(quantityField.getText().trim());
-      controller.buy(stock.getSymbol(), quantity);
+      controller.buy(stock.symbol(), quantity);
       quantityField.clear();
       refreshHolding();
     } catch (NumberFormatException ex) {
@@ -122,7 +119,7 @@ public class StockDetailView extends VBox implements Page {
   }
 
   private void handleSell() {
-    Optional<UUID> sold = controller.sellOneOf(stock.getSymbol());
+    Optional<UUID> sold = controller.sellOneOf(stock.symbol());
     if (sold.isEmpty()) {
       // vis melding: "Du eier ingen aksjer av dette selskapet"
       return;
@@ -133,7 +130,7 @@ public class StockDetailView extends VBox implements Page {
 
 
   private void refreshHolding() {
-    Optional<ShareData> holding = controller.getHolding(stock.getSymbol());
+    Optional<ShareData> holding = controller.getHolding(stock.symbol());
     if (holding.isEmpty()) {
       myHoldingBox.setVisible(false);
       myHoldingBox.setManaged(false);

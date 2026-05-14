@@ -1,10 +1,10 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory.createTable;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
+import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.SearchBarFactory;
 import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -19,25 +19,26 @@ import javafx.scene.layout.VBox;
  * <p>Provides a searchable table where the user can browse stocks and navigate
  * to individual stock detail pages.
  */
-public class MarketView implements Page, Observer {
+public class MarketView extends VBox implements Page {
 
-  private final MarketController controller;
+  private final MarketQueryController queryController;
   private final TextField searchField;
-  private final TableView<Stock> table;
+  private final TableView<StockDto> table;
   private final VBox root;
 
   /**
    * Creates a new MarketView and initializes all UI components.
    *
-   * @param controller the controller handling market logic and data retrieval
+   * @param queryController the controller handling market logic and data retrieval
    */
-  public MarketView(MarketController controller) {
-    this.controller = controller;
-    this.table = createMarketTable();
-    this.searchField = createSearchField();
+  public MarketView(MarketQueryController queryController) {
+    this.queryController = queryController;
+    table = createMarketTable();
+    this.searchField = SearchBarFactory.createSearchField(
+        "Search by symbol or company...",
+        this::applyFilters
+    );
     this.root = createRoot();
-
-    controller.addObserver(this);
   }
 
   /**
@@ -65,27 +66,6 @@ public class MarketView implements Page, Observer {
     return box;
   }
 
-  /**
-   * Creates and configures the search field.
-   *
-   * <p>Filters the stock table in real time based on symbol or company name.
-   *
-   * @return a configured {@link TextField}
-   */
-  private TextField createSearchField() {
-    TextField field = new TextField();
-    field.setPromptText("Search by symbol or company...");
-
-    field.textProperty().addListener((_, _, newVal) -> {
-      if (newVal == null || newVal.isBlank()) {
-        table.getItems().setAll(controller.getStocks());
-      } else {
-        table.getItems().setAll(controller.onSearch(newVal));
-      }
-    });
-    field.setMaxWidth(Double.MAX_VALUE);
-    return field;
-  }
 
   /**
    * Creates and configures the market table with columns for symbol, company,
@@ -94,36 +74,26 @@ public class MarketView implements Page, Observer {
    *
    * @return a configured {@link TableView} populated with stocks
    */
-  private TableView<Stock> createMarketTable() {
-    TableView<Stock> marketTable = createTable(List.of(
-        ColumnPresets.text("Symbol", Stock::getSymbol),
-        ColumnPresets.text("Company", Stock::getCompany),
-        ColumnPresets.currency("Price", Stock::getSalesPrice),
-        ColumnPresets.signedCurrency("+/- (kr)", Stock::getLatestPriceChange),
-        ColumnPresets.signedPercent("+/- (%)", Stock::getLatestPriceChangePercent)
-
+  private TableView<StockDto> createMarketTable() {
+    TableView<StockDto> marketTable = createTable(List.of(
+        ColumnPresets.text("Symbol", StockDto::symbol),
+        ColumnPresets.text("Company", StockDto::company),
+        ColumnPresets.currency("Price", StockDto::salesPrice),
+        ColumnPresets.signedCurrency("+/- (kr)", StockDto::priceChange),
+        ColumnPresets.signedPercent("+/- (%)", StockDto::percentChange)
     ));
-    marketTable.getItems().addAll(controller.getStocks());
+    marketTable.setItems(queryController.getStocks());
     marketTable.setOnMousePressed(_ -> {
-      Stock selected = table.getSelectionModel().getSelectedItem();
+      StockDto selected = table.getSelectionModel().getSelectedItem();
       if (selected != null) {
-        controller.onStockSelected(selected);
+        queryController.setOnStockSelected(selected);
       }
     });
     return marketTable;
   }
 
-  @Override
-  public void update() {
-    refresh();
-  }
-
-  private void refresh() {
+  private void applyFilters() {
     String query = searchField.getText();
-    if (query == null || query.isBlank()) {
-      table.getItems().setAll(controller.getStocks());
-    } else {
-      table.getItems().setAll(controller.onSearch(query));
-    }
+    queryController.onSearch(query);
   }
 }

@@ -6,5 +6,8 @@ import java.util.List;
 public record StockDto(
     String symbol,
     String company,
-    List<BigDecimal> prices
+    List<BigDecimal> prices,
+    BigDecimal salesPrice,
+    BigDecimal priceChange,
+    BigDecimal percentChange
 ) {}

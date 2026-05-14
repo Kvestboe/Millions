@@ -17,7 +17,6 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
@@ -86,8 +85,8 @@ public class App extends Application {
         new PortfolioQueryController(gameId, getPortfolio, session.getExchange());
     TransactionQueryController transactionQueryController =
         new TransactionQueryController(gameId, getTransactions, session.getExchange());
-    MarketQueryController marketController =
-        new MarketQueryController(gameId, getMarket);
+//    MarketQueryController marketController =
+//        new MarketQueryController(gameId, getMarket, session.getExchange());
     GameViewCoordinator gameViewCoordinator = new GameViewCoordinator(
         gameController,
         portfolioQueryController,
@@ -97,7 +96,8 @@ public class App extends Application {
         gameId,
         session.getExchange(),
         session.getPlayer(),
-        getPortfolio
+        getPortfolio,
+        getMarket
     );
 
 

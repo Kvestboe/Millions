@@ -44,8 +44,10 @@ public final class DtoMapper {
     return new StockDto(
         s.getSymbol(),
         s.getCompany(),
-        s.getHistoricalPrices()
+        s.getHistoricalPrices(),
+        s.getSalesPrice(),
+        s.getLatestPriceChange(),
+        s.getLatestPriceChangePercent()
     );
   }
-
 }
