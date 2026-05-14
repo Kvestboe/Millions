@@ -3,6 +3,8 @@ package edu.ntnu.idatt2003.gruppe50.application.command;
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /** Sells an owned share inside a game session and saves updated state. */
@@ -29,7 +31,8 @@ public final class SellShareUseCase {
     GameSession session =
         repository.findById(request.gameId()).orElseThrow(GameSessionNotFoundException::new);
 
-    session.sell(request.shareId());
+    session.sell(request.symbol(), request.quantity());
+
     repository.save(session);
   }
 
@@ -39,5 +42,5 @@ public final class SellShareUseCase {
    * @param gameId id of the game session
    * @param shareId id of the owned share to sell
    */
-  public record Request(UUID gameId, UUID shareId) {}
+  public record Request(UUID gameId, String symbol, BigDecimal quantity) {}
 }

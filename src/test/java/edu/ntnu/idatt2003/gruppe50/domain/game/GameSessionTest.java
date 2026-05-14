@@ -132,7 +132,7 @@ public class GameSessionTest {
     Share boughtShare = session.getPlayer().getPortfolio().getShares().getFirst();
     session.finish();
 
-    assertThrows(GameSessionFinishedException.class, () -> session.sell(boughtShare.getShareId()));
+    assertThrows(GameSessionFinishedException.class, () -> session.sell(boughtShare.getStock().getSymbol(), boughtShare.getQuantity()));
   }
 
   @Test

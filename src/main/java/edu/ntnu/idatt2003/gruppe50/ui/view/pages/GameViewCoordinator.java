@@ -1,6 +1,9 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
@@ -8,6 +11,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.OrdersController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
@@ -32,11 +36,16 @@ public class GameViewCoordinator {
   private final Player player;
   private NavigationManager navManager;
   private final GetPortfolioUseCase getPortfolio;
+  private final PlaceBuyLimitOrderUseCase buyLimitOrder;
+  private final PlaceSellLimitOrderUseCase sellLimitOrder;
+  private final OrdersController ordersController;
+  private final PlaceStopLossOrderUseCase stopLossOrder;
+
 
   public GameViewCoordinator(GameController gameController,
                              PortfolioQueryController portfolioQueryController, TransactionQueryController transactionQueryController,
                              BuyShareUseCase buyShare, SellShareUseCase sellShare,
-                             UUID gameId, Exchange exchange, Player player, GetPortfolioUseCase getPortfolio) {
+                             UUID gameId, Exchange exchange, Player player, GetPortfolioUseCase getPortfolio, PlaceBuyLimitOrderUseCase buyLimitOrder, PlaceSellLimitOrderUseCase sellLimitOrder, PlaceStopLossOrderUseCase stopLossOrder, OrdersController ordersController) {
     this.transactionQueryController = transactionQueryController;
     this.sellShare = sellShare;
     this.exchange = exchange;
@@ -46,6 +55,10 @@ public class GameViewCoordinator {
     this.buyShare = buyShare;
     this.gameId = gameId;
     this.getPortfolio = getPortfolio;
+    this.buyLimitOrder = buyLimitOrder;
+    this.sellLimitOrder = sellLimitOrder;
+    this.stopLossOrder = stopLossOrder;
+    this.ordersController = ordersController;
   }
 
   public Scene getScene() {
@@ -72,13 +85,14 @@ public class GameViewCoordinator {
     pages.put(PageId.MARKET, new MarketView(marketController));
     pages.put(PageId.PORTFOLIO, new PortfolioView(portfolioQueryController, gameController));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(transactionQueryController));
+    pages.put(PageId.ORDERS, new OrdersView(ordersController));
 
     return pages;
   }
 
   private void navigateToStockDetail(Stock stock) {
     StockDetailController controller = new StockDetailController(
-        gameId, buyShare, sellShare, portfolioQueryController, getPortfolio);
+        gameId, buyShare, sellShare, portfolioQueryController, getPortfolio, buyLimitOrder, sellLimitOrder, stopLossOrder);
     StockDetailView view = new StockDetailView(
         stock, controller, () -> navManager.navigateTo(PageId.MARKET));
     navManager.show(view);

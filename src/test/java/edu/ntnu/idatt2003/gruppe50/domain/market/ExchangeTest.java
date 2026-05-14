@@ -155,7 +155,7 @@ public class ExchangeTest {
 
   @Test
   void sell_nullPlayer_throwsException() {
-    Share share = new Share(exchange.getStock("AAPL"), new BigDecimal("1"), new BigDecimal("100"));
+    Share share = new Share(exchange.getStock("AAPL"), new BigDecimal("1"), new BigDecimal("100"), 1);
     assertThrows(IllegalArgumentException.class, () -> exchange.sell(share.getShareId(), null));
   }
 

@@ -15,13 +15,13 @@ class ShareTest {
   @BeforeEach
   void setUp() {
     stock = new Stock("KOG", "Kongsberg Gruppen", bd("330"));
-    share = new Share(stock, bd("5"), bd("310"));
+    share = new Share(stock, bd("5"), bd("310"), 1);
   }
 
   @Test
   void constructor_validArguments_createsShare() {
     Stock stock = new Stock("AAPL", "Apple", bd("265"));
-    Share share = new Share(stock, bd("3"), bd("250"));
+    Share share = new Share(stock, bd("3"), bd("250"), 1);
 
     assertEquals(stock, share.getStock());
     assertEquals(bd("3"), share.getQuantity());
@@ -30,38 +30,38 @@ class ShareTest {
 
   @Test
   void constructor_nullStock_throwsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new Share(null, bd("10"), bd("6")));
+    assertThrows(IllegalArgumentException.class, () -> new Share(null, bd("10"), bd("6"), 1));
   }
 
   @Test
   void constructor_negativeQuantity_throwsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new Share(stock, bd("-7"), bd("20")));
+    assertThrows(IllegalArgumentException.class, () -> new Share(stock, bd("-7"), bd("20"), 1));
   }
 
   @Test
   void constructor_nullQuantity_throwsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new Share(stock, null, bd("20")));
+    assertThrows(IllegalArgumentException.class, () -> new Share(stock, null, bd("20"), 1));
   }
 
   @Test
   void constructor_zeroQuantity_throwsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new Share(stock, BigDecimal.ZERO, bd("20")));
+    assertThrows(IllegalArgumentException.class, () -> new Share(stock, BigDecimal.ZERO, bd("20"), 1));
   }
 
   @Test
   void constructor_negativePurchasePrice_throwsIllegalArgumentException() {
     assertThrows(
-        IllegalArgumentException.class, () -> new Share(stock, bd("7"), new BigDecimal("-1")));
+        IllegalArgumentException.class, () -> new Share(stock, bd("7"), new BigDecimal("-1"), 1));
   }
 
   @Test
   void constructor_nullPurchasePrice_throwsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new Share(stock, bd("7"), null));
+    assertThrows(IllegalArgumentException.class, () -> new Share(stock, bd("7"), null, 1));
   }
 
   @Test
   void constructor_zeroPurchasePrice_throwsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new Share(stock, bd("7"), BigDecimal.ZERO));
+    assertThrows(IllegalArgumentException.class, () -> new Share(stock, bd("7"), BigDecimal.ZERO, 1));
   }
 
   @Test

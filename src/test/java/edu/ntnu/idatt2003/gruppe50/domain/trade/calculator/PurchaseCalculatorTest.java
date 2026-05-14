@@ -15,7 +15,7 @@ public class PurchaseCalculatorTest {
   @BeforeEach
   void setup() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("100"));
-    share = new Share(stock, bd("5"), bd("100"));
+    share = new Share(stock, bd("5"), bd("100"), 1);
     calc = new PurchaseCalculator(share);
   }
 

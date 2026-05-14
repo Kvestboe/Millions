@@ -4,6 +4,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.calculator.SaleCalculator;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * Represents a transaction where a player sells shares.
@@ -13,8 +14,18 @@ import java.math.BigDecimal;
  */
 public class Sale extends Transaction {
 
-  public Sale(Share share, int week) {
-    super(share, week, new SaleCalculator(share));
+  /**
+   * Creates a new {@code Sale} transaction.
+   *
+   * @param share the share being sold
+   * @param week the week the sale takes place
+   * @param batchId the id grouping this transaction with others
+   *     from the same user action
+   * @throws IllegalArgumentException if {@code share} or {@code batchId} is
+   *     {@code null}, or if {@code week} is not positive
+   */
+  public Sale(Share share, int week, UUID batchId) {
+    super(share, week, new SaleCalculator(share), batchId);
   }
 
   /**

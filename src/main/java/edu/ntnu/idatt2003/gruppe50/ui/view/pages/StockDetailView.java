@@ -1,28 +1,26 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-import java.util.List;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView;
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 
-public class StockDetailView extends VBox implements Page {
+public class StockDetailView extends StackPane implements Page {
 
   private final Stock stock;
   private final StockDetailController controller;
@@ -32,8 +30,9 @@ public class StockDetailView extends VBox implements Page {
   private final Label gavLabel = new Label();
   private final Label profitLabel = new Label();
   private final Label profitPercentLabel = new Label();
-  private final TextField quantityField = new TextField();
   private final VBox myHoldingBox = new VBox(10);
+  private final VBox content = new VBox(10);
+  private final Button sell = new Button("Sell");
 
   public StockDetailView(Stock stock, StockDetailController controller, Runnable onBack) {
     this.stock = stock;
@@ -43,12 +42,14 @@ public class StockDetailView extends VBox implements Page {
     Button backBtn = new Button("Back");
     backBtn.setOnAction(e -> onBack.run());
 
-    getChildren().addAll(
+    content.getChildren().addAll(
         backBtn,
         createHeader(),
         createStockChart(),
         createStatTiles(),
         createButtonRow());
+
+    getChildren().addAll(content);
 
     refreshHolding();
   }
@@ -94,53 +95,57 @@ public class StockDetailView extends VBox implements Page {
   }
 
   private HBox createButtonRow() {
-    quantityField.setPromptText("Quantity");
-    HBox.setHgrow(quantityField, Priority.ALWAYS);
-
     Button buy = new Button("Buy");
     buy.setMaxWidth(Double.MAX_VALUE);
     HBox.setHgrow(buy, Priority.ALWAYS);
     buy.setOnAction(e -> handleBuy());
 
-    Button sell = new Button("Sell");
     sell.setMaxWidth(Double.MAX_VALUE);
     HBox.setHgrow(sell, Priority.ALWAYS);
     sell.setOnAction(e -> handleSell());
 
-    return new HBox(10, quantityField, buy, sell);
+    return new HBox(10, buy, sell);
   }
 
   private void handleBuy() {
-    try {
-      BigDecimal quantity = new BigDecimal(quantityField.getText().trim());
-      controller.buy(stock.getSymbol(), quantity);
-      quantityField.clear();
-      refreshHolding();
-    } catch (NumberFormatException ex) {
-      // TODO: vis feilmelding til bruker
-    }
+    OrderFormView popup = new OrderFormView(
+        OrderFormView.Side.BUY,
+        stock,
+        this::closePopup,
+        this::handleConfirmedOrder
+    );
+
+    getChildren().add(popup);
   }
 
   private void handleSell() {
-    Optional<UUID> sold = controller.sellOneOf(stock.getSymbol());
-    if (sold.isEmpty()) {
-      // vis melding: "Du eier ingen aksjer av dette selskapet"
-      return;
-    }
-    refreshHolding();
+    OrderFormView popup = new OrderFormView(
+        OrderFormView.Side.SELL,
+        stock,
+        this::closePopup,
+        this::handleConfirmedOrder
+    );
+
+    getChildren().add(popup);
   }
 
-
+  private void closePopup() {
+    getChildren().removeIf(node -> node instanceof OrderFormView);
+  }
 
   private void refreshHolding() {
     Optional<ShareData> holding = controller.getHolding(stock.getSymbol());
     if (holding.isEmpty()) {
       myHoldingBox.setVisible(false);
       myHoldingBox.setManaged(false);
+      sell.setVisible(false);
+      sell.setManaged(false);
       return;
     }
     myHoldingBox.setVisible(true);
     myHoldingBox.setManaged(true);
+    sell.setVisible(true);
+    sell.setManaged(true);
 
     ShareData s = holding.get();
     quantityLabel.setText(s.quantity().toString());
@@ -163,5 +168,15 @@ public class StockDetailView extends VBox implements Page {
 
   private String formatSigned(BigDecimal value) {
     return (value.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + value;
+  }
+
+  private void handleConfirmedOrder(DraftOrder draftOrder) {
+    try {
+      controller.placeOrder(draftOrder);
+      closePopup();
+      refreshHolding();
+    } catch (RuntimeException ex) {
+      System.out.println(ex.getMessage());
+    }
   }
 }
