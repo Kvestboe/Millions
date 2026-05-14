@@ -19,7 +19,7 @@ public record GameSessionControllerBundle(
   public GameSessionControllerBundle(AppModule m, GameSession session) {
     this(
         new GameController(session.getGameId(), m.buyShare, m.sellShare, m.advanceWeek),
-        new MarketQueryController(session.getGameId(),m.getMarket, session.getExchange(), null),
+        new MarketQueryController(session.getGameId(),m.getMarket, session.getExchange()),
         new PortfolioQueryController(session.getGameId(), m.getPortfolio, session.getExchange()),
         new TransactionQueryController(session.getGameId(), m.getTransactions, session.getExchange()),
         new StockDetailController(

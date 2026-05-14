@@ -86,7 +86,7 @@ public class MarketView extends VBox implements Page {
     marketTable.setOnMousePressed(_ -> {
       StockDto selected = table.getSelectionModel().getSelectedItem();
       if (selected != null) {
-        queryController.setOnStockSelected(selected);
+        queryController.stockSelected(selected);
       }
     });
     return marketTable;

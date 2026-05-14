@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase.Request;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase.Response;
 import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
@@ -14,19 +15,17 @@ public final class MarketQueryController implements Observer {
 
   private final UUID gameId;
   private final GetMarketUseCase getMarket;
-  private final Consumer<String> onStockSelected;
+  private Consumer<StockDto> onStockSelected = null;
   private final ObservableList<StockDto> stocks = FXCollections.observableArrayList();
   private String query = "";
 
   public MarketQueryController(
       UUID gameId,
       GetMarketUseCase getMarket,
-      Exchange exchange,
-      Consumer<String> onStockSelected
+      Exchange exchange
   ) {
     this.gameId = gameId;
     this.getMarket = getMarket;
-    this.onStockSelected = onStockSelected;
     exchange.addObserver(this);
     refresh();
   }
@@ -40,9 +39,13 @@ public final class MarketQueryController implements Observer {
     refresh();
   }
 
-  public void setOnStockSelected(StockDto stock) {
+  public void setOnStockSelected(Consumer<StockDto> onStockSelected) {
+    this.onStockSelected = onStockSelected;
+  }
+
+  public void stockSelected(StockDto stock) {
     if (stock != null) {
-      onStockSelected.accept(stock.symbol());
+      onStockSelected.accept(stock);
     }
   }
 
@@ -52,7 +55,7 @@ public final class MarketQueryController implements Observer {
   }
 
   public void refresh() {
-    GetMarketUseCase.Response response =
+    Response response =
         getMarket.execute(new Request(gameId, query));
 
     stocks.setAll(response.stocks());

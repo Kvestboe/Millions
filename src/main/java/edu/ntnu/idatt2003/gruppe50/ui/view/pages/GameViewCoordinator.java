@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
+import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -28,6 +29,8 @@ public class GameViewCoordinator {
 
     navManager.navigateTo(PageId.DASHBOARD);
 
+    bundle.market().setOnStockSelected(this::navigateToStockDetail);
+
     Scene scene = new Scene(root, 600, 400);
     scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
@@ -45,11 +48,9 @@ public class GameViewCoordinator {
     return pages;
   }
 
-//  private void navigateToStockDetail(Stock stock) {
-//    StockDetailController controller = new StockDetailController(
-//        gameId, buyShare, sellShare, portfolioQueryController, getPortfolio, buyLimitOrder, sellLimitOrder, stopLossOrder);
-//    StockDetailView view = new StockDetailView(
-//        stock, controller, () -> navManager.navigateTo(PageId.MARKET));
-//    navManager.show(view);
-//  }
+  private void navigateToStockDetail(StockDto stock) {
+    StockDetailView view = new StockDetailView(
+        stock, bundle.stockDetail(), () -> navManager.navigateTo(PageId.MARKET));
+    navManager.show(view);
+  }
 }
