@@ -85,10 +85,10 @@ public class LaunchStep implements OnboardingStep {
         summaryRow("Astronaut",       flowData.playerName != null ? flowData.playerName : "—"),
         summaryRow("Mission",         difficultyLabel),
         summaryRow("Starting capital", capitalLabel),
-        summaryRow("Target",          "1 000 000 kr 🌕"),
+        summaryRow("Target",          "1 000 000 kr"),
         summaryRow("Market",          fileLabel),
         summaryRow("Hangar cost",     flowData.difficulty != null
-            ? (int)(flowData.difficulty.getHangarCostRate() * 100) + "% / week" : "—"),
+            ? (int)(flowData.difficulty.getHangarCostRate() * 100) + "% of start capital / week" : "—"),
         summaryRow("Game over below", gameOverLabel)
     );
 
