@@ -632,3 +632,9 @@
     -fx-border-color: transparent transparent -border transparent;
     -fx-border-width: 1;
 }
+
+
+/* Error label */
+.error-label {
+    -fx-text-fill: red;
+}

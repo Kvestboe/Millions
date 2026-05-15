@@ -35,6 +35,8 @@ public class StockDetailView extends StackPane implements Page {
   private final VBox content = new VBox(10);
   private final Button sell = new Button("Sell");
 
+  private final Label errorLabel = new Label();
+
   public StockDetailView(StockDto stock, StockDetailController controller, Runnable onBack) {
     this.stock = stock;
     this.controller = controller;
@@ -51,6 +53,9 @@ public class StockDetailView extends StackPane implements Page {
         createButtonRow());
 
     getChildren().addAll(content);
+
+    errorLabel.getStyleClass().add("error-label");
+    errorLabel.setVisible(false);
 
     refreshHolding();
   }
@@ -174,10 +179,12 @@ public class StockDetailView extends StackPane implements Page {
   private void handleConfirmedOrder(DraftOrder draftOrder) {
     try {
       controller.placeOrder(draftOrder);
+      errorLabel.setVisible(false);
       closePopup();
       refreshHolding();
     } catch (RuntimeException ex) {
-      System.out.println(ex.getMessage());
+      errorLabel.setText(ex.getMessage());
+      errorLabel.setVisible(true);
     }
   }
 }

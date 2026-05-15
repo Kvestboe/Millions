@@ -247,6 +247,7 @@ public class NewGameView {
   private void loadDefaultFile() {
     try (var inputStream = getClass().getResourceAsStream("/data/sp500.csv")) {
       if (inputStream == null) {
+        errorLabel.setText("Default stock data not found.");
         return;
       }
       File tempFile = File.createTempFile("stocks", ".csv");
@@ -256,6 +257,7 @@ public class NewGameView {
       selectedFile = tempFile;
     } catch (Exception e) {
       selectedFile = null;
+      errorLabel.setText("Failed to load default stock data.");
     }
   }
 }
