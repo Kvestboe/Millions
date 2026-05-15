@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.SearchBarFactory;
 import java.util.List;
+import java.util.function.Consumer;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -22,6 +23,7 @@ import javafx.scene.layout.VBox;
 public class MarketView extends VBox implements Page {
 
   private final MarketQueryController queryController;
+  private final Consumer<StockDto> onStockSelected;
   private final TextField searchField;
   private final TableView<StockDto> table;
   private final VBox root;
@@ -30,9 +32,11 @@ public class MarketView extends VBox implements Page {
    * Creates a new MarketView and initializes all UI components.
    *
    * @param queryController the controller handling market logic and data retrieval
+   * @param onStockSelected called with the selected stock when a row is clicked
    */
-  public MarketView(MarketQueryController queryController) {
+  public MarketView(MarketQueryController queryController, Consumer<StockDto> onStockSelected) {
     this.queryController = queryController;
+    this.onStockSelected = onStockSelected;
     table = createMarketTable();
     this.searchField = SearchBarFactory.createSearchField(
         "Search by symbol or company...",
@@ -86,7 +90,7 @@ public class MarketView extends VBox implements Page {
     marketTable.setOnMousePressed(_ -> {
       StockDto selected = table.getSelectionModel().getSelectedItem();
       if (selected != null) {
-        queryController.stockSelected(selected);
+        onStockSelected.accept(selected);
       }
     });
     return marketTable;

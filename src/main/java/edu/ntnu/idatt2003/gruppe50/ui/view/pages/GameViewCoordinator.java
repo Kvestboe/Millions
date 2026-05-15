@@ -30,8 +30,6 @@ public class GameViewCoordinator {
 
     navManager.navigateTo(PageId.DASHBOARD);
 
-    bundle.market().setOnStockSelected(this::navigateToStockDetail);
-
     Scene scene = new Scene(root, WindowConfig.WIDTH, WindowConfig.HEIGHT);
     scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
@@ -41,7 +39,7 @@ public class GameViewCoordinator {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
-    pages.put(PageId.MARKET, new MarketView(bundle.market()));
+    pages.put(PageId.MARKET, new MarketView(bundle.market(), this::navigateToStockDetail));
     pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game()));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
