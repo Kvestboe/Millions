@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.shared.Parse;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import java.io.File;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -62,7 +63,7 @@ public class NewGameView {
     root.setTop(backBtn);
     root.setCenter(center);
 
-    Scene scene = new Scene(root, 1280, 900);
+    Scene scene = new Scene(root, WindowConfig.WIDTH, WindowConfig.HEIGHT);
     scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }

@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,7 +30,7 @@ public class MainMenuView {
     StackPane center = new StackPane(createCardBox());
     root.setCenter(center);
 
-    Scene scene = new Scene(root, 1280, 900);
+    Scene scene = new Scene(root, WindowConfig.WIDTH, WindowConfig.HEIGHT);
     scene.getStylesheets().add(getClass().getResource("/css/newGame.css").toExternalForm());
     return scene;
   }

@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
 import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -31,7 +32,7 @@ public class GameViewCoordinator {
 
     bundle.market().setOnStockSelected(this::navigateToStockDetail);
 
-    Scene scene = new Scene(root, 600, 400);
+    Scene scene = new Scene(root, WindowConfig.WIDTH, WindowConfig.HEIGHT);
     scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }
