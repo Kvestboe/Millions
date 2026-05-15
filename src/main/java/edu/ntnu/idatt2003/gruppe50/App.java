@@ -127,12 +127,12 @@ public class App extends Application {
         this::showNewGame,
         Platform::exit
     );
-    Scene scene = menu.getScene();
+    Scene scene = new Scene(menu, 900, 600);
     themeManager.apply(scene);
     stage.setScene(scene);
     stage.show();
   }
-
+  
   private void showNewGame() {
     NewGameController controller = new NewGameController(startGameSession, this::switchToGame);
     NewGameView newGame = new NewGameView(stage, controller, this::showMainMenu);

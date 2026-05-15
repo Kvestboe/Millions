@@ -1,0 +1,91 @@
+/* ===== MAIN MENU CONTAINER ===== */
+.main-menu {
+    -fx-background-color: -bg-primary;
+}
+
+/* ===== HEADER ===== */
+.header-title {
+    -fx-font-size: 52px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -accent-gold;
+}
+
+/* ===== BUTTON SUBTITLE ===== */
+.button-subtitle {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+    -fx-opacity: 0.7;
+}
+
+/* ===== SECONDARY BUTTON INNHOLD ===== */
+.secondary-button-icon {
+    -fx-font-size: 17px;
+    -fx-text-fill: -text-secondary;
+}
+
+.secondary-button-text {
+    -fx-font-size: 11px;
+    -fx-text-fill: -text-primary;
+}
+
+/* ===== SEPARATOR ===== */
+.menu-separator {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: transparent;
+    -fx-opacity: 0.4;
+}
+
+/* ===== SYSTEM BUTTON DANGER ===== */
+.system-button-danger {
+    -fx-background-color: transparent;
+    -fx-border-color: -border;
+    -fx-border-width: 0.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: -error;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-padding: 10 14 10 14;
+}
+
+.system-button-danger:hover {
+    -fx-background-color: -bg-elevated;
+}
+
+/* ===== VERSION LABEL ===== */
+.menu-top-label {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-secondary;
+    -fx-opacity: 0.4;
+}
+
+
+.menu-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: -text-secondary;
+    -fx-opacity: 0.5;
+}
+
+.version-label {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-secondary;
+    -fx-opacity: 0.25;
+}
+/* ===== SYSTEM BUTTON ===== */
+.system-button {
+    -fx-background-color: transparent;
+    -fx-border-color: -border;
+    -fx-border-width: 0.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-padding: 10 14 10 14;
+}
+
+.system-button:hover {
+    -fx-background-color: -bg-elevated;
+}
