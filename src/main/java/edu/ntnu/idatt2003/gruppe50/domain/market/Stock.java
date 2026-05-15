@@ -16,6 +16,16 @@ public class Stock {
   private final String company;
   private final List<BigDecimal> prices;
 
+  private Stock(String symbol, String company, List<BigDecimal> prices) {
+    this.symbol = symbol;
+    this.company = company;
+    this.prices = new ArrayList<>(prices);
+  }
+
+  public static Stock rehydrate(String symbol, String company, List<BigDecimal> prices) {
+    return new Stock(symbol, company, prices);
+  }
+
   /**
    * Creates a new {@code Stock} with an initial sales price.
    *
