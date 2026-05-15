@@ -632,3 +632,105 @@
     -fx-border-color: transparent transparent -border transparent;
     -fx-border-width: 1;
 }
+
+/* ══════════════════════════════
+   ONBOARDING
+══════════════════════════════ */
+
+.story-icon {
+    -fx-font-size: 32px;
+}
+
+.game-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: 800;
+}
+
+.story-text {
+    -fx-fill: -text-secondary;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 5;
+}
+
+.story-italic {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+.onboarding-progress {
+    -fx-background-color: -bg-surface;
+    -fx-border-color: -border;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-padding: 14 32 14 32;
+}
+
+.dot-inactive {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 5;
+    -fx-border-color: -border;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+}
+
+.dot-active {
+    -fx-background-color: -accent-gold;
+    -fx-background-radius: 4;
+}
+
+.dot-done {
+    -fx-background-color: -gain;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.progress-line {
+    -fx-background-color: -border;
+    -fx-opacity: 0;
+}
+
+.diff-card {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -border;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+}
+
+.diff-card:hover {
+    -fx-border-color: -bg-elevated;
+    -fx-background-color: -bg-elevated;
+}
+
+.diff-card-selected {
+    -fx-background-color: rgba(255, 209, 102, 0.06);
+    -fx-background-radius: 12;
+    -fx-border-color: -accent-gold;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+}
+
+.onboarding-progress {
+    -fx-background-color: -bg-surface;
+    -fx-border-color: -border;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-padding: 14 32 14 32;
+}
+
+.diff-name {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+
+.diff-tag {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+}
+
+.diff-stats {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 12px;
+}
