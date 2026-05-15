@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.mapper;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 
 public final class ShareDataMapper {

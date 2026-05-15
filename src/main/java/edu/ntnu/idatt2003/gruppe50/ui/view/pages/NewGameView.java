@@ -2,7 +2,10 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.shared.Parse;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import java.io.File;
+import java.util.UUID;
+import java.util.function.Consumer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -28,6 +31,7 @@ public class NewGameView {
   private final NewGameController controller;
   private final Label errorLabel = new Label();
   private final Runnable onBack;
+  private final Consumer<UUID> onGameStarted;
   private File selectedFile;
   private TextField nameField;
   private TextField capitalField;
@@ -39,10 +43,12 @@ public class NewGameView {
    * @param stage the primary stage used for displaying file dialogs
    * @param controller the controller handling game startup logic
    */
-  public NewGameView(Stage stage, NewGameController controller, Runnable onBack) {
+  public NewGameView(Stage stage, NewGameController controller, Runnable onBack,
+      Consumer<UUID> onGameStarted) {
     this.stage = stage;
     this.controller = controller;
     this.onBack = onBack;
+    this.onGameStarted = onGameStarted;
     loadDefaultFile();
   }
 
@@ -62,7 +68,7 @@ public class NewGameView {
     root.setTop(backBtn);
     root.setCenter(center);
 
-    Scene scene = new Scene(root, 1280, 900);
+    Scene scene = new Scene(root, WindowConfig.WIDTH, WindowConfig.HEIGHT);
     scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }
@@ -165,8 +171,14 @@ public class NewGameView {
           if (error != null) {
             showError(error);
           } else {
-            errorLabel.setVisible(false);
-            controller.onStartGame(nameField.getText(), capitalField.getText(), selectedFile);
+            try {
+              errorLabel.setVisible(false);
+              UUID gameId = controller.onStartGame(
+                  nameField.getText(), capitalField.getText(), selectedFile);
+              onGameStarted.accept(gameId);
+            } catch (IllegalArgumentException e) {
+              showError(e.getMessage());
+            }
           }
         });
     return btn;
@@ -247,6 +259,7 @@ public class NewGameView {
   private void loadDefaultFile() {
     try (var inputStream = getClass().getResourceAsStream("/data/sp500.csv")) {
       if (inputStream == null) {
+        errorLabel.setText("Default stock data not found.");
         return;
       }
       File tempFile = File.createTempFile("stocks", ".csv");
@@ -256,6 +269,7 @@ public class NewGameView {
       selectedFile = tempFile;
     } catch (Exception e) {
       selectedFile = null;
+      errorLabel.setText("Failed to load default stock data.");
     }
   }
 }

@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPendingOrdersUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.PendingOrderDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.PendingOrderDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import java.util.UUID;
