@@ -50,7 +50,6 @@ public class TransactionsView extends BorderPane implements Page {
 
   @Override
   public Parent getView() {
-    applyFilters();
     return this;
   }
 

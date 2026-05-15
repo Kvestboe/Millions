@@ -51,7 +51,10 @@ public class GameViewCoordinator {
 
   private void navigateToStockDetail(StockDto stock) {
     StockDetailView view = new StockDetailView(
-        stock, bundle.stockDetail(), () -> navManager.navigateTo(PageId.MARKET));
+        stock,
+        bundle.stockQuery(),
+        bundle.orderPlacement(),
+        () -> navManager.navigateTo(PageId.MARKET));
     navManager.show(view);
   }
 }
