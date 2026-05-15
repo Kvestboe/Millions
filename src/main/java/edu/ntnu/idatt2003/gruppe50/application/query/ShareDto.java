@@ -21,4 +21,7 @@ public record ShareDto(
     BigDecimal quantity,
     BigDecimal purchasePrice,
     BigDecimal currentPrice,
-    BigDecimal currentShareValue) {}
+    BigDecimal currentShareValue,
+    BigDecimal gain,
+    BigDecimal percentageGain
+) {}

@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
 
+import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import java.util.function.Consumer;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import javafx.geometry.Pos;
@@ -12,11 +15,13 @@ import javafx.scene.layout.VBox;
 
 public class OrderConfirmationView extends VBox {
 
-  private final OrderPreview preview;
+  private final DraftOrder draftOrder;
+  private final PreviewOrderUseCase.Response preview;
   private final Runnable onBack;
   private final Consumer<DraftOrder> onConfirm;
 
-  public OrderConfirmationView(OrderPreview preview, Runnable onBack, Consumer<DraftOrder> onConfirm) {
+  public OrderConfirmationView(DraftOrder draftOrder, PreviewOrderUseCase.Response preview, Runnable onBack, Consumer<DraftOrder> onConfirm) {
+    this.draftOrder = draftOrder;
     this.preview = preview;
     this.onBack = onBack;
     this.onConfirm = onConfirm;
@@ -27,7 +32,7 @@ public class OrderConfirmationView extends VBox {
   }
 
   private Label buildTitle() {
-    String action = preview.draftOrder().side() == OrderFormView.Side.BUY ? "buy" : "sell";
+    String action = draftOrder.side() == OrderSide.BUY ? "buy" : "sell";
 
     Label title = new Label("Confirm " + action);
     title.getStyleClass().add("popup-title");
@@ -35,12 +40,11 @@ public class OrderConfirmationView extends VBox {
   }
 
   private VBox buildDetails() {
-    DraftOrder draftOrder = preview.draftOrder();
 
-    String orderTypeLabel = getOrderTypeLabel(draftOrder);
+    String orderTypeLabel = draftOrder.label();
 
     VBox details = new VBox(8,
-        row("Stock", draftOrder.stock().getCompany()),
+        row("Stock", draftOrder.stock().company()),
         row("Order type", orderTypeLabel),
         row("Quantity", draftOrder.quantity().toString()),
         row("Price", MoneyFormat.formatCurrency(preview.price())),
@@ -48,11 +52,11 @@ public class OrderConfirmationView extends VBox {
         row("Commission", MoneyFormat.formatCurrency(preview.commission()))
     );
 
-    if (draftOrder.side() == OrderFormView.Side.SELL) {
+    if (draftOrder.side() == OrderSide.SELL) {
       details.getChildren().add(row("Tax", MoneyFormat.formatCurrency(preview.tax())));
     }
 
-    if (preview.isLimit()) {
+    if (draftOrder.isLimit()) {
       details.getChildren().add(row("Duration", draftOrder.duration() + " weeks")
 //                                row("Expires, Week " + preview.expirationWeek()
                                   );
@@ -73,7 +77,7 @@ public class OrderConfirmationView extends VBox {
 
     Button confirmBtn = new Button("Confirm");
     confirmBtn.getStyleClass().add("primary");
-    confirmBtn.setOnAction(e -> onConfirm.accept(preview.draftOrder()));
+    confirmBtn.setOnAction(e -> onConfirm.accept(draftOrder));
 
     HBox actions = new HBox(10, backBtn, confirmBtn);
     actions.setAlignment(Pos.CENTER_RIGHT);
@@ -91,34 +95,5 @@ public class OrderConfirmationView extends VBox {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     return new HBox(l, spacer, v);
-  }
-
-  private String getOrderTypeLabel(DraftOrder draftOrder) {
-    if (draftOrder.side() == OrderFormView.Side.BUY
-        && draftOrder.orderType() == OrderFormView.OrderType.MARKET) {
-      return "Buy now";
-    }
-
-    if (draftOrder.side() == OrderFormView.Side.BUY
-        && draftOrder.orderType() == OrderFormView.OrderType.TARGET_PRICE) {
-      return "Buy at target price";
-    }
-
-    if (draftOrder.side() == OrderFormView.Side.SELL
-        && draftOrder.orderType() == OrderFormView.OrderType.MARKET) {
-      return "Sell now";
-    }
-
-    if (draftOrder.side() == OrderFormView.Side.SELL
-        && draftOrder.orderType() == OrderFormView.OrderType.TARGET_PRICE) {
-      return "Sell at target price";
-    }
-
-    if (draftOrder.side() == OrderFormView.Side.SELL
-        && draftOrder.orderType() == OrderFormView.OrderType.STOP_LOSS) {
-      return "Stop loss";
-    }
-
-    return "Unknown order";
   }
 }
