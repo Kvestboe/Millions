@@ -11,5 +11,5 @@ public final class App extends Application {
   @Override
   public void start(Stage stage) {
     new AppRouter(stage, module, new ThemeManager()).showMainMenu();
-   }
+  }
 }
