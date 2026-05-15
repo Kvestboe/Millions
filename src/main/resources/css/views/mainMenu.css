@@ -20,12 +20,14 @@
 /* ===== SECONDARY BUTTON INNHOLD ===== */
 .secondary-button-icon {
     -fx-font-size: 17px;
-    -fx-text-fill: -text-secondary;
+    -fx-text-fill: -text-primary;
+    -fx-opacity: 0.6;
 }
 
 .secondary-button-text {
     -fx-font-size: 11px;
     -fx-text-fill: -text-primary;
+    -fx-opacity: 0.8;
 }
 
 /* ===== SEPARATOR ===== */
@@ -57,21 +59,21 @@
     -fx-font-family: "Courier New";
     -fx-font-size: 14px;
     -fx-text-fill: -text-secondary;
-    -fx-opacity: 0.4;
+    -fx-opacity: 0.76;
 }
 
 
 .menu-subtitle {
     -fx-font-size: 16px;
     -fx-text-fill: -text-secondary;
-    -fx-opacity: 0.5;
+    -fx-opacity: 0.75;
 }
 
 .version-label {
     -fx-font-family: "Courier New";
     -fx-font-size: 14px;
     -fx-text-fill: -text-secondary;
-    -fx-opacity: 0.25;
+    -fx-opacity: 0.4;
 }
 /* ===== SYSTEM BUTTON ===== */
 .system-button {
@@ -88,4 +90,12 @@
 
 .system-button:hover {
     -fx-background-color: -bg-elevated;
+}
+
+.btn-secondary-accent {
+    -fx-background-color: rgba(79, 70, 229, 0.12);
+    -fx-border-color: rgba(79, 70, 229, 0.3);
+    -fx-border-width: 0.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
 }

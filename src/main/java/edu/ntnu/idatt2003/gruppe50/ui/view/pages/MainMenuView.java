@@ -126,7 +126,6 @@ public class MainMenuView extends StackPane{
     continueBtn.setGraphic(content);
     continueBtn.setMaxWidth(340);
     continueBtn.getStyleClass().add("btn-accent");
-    continueBtn.setOnAction(e -> onNewGame.run());
 
     return continueBtn;
   }
@@ -135,9 +134,11 @@ public class MainMenuView extends StackPane{
     // De tre ikonknappene: Nytt spill, Last inn, Ledertavle
     // Returnerer HBox med tre knapper
 
-    Button newGameBtn = createSecondaryButton("+", "New Game");
-    Button loadGameBtn = createSecondaryButton("↑", "Load Game");
+    Button newGameBtn = createSecondaryButton("✚", "New Game");
+    Button loadGameBtn = createSecondaryButton("⬆", "Load Game");
     Button leaderboardBtn = createSecondaryButton("★", "Leaderboard");
+
+    newGameBtn.setOnAction(e -> onNewGame.run());
 
     HBox.setHgrow(newGameBtn, Priority.ALWAYS);
     HBox.setHgrow(loadGameBtn, Priority.ALWAYS);
@@ -154,7 +155,7 @@ public class MainMenuView extends StackPane{
   private HBox buildSystemButtons() {
     // Innstillinger + Avslutt
     // Avslutt kobler onQuit til onAction
-    Button settings = new Button("⚙ Settings");
+    Button settings = new Button("⛭ Settings");
     settings.getStyleClass().add("system-button");
 
     Button quit = new Button("✕ Quit");
