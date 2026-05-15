@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory.createTable;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.SearchBarFactory;

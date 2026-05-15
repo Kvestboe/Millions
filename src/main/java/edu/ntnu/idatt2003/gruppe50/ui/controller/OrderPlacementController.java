@@ -5,7 +5,7 @@ import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.OrderType;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.OrderType;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import java.util.UUID;

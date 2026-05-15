@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
