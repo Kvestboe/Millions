@@ -10,7 +10,9 @@ import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.GameSaveDto;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,6 +63,32 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
       return Optional.of(session);
     } catch (IOException e) {
       throw new RuntimeException("Failed to load game session " + gameId, e);
+    }
+  }
+
+  @Override
+  public List<GameSession> findAll() {
+    try (var paths = Files.list(SAVE_DIR)) {
+      return paths
+          .filter(p -> p.toString().endsWith(".json"))
+          .map(p -> findById(UUID.fromString(
+              p.getFileName().toString().replace("json", ""))))
+          .filter(Optional::isPresent)
+          .map(Optional::get)
+          .sorted(Comparator.comparing(GameSession::getLastPlayed))
+          .toList();
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to list saves", e);
+    }
+  }
+
+  @Override
+  public void delete(UUID gameId) {
+    cache.remove(gameId);
+    try {
+      Files.deleteIfExists(SAVE_DIR.resolve(gameId + ".json"));
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to delete save " + gameId, e);
     }
   }
 }
