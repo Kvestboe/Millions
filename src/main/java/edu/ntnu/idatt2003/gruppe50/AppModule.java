@@ -16,11 +16,13 @@ import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.JsonFileGameSessionRepository;
 import java.util.UUID;
 
 public final class AppModule {
-  private final GameSessionRepository sessions = new InMemoryGameSessionRepository();
+  private final TransactionFactory transactionFactory = new TransactionFactory();
+  private final GameSessionRepository sessions = new JsonFileGameSessionRepository(transactionFactory);
 
   // Use cases
   public final StartGameSessionUseCase startGameSession = new StartGameSessionUseCase(sessions);
