@@ -129,4 +129,8 @@ public class Player {
       return "Novice";
     }
   }
+
+  public BigDecimal getStartingMoney() {
+    return startingMoney;
+  }
 }

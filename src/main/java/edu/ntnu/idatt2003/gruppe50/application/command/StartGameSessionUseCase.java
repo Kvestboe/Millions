@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.application.command;
 
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
@@ -27,7 +28,7 @@ public final class StartGameSessionUseCase {
    * @return response containing newly created game id
    */
   public Response execute(Request request) {
-    GameSession session = GameSession.createNew(request.player(), request.exchange());
+    GameSession session = GameSession.createNew(request.player(), request.exchange(), request.difficulty);
     repository.save(session);
     return new Response(session.getGameId());
   }
@@ -38,7 +39,7 @@ public final class StartGameSessionUseCase {
    * @param player player state to start with
    * @param exchange exchange state to start with
    */
-  public record Request(Player player, Exchange exchange) {}
+  public record Request(Player player, Exchange exchange, Difficulty difficulty) {}
 
   /**
    * Output from starting a new game session.

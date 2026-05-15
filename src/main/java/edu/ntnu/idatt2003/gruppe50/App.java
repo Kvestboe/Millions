@@ -1,12 +1,16 @@
 package edu.ntnu.idatt2003.gruppe50;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
+import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
+import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.NewGameView;
 
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +49,7 @@ public final class App extends Application {
   public void switchToGame(UUID gameId) {
     module.loadGameSession.execute(new LoadGameSessionUseCase.Request(gameId));
     GameSessionControllerBundle bundle = module.gameBundle(gameId);
-    Scene scene = new GameViewCoordinator(bundle).getScene();
+    Scene scene = new GameViewCoordinator(bundle, this::showMainMenu, this::showNewGame).getScene();
     themeManager.apply(scene);
     stage.setScene(scene);
     stage.show();
@@ -86,14 +90,14 @@ public final class App extends Application {
   }
 
   private void startGameFromOnboarding(OnboardingData data) {
-    NewGameController controller = new NewGameController(
-        module.startGameSession,
-        this::switchToGame
-    );
-    controller.onStartGame(
-        data.playerName(),
-        data.startingCapital().toString(),
-        data.stockFile()
-    );
+    List<Stock> stocks = CSVFileHandler.readLines(data.stockFile().toPath());
+    Player player = new Player(data.playerName(), data.startingCapital());
+    Exchange exchange = new Exchange("Stock exchange", stocks, new TransactionFactory());
+
+    UUID gameId = module.startGameSession.execute(
+        new StartGameSessionUseCase.Request(player, exchange, data.difficulty())
+    ).gameId();
+
+    switchToGame(gameId);
   }
 }
