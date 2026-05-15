@@ -3,16 +3,13 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory.createCard;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.TransactionType;
-import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnDefinition;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.SearchBarFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;
 import java.util.List;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -25,59 +22,52 @@ import javafx.scene.layout.HBox;
 public class TransactionsView extends BorderPane implements Page {
 
   private final TransactionQueryController queryController;
-  private final ObservableList<TransactionData> transactions = FXCollections.observableArrayList();
   private final TableView<TransactionData> table;
   private final TextField searchField;
-  private final RadioButton allFilterButton;
-  private final RadioButton purchaseFilterButton;
-  private final RadioButton saleFilterButton;
+
+  private final RadioButton allFilterButton = new RadioButton("All");
+  private final RadioButton purchaseFilterButton = new RadioButton("Purchase");
+  private final RadioButton saleFilterButton = new RadioButton("Sell");
 
   public TransactionsView(TransactionQueryController queryController) {
     this.queryController = queryController;
-    this.table = makeTransactionTable();
-    this.searchField = createSearchField();
-    this.allFilterButton = new RadioButton("All");
-    this.purchaseFilterButton = new RadioButton("Purchase");
-    this.saleFilterButton = new RadioButton("Sale");
+    this.table = createTransactionTable();
+
+    this.searchField = SearchBarFactory.createSearchField(
+        "Search by symbol, company or type...",
+        this::applyFilters
+    );
+
     setupTypeFilters();
-    this.table.setItems(transactions);
+    // Listen to the master list and apply the filters when new transaction arrives
+    queryController.getTransactions()
+        .addListener((ListChangeListener<TransactionData>) _ -> applyFilters());
+
     setTop(createCard(createFilterBar()));
     setCenter(createCard("History", table));
+    applyFilters();
   }
 
   @Override
   public Parent getView() {
-    refreshTransactions();
+    applyFilters();
     return this;
   }
 
-  private TableView<TransactionData> makeTransactionTable() {
+  private TableView<TransactionData> createTransactionTable() {
     TableView<TransactionData> transactionTable = TableFactory.createTable(List.of(
-        new ColumnDefinition<>("Symbol", t -> new ReadOnlyStringWrapper(t.share().symbol())),
-        new ColumnDefinition<>("Company", t -> new ReadOnlyStringWrapper(t.share().stock())),
-        new ColumnDefinition<>("Type", t -> new ReadOnlyStringWrapper(t.type().name())),
-        new ColumnDefinition<>("Week", t -> new ReadOnlyObjectWrapper<>(t.week())),
-        new ColumnDefinition<>("Commission", t ->
-            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.commissionFee()))
-        ),
-        new ColumnDefinition<>("Tax", t ->
-            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.taxFee()))
-        ),
-        new ColumnDefinition<>("Total", t ->
-            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.total()))
-        )
+        ColumnPresets.text("Symbol", t -> t.share().symbol()),
+        ColumnPresets.text("Company", t -> t.share().stock()),
+        ColumnPresets.text("Type", t -> t.type().name()),
+        ColumnPresets.integer("Week", TransactionData::week),
+        ColumnPresets.currency("Commission", TransactionData::commissionFee),
+        ColumnPresets.currency("Tax", TransactionData::taxFee),
+        ColumnPresets.currency("Total", TransactionData::total)
     ));
     transactionTable.setPlaceholder(new Label("No transactions yet."));
     return transactionTable;
   }
 
-  private TextField createSearchField() {
-    TextField field = new TextField();
-    field.setPromptText("Search by symbol, company or type...");
-    field.textProperty().addListener((_, _, _) -> applyFilters());
-    field.setMaxWidth(Double.MAX_VALUE);
-    return field;
-  }
 
   private HBox createFilterBar() {
     return new HBox(searchField, allFilterButton, purchaseFilterButton, saleFilterButton);
@@ -104,19 +94,8 @@ public class TransactionsView extends BorderPane implements Page {
 
   private void applyFilters() {
     String query = searchField.getText();
-    TransactionType selectedType = selectedTypeFilter();
-    if (query == null || query.isBlank()) {
-      if (selectedType == null) {
-        table.getItems().setAll(queryController.getTransactions());
-      } else {
-        table.getItems().setAll(queryController.onSearch("", selectedType));
-      }
-    } else {
-      table.getItems().setAll(queryController.onSearch(query, selectedType));
-    }
+    TransactionType type = selectedTypeFilter();
+    table.getItems().setAll(queryController.onSearch(query, type));
   }
 
-  private void refreshTransactions() {
-    applyFilters();
-  }
 }

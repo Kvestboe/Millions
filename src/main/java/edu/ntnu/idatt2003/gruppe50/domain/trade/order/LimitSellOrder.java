@@ -11,8 +11,14 @@ public class LimitSellOrder extends LimitOrder{
   /**
    * Creates a new sell order with an explicit expiry week.
    */
-  public LimitSellOrder(Stock stock, Player player, BigDecimal targetPrice,
-                       BigDecimal quantity, int currentWeek, int expiryWeek) {
+  public LimitSellOrder(
+      Stock stock,
+      Player player,
+      BigDecimal targetPrice,
+      BigDecimal quantity,
+      int currentWeek,
+      int expiryWeek
+  ) {
     super(stock, player, targetPrice, quantity, currentWeek, expiryWeek);
   }
 
@@ -34,5 +40,10 @@ public class LimitSellOrder extends LimitOrder{
   @Override
   public void execute(Exchange exchange) {
     exchange.sellQuantity(getStock(), getQuantity(), getPlayer());
+  }
+
+  @Override
+  public String label() {
+    return "Sell at target price";
   }
 }

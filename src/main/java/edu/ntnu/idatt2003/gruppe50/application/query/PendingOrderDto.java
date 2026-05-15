@@ -1,8 +1,8 @@
-package edu.ntnu.idatt2003.gruppe50.ui.model;
+package edu.ntnu.idatt2003.gruppe50.application.query;
 
 import java.math.BigDecimal;
 
-public record OrderData(
+public record PendingOrderDto (
     String type,
     String symbol,
     String company,
@@ -10,5 +10,4 @@ public record OrderData(
     BigDecimal targetPrice,
     int createdWeek,
     int expiryWeek
-) {
-}
+) {}

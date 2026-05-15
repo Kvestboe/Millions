@@ -1,0 +1,44 @@
+package edu.ntnu.idatt2003.gruppe50;
+
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
+import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetPendingOrdersUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
+import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
+import java.util.UUID;
+
+public final class AppModule {
+  private final GameSessionRepository sessions = new InMemoryGameSessionRepository();
+
+  // Use cases
+  public final StartGameSessionUseCase startGameSession = new StartGameSessionUseCase(sessions);
+  public final LoadGameSessionUseCase loadGameSession = new LoadGameSessionUseCase(sessions);
+  public final BuyShareUseCase buyShare = new BuyShareUseCase(sessions);
+  public final SellShareUseCase sellShare = new SellShareUseCase(sessions);
+  public final AdvanceWeekUseCase advanceWeek = new AdvanceWeekUseCase(sessions);
+  public final GetPortfolioUseCase getPortfolio = new GetPortfolioUseCase(sessions);
+  public final GetTransactionsUseCase getTransactions = new GetTransactionsUseCase(sessions);
+  public final GetMarketUseCase getMarket = new GetMarketUseCase(sessions);
+  public final PlaceBuyLimitOrderUseCase buyLimitOrder = new PlaceBuyLimitOrderUseCase(sessions);
+  public final PlaceSellLimitOrderUseCase sellLimitOrder = new PlaceSellLimitOrderUseCase(sessions);
+  public final GetPendingOrdersUseCase getPendingOrders = new GetPendingOrdersUseCase(sessions);
+  public final PlaceStopLossOrderUseCase stopLossOrder = new PlaceStopLossOrderUseCase(sessions);
+  public final PreviewOrderUseCase previewOrder = new PreviewOrderUseCase(sessions);
+
+  public GameSessionControllerBundle gameBundle(UUID gameId) {
+    GameSession session = sessions.findById(gameId).orElseThrow(GameSessionNotFoundException::new);
+    return new GameSessionControllerBundle(this, session);
+  }
+}

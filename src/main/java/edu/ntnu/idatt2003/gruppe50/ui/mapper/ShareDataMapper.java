@@ -13,7 +13,9 @@ public final class ShareDataMapper {
         dto.quantity(),
         dto.purchasePrice(),
         dto.currentPrice(),
-        dto.currentShareValue()
+        dto.currentShareValue(),
+        dto.gain(),
+        dto.percentageGain()
     );
   }
 }
