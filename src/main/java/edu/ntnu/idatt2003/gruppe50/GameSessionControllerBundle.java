@@ -32,7 +32,7 @@ public record GameSessionControllerBundle(
             m.stopLossOrder,
             m.previewOrder
         ),
-        new OrdersController(session.getGameId(), m.getPendingOrders)
+        new OrdersController(session.getGameId(), m.getPendingOrders, session.getExchange())
     );
   }
 }
