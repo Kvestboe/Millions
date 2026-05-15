@@ -153,21 +153,17 @@ public class StockDetailView extends StackPane implements Page {
     sell.setManaged(true);
 
     ShareDto s = holding.get();
-    quantityLabel.setText(s.quantity().toString());
-    gavLabel.setText(s.purchasePrice() + " kr");
     quantityLabel.setText(s.quantity().setScale(0, RoundingMode.HALF_UP).toString());
     gavLabel.setText(s.purchasePrice().setScale(2, RoundingMode.HALF_UP) + " kr");
 
     BigDecimal profit = s.currentShareValue()
         .subtract(s.purchasePrice().multiply(s.quantity()));
-    profitLabel.setText(formatSigned(profit) + " kr");
     profitLabel.setText(formatSigned(profit.setScale(2, RoundingMode.HALF_UP)) + " kr");
 
     BigDecimal percent = s.currentPrice()
         .subtract(s.purchasePrice())
         .divide(s.purchasePrice(), 2, RoundingMode.HALF_UP)
         .multiply(BigDecimal.valueOf(100));
-    profitPercentLabel.setText(formatSigned(percent) + "%");
     profitPercentLabel.setText(formatSigned(percent.setScale(2, RoundingMode.HALF_UP)) + "%");
   }
 
