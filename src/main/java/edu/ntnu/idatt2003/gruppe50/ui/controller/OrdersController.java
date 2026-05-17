@@ -1,55 +1,36 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPendingOrdersUseCase;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.order.StopLossOrder;
-import edu.ntnu.idatt2003.gruppe50.ui.model.OrderData;
-import java.util.List;
+import edu.ntnu.idatt2003.gruppe50.application.query.PendingOrderDto;
+import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import java.util.UUID;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-public class OrdersController {
+public class OrdersController implements Observer {
 
   private final UUID gameId;
   private final GetPendingOrdersUseCase getPendingOrders;
+  private final ObservableList<PendingOrderDto> pendingOrders = FXCollections.observableArrayList();
 
-  public OrdersController(UUID gameId, GetPendingOrdersUseCase getPendingOrders) {
+  public OrdersController(UUID gameId, GetPendingOrdersUseCase getPendingOrders, Exchange exchange) {
     this.gameId = gameId;
     this.getPendingOrders = getPendingOrders;
+    exchange.addObserver(this);
+    refresh();
   }
 
-  public List<OrderData> getPendingOrders() {
-    return getPendingOrders.execute(gameId).stream()
-        .map(this::toOrderData)
-        .toList();
+  public ObservableList<PendingOrderDto> getPendingOrders() {
+    return pendingOrders;
   }
 
-  private OrderData toOrderData(LimitOrder order) {
-    return new OrderData(
-        getOrderTypeLabel(order),
-        order.getStock().getSymbol(),
-        order.getStock().getCompany(),
-        order.getQuantity(),
-        order.getTargetPrice(),
-        order.getCreatedWeek(),
-        order.getExpiryWeek()
-    );
+  @Override
+  public void update() {
+    refresh();
   }
 
-  private String getOrderTypeLabel(LimitOrder order) {
-    if (order instanceof LimitBuyOrder) {
-      return "Buy at target price";
-    }
-
-    if (order instanceof LimitSellOrder) {
-      return "Sell at target price";
-    }
-
-    if (order instanceof StopLossOrder) {
-      return "Stop loss";
-    }
-
-    return "Unknown order";
+  public void refresh() {
+    pendingOrders.setAll(getPendingOrders.execute(gameId));
   }
 }

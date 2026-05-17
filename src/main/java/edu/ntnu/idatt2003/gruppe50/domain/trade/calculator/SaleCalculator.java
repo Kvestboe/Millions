@@ -30,6 +30,12 @@ public class SaleCalculator implements TransactionCalculator {
     this.salesPrice = share.getStock().getSalesPrice();
   }
 
+  public SaleCalculator(BigDecimal purchasePrice, BigDecimal salesPrice, BigDecimal quantity) {
+    this.purchasePrice = purchasePrice;
+    this.salesPrice = salesPrice;
+    this.quantity = quantity;
+  }
+
   /**
    * Calculates the gross amount of the sale before any deductions.
    *

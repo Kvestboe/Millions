@@ -108,4 +108,6 @@ public abstract class LimitOrder {
    * @param exchange the exchange on which to execute the order
    */
   public abstract void execute(Exchange exchange);
+
+  public abstract String label();
 }

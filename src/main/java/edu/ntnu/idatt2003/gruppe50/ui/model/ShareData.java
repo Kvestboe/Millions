@@ -10,5 +10,7 @@ public record ShareData(
     BigDecimal quantity,
     BigDecimal purchasePrice,
     BigDecimal currentPrice,
-    BigDecimal currentShareValue
+    BigDecimal currentShareValue,
+    BigDecimal gain,
+    BigDecimal percentageGain
 ) {}

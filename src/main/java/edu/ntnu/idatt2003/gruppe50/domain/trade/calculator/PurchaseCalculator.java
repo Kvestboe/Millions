@@ -23,6 +23,14 @@ public class PurchaseCalculator implements TransactionCalculator {
     quantity = share.getQuantity();
   }
 
+  public PurchaseCalculator(BigDecimal purchasePrice, BigDecimal quantity) {
+    Validate.notNull(purchasePrice, "Purchase price");
+    Validate.notNull(quantity, "Quantity");
+
+    this.purchasePrice = purchasePrice;
+    this.quantity = quantity;
+  }
+
   /**
    * Calculates the gross amount of the purchase before any fees.
    *
