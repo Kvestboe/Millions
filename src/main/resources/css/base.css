@@ -17,7 +17,7 @@
 
 .page-title {
     -fx-text-fill: -text-primary;
-    -fx-font-size: 22px;
+    -fx-font-size: 28px;
     -fx-font-weight: normal;
 }
 
@@ -28,7 +28,7 @@
 
 .label-muted {
     -fx-text-fill: -text-secondary;
-    -fx-font-size: 11px;
+    -fx-font-size: 14px;
 }
 
 .label-overline {
@@ -644,10 +644,11 @@
 .game-title {
     -fx-font-size: 36px;
     -fx-font-weight: 800;
+    -fx-text-fill: -text-primary;
 }
 
 .story-text {
-    -fx-fill: -text-secondary;
+    -fx-text-fill: -text-secondary;
     -fx-font-size: 13px;
     -fx-line-spacing: 5;
 }
@@ -733,4 +734,49 @@
 .diff-stats {
     -fx-text-fill: -text-primary;
     -fx-font-size: 12px;
+}
+
+
+/* Title text color per difficulty */
+.diff-name-easy   { -fx-text-fill: #22c55e; }
+.diff-name-medium { -fx-text-fill: #eab308; }
+.diff-name-hard   { -fx-text-fill: #ef4444; }
+
+/* Selected state glow per difficulty — override the gold default */
+.difficulty-card-easy.diff-card-selected {
+    -fx-background-color: rgba(34, 197, 94, 0.06);
+    -fx-border-color: #22c55e;
+}
+.difficulty-card-medium.diff-card-selected {
+    -fx-background-color: rgba(234, 179, 8, 0.06);
+    -fx-border-color: #eab308;
+}
+.difficulty-card-hard.diff-card-selected {
+    -fx-background-color: rgba(239, 68, 68, 0.06);
+    -fx-border-color: #ef4444;
+}
+
+.onboarding-scroll,
+.onboarding-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.market-card {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+    -fx-padding: 14 16 14 16;
+}
+
+.market-card:hover {
+    -fx-background-color: -bg-elevated;
+    -fx-border-color: -bg-elevated;
+}
+
+.market-card-selected {
+    -fx-background-color: rgba(255, 209, 102, 0.06);
+    -fx-border-color: -accent-gold;
 }

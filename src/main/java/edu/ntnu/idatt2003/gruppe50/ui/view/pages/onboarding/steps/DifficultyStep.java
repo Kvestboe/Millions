@@ -40,12 +40,9 @@ public class DifficultyStep implements OnboardingStep {
     Label subtitle = new Label("How much risk are you willing to take?");
     subtitle.getStyleClass().add("label-muted");
 
-    VBox easy = createDifficultyCard("Easy", "Training mission", Difficulty.EASY,
-        "Up chance: 60%\nMax gain: ±6%\nMax loss: ±4%\nHangar: 0.5%/week");
-    VBox medium = createDifficultyCard("Medium", "Real mission", Difficulty.MEDIUM,
-        "Up chance: 50%\nMax gain: ±10%\nMax loss: ±10%\nHangar: 1.5%/week");
-    VBox hard = createDifficultyCard("Hard", "Suicide mission", Difficulty.HARD,
-        "Up chance: 50%\nMax gain: ±15%\nMax loss: ±20%\nHangar: 3%/week");
+    VBox easy   = createDifficultyCard("Easy",   "Training mission", Difficulty.EASY,   "difficulty-card-easy");
+    VBox medium = createDifficultyCard("Medium", "Real mission",     Difficulty.MEDIUM, "difficulty-card-medium");
+    VBox hard   = createDifficultyCard("Hard",   "Suicide mission",  Difficulty.HARD,   "difficulty-card-hard");
 
     cards.addAll(List.of(easy, medium, hard));
 
@@ -58,34 +55,54 @@ public class DifficultyStep implements OnboardingStep {
 
   /**
    * Creates a difficulty card that can be selected.
+   * Stats are derived directly from the {@link Difficulty} enum values.
    *
-   * @param name       display name
-   * @param tagLine    short descriptor
-   * @param difficulty the difficulty enum value
-   * @param stats      stats text shown on the card
-   * @return a styled VBox card
+   * @param name       display name shown as the card title
+   * @param tagLine    short descriptor shown below the title
+   * @param difficulty the difficulty enum value this card represents
+   * @param colorClass CSS class controlling the card's risk color (border and glow)
+   * @return a styled, clickable VBox card
    */
   private VBox createDifficultyCard(
       String name, String tagLine,
-      Difficulty difficulty, String stats
+      Difficulty difficulty, String colorClass
   ) {
-    Label nameLabel  = new Label(name);
-    Label tagLabel   = new Label(tagLine);
-    Label statsLabel = new Label(stats);
+    Label nameLabel = new Label(name);
+    nameLabel.getStyleClass().addAll("diff-name", "diff-name-" + difficulty.name().toLowerCase());
 
-    nameLabel.getStyleClass().add("diff-name");
+    Label tagLabel = new Label(tagLine);
     tagLabel.getStyleClass().add("diff-tag");
+
+    Label statsLabel = new Label(
+        "Up chance: "  + (int)(difficulty.getUpChance()  * 100) + "%\n" +
+            "Max gain: ±"  + (int)(difficulty.getMaxGain()   * 100) + "%\n" +
+            "Max loss: ±"  + (int)(difficulty.getMaxLoss()   * 100) + "%\n" +
+            "Hangar cost: "     + (difficulty.getHangarCostRate() * 100) + "%/week"
+    );
     statsLabel.getStyleClass().add("diff-stats");
 
     VBox card = new VBox(8, nameLabel, tagLabel, statsLabel);
     card.setAlignment(Pos.CENTER);
     card.setPadding(new Insets(20));
     card.setPrefWidth(200);
-    card.getStyleClass().add("diff-card");
+    card.getStyleClass().addAll("diff-card", colorClass);
 
     card.setOnMouseClicked(_ -> selectCard(card, difficulty));
 
     return card;
+  }
+
+  /**
+   * Creates a single stat label with a risk color style class applied.
+   *
+   * @param text       the stat text to display
+   * @param styleClass either {@code risk-positive} or {@code risk-negative}
+   * @return a styled label
+   */
+  private Label statLabel(String text, String styleClass) {
+    Label label = new Label(text);
+    label.getStyleClass().addAll("diff-stats", styleClass);
+    return label;
   }
 
   /**
@@ -96,11 +113,7 @@ public class DifficultyStep implements OnboardingStep {
    */
   private void selectCard(VBox clicked, Difficulty difficulty) {
     selected = difficulty;
-    cards.forEach(card -> {
-      card.getStyleClass().removeAll("diff-card", "diff-card-selected");
-      card.getStyleClass().add("diff-card");
-    });
-    clicked.getStyleClass().removeAll("diff-card");
+    cards.forEach(card -> card.getStyleClass().remove("diff-card-selected"));
     clicked.getStyleClass().add("diff-card-selected");
   }
 

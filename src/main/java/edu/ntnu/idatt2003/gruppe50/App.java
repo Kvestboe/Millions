@@ -11,6 +11,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.pages.NewGameView;
 import java.util.List;
 import java.util.UUID;
 
+import edu.ntnu.idatt2003.gruppe50.ui.view.pages.SettingsView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingFlow;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.CapitalStep;
@@ -33,12 +34,15 @@ public final class App extends Application {
   private final AppModule module = new AppModule();
   private Stage stage;
   private ThemeManager themeManager;
-
+  private boolean isFullscreen = false;
 
   @Override
   public void start(Stage stage) {
     this.stage = stage;
     this.themeManager = new ThemeManager();
+    stage.fullScreenProperty().addListener((obs, oldVal, newVal) -> {
+      isFullscreen = newVal;
+    });
     showMainMenu();
   }
 
@@ -47,6 +51,7 @@ public final class App extends Application {
     GameSessionControllerBundle bundle = module.gameBundle(gameId);
     Scene scene = new GameViewCoordinator(bundle).getScene();
     themeManager.apply(scene);
+    stage.setFullScreen(isFullscreen);
     stage.setScene(scene);
     stage.show();
   }
@@ -54,12 +59,14 @@ public final class App extends Application {
   private void showMainMenu() {
     MainMenuView menu = new MainMenuView(
         this::showNewGame,
+        this::showSettings,
         Platform::exit
     );
-    Scene scene = menu.getScene();
+    Scene scene = new Scene(menu, 900, 600);
     themeManager.apply(scene);
     stage.setScene(scene);
     stage.show();
+    Platform.runLater(() -> stage.setFullScreen(stage.isFullScreen()));
   }
 
   private void showNewGame() {
@@ -83,6 +90,7 @@ public final class App extends Application {
     Scene scene = flow.getScene();
     themeManager.apply(scene);
     stage.setScene(scene);
+    stage.setFullScreen(isFullscreen);
   }
 
   private void startGameFromOnboarding(OnboardingData data) {
@@ -95,5 +103,19 @@ public final class App extends Application {
         data.startingCapital().toString(),
         data.stockFile()
     );
+  }
+
+  private void showSettings() {
+    SettingsView settings = new SettingsView(
+        this::showMainMenu,
+        fullscreen -> {
+          isFullscreen = fullscreen;
+          stage.setFullScreen(fullscreen);
+        }
+    );
+    Scene scene = new Scene(settings, 900, 600);
+    themeManager.apply(scene);
+    stage.setScene(scene);
+    stage.setFullScreen(isFullscreen);
   }
 }

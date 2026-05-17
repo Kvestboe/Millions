@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -19,7 +20,7 @@ public class StoryStep implements OnboardingStep {
   /**
    * Builds and returns the story screen layout.
    *
-   * @return the root node of this step's view
+   * @return the scroll pane node of this step's view
    */
   @Override
   public Parent getView() {
@@ -34,30 +35,32 @@ public class StoryStep implements OnboardingStep {
     Label title = new Label("MILLIONS");
     title.getStyleClass().add("game-title");
 
-    Text story = new Text(
-        "You've always dreamed of reaching the Moon.\n"
-            + "NASA said you weren't good enough.\n"
-            + "So you built your own rocket.\n"
-            + "\n"
-            + "Years of work later, it's almost ready\n"
-            + "the final components, the launch clearance, the fuel.\n"
-            + "It all comes down to 1 000 000 kr.\n"
-            + "\n"
-            + "The rocket doesn't wait for free.\n"
-            + "Every week it sits in the hangar, it costs you money.\n"
-            + "\n"
-            + "Getting that money is on you.\n"
-            + "Luckily, you know your way around the stock market.\n"
+    Label story = new Label(
+        "You've always dreamed of reaching the Moon. "
+            + "NASA said you weren't good enough. "
+            + "So you built your own rocket.\n\n"
+            + "Years of work later, it's almost ready — "
+            + "the final components, the launch clearance, the fuel. "
+            + "It all comes down to 1 000 000 kr.\n\n"
+            + "The rocket doesn't wait for free. "
+            + "Every week it sits in the hangar, it costs you money.\n\n"
+            + "Getting that money is on you. "
+            + "Luckily, you know your way around the stock market. "
             + "You've done it before. You can do it again."
     );
+    story.setWrapText(true);
+    story.setMaxWidth(700);
+    story.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
     story.getStyleClass().add("story-text");
 
     Label bottomStory = new Label("The market opens Monday.");
     bottomStory.getStyleClass().add("story-italic");
 
     container.getChildren().addAll(icon, title, story, bottomStory);
+
     return container;
   }
+
 
   /**
    * Always returns true — no input required on the story step.
