@@ -21,9 +21,11 @@ public class MainMenuView extends StackPane{
 
   private final Runnable onNewGame;
   private final Runnable onQuit;
+  private final Runnable onSettings;
 
-  public MainMenuView(Runnable onNewGame, Runnable onQuit) {
+  public MainMenuView(Runnable onNewGame, Runnable onSettings, Runnable onQuit) {
     this.onNewGame = onNewGame;
+    this.onSettings = onSettings;
     this.onQuit = onQuit;
     build();
   }
@@ -157,10 +159,11 @@ public class MainMenuView extends StackPane{
     // Avslutt kobler onQuit til onAction
     Button settings = new Button("⛭ Settings");
     settings.getStyleClass().add("system-button");
+    settings.setOnAction(e -> onSettings.run());
 
     Button quit = new Button("✕ Quit");
     quit.getStyleClass().add("system-button-danger");
-    quit.setOnAction(_ -> onQuit.run());
+    quit.setOnAction(e -> onQuit.run());
 
     HBox.setHgrow(settings, Priority.ALWAYS);
     HBox.setHgrow(quit, Priority.ALWAYS);

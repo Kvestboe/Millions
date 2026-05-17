@@ -30,6 +30,8 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.NewGameView;
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import edu.ntnu.idatt2003.gruppe50.ui.view.pages.SettingsView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -125,6 +127,7 @@ public class App extends Application {
   private void showMainMenu() {
     MainMenuView menu = new MainMenuView(
         this::showNewGame,
+        this::showSettings,
         Platform::exit
     );
     Scene scene = new Scene(menu, 900, 600);
@@ -137,6 +140,16 @@ public class App extends Application {
     NewGameController controller = new NewGameController(startGameSession, this::switchToGame);
     NewGameView newGame = new NewGameView(stage, controller, this::showMainMenu);
     Scene scene = newGame.getScene();
+    themeManager.apply(scene);
+    stage.setScene(scene);
+  }
+
+  private void showSettings() {
+    SettingsView settings = new SettingsView(
+        this::showMainMenu,
+        isFullscreen -> stage.setFullScreen(isFullscreen)
+    );
+    Scene scene = new Scene(settings, 900, 600);
     themeManager.apply(scene);
     stage.setScene(scene);
   }
