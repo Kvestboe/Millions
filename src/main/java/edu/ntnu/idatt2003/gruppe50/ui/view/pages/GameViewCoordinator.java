@@ -3,6 +3,8 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
 import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameOutcome;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameResult;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
@@ -39,17 +41,19 @@ public class GameViewCoordinator {
     navManager.navigateTo(PageId.DASHBOARD);
     bundle.market().setOnStockSelected(this::navigateToStockDetail);
 
+    // ui/view/pages/GameViewCoordinator.java
     bundle.game().setOutcomeListener(outcome -> {
       GameSession session = bundle.session();
-      BigDecimal finalNetWorth = session.getPlayer().getNetWorth();
-      int weeksPlayed = session.getExchange().getWeek();
-      Difficulty difficulty = session.getDifficulty();
+      GameResult result = new GameResult(
+          outcome == GameOutcome.WON,
+          session.getPlayer().getNetWorth(),
+          session.getPlayer().getStartingMoney(),
+          session.getExchange().getWeek(),
+          session.getDifficulty()
+      );
 
-      root.setTop(null); // skjul navbar
-      navManager.show(new GameOverView(
-          outcome, finalNetWorth, weeksPlayed, difficulty,
-          onPlayAgain, onMainMenu
-      ));
+      root.setTop(null);
+      navManager.show(new GameOverView(result, onPlayAgain, onMainMenu));
     });
 
     Scene scene = new Scene(root, 600, 400);

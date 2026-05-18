@@ -2,6 +2,8 @@ package edu.ntnu.idatt2003.gruppe50;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameResult;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
@@ -9,9 +11,11 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
+import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameOverView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,12 +59,22 @@ public final class App extends Application {
     stage.show();
   }
 
+//  private void showMainMenu() {
+//    MainMenuView menu = new MainMenuView(
+//        this::showNewGame,
+//        Platform::exit
+//    );
+//    Scene scene = menu.getScene();
+//    themeManager.apply(scene);
+//    stage.setScene(scene);
+//    stage.show();
+//  }
+
   private void showMainMenu() {
-    MainMenuView menu = new MainMenuView(
-        this::showNewGame,
-        Platform::exit
-    );
-    Scene scene = menu.getScene();
+    GameResult result = new GameResult(false, new BigDecimal("1234567"),
+        new BigDecimal("10000"), 42, Difficulty.EASY);
+    GameOverView view = new GameOverView(result, this::showNewGame, this::showMainMenu);
+    Scene scene = new Scene(view, 900, 600);
     themeManager.apply(scene);
     stage.setScene(scene);
     stage.show();
