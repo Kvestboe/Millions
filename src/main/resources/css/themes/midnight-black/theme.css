@@ -1,0 +1,41 @@
+/* ============================================
+   Millions - Midnight Black Theme
+   Palett: nesten svart trading-terminal med kald blå og gull-aksent
+   ============================================ */
+
+.root {
+
+    /* --- Bakgrunner --- */
+    -bg-primary:    #050608;   /* Sidebakgrunn */
+    -bg-surface:    #0B0D12;   /* Kort, navbar */
+    -bg-elevated:   #141821;   /* Tabellrad, hover-overflater */
+    -bg-overlay:    #1B202B;   /* Popup, modal */
+
+    /* --- Aksenter --- */
+    -accent-gold:   #F5C542;   /* Primær aksent - coins, viktige tall */
+    -accent-indigo: #64748B;   /* Sekundær aksent - aktiv knapp, dempet blågrå */
+    -accent-teal:   #38BDF8;   /* Chart-fill, linjer, highlight */
+
+    /* --- Tekst --- */
+    -text-primary:   #F8FAFC;  /* Hovedtekst */
+    -text-secondary: #94A3B8;  /* Muted labels, metadata */
+    -text-disabled:  #475569;  /* Deaktivert */
+
+    /* --- Status --- */
+    -gain:  #22C55E;           /* Positiv endring */
+    -loss:  #EF4444;           /* Negativ endring */
+    -error: #F87171;           /* Feilmeldinger */
+    -warn:  #FACC15;           /* Advarsler */
+
+    /* --- Border --- */
+    -border:         #232936;  /* Standard border */
+    -border-subtle:  #141821;  /* Subtil separator */
+
+    /* --- Status-nivåer --- */
+    -status-dreamer:    #475569;   /* Grå */
+    -status-engineer:   #38BDF8;   /* Kald blå */
+    -status-astronaut:  #F5C542;   /* Gull */
+
+    /* --- Font --- */
+    -font-mono: "Courier New", monospace;
+}

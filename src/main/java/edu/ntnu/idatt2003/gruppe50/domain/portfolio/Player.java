@@ -21,6 +21,7 @@ public class Player {
   private final TransactionArchive transactionArchive;
   private BigDecimal money;
   private int coins = 0;
+  private String activeTheme = "default";
 
   /**
    * Creates a new {@code Player} with the given name and starting money of given amount.
@@ -168,5 +169,25 @@ public class Player {
           "Not enough coins. Required: " + amount + ", available: " + coins);
     }
     coins -= amount;
+  }
+
+  /**
+   * Returns the id of the currently active visual theme.
+   *
+   * @return the active theme id
+   */
+  public String getActiveTheme() {
+    return activeTheme;
+  }
+
+  /**
+   * Sets the currently active visual theme.
+   *
+   * @param activeTheme the id of the theme to activate
+   * @throws IllegalArgumentException if {@code activeTheme} is null or blank
+   */
+  public void setActiveTheme(String activeTheme) {
+    Validate.notBlank(activeTheme, "Active theme");
+    this.activeTheme = activeTheme;
   }
 }

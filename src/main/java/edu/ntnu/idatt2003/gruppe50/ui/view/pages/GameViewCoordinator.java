@@ -12,6 +12,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,11 +32,13 @@ public class GameViewCoordinator {
   private final Runnable onPlayAgain;
   private NavigationManager navManager;
   private BorderPane root;
+  private final Consumer<String> onThemeChanged;
 
-  public GameViewCoordinator(GameSessionControllerBundle bundle, Runnable onMainMenu, Runnable onPlayAgain) {
+  public GameViewCoordinator(GameSessionControllerBundle bundle, Runnable onMainMenu, Runnable onPlayAgain, Consumer<String> onThemeChanged) {
     this.bundle = bundle;
     this.onMainMenu = onMainMenu;
     this.onPlayAgain = onPlayAgain;
+    this.onThemeChanged = onThemeChanged;
   }
 
   public Scene getScene() {
@@ -74,6 +77,7 @@ public class GameViewCoordinator {
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
     pages.put(PageId.MARKET, new MarketView(bundle.market()));
     pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game()));
+    pages.put(PageId.SHOP, new ShopView(bundle.shop(), onThemeChanged));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
 
