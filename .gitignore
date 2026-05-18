@@ -37,3 +37,6 @@ build/
 
 ### Claude ###
 .claude/
+
+## Game saves ###
+saves/

@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.TransactionType;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.TransactionType;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.mapper.TransactionDataMapper;

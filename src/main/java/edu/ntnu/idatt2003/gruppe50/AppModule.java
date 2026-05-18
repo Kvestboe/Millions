@@ -9,6 +9,8 @@ import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCas
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.DeleteSaveUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetAllSavesUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPendingOrdersUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
@@ -16,11 +18,13 @@ import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.JsonFileGameSessionRepository;
 import java.util.UUID;
 
 public final class AppModule {
-  private final GameSessionRepository sessions = new InMemoryGameSessionRepository();
+  private final TransactionFactory transactionFactory = new TransactionFactory();
+  private final GameSessionRepository sessions = new JsonFileGameSessionRepository(transactionFactory);
 
   // Use cases
   public final StartGameSessionUseCase startGameSession = new StartGameSessionUseCase(sessions);
@@ -36,6 +40,8 @@ public final class AppModule {
   public final GetPendingOrdersUseCase getPendingOrders = new GetPendingOrdersUseCase(sessions);
   public final PlaceStopLossOrderUseCase stopLossOrder = new PlaceStopLossOrderUseCase(sessions);
   public final PreviewOrderUseCase previewOrder = new PreviewOrderUseCase(sessions);
+  public final GetAllSavesUseCase getAllSaves = new GetAllSavesUseCase(sessions);
+  public final DeleteSaveUseCase deleteSave = new DeleteSaveUseCase(sessions);
 
   public GameSessionControllerBundle gameBundle(UUID gameId) {
     GameSession session = sessions.findById(gameId).orElseThrow(GameSessionNotFoundException::new);

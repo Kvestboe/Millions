@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.PendingOrderDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.PendingOrderDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.OrdersController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;

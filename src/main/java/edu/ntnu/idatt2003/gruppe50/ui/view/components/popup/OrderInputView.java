@@ -1,10 +1,10 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
-import edu.ntnu.idatt2003.gruppe50.application.query.OrderType;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.OrderType;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

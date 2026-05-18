@@ -18,6 +18,14 @@ public class Portfolio {
 
   private final Map<UUID, Share> shares;
 
+  public static Portfolio rehydrate(Map<UUID, Share> shares) {
+    return new Portfolio(shares);
+  }
+
+  private Portfolio(Map<UUID, Share> shares) {
+    this.shares = new HashMap<>(shares);
+  }
+
   /**
    * Creates a new {@code Portfolio} with an empty list.
    */

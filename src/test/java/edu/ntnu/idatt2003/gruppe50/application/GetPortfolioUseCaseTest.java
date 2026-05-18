@@ -6,7 +6,7 @@ import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefault
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
@@ -34,10 +34,10 @@ public class GetPortfolioUseCaseTest {
     GetPortfolioUseCase.Response response =
         getPortfolio.execute(new GetPortfolioUseCase.Request(session.getGameId()));
 
-    assertBigDecimalEquals(bd(10000), response.cash());
-    assertBigDecimalEquals(BigDecimal.ZERO, response.portfolioValue());
-    assertBigDecimalEquals(bd(10000), response.netWorth());
-    assertTrue(response.shares().isEmpty());
+    assertBigDecimalEquals(bd(10000), response.portfolio().cash());
+    assertBigDecimalEquals(BigDecimal.ZERO, response.portfolio().portfolioValue());
+    assertBigDecimalEquals(bd(10000), response.portfolio().netWorth());
+    assertTrue(response.portfolio().shares().isEmpty());
   }
 
   @Test
@@ -48,12 +48,12 @@ public class GetPortfolioUseCaseTest {
     GetPortfolioUseCase.Response response =
         getPortfolio.execute(new GetPortfolioUseCase.Request(session.getGameId()));
 
-    assertBigDecimalEquals(bd(9196), response.cash());
-    assertBigDecimalEquals(bd(792), response.portfolioValue());
-    assertBigDecimalEquals(bd(9988), response.netWorth());
+    assertBigDecimalEquals(bd(9196), response.portfolio().cash());
+    assertBigDecimalEquals(bd(792), response.portfolio().portfolioValue());
+    assertBigDecimalEquals(bd(9988), response.portfolio().netWorth());
 
-    assertEquals(1, response.shares().size());
-    ShareDto share = response.shares().getFirst();
+    assertEquals(1, response.portfolio().shares().size());
+    ShareDto share = response.portfolio().shares().getFirst();
 
     assertNotNull(share.shareId());
     assertEquals("AAPL", share.symbol());
