@@ -28,7 +28,7 @@ public final class StartGameSessionUseCase {
    * @return response containing newly created game id
    */
   public Response execute(Request request) {
-    GameSession session = GameSession.createNew(request.player(), request.exchange(), request.difficulty);
+    GameSession session = GameSession.createNew(request.player(), request.exchange(), request.difficulty());
     repository.save(session);
     return new Response(session.getGameId());
   }
@@ -38,6 +38,7 @@ public final class StartGameSessionUseCase {
    *
    * @param player player state to start with
    * @param exchange exchange state to start with
+   * @param difficulty difficulty level for the new game session
    */
   public record Request(Player player, Exchange exchange, Difficulty difficulty) {}
 

@@ -47,7 +47,7 @@ public class LaunchStep implements OnboardingStep {
     VBox summary = buildSummary();
     summary.setMaxWidth(440);
 
-    Label tagline = new Label("Target: 1 000 000 kr, Good luck out there.");
+    Label tagline = new Label("Target: 1 000 000 kr. Good luck out there.");
     tagline.getStyleClass().add("label-muted");
 
     container.getChildren().addAll(title, subtitle, summary, tagline);
@@ -80,11 +80,13 @@ public class LaunchStep implements OnboardingStep {
           .toPlainString() + " kr";
     }
 
-    BigDecimal weeklyHangarCost = flowData.startingCapital
-        .multiply(BigDecimal.valueOf(flowData.difficulty.getHangarCostRate()))
-        .setScale(0, java.math.RoundingMode.HALF_UP);
-
-    String hangarLabel = weeklyHangarCost.toPlainString() + " kr / week";
+    String hangarLabel = "—";
+    if (flowData.difficulty != null && flowData.startingCapital != null) {
+      BigDecimal weeklyHangarCost = flowData.startingCapital
+          .multiply(BigDecimal.valueOf(flowData.difficulty.getHangarCostRate()))
+          .setScale(0, java.math.RoundingMode.HALF_UP);
+      hangarLabel = weeklyHangarCost.toPlainString() + " kr / week";
+    }
 
     card.getChildren().addAll(
         summaryRow("Trader",       flowData.playerName != null ? flowData.playerName : "—"),
