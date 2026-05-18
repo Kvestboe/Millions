@@ -23,6 +23,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.StoryStep;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -43,6 +44,12 @@ public final class App extends Application {
     stage.fullScreenProperty().addListener((obs, oldVal, newVal) -> {
       isFullscreen = newVal;
     });
+
+    stage.getIcons().add(new Image(
+        getClass().getResourceAsStream("/icons/app-icon.png")
+    ));
+
+
     showMainMenu();
   }
 
