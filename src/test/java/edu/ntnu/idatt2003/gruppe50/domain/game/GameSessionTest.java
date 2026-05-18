@@ -18,12 +18,12 @@ public class GameSessionTest {
 
   @BeforeEach
   void setUp() {
-    session = GameSession.createNew(createDefaultPlayer(), createDefaultExchange());
+    session = GameSession.createNew(createDefaultPlayer(), createDefaultExchange(), Difficulty.EASY);
   }
 
   @Test
   void createNew_validInput_createsActiveSession() {
-    GameSession newSession = GameSession.createNew(createDefaultPlayer(), createDefaultExchange());
+    GameSession newSession = GameSession.createNew(createDefaultPlayer(), createDefaultExchange(), Difficulty.EASY);
 
     assertNotNull(newSession.getGameId());
     assertEquals(GameSessionState.ACTIVE, newSession.getState());
@@ -34,13 +34,13 @@ public class GameSessionTest {
   @Test
   void createNew_nullPlayer_throwsException() {
     assertThrows(
-        IllegalArgumentException.class, () -> GameSession.createNew(null, createDefaultExchange()));
+        IllegalArgumentException.class, () -> GameSession.createNew(null, createDefaultExchange(), Difficulty.EASY));
   }
 
   @Test
   void createNew_nullExchange_throwsException() {
     assertThrows(
-        IllegalArgumentException.class, () -> GameSession.createNew(createDefaultPlayer(), null));
+        IllegalArgumentException.class, () -> GameSession.createNew(createDefaultPlayer(), null, Difficulty.EASY));
   }
 
   @Test
@@ -54,6 +54,7 @@ public class GameSessionTest {
             gameId,
             createDefaultPlayer(),
             createDefaultExchange(),
+            Difficulty.EASY,
             GameSessionState.FINISHED,
             runStartedAt,
             lastPlayed,
@@ -74,6 +75,7 @@ public class GameSessionTest {
                 null,
                 createDefaultPlayer(),
                 createDefaultExchange(),
+                Difficulty.EASY,
                 GameSessionState.ACTIVE,
                 LocalDate.now(),
                 LocalDate.now(),
@@ -89,6 +91,7 @@ public class GameSessionTest {
                 UUID.randomUUID(),
                 createDefaultPlayer(),
                 createDefaultExchange(),
+                Difficulty.EASY,
                 GameSessionState.ACTIVE,
                 LocalDate.now(),
                 null,
@@ -109,6 +112,7 @@ public class GameSessionTest {
             UUID.randomUUID(),
             createDefaultPlayer(),
             createDefaultExchange(),
+            Difficulty.EASY,
             GameSessionState.ACTIVE,
             LocalDate.now().minusDays(10),
             LocalDate.now().minusDays(1),

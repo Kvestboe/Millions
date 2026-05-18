@@ -46,7 +46,6 @@ public class CapitalStep implements OnboardingStep {
     VBox container = new VBox(16);
     container.setAlignment(Pos.CENTER);
     container.setPadding(new Insets(60, 80, 60, 80));
-    container.setMaxWidth(480);
     container.getStyleClass().add("root-bg");
 
     Label title = new Label("Your starting capital");
@@ -57,12 +56,22 @@ public class CapitalStep implements OnboardingStep {
 
     HBox presets = buildPresets();
 
+    Label maxLabel = new Label();
+    maxLabel.getStyleClass().add("label-muted");
+    if (difficulty != null) {
+      difficulty.getMaxStartingCapital().ifPresentOrElse(
+          max -> maxLabel.setText("Maximum for " + difficulty.name() + ": " + max.toPlainString() + " kr"),
+          () -> maxLabel.setText("No limit on " + difficulty.name())
+      );
+    }
+
     Label fieldLabel = new Label("Amount (kr)");
     fieldLabel.getStyleClass().add("field-label");
 
-    capitalField.setPromptText("10 000");
+    capitalField.setPromptText("5 000");
     capitalField.getStyleClass().add("input-field");
-    capitalField.setMaxWidth(Double.MAX_VALUE);
+    capitalField.setPrefWidth(400);
+    capitalField.setMaxWidth(400);
     capitalField.textProperty().addListener((_, _, _) -> updateGameOverLabel());
 
     errorLabel.getStyleClass().add("error-label");
@@ -72,7 +81,7 @@ public class CapitalStep implements OnboardingStep {
     updateGameOverLabel();
 
     container.getChildren().addAll(
-        title, subtitle, presets, fieldLabel,
+        title, subtitle, maxLabel, presets, fieldLabel,
         capitalField, gameOverLabel, errorLabel
     );
     return container;
@@ -87,11 +96,13 @@ public class CapitalStep implements OnboardingStep {
     HBox presets = new HBox(8);
     presets.setAlignment(Pos.CENTER);
 
-    List<String> amounts = difficulty == Difficulty.HARD
-        ? List.of("1 000", "2 000", "3 000", "5 000")
-        : difficulty == Difficulty.MEDIUM
-        ? List.of("5 000", "10 000", "15 000", "25 000")
-        : List.of("5 000", "10 000", "25 000", "50 000");
+    List<String> amounts = difficulty == null
+        ? List.of("5 000", "10 000", "25 000", "50 000")
+        : switch (difficulty) {
+          case HARD -> List.of("1 000", "2 000", "3 000", "5 000");
+          case MEDIUM -> List.of("5 000", "10 000", "15 000", "25 000");
+          case EASY -> List.of("5 000", "10 000", "25 000", "50 000");
+        };
 
     amounts.forEach(amount -> {
       Button btn = new Button(amount + " kr");

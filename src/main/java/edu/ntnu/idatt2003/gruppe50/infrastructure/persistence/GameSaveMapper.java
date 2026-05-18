@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.infrastructure.persistence;
 
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
@@ -73,6 +74,7 @@ public class GameSaveMapper {
     return new GameSaveDto(
         session.getGameId().toString(),
         session.getState().name(),
+        session.getDifficulty().name(),
         session.getRunStartedAt().toString(),
         session.getLastPlayed().toString(),
         session.getNetWorthHistory(),
@@ -124,6 +126,7 @@ public class GameSaveMapper {
         UUID.fromString(dto.gameId()),
         player,
         exchange,
+        Difficulty.valueOf(dto.difficulty()),
         GameSessionState.valueOf(dto.state()),
         LocalDate.parse(dto.runStartedAt()),
         LocalDate.parse(dto.lastPlayed()),

@@ -7,10 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -23,8 +26,11 @@ import javafx.stage.Stage;
 public class MarketStep implements OnboardingStep {
 
   private final Stage stage;
+  private final List<VBox> cards = new ArrayList<>();
   private File selectedFile;
   private Label selectedLabel;
+  private int selectedIndex = 0;
+  private String selectedDisplayName = "S&P 500 (default)";
 
   /**
    * Constructs a MarketStep.
@@ -43,10 +49,11 @@ public class MarketStep implements OnboardingStep {
    */
   @Override
   public Parent getView() {
-    VBox container = new VBox(16);
+    cards.clear();
+
+    VBox container = new VBox(12);
     container.setAlignment(Pos.CENTER);
-    container.setPadding(new Insets(60, 80, 60, 80));
-    container.setMaxWidth(480);
+    container.setPadding(new Insets(24, 80, 24, 80));
     container.getStyleClass().add("root-bg");
 
     Label title = new Label("Choose your market");
@@ -58,18 +65,23 @@ public class MarketStep implements OnboardingStep {
     selectedLabel = new Label("S&P 500 (default)");
     selectedLabel.getStyleClass().add("label-muted");
 
-    VBox options = new VBox(10);
-    options.setMaxWidth(400);
-    options.getChildren().addAll(
-        createMarketOption("🇺🇸", "S&P 500",
-            "Top 500 US stocks by market cap", "/data/sp500.csv", true),
-        createMarketOption("🇳🇴", "Oslo Børs",
-            "Norwegian stock exchange", "/data/oslo.csv", false),
-        // TODO: replace label and file with the fun market once created
-        createMarketOption("🎲", "??? Exchange",
-            "A very serious market. Definitely not a joke.", "/data/fun.csv", false),
-        createCustomOption()
-    );
+    VBox sp500  = createMarketOption("US", "S&P 500",
+        "Top 500 US stocks by market cap", "/data/sp500.csv");
+    VBox oslo   = createMarketOption("NO", "Oslo Børs",
+        "Norwegian stock exchange", "/data/oslo.csv");
+    // TODO: replace label and file with the fun market once created
+    VBox funMkt = createMarketOption("🎲", "???",
+        "A very serious market. Definitely not a joke.", "/data/fun.csv");
+    VBox custom = createCustomOption();
+
+    cards.addAll(List.of(sp500, oslo, funMkt, custom));
+    cards.get(selectedIndex).getStyleClass().add("market-card-selected");
+
+    selectedLabel.setText(selectedDisplayName);
+
+    VBox options = new VBox(10, sp500, oslo, funMkt, custom);
+    options.setMaxWidth(500);
+    options.setAlignment(Pos.CENTER);
 
     container.getChildren().addAll(title, subtitle, options, selectedLabel);
     return container;
@@ -78,51 +90,33 @@ public class MarketStep implements OnboardingStep {
   /**
    * Creates a market option card that loads a bundled CSV resource.
    *
-   * @param icon        emoji icon for the market
-   * @param name        display name
-   * @param description short description
+   * @param icon         text or emoji icon for the market
+   * @param name         display name
+   * @param description  short description
    * @param resourcePath path to the bundled CSV resource
-   * @param isDefault   whether this option is pre-selected
-   * @return a styled VBox card
+   *
+   * @return a styled, clickable VBox card
    */
   private VBox createMarketOption(
-      String icon, String name, String description,
-      String resourcePath, boolean isDefault
+      String icon, String name, String description, String resourcePath
   ) {
-    Label iconLabel = new Label(icon + "  " + name);
-    iconLabel.getStyleClass().add("field-label");
-
-    Label descLabel = new Label(description);
-    descLabel.getStyleClass().add("label-muted");
-
-    VBox card = new VBox(4, iconLabel, descLabel);
-    card.setPadding(new Insets(14, 16, 14, 16));
-    card.getStyleClass().add(isDefault ? "market-card-selected" : "market-card");
-
+    VBox card = buildCard(icon, name, description);
     card.setOnMouseClicked(_ -> {
       loadDefaultFile(resourcePath);
-      selectedLabel.setText("Selected: " + name);
-      resetCardStyles(card);
+      selectedDisplayName = "Selected: " + name;
+      selectedLabel.setText(selectedDisplayName);
+      selectCard(card);
     });
-
     return card;
   }
 
   /**
    * Creates a custom file picker option.
    *
-   * @return a styled VBox card for custom file selection
+   * @return a styled, clickable VBox card for custom file selection
    */
   private VBox createCustomOption() {
-    Label iconLabel = new Label("📁  Custom file");
-    iconLabel.getStyleClass().add("field-label");
-
-    Label descLabel = new Label("Load your own .csv file");
-    descLabel.getStyleClass().add("label-muted");
-
-    VBox card = new VBox(4, iconLabel, descLabel);
-    card.setPadding(new Insets(14, 16, 14, 16));
-    card.getStyleClass().add("market-card");
+    VBox card = buildCard("📁", "Custom file", "Load your own .csv file");
 
     card.setOnMouseClicked(_ -> {
       FileChooser chooser = new FileChooser();
@@ -132,8 +126,9 @@ public class MarketStep implements OnboardingStep {
       File file = chooser.showOpenDialog(stage);
       if (file != null) {
         selectedFile = file;
-        selectedLabel.setText("Selected: " + file.getName());
-        resetCardStyles(card);
+        selectedDisplayName = "Selected: " + file.getName();
+        selectedLabel.setText(selectedDisplayName);
+        selectCard(card);
       }
     });
 
@@ -141,15 +136,44 @@ public class MarketStep implements OnboardingStep {
   }
 
   /**
-   * Resets all market card styles and marks the selected card.
+   * Builds a market card with an icon to the left and stacked
+   * name and description labels to the right.
    *
-   * @param selected the card that was clicked
+   * @param icon        icon text shown on the left
+   * @param name        market name shown as the card title
+   * @param description short description shown below the title
+   * @return a styled VBox card
    */
-  private void resetCardStyles(VBox selected) {
-    // Note: in a real implementation, keep references to all cards
-    // and iterate over them. This is a simplified version.
-    selected.getStyleClass().removeAll("market-card", "market-card-selected");
-    selected.getStyleClass().add("market-card-selected");
+  private VBox buildCard(String icon, String name, String description) {
+    Label iconLabel = new Label(icon);
+    iconLabel.getStyleClass().add("market-icon");
+    iconLabel.setMinWidth(32);
+
+    Label nameLabel = new Label(name);
+    nameLabel.getStyleClass().add("field-label");
+
+    Label descLabel = new Label(description);
+    descLabel.getStyleClass().add("label-muted");
+
+    VBox texts = new VBox(2, nameLabel, descLabel);
+    HBox row = new HBox(10, iconLabel, texts);
+    row.setAlignment(Pos.CENTER_LEFT);
+
+    VBox card = new VBox(row);
+    card.setPadding(new Insets(8, 12, 8, 12));
+    card.getStyleClass().add("market-card");
+    return card;
+  }
+
+  /**
+   * Selects the clicked card and deselects all others.
+   *
+   * @param clicked the card that was clicked
+   */
+  private void selectCard(VBox clicked) {
+    cards.forEach(card -> card.getStyleClass().remove("market-card-selected"));
+    clicked.getStyleClass().add("market-card-selected");
+    selectedIndex = cards.indexOf(clicked);
   }
 
   /**

@@ -9,6 +9,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.StopLossOrder;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public final class GameSession {
   private final Player player;
   private final Exchange exchange;
   private final LocalDate runStartedAt;
+  private final Difficulty difficulty;
   private GameSessionState state;
   private LocalDate lastPlayed;
   private List<BigDecimal> netWorthHistory;
@@ -34,6 +36,7 @@ public final class GameSession {
       UUID gameId,
       Player player,
       Exchange exchange,
+      Difficulty difficulty,
       GameSessionState state,
       LocalDate runStartedAt,
       LocalDate lastPlayed
@@ -41,6 +44,7 @@ public final class GameSession {
     this.gameId = gameId;
     this.player = player;
     this.exchange = exchange;
+    this.difficulty = difficulty;
     this.state = state;
     this.runStartedAt = runStartedAt;
     this.lastPlayed = lastPlayed;
@@ -54,9 +58,10 @@ public final class GameSession {
       GameSessionState state,
       LocalDate runStartedAt,
       LocalDate lastPlayed,
+      Difficulty difficulty,
       List<BigDecimal> netWorthHistory
   ) {
-    this(gameId, player, exchange, state, runStartedAt, lastPlayed);
+    this(gameId, player, exchange, difficulty, state, runStartedAt, lastPlayed);
     this.netWorthHistory = netWorthHistory;
   }
 
@@ -68,7 +73,7 @@ public final class GameSession {
    * @return newly created active session
    * @throws IllegalArgumentException if {@code player} or {@code exchange} is null
    */
-  public static GameSession createNew(Player player, Exchange exchange) {
+  public static GameSession createNew(Player player, Exchange exchange, Difficulty difficulty) {
     Validate.notNull(player, "Player");
     Validate.notNull(exchange, "Exchange");
 
@@ -76,6 +81,7 @@ public final class GameSession {
         UUID.randomUUID(),
         player,
         exchange,
+        difficulty,
         GameSessionState.ACTIVE,
         LocalDate.now(),
         LocalDate.now()
@@ -98,6 +104,7 @@ public final class GameSession {
       UUID gameId,
       Player player,
       Exchange exchange,
+      Difficulty difficulty,
       GameSessionState state,
       LocalDate runStartedAt,
       LocalDate lastPlayed,
@@ -110,7 +117,7 @@ public final class GameSession {
     Validate.notNull(runStartedAt, "Run started at date");
     Validate.notNull(lastPlayed, "Last played date");
     Validate.notNull(netWorthHistory, "Net worth history");
-    return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed, netWorthHistory);
+    return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed, difficulty, netWorthHistory);
   }
 
   /**
@@ -241,6 +248,9 @@ public final class GameSession {
     ensureActive();
     exchange.advance();
     netWorthHistory.add(player.getNetWorth());
+    if (evaluateOutcome() != GameOutcome.ONGOING) {
+      finish();
+    }
   }
 
   /**
@@ -248,6 +258,17 @@ public final class GameSession {
    */
   public void finish() {
     state = GameSessionState.FINISHED;
+  }
+
+  public GameOutcome evaluateOutcome() {
+    BigDecimal netWorth = player.getNetWorth();
+    BigDecimal threshold = player.getStartingMoney()
+        .multiply(BigDecimal.valueOf(difficulty.getGameOverThreshold()))
+        .setScale(2, RoundingMode.HALF_UP);
+
+    if (netWorth.compareTo(new BigDecimal("1000000")) >= 0) return GameOutcome.WON;
+    if (netWorth.compareTo(threshold) < 0) return GameOutcome.LOST;
+    return GameOutcome.ONGOING;
   }
 
   /**
@@ -316,5 +337,9 @@ public final class GameSession {
 
   public List<LimitOrder> getPendingOrders() {
     return exchange.getPendingOrders();
+  }
+
+  public Difficulty getDifficulty() {
+    return difficulty;
   }
 }

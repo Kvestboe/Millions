@@ -3,6 +3,8 @@ package edu.ntnu.idatt2003.gruppe50.ui.controller;
 import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameOutcome;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -12,6 +14,7 @@ public final class GameController {
   private final BuyShareUseCase buyShare;
   private final SellShareUseCase sellShare;
   private final AdvanceWeekUseCase advanceWeek;
+  private GameOutcomeListener outcomeListener;
 
   public GameController(
       UUID gameId,
@@ -34,6 +37,14 @@ public final class GameController {
   }
 
   public void advanceWeek() {
-    advanceWeek.execute(new AdvanceWeekUseCase.Request(gameId));
+    AdvanceWeekUseCase.Result result = advanceWeek.execute(new AdvanceWeekUseCase.Request(gameId));
+    if (result.outcome() != GameOutcome.ONGOING && outcomeListener != null) {
+      outcomeListener.onOutcome(result.outcome());
+    }
   }
+
+  public void setOutcomeListener(GameOutcomeListener listener) {
+    this.outcomeListener = listener;
+  }
+
 }

@@ -4,6 +4,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** Factory for easy and customizable card creation for different UI views. */
 public class CardFactory {
 
@@ -57,4 +60,5 @@ public class CardFactory {
     card.getChildren().addAll(content);
     return card;
   }
+
 }

@@ -4,8 +4,10 @@ import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.pages.SettingsView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingFlow;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.CapitalStep;
@@ -25,15 +27,19 @@ public final class AppRouter {
   private final Stage stage;
   private final AppModule module;
   private final ThemeManager themeManager;
+  private boolean isFullscreen = false;
 
   public AppRouter(Stage stage, AppModule module, ThemeManager themeManager) {
     this.stage = stage;
     this.module = module;
     this.themeManager = themeManager;
+
+    stage.fullScreenProperty().addListener((obs, oldVal, newVal) -> isFullscreen = newVal);
   }
 
   public void showMainMenu() {
-    show(new MainMenuView(this::showNewGame, Platform::exit).getScene());
+    MainMenuView menu = new MainMenuView(this::showNewGame, this::showSettings, Platform::exit);
+    show(new Scene(menu, WindowConfig.WIDTH, WindowConfig.HEIGHT));
   }
 
   private void showNewGame() {
@@ -52,19 +58,36 @@ public final class AppRouter {
     UUID gameId = new NewGameController(module.startGameSession).onStartGame(
         data.playerName(),
         data.startingCapital().toString(),
-        data.stockFile()
+        data.stockFile(),
+        data.difficulty()
     );
     switchToGame(gameId);
   }
 
-  private void switchToGame(UUID gameId) {
+  public void switchToGame(UUID gameId) {
     module.loadGameSession.execute(new LoadGameSessionUseCase.Request(gameId));
-    show(new GameViewCoordinator(module.gameBundle(gameId)).getScene());
+    show(new GameViewCoordinator(
+        module.gameBundle(gameId),
+        this::showMainMenu,
+        this::showNewGame
+    ).getScene());
+  }
+
+  private void showSettings() {
+    SettingsView settings = new SettingsView(
+        this::showMainMenu,
+        fullscreen -> {
+          isFullscreen = fullscreen;
+          stage.setFullScreen(fullscreen);
+        }
+    );
+    show(new Scene(settings, WindowConfig.WIDTH, WindowConfig.HEIGHT));
   }
 
   private void show(Scene scene) {
     themeManager.apply(scene);
     stage.setScene(scene);
+    stage.setFullScreen(isFullscreen);
     stage.show();
   }
 }

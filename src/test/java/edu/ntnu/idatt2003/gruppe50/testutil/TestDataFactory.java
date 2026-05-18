@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.testutil;
 
 import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
 
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
@@ -29,6 +30,6 @@ public class TestDataFactory {
   }
 
   public static GameSession createDefaultGameSession() {
-    return GameSession.createNew(createDefaultPlayer(), createDefaultExchange());
+    return GameSession.createNew(createDefaultPlayer(), createDefaultExchange(), Difficulty.EASY);
   }
 }

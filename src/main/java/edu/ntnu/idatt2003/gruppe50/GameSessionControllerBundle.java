@@ -10,6 +10,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 
 public record GameSessionControllerBundle(
+    GameSession session,
     GameController game,
     MarketQueryController market,
     PortfolioQueryController portfolio,
@@ -20,6 +21,7 @@ public record GameSessionControllerBundle(
 ) {
   public GameSessionControllerBundle(AppModule m, GameSession session) {
     this(
+        session,
         new GameController(session.getGameId(), m.buyShare, m.sellShare, m.advanceWeek),
         new MarketQueryController(session.getGameId(), m.getMarket, session.getExchange()),
         new PortfolioQueryController(session.getGameId(), m.getPortfolio, session.getExchange()),

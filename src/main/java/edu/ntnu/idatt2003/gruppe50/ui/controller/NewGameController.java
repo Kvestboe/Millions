@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
@@ -35,10 +36,11 @@ public final class NewGameController {
    * @param playerName the name of the player
    * @param capital the starting capital as a string, e.g. "10000" or "10000kr"
    * @param stockFile the CSV file containing stock data
+   * @param difficulty the chosen difficulty level
    * @return the UUID of the newly created game session
    * @throws IllegalArgumentException if any input is invalid
    */
-  public UUID onStartGame(String playerName, String capital, File stockFile) {
+  public UUID onStartGame(String playerName, String capital, File stockFile, Difficulty difficulty) {
     BigDecimal startingCapital = Parse.parseBigDecimal(capital);
     Validate.validateInput(playerName, startingCapital, stockFile);
 
@@ -47,7 +49,7 @@ public final class NewGameController {
     Exchange exchange = createExchange(stocks);
 
     return startGameSession.execute(
-        new StartGameSessionUseCase.Request(player, exchange)).gameId();
+        new StartGameSessionUseCase.Request(player, exchange, difficulty)).gameId();
   }
 
   private List<Stock> loadStocks(File stockFile) {

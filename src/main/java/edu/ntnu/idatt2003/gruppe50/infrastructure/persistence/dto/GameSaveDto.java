@@ -6,6 +6,7 @@ import java.util.List;
 public record GameSaveDto(
     String gameId,
     String state,
+    String difficulty,
     String runStartedAt,
     String lastPlayed,
     List<BigDecimal> netWorthHistory,

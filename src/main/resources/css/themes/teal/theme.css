@@ -42,5 +42,7 @@
 
     /* --- Border radius --- */
     /* Kort: 10 | Knapper: 8 | Chips: 20 | Avatar: 50% */
+    -font-mono: "Courier New", monospace;
 }
+
 

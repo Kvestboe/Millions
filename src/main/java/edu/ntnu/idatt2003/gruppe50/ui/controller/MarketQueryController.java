@@ -7,6 +7,7 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import java.util.UUID;
+import java.util.function.Consumer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,6 +17,7 @@ public final class MarketQueryController implements Observer {
   private final GetMarketUseCase getMarket;
   private final ObservableList<StockDto> stocks = FXCollections.observableArrayList();
   private String query = "";
+  private Consumer<StockDto> onStockSelected;
 
   public MarketQueryController(
       UUID gameId,
@@ -30,6 +32,16 @@ public final class MarketQueryController implements Observer {
 
   public ObservableList<StockDto> getStocks() {
     return stocks;
+  }
+
+  public void setOnStockSelected(Consumer<StockDto> onStockSelected) {
+    this.onStockSelected = onStockSelected;
+  }
+
+  public void onStockSelected(StockDto stock) {
+    if (onStockSelected != null) {
+      onStockSelected.accept(stock);
+    }
   }
 
   public void onSearch(String query) {
