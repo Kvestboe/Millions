@@ -126,7 +126,7 @@ public class GameSaveMapper {
         UUID.fromString(dto.gameId()),
         player,
         exchange,
-        Difficulty.valueOf(dto.difficulty()),
+        dto.difficulty() != null ? Difficulty.valueOf(dto.difficulty()) : Difficulty.EASY,
         GameSessionState.valueOf(dto.state()),
         LocalDate.parse(dto.runStartedAt()),
         LocalDate.parse(dto.lastPlayed()),

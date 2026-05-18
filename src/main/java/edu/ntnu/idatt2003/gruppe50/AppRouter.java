@@ -7,6 +7,8 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.LoadGameController;
+import edu.ntnu.idatt2003.gruppe50.ui.view.pages.LoadGameView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.SettingsView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingFlow;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingStep;
@@ -39,7 +41,19 @@ public final class AppRouter {
 
   public void showMainMenu() {
     MainMenuView menu = new MainMenuView(this::showNewGame, this::showSettings, Platform::exit);
+    menu.setOnLoadGame(this::showLoadGame);
     show(new Scene(menu, WindowConfig.WIDTH, WindowConfig.HEIGHT));
+  }
+
+  private void showLoadGame() {
+    LoadGameController controller = new LoadGameController(
+        module.getAllSaves,
+        module.loadGameSession,
+        module.deleteSave,
+        this::switchToGame
+    );
+    LoadGameView view = new LoadGameView(controller, this::showMainMenu);
+    show(new Scene(view, WindowConfig.WIDTH, WindowConfig.HEIGHT));
   }
 
   private void showNewGame() {

@@ -72,7 +72,7 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
       return paths
           .filter(p -> p.toString().endsWith(".json"))
           .map(p -> findById(UUID.fromString(
-              p.getFileName().toString().replace("json", ""))))
+              p.getFileName().toString().replace(".json", ""))))
           .filter(Optional::isPresent)
           .map(Optional::get)
           .sorted(Comparator.comparing(GameSession::getLastPlayed))
