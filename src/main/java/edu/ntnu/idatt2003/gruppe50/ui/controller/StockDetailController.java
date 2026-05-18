@@ -8,6 +8,9 @@ import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
+import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.application.query.OrderType;
@@ -29,6 +32,7 @@ public class StockDetailController {
   private final PlaceSellLimitOrderUseCase placeSellLimitOrder;
   private final PlaceStopLossOrderUseCase placeStopLossOrder;
   private final PreviewOrderUseCase previewOrderUseCase;
+  private final Exchange exchange;
 
   public StockDetailController(
       UUID gameId,
@@ -38,7 +42,7 @@ public class StockDetailController {
       PlaceBuyLimitOrderUseCase placeBuyLimitOrderUseCase,
       PlaceSellLimitOrderUseCase sellLimitOrder,
       PlaceStopLossOrderUseCase placeStopLossOrder,
-      PreviewOrderUseCase previewOrderUseCase
+      PreviewOrderUseCase previewOrderUseCase, Exchange exchange
   ) {
     this.gameId = gameId;
     this.buyShare = buyShare;
@@ -48,6 +52,7 @@ public class StockDetailController {
     this.placeSellLimitOrder = sellLimitOrder;
     this.placeStopLossOrder = placeStopLossOrder;
     this.previewOrderUseCase = previewOrderUseCase;
+    this.exchange = exchange;
   }
   public void buy(String symbol, BigDecimal quantity) {
     buyShare.execute(new BuyShareUseCase.Request(gameId, symbol, quantity));
@@ -58,6 +63,22 @@ public class StockDetailController {
     return portfolio.stream()
         .filter(s -> s.symbol().equals(symbol))
         .findFirst();
+  }
+
+  public StockDto getStock(String symbol) {
+    Stock s = exchange.getStock(symbol);
+    return new StockDto(
+        s.getSymbol(),
+        s.getCompany(),
+        s.getHistoricalPrices(),
+        s.getSalesPrice(),
+        s.getLatestPriceChange(),
+        s.getLatestPriceChangePercent()
+    );
+  }
+
+  public Exchange exchange() {
+    return exchange;
   }
 
   public void placeOrder(DraftOrder draftOrder) {

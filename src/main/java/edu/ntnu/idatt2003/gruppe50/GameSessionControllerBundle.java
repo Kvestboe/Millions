@@ -32,7 +32,8 @@ public record GameSessionControllerBundle(
             m.buyLimitOrder,
             m.sellLimitOrder,
             m.stopLossOrder,
-            m.previewOrder
+            m.previewOrder,
+            session.getExchange()
         ),
         new OrdersController(session.getGameId(), m.getPendingOrders, session.getExchange())
     );
