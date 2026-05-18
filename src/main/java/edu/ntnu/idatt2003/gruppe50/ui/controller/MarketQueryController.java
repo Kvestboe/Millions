@@ -3,7 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.controller;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase.Request;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase.Response;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import java.util.UUID;
@@ -15,9 +15,9 @@ public final class MarketQueryController implements Observer {
 
   private final UUID gameId;
   private final GetMarketUseCase getMarket;
-  private Consumer<StockDto> onStockSelected = null;
   private final ObservableList<StockDto> stocks = FXCollections.observableArrayList();
   private String query = "";
+  private Consumer<StockDto> onStockSelected;
 
   public MarketQueryController(
       UUID gameId,
@@ -34,19 +34,19 @@ public final class MarketQueryController implements Observer {
     return stocks;
   }
 
-  public void onSearch(String query) {
-    this.query = query;
-    refresh();
-  }
-
   public void setOnStockSelected(Consumer<StockDto> onStockSelected) {
     this.onStockSelected = onStockSelected;
   }
 
-  public void stockSelected(StockDto stock) {
-    if (stock != null) {
+  public void onStockSelected(StockDto stock) {
+    if (onStockSelected != null) {
       onStockSelected.accept(stock);
     }
+  }
+
+  public void onSearch(String query) {
+    this.query = query;
+    refresh();
   }
 
   @Override
