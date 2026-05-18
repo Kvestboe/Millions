@@ -1,0 +1,782 @@
+/* ============================================
+   Millions — base.css
+   Globale komponenter. Ingen hardkodede farger.
+   Alle farger kommer fra themes
+══════════════════════════════ */
+
+/* ── Root bakgrunn ── */
+.root {
+    -fx-background-color: -bg-primary;
+    -fx-font-family: "System";
+}
+
+
+/* ══════════════════════════════
+   TYPOGRAFI
+══════════════════════════════ */
+
+.page-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 28px;
+    -fx-font-weight: normal;
+}
+
+.section-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 16px;
+}
+
+.label-muted {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 14px;
+}
+
+.label-overline {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 10px;
+}
+
+.title-label {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.subtitle-label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 14px;
+}
+
+.field-label {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 14px;
+}
+
+.error-label {
+    -fx-text-fill: -error;
+    -fx-font-size: 12px;
+}
+
+.file-name-label {
+    -fx-text-fill: -text-secondary;
+}
+
+
+/* ══════════════════════════════
+   STATUS / GAIN / LOSS
+══════════════════════════════ */
+
+.gain {
+    -fx-text-fill: -gain;
+    -fx-font-weight: 500;
+}
+
+.loss {
+    -fx-text-fill: -loss;
+    -fx-font-weight: 500;
+}
+
+
+/* ══════════════════════════════
+   KORT / OVERFLATER
+══════════════════════════════ */
+
+.card {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+    -fx-padding: 16;
+}
+
+.card-box {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+}
+
+.info-card {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+    -fx-padding: 14 16 14 16;
+    -fx-spacing: 4;
+    -fx-min-width: 160;
+    -fx-alignment: center-left;
+}
+
+.info-card .label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+}
+
+.info-card-accent {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -accent-gold;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+    -fx-padding: 14 16 14 16;
+    -fx-spacing: 4;
+    -fx-min-width: 160;
+    -fx-alignment: center-left;
+}
+
+.info-card-accent .label {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 12px;
+}
+
+.root-bg {
+    -fx-background-color: -bg-primary;
+}
+
+
+/* ══════════════════════════════
+   KNAPPER
+══════════════════════════════ */
+
+.btn-primary {
+    -fx-background-color: -accent-indigo;
+    -fx-text-fill: -text-primary;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-padding: 10 18 10 18;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #5D54F0;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.btn-primary:pressed {
+    -fx-background-color: #3F38C0;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.btn-secondary {
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -text-primary;
+    -fx-background-radius: 8;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-border-width: 0.5;
+    -fx-padding: 10 18 10 18;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -bg-overlay;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.btn-accent {
+    -fx-background-color: -accent-gold;
+    -fx-text-fill: -bg-primary;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-padding: 10 18 10 18;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.btn-accent:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Advance week — stor grønn knapp */
+.advance-button {
+    -fx-background-color: -accent-teal;
+    -fx-text-fill: -bg-primary;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 16;
+}
+
+.advance-button:hover {
+    -fx-effect: dropshadow(gaussian, #00C9A760, 20, 0.4, 0, 0);
+}
+
+/* Disabled state — brukes på knapper som ikke er klare */
+.button-disabled {
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -text-primary;
+    -fx-background-radius: 8;
+    -fx-padding: 12;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.button-disabled:hover {
+    -fx-background-color: -bg-overlay;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Active state — brukes på knapper som er klare */
+.button-active {
+    -fx-background-color: -accent-indigo;
+    -fx-text-fill: -text-primary;
+    -fx-background-radius: 8;
+    -fx-padding: 12;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.button-active:hover {
+    -fx-background-color: #5D54F0;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.button-active:pressed {
+    -fx-background-color: #3F38C0;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+.add-button {
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -text-primary;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.add-button:hover {
+    -fx-background-color: -bg-overlay;
+}
+
+
+/* ══════════════════════════════
+   INPUT-FELT
+══════════════════════════════ */
+
+.text-field {
+    -fx-background-color: -bg-elevated;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: -text-primary;
+    -fx-prompt-text-fill: -text-secondary;
+    -fx-font-size: 14px;
+    -fx-padding: 10 16 10 16;
+}
+
+.text-field:focused {
+    -fx-border-color: -accent-indigo;
+}
+
+.input-field {
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -text-primary;
+    -fx-prompt-text-fill: -text-secondary;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.input-field:focused {
+    -fx-border-color: -accent-indigo;
+}
+
+.file-picker-row {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+}
+
+
+/* ══════════════════════════════
+   TABELL — TableView
+══════════════════════════════ */
+
+.table-view {
+    -fx-background-color: -bg-surface;
+    -fx-border-color: -border;
+    -fx-border-width: 0.5;
+    -fx-background-radius: 10;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: -bg-elevated;
+}
+
+.table-view .column-header-background .filler {
+    -fx-background-color: -bg-elevated;
+}
+
+.table-view .column-header {
+    -fx-background-color: -bg-elevated;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 11px;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: -bg-surface;
+    -fx-border-color: -border-subtle;
+    -fx-border-width: 0 0 0.5 0;
+}
+
+.table-view .table-row-cell:even {
+    -fx-background-color: -bg-surface;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: -bg-elevated;
+}
+
+.table-view .table-row-cell:empty {
+    -fx-background-color: -bg-primary;
+    -fx-border-color: transparent;
+}
+
+.table-view .table-row-cell:filled:hover {
+    -fx-background-color: -bg-overlay;
+    -fx-cursor: hand;
+}
+
+.table-view .table-row-cell:filled:pressed {
+    -fx-background-color: -bg-elevated;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: -text-primary;
+    -fx-border-color: transparent;
+    -fx-font-size: 13px;
+    -fx-padding: 10 16 10 16;
+    -fx-alignment: center-left;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 14px;
+}
+
+
+/* ══════════════════════════════
+   SCROLLBAR
+══════════════════════════════ */
+
+.scroll-bar {
+    -fx-background-color: -bg-primary;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: -border;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: -text-disabled;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-opacity: 0;
+}
+
+.scroll-bar:vertical {
+    -fx-opacity: 0;
+}
+
+.scroll-bar:vertical:hover {
+    -fx-opacity: 1;
+}
+
+
+/* ══════════════════════════════
+   CHART — AreaChart
+══════════════════════════════ */
+
+.chart {
+    -fx-background-color: -bg-surface;
+}
+
+.chart-plot-background {
+    -fx-background-color: -bg-surface;
+}
+
+.chart-title {
+    -fx-text-fill: -text-primary;
+}
+
+.axis .axis-minor-tick-mark {
+    -fx-stroke: transparent;
+}
+
+.axis {
+    -fx-tick-label-fill: -text-secondary;
+    -fx-font-size: 10px;
+}
+
+.axis-label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 11px;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: transparent;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: -border;
+    -fx-stroke-width: 0.5;
+}
+
+.chart-legend {
+    -fx-padding: 0;
+    visibility: hidden;
+}
+
+.chart-series-area-line {
+    -fx-stroke: -accent-teal;
+    -fx-stroke-width: 2;
+}
+
+.chart-series-area-fill {
+    -fx-fill: linear-gradient(from 0% 0% to 0% 100%, #00C9A730, #00C9A705);
+}
+
+.chart-area-symbol {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+}
+
+
+/* ══════════════════════════════
+   POPUP / MODAL
+══════════════════════════════ */
+
+.modal-backdrop {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+}
+
+.place-order-popup {
+    -fx-background-color: -bg-surface;
+    -fx-padding: 24;
+    -fx-background-radius: 10;
+    -fx-spacing: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 20, 0, 0, 6);
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+}
+
+.place-order-popup .label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 14px;
+}
+
+.place-order-popup .popup-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 20px;
+    -fx-font-weight: normal;
+}
+
+.place-order-popup .text-field {
+    -fx-background-color: -bg-primary;
+    -fx-text-fill: -text-primary;
+    -fx-prompt-text-fill: -text-secondary;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12 8 12;
+    -fx-font-size: 14px;
+}
+
+.place-order-popup .button {
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -text-primary;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16 8 16;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.place-order-popup .button:hover {
+    -fx-background-color: -bg-overlay;
+}
+
+.place-order-popup .button.primary {
+    -fx-background-color: -accent-indigo;
+}
+
+.place-order-popup .button.primary:hover {
+    -fx-background-color: #5D54F0;
+}
+
+.place-order-popup .detail-label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 14px;
+}
+
+.place-order-popup .detail-value {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 14px;
+}
+
+.place-order-popup .popup-total {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 0 0 0;
+}
+
+.popup-error {
+    -fx-text-fill: -error;
+    -fx-font-size: 12px;
+}
+
+
+/* ══════════════════════════════
+   NET WORTH VALUE
+══════════════════════════════ */
+
+.net-worth-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -accent-gold;
+}
+
+
+/* ══════════════════════════════
+   NAVBAR
+══════════════════════════════ */
+
+.navbar {
+    -fx-background-color: -bg-surface;
+    -fx-border-color: -border;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-padding: 0 20 0 20;
+}
+
+.nav-link {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-padding: 6 14 6 14;
+    -fx-background-radius: 6;
+}
+
+.nav-link:hover {
+    -fx-text-fill: -text-primary;
+    -fx-background-color: -bg-elevated;
+}
+
+.nav-link-active {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 6;
+    -fx-padding: 6 14 6 14;
+}
+
+.coin-badge {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 8;
+    -fx-padding: 5 10 5 10;
+    -fx-font-size: 12px;
+    -fx-text-fill: -text-primary;
+}
+
+.coin-badge-gold {
+    -fx-background-color: rgba(255, 209, 102, 0.1);
+    -fx-border-color: rgba(255, 209, 102, 0.25);
+    -fx-border-radius: 8;
+    -fx-border-width: 0.5;
+    -fx-background-radius: 8;
+    -fx-padding: 5 10 5 10;
+    -fx-font-size: 12px;
+    -fx-text-fill: -accent-gold;
+}
+
+
+/* ══════════════════════════════
+   DASHBOARD GRID
+══════════════════════════════ */
+
+.grid {
+    -fx-background-color: -bg-primary;
+    -fx-padding: 24;
+    -fx-hgap: 16;
+    -fx-vgap: 16;
+}
+
+.card-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 12 0;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 1;
+}
+
+/* ══════════════════════════════
+   ONBOARDING
+══════════════════════════════ */
+
+.story-icon {
+    -fx-font-size: 32px;
+}
+
+.game-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -text-primary;
+}
+
+.story-text {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 5;
+}
+
+.story-italic {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+.onboarding-progress {
+    -fx-background-color: -bg-surface;
+    -fx-border-color: -border;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-padding: 14 32 14 32;
+}
+
+.dot-inactive {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 5;
+    -fx-border-color: -border;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+}
+
+.dot-active {
+    -fx-background-color: -accent-gold;
+    -fx-background-radius: 4;
+}
+
+.dot-done {
+    -fx-background-color: -gain;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.progress-line {
+    -fx-background-color: -border;
+    -fx-opacity: 0;
+}
+
+.diff-card {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -border;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+}
+
+.diff-card:hover {
+    -fx-border-color: -bg-elevated;
+    -fx-background-color: -bg-elevated;
+}
+
+.diff-card-selected {
+    -fx-background-color: rgba(255, 209, 102, 0.06);
+    -fx-background-radius: 12;
+    -fx-border-color: -accent-gold;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+}
+
+.onboarding-progress {
+    -fx-background-color: -bg-surface;
+    -fx-border-color: -border;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-padding: 14 32 14 32;
+}
+
+.diff-name {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+
+.diff-tag {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+}
+
+.diff-stats {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 12px;
+}
+
+
+/* Title text color per difficulty */
+.diff-name-easy   { -fx-text-fill: #22c55e; }
+.diff-name-medium { -fx-text-fill: #eab308; }
+.diff-name-hard   { -fx-text-fill: #ef4444; }
+
+/* Selected state glow per difficulty — override the gold default */
+.difficulty-card-easy.diff-card-selected {
+    -fx-background-color: rgba(34, 197, 94, 0.06);
+    -fx-border-color: #22c55e;
+}
+.difficulty-card-medium.diff-card-selected {
+    -fx-background-color: rgba(234, 179, 8, 0.06);
+    -fx-border-color: #eab308;
+}
+.difficulty-card-hard.diff-card-selected {
+    -fx-background-color: rgba(239, 68, 68, 0.06);
+    -fx-border-color: #ef4444;
+}
+
+.onboarding-scroll,
+.onboarding-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.market-card {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+    -fx-padding: 14 16 14 16;
+}
+
+.market-card:hover {
+    -fx-background-color: -bg-elevated;
+    -fx-border-color: -bg-elevated;
+}
+
+.market-card-selected {
+    -fx-background-color: rgba(255, 209, 102, 0.06);
+    -fx-border-color: -accent-gold;
+}

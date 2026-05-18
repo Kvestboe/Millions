@@ -4,6 +4,7 @@ import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
@@ -32,7 +33,7 @@ public class StartGameSessionUseCaseTest {
   @Test
   void execute_validRequest_createsAndSavesSession() {
     StartGameSessionUseCase.Response response =
-        startSession.execute(new StartGameSessionUseCase.Request(player, exchange));
+        startSession.execute(new StartGameSessionUseCase.Request(player, exchange, Difficulty.EASY));
 
     UUID gameId = response.gameId();
     assertNotNull(gameId);
@@ -48,22 +49,22 @@ public class StartGameSessionUseCaseTest {
   void execute_nullPlayer_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> startSession.execute(new StartGameSessionUseCase.Request(null, exchange)));
+        () -> startSession.execute(new StartGameSessionUseCase.Request(null, exchange, Difficulty.EASY)));
   }
 
   @Test
   void execute_nullExchange_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> startSession.execute(new StartGameSessionUseCase.Request(player, null)));
+        () -> startSession.execute(new StartGameSessionUseCase.Request(player, null, Difficulty.EASY)));
   }
 
   @Test
   void execute_twoRequests_returnsDifferentGameIds() {
     UUID firstId =
-        startSession.execute(new StartGameSessionUseCase.Request(player, exchange)).gameId();
+        startSession.execute(new StartGameSessionUseCase.Request(player, exchange, Difficulty.EASY)).gameId();
     UUID secondId =
-        startSession.execute(new StartGameSessionUseCase.Request(player, exchange)).gameId();
+        startSession.execute(new StartGameSessionUseCase.Request(player, exchange, Difficulty.EASY)).gameId();
 
     assertNotEquals(firstId, secondId);
   }

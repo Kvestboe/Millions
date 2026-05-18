@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
@@ -68,6 +69,7 @@ public class LoadGameSessionUseCaseTest {
             UUID.randomUUID(),
             session.getPlayer(),
             session.getExchange(),
+            Difficulty.EASY,
             GameSessionState.ACTIVE,
             LocalDate.now().minusDays(10),
             yesterday,
