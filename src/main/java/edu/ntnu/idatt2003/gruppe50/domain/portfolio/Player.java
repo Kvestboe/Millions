@@ -5,6 +5,8 @@ import edu.ntnu.idatt2003.gruppe50.domain.shop.InsufficientCoinsException;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents a player in the game, holding information about the player's progress.
@@ -21,7 +23,9 @@ public class Player {
   private final TransactionArchive transactionArchive;
   private BigDecimal money;
   private int coins = 0;
-  private String activeTheme = "default";
+  private static final String DEFAULT_THEME = "default";
+  private String activeTheme = DEFAULT_THEME;
+  private final Set<String> ownedThemes = new HashSet<>();
 
   /**
    * Creates a new {@code Player} with the given name and starting money of given amount.
@@ -39,6 +43,7 @@ public class Player {
     this.money = startingMoney;
     this.portfolio = new Portfolio();
     this.transactionArchive = new TransactionArchive();
+    ownedThemes.add(DEFAULT_THEME);
   }
 
   /**
@@ -189,5 +194,37 @@ public class Player {
   public void setActiveTheme(String activeTheme) {
     Validate.notBlank(activeTheme, "Active theme");
     this.activeTheme = activeTheme;
+  }
+
+  /**
+   * Adds the given theme to the player's owned themes.
+   *
+   * @param themeId the id of the theme to mark as owned
+   * @throws IllegalArgumentException if {@code themeId} is null or blank
+   */
+  public void addOwnedTheme(String themeId) {
+    Validate.notBlank(themeId, "Theme id");
+    ownedThemes.add(themeId);
+  }
+
+  /**
+   * Checks whether the player owns the given theme.
+   *
+   * @param themeId the id of the theme to check
+   * @return {@code true} if the player owns the theme, otherwise {@code false}
+   * @throws IllegalArgumentException if {@code themeId} is null or blank
+   */
+  public boolean ownsTheme(String themeId) {
+    Validate.notBlank(themeId, "Theme id");
+    return ownedThemes.contains(themeId);
+  }
+
+  /**
+   * Returns the ids of all themes owned by the player.
+   *
+   * @return an immutable copy of the owned theme ids
+   */
+  public Set<String> getOwnedThemes() {
+    return Set.copyOf(ownedThemes);
   }
 }

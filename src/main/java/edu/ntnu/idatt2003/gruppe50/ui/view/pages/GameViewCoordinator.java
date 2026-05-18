@@ -33,6 +33,7 @@ public class GameViewCoordinator {
   private NavigationManager navManager;
   private BorderPane root;
   private final Consumer<String> onThemeChanged;
+  private ShopView shopView;
 
   public GameViewCoordinator(GameSessionControllerBundle bundle, Runnable onMainMenu, Runnable onPlayAgain, Consumer<String> onThemeChanged) {
     this.bundle = bundle;
@@ -77,7 +78,7 @@ public class GameViewCoordinator {
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
     pages.put(PageId.MARKET, new MarketView(bundle.market()));
     pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game()));
-    pages.put(PageId.SHOP, new ShopView(bundle.shop(), onThemeChanged));
+    pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
 
@@ -119,6 +120,11 @@ public class GameViewCoordinator {
 
   private void onAdvanceWeek() {
     bundle.game().advanceWeek();
+    bundle.shop().advanceCoinExchange();
+
+    if (shopView != null) {
+      shopView.refresh();
+    }
     // TODO: åpne weekly summary popup her
   }
 }

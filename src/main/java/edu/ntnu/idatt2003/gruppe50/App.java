@@ -76,6 +76,8 @@ public final class App extends Application {
   }
 
   private void showMainMenu() {
+    themeManager.reset();
+
     MainMenuView menu = new MainMenuView(
         this::showNewGame,
         this::showSettings,
@@ -89,6 +91,8 @@ public final class App extends Application {
   }
 
   private void showNewGame() {
+    themeManager.reset();
+
     CapitalStep capitalStep = new CapitalStep();
 
     List<OnboardingStep> steps = List.of(

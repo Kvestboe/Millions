@@ -138,6 +138,7 @@ public class ThemeItem implements ShopItem {
   @Override
   public void applyTo(Player player) {
     Validate.notNull(player, "Player");
+    player.addOwnedTheme(themeId);
     player.setActiveTheme(themeId);
   }
 }

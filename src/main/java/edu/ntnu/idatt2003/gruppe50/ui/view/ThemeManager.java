@@ -4,7 +4,8 @@ import javafx.scene.Scene;
 
 public class ThemeManager {
 
-  private String currentTheme = "teal";
+  private static final String DEFAULT_THEME = "default";
+  private String currentTheme = DEFAULT_THEME;
 
   public void apply(Scene scene) {
     scene.getStylesheets().clear();
@@ -16,6 +17,10 @@ public class ThemeManager {
 
   public void setTheme(String themeName) {
     this.currentTheme = themeName;
+  }
+
+  public void reset() {
+    currentTheme = DEFAULT_THEME;
   }
 
   private String resource(String path) {

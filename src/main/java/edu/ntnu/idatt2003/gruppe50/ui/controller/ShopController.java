@@ -119,4 +119,16 @@ public class ShopController {
   public Difficulty getDifficulty() {
     return difficulty;
   }
+
+  public boolean ownsTheme(String themeId) {
+    return player.ownsTheme(themeId);
+  }
+
+  public List<BigDecimal> getCoinPriceHistory() {
+    return shop.getCoinExchange().getPriceHistory();
+  }
+
+  public void advanceCoinExchange() {
+    shop.getCoinExchange().advanceShop();
+  }
 }

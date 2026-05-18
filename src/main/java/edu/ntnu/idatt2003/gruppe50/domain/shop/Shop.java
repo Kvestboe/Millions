@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.domain.shop;
 
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.domain.shop.items.ThemeItem;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -86,6 +87,12 @@ public class Shop {
     Validate.notNull(difficulty, "Difficulty");
 
     ShopItem item = findItemById(itemId);
+
+    if (item instanceof ThemeItem themeItem && player.ownsTheme(themeItem.getThemeId())) {
+      player.setActiveTheme(themeItem.getThemeId());
+      return;
+    }
+
     if (player.getNetWorth().compareTo(item.getRequiredNetWorth()) < 0) {
       throw new IllegalArgumentException("Not enough net worth to buy this item");
     }

@@ -24,6 +24,14 @@ public class ShopItemFactory {
   public static List<ShopItem> createDefaultItems() {
     return List.of(
         createThemeItem(
+            "theme-default",
+            "Default Dark",
+            "The original dark market theme.",
+            "default",
+            0,
+            BigDecimal.ZERO
+        ),
+        createThemeItem(
             "theme-midnight-black",
             "Midnight Black",
             "A dark market terminal theme.",
@@ -37,7 +45,15 @@ public class ShopItemFactory {
             "A calm green trading desk theme.",
             "forest-fund",
             35,
-            new BigDecimal("50000")
+            new BigDecimal("50 000")
+        ),
+        createThemeItem(
+          "theme-vintage-cream",
+          "Vintage Cream",
+          "A vintage cream theme.",
+          "vintage-cream",
+          50,
+          new BigDecimal("100 000")
         ),
         createThemeItem(
             "theme-copper-shadow",
@@ -45,7 +61,7 @@ public class ShopItemFactory {
             "A warm copper and shadow theme.",
             "copper-shadow",
             70,
-            new BigDecimal("200000")
+            new BigDecimal("200 000")
         ),
         createThemeItem(
             "theme-royal-gold",
@@ -53,7 +69,7 @@ public class ShopItemFactory {
             "A premium gold portfolio theme.",
             "royal-gold",
             120,
-            new BigDecimal("800000")
+            new BigDecimal("800 000")
         )
     );
   }

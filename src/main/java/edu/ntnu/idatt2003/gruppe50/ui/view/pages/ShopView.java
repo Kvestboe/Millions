@@ -8,9 +8,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.function.Consumer;
 
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -39,15 +41,19 @@ public class ShopView extends ScrollPane implements Page {
   private final TextField coinAmountField = new TextField("10");
   private final FlowPane themesGrid = new FlowPane();
   private final Consumer<String> onThemeChanged;
+  private final Runnable onPlayerBalanceChanged;
+  private final Label rateLabel = new Label();
+  private final AreaChartView coinPriceChart = new AreaChartView("Week", "Coin price");
 
   /**
    * Creates a shop view connected to the given controller.
    *
    * @param controller the shop controller used by the view
    */
-  public ShopView(ShopController controller, Consumer<String> onThemeChanged) {
+  public ShopView(ShopController controller, Consumer<String> onThemeChanged, Runnable onPlayerBalanceChanged) {
     this.controller = controller;
     this.onThemeChanged = onThemeChanged;
+    this.onPlayerBalanceChanged = onPlayerBalanceChanged;
     build();
     refresh();
   }
@@ -59,6 +65,7 @@ public class ShopView extends ScrollPane implements Page {
    */
   @Override
   public Parent getView() {
+    refresh();
     return this;
   }
 
@@ -128,7 +135,6 @@ public class ShopView extends ScrollPane implements Page {
     Label rateCaption = new Label("CURRENT RATE");
     rateCaption.getStyleClass().add("shop-caption");
 
-    Label rateLabel = new Label(MoneyFormat.format(controller.getCurrentCoinPrice()) + " kr / coin");
     rateLabel.getStyleClass().add("shop-rate");
 
     moneyLabel.getStyleClass().add("shop-balance");
@@ -150,10 +156,10 @@ public class ShopView extends ScrollPane implements Page {
 
     VBox rateBox = new VBox(6, rateCaption, rateLabel, buyRow, moneyLabel);
 
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
+    AreaChart<Number, Number> chart = createCoinPriceChart();
+    HBox.setHgrow(chart, Priority.ALWAYS);
 
-    HBox section = new HBox(28, rateBox, spacer);
+    HBox section = new HBox(28, rateBox, chart);
     section.getStyleClass().add("coin-exchange-panel");
     section.setAlignment(Pos.CENTER_LEFT);
     section.setMaxWidth(Double.MAX_VALUE);
@@ -206,12 +212,27 @@ public class ShopView extends ScrollPane implements Page {
   }
 
   private String createThemeMetaText(ShopItem item) {
-    return item.getPrice(controller.getDifficulty()) + " coins | unlock "
-        + MoneyFormat.formatCurrency(item.getRequiredNetWorth());
+    String priceText = item.getPrice(controller.getDifficulty()) + " coins";
+
+    if (item.getRequiredNetWorth().compareTo(BigDecimal.ZERO) == 0) {
+      return priceText;
+    }
+
+    return priceText + " | requires "
+        + MoneyFormat.formatCurrency(item.getRequiredNetWorth())
+        + " net worth";
   }
 
   private String createThemeButtonText(ShopItem item) {
-    return isActiveTheme(item) ? "Active" : "Buy";
+    if (isActiveTheme(item)) {
+      return "Active";
+    }
+
+    if (item instanceof ThemeItem themeItem && controller.ownsTheme(themeItem.getThemeId())) {
+      return "Use";
+    }
+
+    return "Buy";
   }
 
   private boolean isActiveTheme(ShopItem item) {
@@ -233,6 +254,7 @@ public class ShopView extends ScrollPane implements Page {
     }
 
     messageLabel.setText(controller.buyCoins(coins));
+    onPlayerBalanceChanged.run();
     refresh();
   }
 
@@ -248,9 +270,11 @@ public class ShopView extends ScrollPane implements Page {
     refresh();
   }
 
-  private void refresh() {
+  public void refresh() {
     coinsLabel.setText(controller.getPlayerCoins() + " coins");
     moneyLabel.setText("Current balance: " + MoneyFormat.formatCurrency(controller.getPlayerMoney()));
+    rateLabel.setText(MoneyFormat.format(controller.getCurrentCoinPrice()) + " kr / coin");
+    coinPriceChart.display("Coin price history", controller.getCoinPriceHistory());
     updateBuyPreview();
     buildThemeCards();
   }
@@ -272,5 +296,18 @@ public class ShopView extends ScrollPane implements Page {
     } catch (NumberFormatException e) {
       buyPreviewLabel.setText("Buy coins");
     }
+  }
+
+  private AreaChart<Number, Number> createCoinPriceChart() {
+    coinPriceChart.display("Coin price history", controller.getCoinPriceHistory());
+
+    AreaChart<Number, Number> chart = coinPriceChart.getChart();
+    chart.setLegendVisible(false);
+    chart.setMinHeight(180);
+    chart.setPrefHeight(180);
+    chart.setMaxHeight(220);
+    chart.setMinWidth(360);
+
+    return chart;
   }
 }
