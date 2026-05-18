@@ -98,10 +98,10 @@ public class LoadGameView extends StackPane {
   private HBox createDetailPanel() {
     SimpleObjectProperty<SaveSummaryDto> selected = controller.getSelected();
 
-    Label nameVal = new Label("-");
-    Label statusVal = new Label("-");
-    Label weekVal = new Label("-");
-    Label netWorthVal = new Label("-");
+    Label nameVal       = new Label("-");
+    Label statusVal     = new Label("-");
+    Label weekVal       = new Label("-");
+    Label netWorthVal   = new Label("-");
     Label lastPlayedVal = new Label("-");
 
     selected.addListener((_, _, s) -> {
