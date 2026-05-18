@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50;
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
+import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
@@ -21,7 +22,9 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.StoryStep;
 import java.util.List;
 import java.util.UUID;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public final class AppRouter {
@@ -30,11 +33,14 @@ public final class AppRouter {
   private final AppModule module;
   private final ThemeManager themeManager;
   private boolean isFullscreen = false;
+  private final SoundManager soundManager;
 
   public AppRouter(Stage stage, AppModule module, ThemeManager themeManager) {
     this.stage = stage;
     this.module = module;
     this.themeManager = themeManager;
+    this.soundManager = module.soundManager;
+    this.soundManager.playMusic();
 
     stage.fullScreenProperty().addListener((obs, oldVal, newVal) -> isFullscreen = newVal);
   }
@@ -99,6 +105,14 @@ public final class AppRouter {
   }
 
   private void show(Scene scene) {
+
+    scene.addEventFilter(ActionEvent.ACTION,
+        e -> {
+      if (e.getTarget() instanceof Button) {
+        soundManager.playClick();
+      }
+        });
+
     themeManager.apply(scene);
     stage.setScene(scene);
     stage.setFullScreen(isFullscreen);
