@@ -4,6 +4,7 @@ import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
 import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
+import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -11,8 +12,17 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.Map;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 
 public class GameViewCoordinator {
 
@@ -35,6 +45,7 @@ public class GameViewCoordinator {
     root = new BorderPane();
     root.setTop(navBar);
     root.setCenter(navManager.getContentArea());
+    root.setBottom(buildBottomBar());
 
     navManager.navigateTo(PageId.DASHBOARD);
     bundle.market().setOnStockSelected(this::navigateToStockDetail);
@@ -73,5 +84,37 @@ public class GameViewCoordinator {
     StockDetailView view = new StockDetailView(
         stock, bundle.stockDetail(), () -> navManager.navigateTo(PageId.MARKET));
     navManager.show(view);
+  }
+
+  private HBox buildBottomBar() {
+    GameSession session = bundle.session();
+
+    Label weekLabel = new Label("Week " + session.getExchange().getWeek());
+    Label netWorthLabel = new Label(
+        MoneyFormat.formatCurrency(session.getPlayer().getNetWorth()));
+
+    weekLabel.getStyleClass().add("label-muted");
+    netWorthLabel.getStyleClass().add("field-label");
+
+    Button advanceBtn = new Button("Advance to Week "
+        + (session.getExchange().getWeek() + 1) + " →");
+    advanceBtn.getStyleClass().add("advance-button");
+    advanceBtn.setOnAction(_ -> onAdvanceWeek());
+
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+    HBox bar = new HBox(24, weekLabel, netWorthLabel, spacer, advanceBtn);
+    bar.getStyleClass().add("bottom-bar");
+    advanceBtn.setPrefWidth(200);
+    bar.setMaxHeight(20);
+    bar.setAlignment(Pos.CENTER_LEFT);
+    bar.setPadding(new Insets(12, 32, 16, 32));
+    return bar;
+  }
+
+  private void onAdvanceWeek() {
+    bundle.game().advanceWeek();
+    // TODO: åpne weekly summary popup her
   }
 }

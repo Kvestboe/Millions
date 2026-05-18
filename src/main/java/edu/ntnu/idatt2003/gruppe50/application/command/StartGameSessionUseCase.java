@@ -28,7 +28,7 @@ public final class StartGameSessionUseCase {
    * @return response containing newly created game id
    */
   public Response execute(Request request) {
-    GameSession session = GameSession.createNew(request.player(), request.exchange(), request.difficulty);
+    GameSession session = GameSession.createNew(request.player(), request.exchange(), request.difficulty());
     repository.save(session);
     return new Response(session.getGameId());
   }

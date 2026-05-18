@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
+import edu.ntnu.idatt2003.gruppe50.domain.shop.InsufficientCoinsException;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ public class Player {
   private final Portfolio portfolio;
   private final TransactionArchive transactionArchive;
   private BigDecimal money;
+  private int coins = 0;
 
   /**
    * Creates a new {@code Player} with the given name and starting money of given amount.
@@ -130,7 +132,41 @@ public class Player {
     }
   }
 
+  /**
+   * Returns the player's starting capital.
+   *
+   * @return the amount of start capital the player started with
+   */
   public BigDecimal getStartingMoney() {
     return startingMoney;
+  }
+
+  /**
+   * Returns the player's current coin balance.
+   *
+   * @return the number of coins the player owns
+   */
+  public int getCoins() {
+    return coins;
+  }
+
+  /**
+   * Adds the given amount of coins to the player's balance.
+   *
+   * @param amount the number of coins to add
+   * @throws IllegalArgumentException if {@code amount} is not positive
+   */
+  public void addCoins(int amount) {
+    Validate.positiveInt(amount, "Coins");
+    coins += amount;
+  }
+
+  public void spendCoins(int amount) throws InsufficientCoinsException {
+    Validate.positiveInt(amount, "Amount");
+    if (coins < amount) {
+      throw new InsufficientCoinsException(
+          "Not enough coins. Required: " + amount + ", available: " + coins);
+    }
+    coins -= amount;
   }
 }
