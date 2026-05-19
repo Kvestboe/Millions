@@ -23,6 +23,7 @@ public class MainMenuView extends StackPane{
   private final Runnable onQuit;
   private final Runnable onSettings;
   private Runnable onLoadGame;
+  private Runnable onContinueGame;
 
   public MainMenuView(Runnable onNewGame, Runnable onSettings, Runnable onQuit) {
     this.onNewGame = onNewGame;
@@ -33,6 +34,10 @@ public class MainMenuView extends StackPane{
 
   public void setOnLoadGame(Runnable onLoadGame) {
     this.onLoadGame = onLoadGame;
+  }
+
+  public void setOnContinueGame(Runnable onContinueGame) {
+    this.onContinueGame = onContinueGame;
   }
 
   private void build() {
@@ -133,6 +138,7 @@ public class MainMenuView extends StackPane{
     continueBtn.setGraphic(content);
     continueBtn.setMaxWidth(340);
     continueBtn.getStyleClass().add("btn-accent");
+    continueBtn.setOnAction(e -> {if (onContinueGame != null) onContinueGame.run();});
 
     return continueBtn;
   }

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +28,8 @@ public class GameSessionTest {
 
     assertNotNull(newSession.getGameId());
     assertEquals(GameSessionState.ACTIVE, newSession.getState());
-    assertEquals(LocalDate.now(), newSession.getRunStartedAt());
-    assertEquals(LocalDate.now(), newSession.getLastPlayed());
+    assertEquals(LocalDate.now(), newSession.getRunStartedAt().toLocalDate());
+    assertEquals(LocalDate.now(), newSession.getLastPlayed().toLocalDate());
   }
 
   @Test
@@ -46,8 +47,8 @@ public class GameSessionTest {
   @Test
   void rehydrate_validInput_restoresFields() {
     UUID gameId = UUID.randomUUID();
-    LocalDate runStartedAt = LocalDate.now().minusDays(10);
-    LocalDate lastPlayed = LocalDate.now().minusDays(2);
+    LocalDateTime runStartedAt = LocalDateTime.now().minusDays(10);
+    LocalDateTime lastPlayed = LocalDateTime.now().minusDays(2);
 
     GameSession rehydrated =
         GameSession.rehydrate(
@@ -77,8 +78,8 @@ public class GameSessionTest {
                 createDefaultExchange(),
                 Difficulty.EASY,
                 GameSessionState.ACTIVE,
-                LocalDate.now(),
-                LocalDate.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
                 List.of(bd(20))));
   }
 
@@ -93,7 +94,7 @@ public class GameSessionTest {
                 createDefaultExchange(),
                 Difficulty.EASY,
                 GameSessionState.ACTIVE,
-                LocalDate.now(),
+                LocalDateTime.now(),
                 null,
                 List.of(bd(20))));
   }
@@ -114,13 +115,13 @@ public class GameSessionTest {
             createDefaultExchange(),
             Difficulty.EASY,
             GameSessionState.ACTIVE,
-            LocalDate.now().minusDays(10),
-            LocalDate.now().minusDays(1),
+            LocalDateTime.now().minusDays(10),
+            LocalDateTime.now().minusDays(1),
             List.of(bd(20)));
 
     rehydrated.markOpened();
 
-    assertEquals(LocalDate.now(), rehydrated.getLastPlayed());
+    assertEquals(LocalDate.now(), rehydrated.getLastPlayed().toLocalDate());
   }
 
   @Test
