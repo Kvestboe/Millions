@@ -8,6 +8,10 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.OrdersController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
+import edu.ntnu.idatt2003.gruppe50.domain.shop.CoinExchange;
+import edu.ntnu.idatt2003.gruppe50.domain.shop.Shop;
+import edu.ntnu.idatt2003.gruppe50.domain.shop.ShopItemFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.ShopController;
 
 public record GameSessionControllerBundle(
     GameSession session,
@@ -15,6 +19,9 @@ public record GameSessionControllerBundle(
     MarketQueryController market,
     PortfolioQueryController portfolio,
     TransactionQueryController transactions,
+    StockDetailController stockDetail,
+    OrdersController ordersController,
+    ShopController shop
     StockDetailQueryController stockQuery,
     OrderPlacementController orderPlacement,
     OrdersController ordersController
@@ -35,7 +42,15 @@ public record GameSessionControllerBundle(
             m.sellLimitOrder,
             m.stopLossOrder
         ),
-        new OrdersController(session.getGameId(), m.getPendingOrders, session.getExchange())
+        new OrdersController(session.getGameId(), m.getPendingOrders, session.getExchange()),
+        new ShopController(
+            new Shop(
+                new CoinExchange(session.getPlayer().getStartingMoney()),
+                ShopItemFactory.createDefaultItems()
+            ),
+            session.getPlayer(),
+            session.getDifficulty()
+        )
     );
   }
 }

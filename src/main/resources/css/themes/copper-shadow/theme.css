@@ -1,0 +1,27 @@
+/* ============================================
+   Millions - Copper Shadow Theme
+   Palett: varm kobber, dyp skygge og dempet blå aksent
+   ============================================ */
+
+.root {
+
+    /* --- Bakgrunner --- */
+    -bg-primary: #100B09; /* Sidebakgrunn */
+    -bg-surface: #1A120F; /* Kort, navbar */
+    -bg-elevated: #2A1B16; /* Tabellrad, hover-overflater */
+    -bg-overlay: #3A251E; /* Popup, modal */
+
+    /* --- Aksenter --- */
+    -accent-gold: #D98A4A; /* Primær aksent - kobber */
+    -accent-indigo: #64748B; /* Sekundær aksent - dempet blågrå */
+    -accent-teal: #38BDF8; /* Chart-fill, linjer, highlight */
+
+    /* --- Tekst --- */
+    -text-primary: #FFF7ED; /* Hovedtekst */
+    -text-secondary: #B89B8A; /* Muted labels, metadata */
+    -text-disabled: #6B4A3C; /* Deaktivert */
+
+    /* --- Status --- */
+    -gain: #86EFAC; /* Positiv endring */
+    -loss: #FCA5A5;
+}
