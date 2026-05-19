@@ -3,8 +3,10 @@ package edu.ntnu.idatt2003.gruppe50.domain.trade.order;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.LimitOrderDto;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * Represents a pending limit order placed by a player on the exchange.
@@ -24,6 +26,25 @@ public abstract class LimitOrder {
 
   public static final int DEFAULT_DURATION_WEEKS = 6;
   public static final int MAX_DURATION_WEEKS = 12;
+
+  public static LimitOrder buildOrder(LimitOrderDto dto, Map<String, Stock> stockMap, Player player) {
+    Stock stock = stockMap.get(dto.stockSymbol());
+    return switch (dto.type()) {
+      case "BUY" -> new LimitBuyOrder(
+          stock, player, dto.targetPrice(), dto.quantity(),
+          dto.createdWeek(), dto.expiryWeek()
+      );
+      case "SELL" -> new LimitSellOrder(
+          stock, player, dto.targetPrice(), dto.quantity(),
+          dto.createdWeek(), dto.expiryWeek()
+      );
+      case "STOP_LOSS" -> new StopLossOrder(
+          stock, player, dto.targetPrice(), dto.quantity(),
+          dto.createdWeek(), dto.expiryWeek()
+      );
+      default -> throw new IllegalArgumentException("Unknown order type: " + dto.type());
+    };
+  }
 
   /**
    * Creates a new limit order.

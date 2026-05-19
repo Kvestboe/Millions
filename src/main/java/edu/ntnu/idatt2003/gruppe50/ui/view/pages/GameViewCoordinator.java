@@ -1,10 +1,11 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -60,14 +61,14 @@ public class GameViewCoordinator {
       int weeksPlayed = session.getExchange().getWeek();
       Difficulty difficulty = session.getDifficulty();
 
-      root.setTop(null); // skjul navbar
+      root.setTop(null);
       navManager.show(new GameOverView(
           outcome, finalNetWorth, weeksPlayed, difficulty,
           onPlayAgain, onMainMenu
       ));
     });
 
-    Scene scene = new Scene(root, 600, 400);
+    Scene scene = new Scene(root, WindowConfig.WIDTH, WindowConfig.HEIGHT);
     scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }
@@ -76,7 +77,7 @@ public class GameViewCoordinator {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
-    pages.put(PageId.MARKET, new MarketView(bundle.market()));
+    pages.put(PageId.MARKET, new MarketView(bundle.market(), this::navigateToStockDetail));
     pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game()));
     pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
@@ -87,7 +88,10 @@ public class GameViewCoordinator {
 
   private void navigateToStockDetail(StockDto stock) {
     StockDetailView view = new StockDetailView(
-        stock, bundle.stockDetail(), () -> navManager.navigateTo(PageId.MARKET));
+        stock,
+        bundle.stockQuery(),
+        bundle.orderPlacement(),
+        () -> navManager.navigateTo(PageId.MARKET));
     navManager.show(view);
   }
 

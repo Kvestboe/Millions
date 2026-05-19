@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.application.query;
 
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.PendingOrderDto;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.List;
 import java.util.UUID;

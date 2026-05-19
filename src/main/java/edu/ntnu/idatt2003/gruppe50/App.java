@@ -1,54 +1,16 @@
 package edu.ntnu.idatt2003.gruppe50;
 
-import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
-import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
-import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
-
-import java.util.List;
-import java.util.UUID;
-
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.SettingsView;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingFlow;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingStep;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.CapitalStep;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.DifficultyStep;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.LaunchStep;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.MarketStep;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.NameStep;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.StoryStep;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-/**
- * Hello world!
- *
- */
 public final class App extends Application {
 
   private final AppModule module = new AppModule();
-  private Stage stage;
-  private ThemeManager themeManager;
-  private boolean isFullscreen = false;
 
   @Override
   public void start(Stage stage) {
-    this.stage = stage;
-    this.themeManager = new ThemeManager();
-    stage.fullScreenProperty().addListener((obs, oldVal, newVal) -> {
-      isFullscreen = newVal;
-    });
-
     stage.getIcons().add(new Image(
         getClass().getResourceAsStream("/icons/app-icon.png")
     ));
@@ -140,5 +102,6 @@ public final class App extends Application {
     themeManager.apply(scene);
     stage.setScene(scene);
     stage.setFullScreen(isFullscreen);
+    new AppRouter(stage, module, new ThemeManager()).showMainMenu();
   }
 }

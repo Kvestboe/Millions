@@ -27,6 +27,30 @@ public class Player {
   private String activeTheme = DEFAULT_THEME;
   private final Set<String> ownedThemes = new HashSet<>();
 
+  public static Player rehydrate(
+      String name,
+      BigDecimal startingMoney,
+      BigDecimal money,
+      Portfolio portfolio,
+      TransactionArchive transactions
+  ) {
+    return new Player(name, startingMoney, money, portfolio, transactions);
+  }
+
+  private Player(
+      String name,
+      BigDecimal startingMoney,
+      BigDecimal money,
+      Portfolio portfolio,
+      TransactionArchive transactions
+  ) {
+    this.name = name;
+    this.startingMoney = startingMoney;
+    this.money = money;
+    this.portfolio = portfolio;
+    this.transactionArchive = transactions;
+  }
+
   /**
    * Creates a new {@code Player} with the given name and starting money of given amount.
    *
@@ -114,6 +138,10 @@ public class Player {
    */
   public BigDecimal getNetWorth() {
     return money.add(portfolio.getNetWorth());
+  }
+
+  public BigDecimal getStartingMoney() {
+    return startingMoney;
   }
 
   /**

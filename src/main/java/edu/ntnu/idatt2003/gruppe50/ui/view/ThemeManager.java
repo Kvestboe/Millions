@@ -24,6 +24,10 @@ public class ThemeManager {
   }
 
   private String resource(String path) {
-    return getClass().getResource(path).toExternalForm();
+    var url = getClass().getResource(path);
+    if (url == null) {
+      throw new IllegalStateException("CSS resource not found:" + path);
+    }
+    return url.toExternalForm();
   }
 }

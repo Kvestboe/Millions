@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.model;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.TransactionType;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.TransactionType;
 import java.math.BigDecimal;
 
 public record TransactionData(

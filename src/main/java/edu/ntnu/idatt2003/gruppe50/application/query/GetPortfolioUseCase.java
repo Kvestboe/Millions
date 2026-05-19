@@ -1,6 +1,9 @@
 package edu.ntnu.idatt2003.gruppe50.application.query;
 
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.DtoMapper;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.PortfolioDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
@@ -47,7 +50,7 @@ public final class GetPortfolioUseCase {
 
     List<BigDecimal> netWorthHistory = session.getNetWorthHistory();
 
-    return new Response(cash, portfolioValue, netWorth, shares, netWorthHistory);
+    return new Response(new PortfolioDto(cash, portfolioValue, netWorth, shares, netWorthHistory));
   }
 
   /**
@@ -59,16 +62,6 @@ public final class GetPortfolioUseCase {
 
   /**
    * Portfolio aggregate response for the UI layer.
-   *
-   * @param cash available player cash
-   * @param portfolioValue current portfolio liquidation value
-   * @param netWorth total net worth (cash + portfolio)
-   * @param shares current owned shares as DTOs
    */
-  public record Response(
-      BigDecimal cash,
-      BigDecimal portfolioValue,
-      BigDecimal netWorth,
-      List<ShareDto> shares,
-      List<BigDecimal> netWorthHistory) {}
+  public record Response(PortfolioDto portfolio) {}
 }

@@ -713,13 +713,6 @@
     -fx-cursor: hand;
 }
 
-.onboarding-progress {
-    -fx-background-color: -bg-surface;
-    -fx-border-color: -border;
-    -fx-border-width: 0 0 0.5 0;
-    -fx-padding: 14 32 14 32;
-}
-
 .diff-name {
     -fx-text-fill: -text-primary;
     -fx-font-size: 16px;

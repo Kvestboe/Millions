@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.model;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.OrderType;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.OrderType;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;

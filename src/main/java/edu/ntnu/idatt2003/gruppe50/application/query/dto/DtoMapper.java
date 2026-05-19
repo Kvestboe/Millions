@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.gruppe50.application.query;
+package edu.ntnu.idatt2003.gruppe50.application.query.dto;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
@@ -10,7 +10,7 @@ import java.math.RoundingMode;
 
 public final class DtoMapper {
 
-  static ShareDto createShareDto(Share share) {
+  public static ShareDto createShareDto(Share share) {
     return new ShareDto(
             share.getShareId(),
             share.getStock().getSymbol(),
@@ -30,7 +30,7 @@ public final class DtoMapper {
     );
   }
 
-  static TransactionType defineTransactionType(Transaction transaction) {
+  public static TransactionType defineTransactionType(Transaction transaction) {
     if (transaction instanceof Purchase) {
       return TransactionType.PURCHASE;
     }
@@ -40,7 +40,7 @@ public final class DtoMapper {
     throw new IllegalStateException("The transaction type is not of sale or purchase");
   }
 
-  static StockDto createStockDto(Stock s) {
+  public static StockDto createStockDto(Stock s) {
     return new StockDto(
         s.getSymbol(),
         s.getCompany(),

@@ -38,6 +38,7 @@ public final class StartGameSessionUseCase {
    *
    * @param player player state to start with
    * @param exchange exchange state to start with
+   * @param difficulty difficulty level for the new game session
    */
   public record Request(Player player, Exchange exchange, Difficulty difficulty) {}
 

@@ -1,8 +1,9 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
@@ -24,7 +25,8 @@ import javafx.scene.layout.VBox;
 public class StockDetailView extends StackPane implements Page {
 
   private final StockDto stock;
-  private final StockDetailController controller;
+  private final StockDetailQueryController queryController;
+  private final OrderPlacementController orderController;
   private final Runnable onBack;
 
   private final Label quantityLabel = new Label();
@@ -35,9 +37,13 @@ public class StockDetailView extends StackPane implements Page {
   private final VBox content = new VBox(10);
   private final Button sell = new Button("Sell");
 
-  public StockDetailView(StockDto stock, StockDetailController controller, Runnable onBack) {
+  private final Label errorLabel = new Label();
+
+  public StockDetailView(StockDto stock, StockDetailQueryController queryController,
+      OrderPlacementController orderController, Runnable onBack) {
     this.stock = stock;
-    this.controller = controller;
+    this.queryController = queryController;
+    this.orderController = orderController;
     this.onBack = onBack;
 
     Button backBtn = new Button("Back");
@@ -51,6 +57,9 @@ public class StockDetailView extends StackPane implements Page {
         createButtonRow());
 
     getChildren().addAll(content);
+
+    errorLabel.getStyleClass().add("error-label");
+    errorLabel.setVisible(false);
 
     refreshHolding();
   }
@@ -110,12 +119,12 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleBuy() {
     OrderFormView popup = new OrderFormView(
-        controller.gameId(),
+        queryController.gameId(),
         OrderSide.BUY,
         stock,
         this::closePopup,
         this::handleConfirmedOrder,
-        controller.previewOrderUseCase()
+        queryController.previewOrderUseCase()
     );
 
     getChildren().add(popup);
@@ -123,12 +132,12 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleSell() {
     OrderFormView popup = new OrderFormView(
-        controller.gameId(),
+        queryController.gameId(),
         OrderSide.SELL,
         stock,
         this::closePopup,
         this::handleConfirmedOrder,
-        controller.previewOrderUseCase()
+        queryController.previewOrderUseCase()
     );
 
     getChildren().add(popup);
@@ -139,7 +148,7 @@ public class StockDetailView extends StackPane implements Page {
   }
 
   private void refreshHolding() {
-    Optional<ShareDto> holding = controller.getHolding(stock.symbol());
+    Optional<ShareDto> holding = queryController.getHolding(stock.symbol());
     if (holding.isEmpty()) {
       myHoldingBox.setVisible(false);
       myHoldingBox.setManaged(false);
@@ -173,11 +182,13 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleConfirmedOrder(DraftOrder draftOrder) {
     try {
-      controller.placeOrder(draftOrder);
+      orderController.placeOrder(draftOrder);
+      errorLabel.setVisible(false);
       closePopup();
       refreshHolding();
     } catch (RuntimeException ex) {
-      System.out.println(ex.getMessage());
+      errorLabel.setText(ex.getMessage());
+      errorLabel.setVisible(true);
     }
   }
 }
