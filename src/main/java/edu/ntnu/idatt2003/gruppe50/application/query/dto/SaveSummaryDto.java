@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.application.query.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record SaveSummaryDto(
@@ -10,6 +10,6 @@ public record SaveSummaryDto(
     int week,
     String status,
     BigDecimal netWorth,
-    LocalDate lastPlayed,
+    LocalDateTime lastPlayed,
     boolean isFinished
 ) {}

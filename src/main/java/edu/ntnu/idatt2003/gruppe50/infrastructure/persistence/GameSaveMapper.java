@@ -24,6 +24,7 @@ import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.TransactionDto;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -128,10 +129,22 @@ public class GameSaveMapper {
         exchange,
         dto.difficulty() != null ? Difficulty.valueOf(dto.difficulty()) : Difficulty.EASY,
         GameSessionState.valueOf(dto.state()),
-        LocalDate.parse(dto.runStartedAt()),
-        LocalDate.parse(dto.lastPlayed()),
+        parseDateTime(dto.runStartedAt()),
+        parseDateTime(dto.lastPlayed()),
         dto.netWorthHistory()
     );
+  }
+
+  /**
+   * Parses a date string that may be either ISO LocalDateTime ("2024-01-15T10:30:00")
+   * or a legacy ISO LocalDate ("2024-01-15") from older save files.
+   */
+  private static LocalDateTime parseDateTime(String value) {
+    try {
+      return LocalDateTime.parse(value);
+    } catch (Exception e) {
+      return LocalDate.parse(value).atStartOfDay();
+    }
   }
 
   private static LimitOrder buildOrder(LimitOrderDto o, Map<String, Stock> stockMap, Player player) {

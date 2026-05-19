@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.LoadGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import java.math.RoundingMode;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
@@ -18,6 +19,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class LoadGameView extends StackPane {
+
+  private static final DateTimeFormatter DATE_FORMAT =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
   private final LoadGameController controller;
   private final Runnable onBack;
@@ -82,7 +86,7 @@ public class LoadGameView extends StackPane {
         ColumnPresets.text("Status", SaveSummaryDto::status),
         ColumnPresets.text("Week", s -> "Week " + s.week()),
         ColumnPresets.currency("Net worth", SaveSummaryDto::netWorth),
-        ColumnPresets.text("Last played", s -> s.lastPlayed().toString())
+        ColumnPresets.text("Last played", s -> s.lastPlayed().format(DATE_FORMAT))
     ));
     table.setItems(controller.getSaves());
     table.setPrefHeight(220);
@@ -116,7 +120,7 @@ public class LoadGameView extends StackPane {
         statusVal.setText(s.status());
         weekVal.setText("Week " + s.week());
         netWorthVal.setText(s.netWorth().setScale(0, RoundingMode.HALF_UP).toString() + " kr");
-        lastPlayedVal.setText(s.lastPlayed().toString());
+        lastPlayedVal.setText(s.lastPlayed().format(DATE_FORMAT));
       }
     });
 
