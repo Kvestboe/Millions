@@ -3,12 +3,16 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameOutcome;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
+import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
+import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.LeaderboardFileHandler;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekHolding;
@@ -19,6 +23,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +48,8 @@ public class GameViewCoordinator {
   private final Runnable onMainMenu;
   private final Runnable onPlayAgain;
   private final Consumer<String> onThemeChanged;
+  private final Leaderboard leaderboard;
+  private final LeaderboardFileHandler leaderboardFile;
   private NavigationManager navManager;
   private BorderPane root;
   private ShopView shopView;
@@ -62,12 +69,17 @@ public class GameViewCoordinator {
       GameSessionControllerBundle bundle,
       Runnable onMainMenu,
       Runnable onPlayAgain,
-      Consumer<String> onThemeChanged
+      Consumer<String> onThemeChanged,
+      Leaderboard leaderboard,
+      LeaderboardFileHandler leaderboardFile
+
   ) {
     this.bundle = bundle;
     this.onMainMenu = onMainMenu;
     this.onPlayAgain = onPlayAgain;
     this.onThemeChanged = onThemeChanged;
+    this.leaderboard = leaderboard;
+    this.leaderboardFile = leaderboardFile;
   }
 
   public Scene getScene() {
@@ -90,6 +102,21 @@ public class GameViewCoordinator {
       BigDecimal finalNetWorth = session.getPlayer().getNetWorth();
       int weeksPlayed = session.getExchange().getWeek();
       Difficulty difficulty = session.getDifficulty();
+
+      if (outcome == GameOutcome.WON) {
+        BigDecimal start = session.getPlayer().getStartingMoney();
+        LeaderboardEntry entry = new LeaderboardEntry(
+            session.getPlayer().getName(),
+            LeaderboardEntry.calculateScore(weeksPlayed, start),
+            weeksPlayed,
+            finalNetWorth,
+            start,
+            difficulty,
+            LocalDate.now()
+        );
+        leaderboard.add(entry);
+        leaderboardFile.save(leaderboard);
+      }
 
       root.setTop(null);
       root.setBottom(null);
