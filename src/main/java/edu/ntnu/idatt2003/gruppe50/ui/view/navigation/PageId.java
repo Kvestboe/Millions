@@ -4,6 +4,7 @@ public enum PageId {
   DASHBOARD("Dashboard"),
   MARKET("Market"),
   PORTFOLIO("Portfolio"),
+  SHOP("Shop"),
   TRANSACTIONS("Transactions"),
   ORDERS("Orders");
 

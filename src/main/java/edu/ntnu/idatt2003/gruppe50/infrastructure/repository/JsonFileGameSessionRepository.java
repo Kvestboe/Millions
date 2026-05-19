@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.infrastructure.repository;
 
+import com.fasterxml.jackson.core.StreamReadConstraints;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
@@ -29,6 +30,8 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     this.factory = factory;
     this.mapper = new ObjectMapper()
         .enable(SerializationFeature.INDENT_OUTPUT);
+    this.mapper.getFactory().setStreamReadConstraints(
+        StreamReadConstraints.builder().maxNumberLength(Integer.MAX_VALUE).build());
     try {
       Files.createDirectories(SAVE_DIR);
     } catch (IOException e) {

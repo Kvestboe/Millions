@@ -1,6 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.GameSaveDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
@@ -19,6 +21,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.LaunchStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.MarketStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.NameStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.StoryStep;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import javafx.application.Platform;
@@ -48,6 +51,7 @@ public final class AppRouter {
   public void showMainMenu() {
     MainMenuView menu = new MainMenuView(this::showNewGame, this::showSettings, Platform::exit);
     menu.setOnLoadGame(this::showLoadGame);
+    menu.setOnContinueGame(this::showContinueGame);
     show(new Scene(menu, WindowConfig.WIDTH, WindowConfig.HEIGHT));
   }
 
@@ -84,12 +88,22 @@ public final class AppRouter {
     switchToGame(gameId);
   }
 
+  private void showContinueGame() {
+    module.getAllSaves.execute().stream()
+        .max(Comparator.comparing(SaveSummaryDto::lastPlayed))
+        .ifPresent(s -> switchToGame(s.gameId()));
+  }
+
   public void switchToGame(UUID gameId) {
     module.loadGameSession.execute(new LoadGameSessionUseCase.Request(gameId));
     show(new GameViewCoordinator(
         module.gameBundle(gameId),
         this::showMainMenu,
-        this::showNewGame
+        this::showNewGame,
+        themeName -> {
+          themeManager.setTheme(themeName);
+          themeManager.apply(stage.getScene());
+        }
     ).getScene());
   }
 
