@@ -5,6 +5,7 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
+import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
@@ -14,6 +15,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order.OrderFormView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,6 +25,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class StockDetailView extends StackPane implements Page {
+
+  private static final double STOCK_DATA_CARD_WIDTH = 380;
 
   private StockDto stock;
   private final StockDetailQueryController queryController;
@@ -43,7 +47,7 @@ public class StockDetailView extends StackPane implements Page {
   private final Label gavLabel = new Label();
   private final Label profitLabel = new Label();
   private final Label profitPercentLabel = new Label();
-  private final VBox myHoldingBox = new VBox(10);
+  private final VBox myHoldingBox = new VBox(14);
   private final VBox content = new VBox(10);
   private final Button sell = ButtonFactory.secondary("Sell");
 
@@ -57,13 +61,23 @@ public class StockDetailView extends StackPane implements Page {
     this.onBack = onBack;
 
     Button backBtn = ButtonFactory.secondary("Back", onBack);
+    HBox backRow = new HBox(backBtn);
 
-    content.getChildren().addAll(
-        backBtn,
-        createHeader(),
-        chartBox,
-        createStatTiles(),
-        createButtonRow());
+    VBox stockDataCard = createHeader();
+    stockDataCard.setMinWidth(STOCK_DATA_CARD_WIDTH);
+    stockDataCard.setPrefWidth(STOCK_DATA_CARD_WIDTH);
+    stockDataCard.setMaxWidth(STOCK_DATA_CARD_WIDTH);
+
+    VBox rightColumn = new VBox(16, chartBox, createStatTiles(), createButtonRow());
+    VBox.setVgrow(chartBox, Priority.ALWAYS);
+
+    HBox splitRow = new HBox(16, stockDataCard, rightColumn);
+    HBox.setHgrow(rightColumn, Priority.ALWAYS);
+    VBox.setVgrow(splitRow, Priority.ALWAYS);
+
+    content.getChildren().addAll(backRow, splitRow);
+    content.getStyleClass().add("stock-detail-view");
+    getStylesheets().add(getClass().getResource("/css/views/stockDetail.css").toExternalForm());
 
     getChildren().addAll(content);
 
@@ -86,14 +100,27 @@ public class StockDetailView extends StackPane implements Page {
   }
 
   private VBox createHeader() {
-    HBox nameBox = new HBox(10,
-        new Label(stock.symbol()),
-        new Label(stock.company()));
+    Label symbol = new Label(stock.symbol());
+    symbol.getStyleClass().add("stock-symbol");
 
-    HBox priceBox = new HBox(10, priceLabel, priceChangeLabel, percentChangeLabel);
+    Label company = new Label(stock.company());
+    company.getStyleClass().add("stock-company");
 
-    VBox header = new VBox(10);
-    header.getChildren().addAll(nameBox, priceBox);
+    HBox nameBox = new HBox(12, symbol, company);
+    nameBox.setAlignment(Pos.CENTER_LEFT);
+
+    VBox priceTile = StatCardFactory.tile("PRICE", priceLabel);
+    VBox changeTile = StatCardFactory.tile("CHANGE", priceChangeLabel);
+    VBox percentTile = StatCardFactory.tile("CHANGE %", percentChangeLabel);
+
+    priceTile.setMaxWidth(Double.MAX_VALUE);
+    changeTile.setMaxWidth(Double.MAX_VALUE);
+    percentTile.setMaxWidth(Double.MAX_VALUE);
+
+    VBox priceColumn = new VBox(10, priceTile, changeTile, percentTile);
+
+    VBox header = new VBox(14, nameBox, priceColumn);
+    header.getStyleClass().add("card");
     return header;
   }
 
@@ -108,7 +135,10 @@ public class StockDetailView extends StackPane implements Page {
 
     HBox numbersBox = new HBox(10, myQuantityBox, gavBox, profitBox);
 
-    myHoldingBox.getChildren().addAll(new Label("My holding"), numbersBox);
+    Label holdingTitle = new Label("My holding");
+    holdingTitle.getStyleClass().add("section-title");
+    myHoldingBox.getChildren().addAll(holdingTitle, numbersBox);
+    myHoldingBox.getStyleClass().add("card");
     return myHoldingBox;
   }
 
@@ -156,9 +186,12 @@ public class StockDetailView extends StackPane implements Page {
 
   private void refresh() {
     stock = queryController.getStock(stock.symbol()).orElse(stock);
-    priceLabel.setText(stock.salesPrice() + " kr");
-    priceChangeLabel.setText(formatSigned(stock.priceChange()) + " kr");
-    percentChangeLabel.setText(formatSigned(stock.percentChange()) + "%");
+    priceLabel.setText(MoneyFormat.formatCurrency(stock.salesPrice()));
+    priceChangeLabel.setText(MoneyFormat.formatSignedCurrency(stock.priceChange()));
+    percentChangeLabel.setText(MoneyFormat.formatSignedPercent(stock.percentChange()));
+
+    applySignClass(priceChangeLabel, stock.priceChange());
+    applySignClass(percentChangeLabel, stock.percentChange());
 
     AreaChartView chart = new AreaChartView("Week", "Price");
     chart.display("Price development", stock.prices());
@@ -166,6 +199,13 @@ public class StockDetailView extends StackPane implements Page {
     chartBox.getChildren().setAll(chart.getChart());
 
     refreshHolding();
+  }
+
+  private void applySignClass(Label label, BigDecimal value) {
+    label.getStyleClass().removeAll("gain", "loss");
+    int sign = value.signum();
+    if (sign > 0) label.getStyleClass().add("gain");
+    if (sign < 0) label.getStyleClass().add("loss");
   }
 
   private void refreshHolding() {
@@ -184,21 +224,20 @@ public class StockDetailView extends StackPane implements Page {
 
     ShareDto s = holding.get();
     quantityLabel.setText(s.quantity().setScale(0, RoundingMode.HALF_UP).toString());
-    gavLabel.setText(s.purchasePrice().setScale(2, RoundingMode.HALF_UP) + " kr");
+    gavLabel.setText(MoneyFormat.formatCurrency(s.purchasePrice()));
 
     BigDecimal profit = s.currentShareValue()
         .subtract(s.purchasePrice().multiply(s.quantity()));
-    profitLabel.setText(formatSigned(profit.setScale(2, RoundingMode.HALF_UP)) + " kr");
+    profitLabel.setText(MoneyFormat.formatSignedCurrency(profit));
 
     BigDecimal percent = s.currentPrice()
         .subtract(s.purchasePrice())
-        .divide(s.purchasePrice(), 2, RoundingMode.HALF_UP)
+        .divide(s.purchasePrice(), 4, RoundingMode.HALF_UP)
         .multiply(BigDecimal.valueOf(100));
-    profitPercentLabel.setText(formatSigned(percent.setScale(2, RoundingMode.HALF_UP)) + "%");
-  }
+    profitPercentLabel.setText(MoneyFormat.formatSignedPercent(percent));
 
-  private String formatSigned(BigDecimal value) {
-    return (value.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + value;
+    applySignClass(profitLabel, profit);
+    applySignClass(profitPercentLabel, percent);
   }
 
   private void handleConfirmedOrder(DraftOrder draftOrder) {
