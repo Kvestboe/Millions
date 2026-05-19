@@ -4,16 +4,26 @@ import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
 import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
+import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
+import edu.ntnu.idatt2003.gruppe50.ui.model.WeekHolding;
+import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.WeekSummaryPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 
 import java.math.BigDecimal;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,6 +31,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class GameViewCoordinator {
@@ -30,6 +41,7 @@ public class GameViewCoordinator {
   private final Runnable onPlayAgain;
   private NavigationManager navManager;
   private BorderPane root;
+  private StackPane popupHost;   // ← ny linje
 
   private HBox bottomBar;
   private Label weekValue;
@@ -77,7 +89,8 @@ public class GameViewCoordinator {
       ));
     });
 
-    Scene scene = new Scene(root, 600, 400);
+    popupHost = new StackPane(root);
+    Scene scene = new Scene(popupHost, 900, 600);
     scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }
@@ -134,12 +147,55 @@ public class GameViewCoordinator {
   }
 
   private void onAdvanceWeek() {
-    BigDecimal before = bundle.session().getPlayer().getNetWorth();
+    GameSession session = bundle.session();
+    int prevWeek = session.getExchange().getWeek();
+    BigDecimal before = session.getPlayer().getNetWorth();
+
     bundle.game().advanceWeek();
-    BigDecimal after = bundle.session().getPlayer().getNetWorth();
+
+    if (session.getState() == GameSessionState.FINISHED) {
+      refreshBottomBar();
+      return;
+    }
+
+    BigDecimal after = session.getPlayer().getNetWorth();
     lastWeeklyDelta = after.subtract(before);
     refreshBottomBar();
-    // TODO: åpne weekly-summary popup her senere
+
+    WeekSummary summary = buildWeekSummary(prevWeek, before, after);
+
+    Node[] holder = new Node[1];
+    WeekSummaryPopup popup = new WeekSummaryPopup(summary, () -> closePopup(holder[0]));
+    holder[0] = popup;
+    showPopup(popup);
+  }
+
+  private WeekSummary buildWeekSummary(int prevWeek, BigDecimal before, BigDecimal after) {
+    Player player = bundle.session().getPlayer();
+
+    List<WeekHolding> holdings = player.getPortfolio().getShares().stream()
+        .collect(Collectors.groupingBy(s -> s.getStock().getSymbol()))
+        .entrySet().stream()
+        .map(e -> {
+          Stock stock = e.getValue().get(0).getStock();
+          BigDecimal qty = e.getValue().stream()
+              .map(Share::getQuantity)
+              .reduce(BigDecimal.ZERO, BigDecimal::add);
+          BigDecimal delta = stock.getLatestPriceChange().multiply(qty);
+          BigDecimal percent = stock.getLatestPriceChangePercent();
+          return new WeekHolding(stock.getSymbol(), qty, delta, percent);
+        })
+        .sorted((a, b) -> b.weeklyDelta().abs().compareTo(a.weeklyDelta().abs()))
+        .toList();
+
+    return new WeekSummary(
+        prevWeek,
+        bundle.session().getExchange().getWeek(),
+        before, after,
+        player.getMoney(),
+        holdings,
+        List.of(), List.of()
+    );
   }
 
   private void refreshBottomBar() {
@@ -171,5 +227,13 @@ public class GameViewCoordinator {
 
     bottomBar.getStyleClass().remove("bottom-bar-danger");
     if (danger) bottomBar.getStyleClass().add("bottom-bar-danger");
+  }
+
+  private void showPopup(Node popup) {
+    popupHost.getChildren().add(popup);
+  }
+
+  private void closePopup(Node popup) {
+    popupHost.getChildren().remove(popup);
   }
 }
