@@ -39,8 +39,8 @@ public class StockDetailView extends StackPane implements Page {
   private final Label priceChangeLabel = new Label();
   private final Label percentChangeLabel = new Label();
 
-  // Chart-wrapper så vi kan bytte selve chartet
-  private final VBox chartBox = new VBox();
+  private final AreaChartView priceChart = new AreaChartView("Week", "Price");
+  private final VBox chartBox = new VBox(priceChart.getChart());
 
   // Holding-felter (uendret)
   private final Label quantityLabel = new Label();
@@ -193,10 +193,8 @@ public class StockDetailView extends StackPane implements Page {
     applySignClass(priceChangeLabel, stock.priceChange());
     applySignClass(percentChangeLabel, stock.percentChange());
 
-    AreaChartView chart = new AreaChartView("Week", "Price");
-    chart.display("Price development", stock.prices());
-    chart.getChart().setLegendVisible(false);
-    chartBox.getChildren().setAll(chart.getChart());
+    priceChart.display("Price development", stock.prices());
+    priceChart.getChart().setLegendVisible(false);
 
     refreshHolding();
   }
