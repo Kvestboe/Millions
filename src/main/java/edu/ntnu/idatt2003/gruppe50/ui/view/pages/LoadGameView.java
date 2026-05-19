@@ -4,6 +4,7 @@ import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactor
 
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.LoadGameController;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import java.math.RoundingMode;
 import java.util.List;
@@ -55,9 +56,7 @@ public class LoadGameView extends StackPane {
   }
 
   private StackPane buildHeader() {
-    Button backBtn = new Button("Back");
-    backBtn.getStyleClass().add("system-button");
-    backBtn.setOnAction(_ -> onBack.run());
+    Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
 
     Label title = new Label("LOAD GAME");
     title.getStyleClass().add("load-game-title");
@@ -143,16 +142,12 @@ public class LoadGameView extends StackPane {
   }
 
   private HBox createButtons() {
-    Button load = new Button("Load game");
-    load.getStyleClass().add("btn-accent");
+    Button load = ButtonFactory.styled("Load game", "btn-accent", controller::load);
     load.setMaxWidth(Double.MAX_VALUE);
-    load.setOnAction(_ -> controller.load());
     load.disableProperty().bind(controller.getSelected().isNull());
 
-    Button delete = new Button("Delete save");
-    delete.getStyleClass().add("system-button-danger");
+    Button delete = ButtonFactory.styled("Delete save", "system-button-danger", controller::delete);
     delete.setMaxWidth(Double.MAX_VALUE);
-    delete.setOnAction(_ -> controller.delete());
     delete.disableProperty().bind(controller.getSelected().isNull());
 
     HBox.setHgrow(load, Priority.ALWAYS);

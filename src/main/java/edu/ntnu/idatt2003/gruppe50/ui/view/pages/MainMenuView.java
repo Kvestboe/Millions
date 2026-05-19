@@ -1,15 +1,12 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.SnapshotResult;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -129,10 +126,9 @@ public class MainMenuView extends StackPane{
     HBox content = new HBox(8, icon, text, spacer, subtitle);
     content.setAlignment(Pos.CENTER_LEFT);
 
-    Button continueBtn = new Button();
+    Button continueBtn = ButtonFactory.styled("", "btn-accent");
     continueBtn.setGraphic(content);
     continueBtn.setMaxWidth(340);
-    continueBtn.getStyleClass().add("btn-accent");
 
     return continueBtn;
   }
@@ -141,12 +137,9 @@ public class MainMenuView extends StackPane{
     // De tre ikonknappene: Nytt spill, Last inn, Ledertavle
     // Returnerer HBox med tre knapper
 
-    Button newGameBtn = createSecondaryButton("✚", "New Game");
-    Button loadGameBtn = createSecondaryButton("⬆", "Load Game");
-    Button leaderboardBtn = createSecondaryButton("★", "Leaderboard");
-
-    newGameBtn.setOnAction(e -> onNewGame.run());
-    loadGameBtn.setOnAction(e -> { if (onLoadGame != null) onLoadGame.run(); });
+    Button newGameBtn    = ButtonFactory.iconButton("✚", "New Game",    onNewGame);
+    Button loadGameBtn   = ButtonFactory.iconButton("⬆", "Load Game",   () -> { if (onLoadGame != null) onLoadGame.run(); });
+    Button leaderboardBtn = ButtonFactory.iconButton("★", "Leaderboard", () -> {});
 
     HBox.setHgrow(newGameBtn, Priority.ALWAYS);
     HBox.setHgrow(loadGameBtn, Priority.ALWAYS);
@@ -154,7 +147,6 @@ public class MainMenuView extends StackPane{
 
     HBox secondaryButtonsBox = new HBox(10);
     secondaryButtonsBox.getChildren().addAll(newGameBtn, loadGameBtn, leaderboardBtn);
-    secondaryButtonsBox.setMaxWidth(Double.MAX_VALUE);
     secondaryButtonsBox.setMaxWidth(340);
 
     return secondaryButtonsBox;
@@ -163,13 +155,8 @@ public class MainMenuView extends StackPane{
   private HBox buildSystemButtons() {
     // Innstillinger + Avslutt
     // Avslutt kobler onQuit til onAction
-    Button settings = new Button("⛭ Settings");
-    settings.getStyleClass().add("system-button");
-    settings.setOnAction(e -> onSettings.run());
-
-    Button quit = new Button("✕ Quit");
-    quit.getStyleClass().add("system-button-danger");
-    quit.setOnAction(e -> onQuit.run());
+    Button settings = ButtonFactory.styled("⛭ Settings", "system-button", onSettings);
+    Button quit = ButtonFactory.styled("✕ Quit", "system-button-danger", onQuit);
 
     HBox.setHgrow(settings, Priority.ALWAYS);
     HBox.setHgrow(quit, Priority.ALWAYS);
@@ -183,20 +170,4 @@ public class MainMenuView extends StackPane{
     return systemBox;
   }
 
-  private Button createSecondaryButton(String icon, String text) {
-    Label iconLabel = new Label(icon);
-    iconLabel.getStyleClass().add("secondary-button-icon");
-
-    Label textLabel = new Label(text);
-    textLabel.getStyleClass().add("secondary-button-text");
-
-    VBox content = new VBox(5, iconLabel, textLabel);
-    content.setAlignment(Pos.CENTER);
-
-    Button btn = new Button();
-    btn.setGraphic(content);
-    btn.setMaxWidth(Double.MAX_VALUE);
-    btn.getStyleClass().add("btn-secondary");
-    return btn;
-  }
 }

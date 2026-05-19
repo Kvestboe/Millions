@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import java.util.function.Consumer;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
@@ -72,12 +73,8 @@ public class OrderConfirmationView extends VBox {
   }
 
   private HBox buildActions() {
-    Button backBtn = new Button("Back");
-    backBtn.setOnAction(e -> onBack.run());
-
-    Button confirmBtn = new Button("Confirm");
-    confirmBtn.getStyleClass().add("primary");
-    confirmBtn.setOnAction(e -> onConfirm.accept(draftOrder));
+    Button backBtn = ButtonFactory.secondary("Back", onBack);
+    Button confirmBtn = ButtonFactory.styled("Confirm", "primary", () -> onConfirm.accept(draftOrder));
 
     HBox actions = new HBox(10, backBtn, confirmBtn);
     actions.setAlignment(Pos.CENTER_RIGHT);

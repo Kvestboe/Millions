@@ -24,6 +24,7 @@ import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.TransactionDto;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -128,8 +129,8 @@ public class GameSaveMapper {
         exchange,
         dto.difficulty() != null ? Difficulty.valueOf(dto.difficulty()) : Difficulty.EASY,
         GameSessionState.valueOf(dto.state()),
-        LocalDate.parse(dto.runStartedAt()),
-        LocalDate.parse(dto.lastPlayed()),
+        LocalDateTime.parse(dto.runStartedAt()).toLocalDate(),
+        LocalDateTime.parse(dto.lastPlayed()).toLocalDate(),
         dto.netWorthHistory()
     );
   }
@@ -143,4 +144,5 @@ public class GameSaveMapper {
       default -> throw new IllegalArgumentException("Unknown order type: " + o.type());
     };
   }
+
 }

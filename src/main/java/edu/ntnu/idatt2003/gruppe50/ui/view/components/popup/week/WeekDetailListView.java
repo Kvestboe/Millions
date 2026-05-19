@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week;
 
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,8 +20,7 @@ public class WeekDetailListView extends VBox {
   ) {
     setSpacing(15);
 
-    Button backBtn = new Button("Back");
-    backBtn.setOnAction(e -> onBack.run());
+    Button backBtn = ButtonFactory.secondary("Back", onBack);
 
     Label header = new Label(title);
     header.getStyleClass().add("popup-title");
@@ -40,9 +40,7 @@ public class WeekDetailListView extends VBox {
     scroll.setFitToWidth(true);
     scroll.setMaxHeight(280);
 
-    Button continueBtn = new Button("Continue");
-    continueBtn.getStyleClass().add("primary");
-    continueBtn.setOnAction(e -> onClose.run());
+    Button continueBtn = ButtonFactory.styled("Continue", "primary", onClose);
     HBox actions = new HBox(continueBtn);
     actions.setAlignment(Pos.CENTER_RIGHT);
 

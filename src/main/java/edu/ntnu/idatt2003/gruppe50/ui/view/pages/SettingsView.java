@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import java.util.function.Consumer;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
@@ -45,9 +46,7 @@ public class SettingsView extends VBox {
   }
 
   private HBox buildHeader() {
-    Button backBtn = new Button("← Back");
-    backBtn.getStyleClass().add("btn-secondary");
-    backBtn.setOnAction(e -> onBack.run());
+    Button backBtn = ButtonFactory.secondary("← Back", onBack);
 
     Label title = new Label("Settings");
     title.getStyleClass().add("page-title");
@@ -77,7 +76,7 @@ public class SettingsView extends VBox {
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    Button toggle = createToggle(false);
+    Button toggle = ButtonFactory.toggle(false);
     toggle.setOnAction(e -> {
       boolean isOn = toggle.getStyleClass().contains("toggle-on");
       toggle.getStyleClass().remove(isOn ? "toggle-on" : "toggle-off");
@@ -127,7 +126,7 @@ public class SettingsView extends VBox {
 
     Region spacer = new Region();
 
-    Button toggle = createToggle(true);
+    Button toggle = ButtonFactory.toggle(true);
 
     // Felles metoder for å styre tilstand
     Runnable turnOn = () -> {
@@ -191,11 +190,8 @@ public class SettingsView extends VBox {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     // TODO: Implement language system
-    Button enBtn = new Button("EN");
-    enBtn.getStyleClass().add("lang-btn-active");
-
-    Button noBtn = new Button("NO");
-    noBtn.getStyleClass().add("lang-btn");
+    Button enBtn = ButtonFactory.styled("EN", "lang-btn-active");
+    Button noBtn = ButtonFactory.styled("NO", "lang-btn");
 
     enBtn.setOnAction(e -> {
       enBtn.getStyleClass().setAll("lang-btn-active");
@@ -216,13 +212,4 @@ public class SettingsView extends VBox {
     return row;
   }
 
-  private Button createToggle(boolean initialState) {
-    Label thumb = new Label();
-    thumb.getStyleClass().add("toggle-thumb");
-
-    Button toggle = new Button();
-    toggle.setGraphic(thumb);
-    toggle.getStyleClass().add(initialState ? "toggle-on" : "toggle-off");
-    return toggle;
-  }
 }

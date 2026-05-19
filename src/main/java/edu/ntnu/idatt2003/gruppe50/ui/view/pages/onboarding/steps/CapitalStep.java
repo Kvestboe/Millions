@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps;
 
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.shared.Parse;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingFlowData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingStep;
 import java.math.BigDecimal;
@@ -9,7 +10,6 @@ import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -104,12 +104,11 @@ public class CapitalStep implements OnboardingStep {
           case EASY -> List.of("5 000", "10 000", "25 000", "50 000");
         };
 
-    amounts.forEach(amount -> {
-      Button btn = new Button(amount + " kr");
-      btn.getStyleClass().add("btn-secondary");
-      btn.setOnAction(_ -> capitalField.setText(amount));
-      presets.getChildren().add(btn);
-    });
+    amounts.forEach(amount ->
+        presets.getChildren().add(
+            ButtonFactory.secondary(amount + " kr", () -> capitalField.setText(amount))
+        )
+    );
 
     return presets;
   }

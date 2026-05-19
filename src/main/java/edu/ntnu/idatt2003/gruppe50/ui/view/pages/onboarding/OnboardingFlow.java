@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.CapitalStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.LaunchStep;
 import javafx.geometry.Insets;
@@ -81,14 +82,10 @@ public class OnboardingFlow {
   private Parent buildLayout() {
     HBox progressBar = buildProgressBar();
 
-    backBtn = new Button("← Back");
-    backBtn.getStyleClass().add("btn-secondary");
-    backBtn.setOnAction(_ -> goBack());
+    backBtn = ButtonFactory.secondary("← Back", this::goBack);
     backBtn.setPrefWidth(160);
 
-    nextBtn = new Button("Continue →");
-    nextBtn.getStyleClass().add("btn-primary");
-    nextBtn.setOnAction(_ -> goToNext());
+    nextBtn = ButtonFactory.primary("Continue →", this::goToNext);
     nextBtn.setPrefWidth(160);
 
     Region spacer = new Region();

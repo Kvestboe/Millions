@@ -8,6 +8,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order.OrderFormView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -43,7 +44,7 @@ public class StockDetailView extends StackPane implements Page {
   private final Label profitPercentLabel = new Label();
   private final VBox myHoldingBox = new VBox(10);
   private final VBox content = new VBox(10);
-  private final Button sell = new Button("Sell");
+  private final Button sell = ButtonFactory.secondary("Sell");
 
   private final Label errorLabel = new Label();
 
@@ -54,8 +55,7 @@ public class StockDetailView extends StackPane implements Page {
     this.orderController = orderController;
     this.onBack = onBack;
 
-    Button backBtn = new Button("Back");
-    backBtn.setOnAction(e -> onBack.run());
+    Button backBtn = ButtonFactory.secondary("Back", onBack);
 
     content.getChildren().addAll(
         backBtn,
@@ -108,10 +108,9 @@ public class StockDetailView extends StackPane implements Page {
   }
 
   private HBox createButtonRow() {
-    Button buy = new Button("Buy");
+    Button buy = ButtonFactory.primary("Buy", this::handleBuy);
     buy.setMaxWidth(Double.MAX_VALUE);
     HBox.setHgrow(buy, Priority.ALWAYS);
-    buy.setOnAction(e -> handleBuy());
 
     sell.setMaxWidth(Double.MAX_VALUE);
     HBox.setHgrow(sell, Priority.ALWAYS);

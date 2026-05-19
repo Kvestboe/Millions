@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameOutcome;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -49,11 +50,8 @@ public class GameOverView extends VBox implements Page {
 
     Label diff = new Label("Difficulty: " + difficulty.name());
 
-    Button playAgain = new Button("Play Again");
-    playAgain.setOnAction(e -> onPlayAgain.run());
-
-    Button mainMenu = new Button("Main Menu");
-    mainMenu.setOnAction(e -> onMainMenu.run());
+    Button playAgain = ButtonFactory.primary("Play Again", onPlayAgain);
+    Button mainMenu = ButtonFactory.secondary("Main Menu", onMainMenu);
 
     getChildren().addAll(heading, subtitle, netWorth, weeks, diff, playAgain, mainMenu);
   }

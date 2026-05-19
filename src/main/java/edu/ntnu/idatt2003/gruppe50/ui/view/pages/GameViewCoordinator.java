@@ -14,6 +14,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekHolding;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.WeekSummaryPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -141,9 +142,7 @@ public class GameViewCoordinator {
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    advanceButton = new Button();
-    advanceButton.getStyleClass().add("advance-button");
-    advanceButton.setOnAction(_ -> onAdvanceWeek());
+    advanceButton = ButtonFactory.styled("", "advance-button", this::onAdvanceWeek);
 
     HBox bar = new HBox(week, netWorth, delta, cash, spacer, advanceButton);
     bar.getStyleClass().add("bottom-bar");
