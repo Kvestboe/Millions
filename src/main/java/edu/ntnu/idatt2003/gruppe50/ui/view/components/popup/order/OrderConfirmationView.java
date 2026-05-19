@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
+package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;

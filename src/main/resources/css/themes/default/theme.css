@@ -24,4 +24,10 @@
     /* --- Status --- */
     -gain: #4ADE80; /* Positiv endring */
     -loss: #F87171; /* Negativ endring */
+    -error: #F87171; /* Feilmeldinger */
+    -warn:  #FACC15; /* Advarsler */
+
+    /* --- Border --- */
+    -border:         #1F3344; /* Standard border */
+    -border-subtle:  #132838; /* Subtil separator */
 }

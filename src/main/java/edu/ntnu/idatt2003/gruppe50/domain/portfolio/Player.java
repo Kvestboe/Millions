@@ -140,10 +140,6 @@ public class Player {
     return money.add(portfolio.getNetWorth());
   }
 
-  public BigDecimal getStartingMoney() {
-    return startingMoney;
-  }
-
   /**
    * Returns the players status.
    *

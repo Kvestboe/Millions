@@ -83,7 +83,11 @@ public final class AppRouter {
     show(new GameViewCoordinator(
         module.gameBundle(gameId),
         this::showMainMenu,
-        this::showNewGame
+        this::showNewGame,
+        themeName -> {
+          themeManager.setTheme(themeName);
+          themeManager.apply(stage.getScene());
+        }
     ).getScene());
   }
 
