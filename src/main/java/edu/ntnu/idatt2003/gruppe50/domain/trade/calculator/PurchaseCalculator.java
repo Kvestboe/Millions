@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.domain.trade.calculator;
 
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 
@@ -38,7 +39,7 @@ public class PurchaseCalculator implements TransactionCalculator {
    */
   @Override
   public BigDecimal calculateGross() {
-    return purchasePrice.multiply(quantity);
+    return Money.round(purchasePrice.multiply(quantity));
   }
 
   /**
@@ -48,7 +49,7 @@ public class PurchaseCalculator implements TransactionCalculator {
    */
   @Override
   public BigDecimal calculateCommission() {
-    return calculateGross().multiply(BigDecimal.valueOf(0.005));
+    return Money.round(calculateGross().multiply(BigDecimal.valueOf(0.005)));
   }
 
   /**
@@ -70,6 +71,6 @@ public class PurchaseCalculator implements TransactionCalculator {
    */
   @Override
   public BigDecimal calculateTotal() {
-    return calculateGross().add(calculateCommission()).add(calculateTax());
+    return Money.round(calculateGross().add(calculateCommission()).add(calculateTax()));
   }
 }
