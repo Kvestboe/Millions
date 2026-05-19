@@ -132,6 +132,37 @@
     -fx-font-size: 12px;
 }
 
+.card-container {
+    -fx-spacing: 12;
+}
+
+.segmented-control {
+    -fx-spacing: 4;
+    -fx-padding: 4;
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 8;
+    -fx-alignment: center-left;
+}
+
+.segmented-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text-secondary;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-padding: 6 14 6 14;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.segmented-btn:hover {
+    -fx-text-fill: -text-primary;
+}
+
+.segmented-btn-active {
+    -fx-background-color: -bg-surface;
+    -fx-text-fill: -text-primary;
+}
+
 .stat-card {
     -fx-background-color: -bg-elevated;
     -fx-background-radius: 8;
