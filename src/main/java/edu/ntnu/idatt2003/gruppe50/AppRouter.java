@@ -113,7 +113,8 @@ public final class AppRouter {
         fullscreen -> {
           isFullscreen = fullscreen;
           stage.setFullScreen(fullscreen);
-        }
+        },
+        soundManager   // ← ny parameter
     );
     show(new Scene(settings, WindowConfig.WIDTH, WindowConfig.HEIGHT));
   }
