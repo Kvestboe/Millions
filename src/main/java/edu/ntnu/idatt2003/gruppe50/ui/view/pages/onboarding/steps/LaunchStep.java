@@ -11,6 +11,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+import java.math.BigDecimal;
+
 /**
  * The final step in the onboarding flow.
  * Shows a summary of all player choices before launching the game.
@@ -31,27 +33,24 @@ public class LaunchStep implements OnboardingStep {
    */
   @Override
   public Parent getView() {
-    VBox container = new VBox(20);
+    VBox container = new VBox(16);
     container.setAlignment(Pos.CENTER);
-    container.setPadding(new Insets(60, 80, 60, 80));
+    container.setPadding(new Insets(24, 80, 24, 80));
     container.getStyleClass().add("root-bg");
 
-    Label icon = new Label("🚀");
-    icon.getStyleClass().add("story-icon");
-
-    Label title = new Label("Ready for launch?");
+    Label title = new Label("Ready to trade?");
     title.getStyleClass().add("page-title");
 
-    Label subtitle = new Label("Here's your mission briefing.");
+    Label subtitle = new Label("Review the plan before opening the market");
     subtitle.getStyleClass().add("label-muted");
 
     VBox summary = buildSummary();
     summary.setMaxWidth(440);
 
-    Label tagline = new Label("Target: 1 000 000 kr · Good luck, astronaut.");
+    Label tagline = new Label("Target: 1 000 000 kr. Good luck out there.");
     tagline.getStyleClass().add("label-muted");
 
-    container.getChildren().addAll(icon, title, subtitle, summary, tagline);
+    container.getChildren().addAll(title, subtitle, summary, tagline);
     return container;
   }
 
@@ -81,14 +80,21 @@ public class LaunchStep implements OnboardingStep {
           .toPlainString() + " kr";
     }
 
+    String hangarLabel = "—";
+    if (flowData.difficulty != null && flowData.startingCapital != null) {
+      BigDecimal weeklyHangarCost = flowData.startingCapital
+          .multiply(BigDecimal.valueOf(flowData.difficulty.getHangarCostRate()))
+          .setScale(0, java.math.RoundingMode.HALF_UP);
+      hangarLabel = weeklyHangarCost.toPlainString() + " kr / week";
+    }
+
     card.getChildren().addAll(
-        summaryRow("Astronaut",       flowData.playerName != null ? flowData.playerName : "—"),
+        summaryRow("Trader",       flowData.playerName != null ? flowData.playerName : "—"),
         summaryRow("Mission",         difficultyLabel),
         summaryRow("Starting capital", capitalLabel),
-        summaryRow("Target",          "1 000 000 kr 🌕"),
+        summaryRow("Target",          "1 000 000 kr"),
         summaryRow("Market",          fileLabel),
-        summaryRow("Hangar cost",     flowData.difficulty != null
-            ? (int)(flowData.difficulty.getHangarCostRate() * 100) + "% / week" : "—"),
+        summaryRow("Hangar cost", hangarLabel),
         summaryRow("Game over below", gameOverLabel)
     );
 

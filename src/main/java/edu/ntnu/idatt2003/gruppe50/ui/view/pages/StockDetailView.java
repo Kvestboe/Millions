@@ -1,18 +1,18 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order.OrderFormView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
-
 import javafx.scene.Parent;
-import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -20,13 +20,23 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-
 public class StockDetailView extends StackPane implements Page {
 
-  private final StockDto stock;
-  private final StockDetailController controller;
+  private StockDto stock;
+  private final StockDetailQueryController queryController;
+  private final OrderPlacementController orderController;
   private final Runnable onBack;
+  private final Observer exchangeObserver = this::refresh;
 
+  // Header-felter (oppdateres i refresh)
+  private final Label priceLabel = new Label();
+  private final Label priceChangeLabel = new Label();
+  private final Label percentChangeLabel = new Label();
+
+  // Chart-wrapper så vi kan bytte selve chartet
+  private final VBox chartBox = new VBox();
+
+  // Holding-felter (uendret)
   private final Label quantityLabel = new Label();
   private final Label gavLabel = new Label();
   private final Label profitLabel = new Label();
@@ -35,9 +45,13 @@ public class StockDetailView extends StackPane implements Page {
   private final VBox content = new VBox(10);
   private final Button sell = new Button("Sell");
 
-  public StockDetailView(StockDto stock, StockDetailController controller, Runnable onBack) {
+  private final Label errorLabel = new Label();
+
+  public StockDetailView(StockDto stock, StockDetailQueryController queryController,
+      OrderPlacementController orderController, Runnable onBack) {
     this.stock = stock;
-    this.controller = controller;
+    this.queryController = queryController;
+    this.orderController = orderController;
     this.onBack = onBack;
 
     Button backBtn = new Button("Back");
@@ -46,13 +60,23 @@ public class StockDetailView extends StackPane implements Page {
     content.getChildren().addAll(
         backBtn,
         createHeader(),
-        createStockChart(),
+        chartBox,
         createStatTiles(),
         createButtonRow());
 
     getChildren().addAll(content);
 
-    refreshHolding();
+    errorLabel.getStyleClass().add("error-label");
+    errorLabel.setVisible(false);
+
+    refresh();
+
+    queryController.subscribe(exchangeObserver);
+    sceneProperty().addListener((obs, oldScene, newScene) -> {
+      if (newScene == null) {
+        queryController.unsubscribe(exchangeObserver);
+      }
+    });
   }
 
   @Override
@@ -61,31 +85,19 @@ public class StockDetailView extends StackPane implements Page {
   }
 
   private VBox createHeader() {
-    VBox header = new VBox(10);
-
     HBox nameBox = new HBox(10,
         new Label(stock.symbol()),
         new Label(stock.company()));
 
-    HBox priceBox = new HBox(10,
-        new Label(stock.salesPrice() + " kr"),
-        new Label(formatSigned(stock.priceChange()) + " kr"),
-        new Label(formatSigned(stock.percentChange()) + "%"));
+    HBox priceBox = new HBox(10, priceLabel, priceChangeLabel, percentChangeLabel);
 
+    VBox header = new VBox(10);
     header.getChildren().addAll(nameBox, priceBox);
     return header;
   }
 
-  private AreaChart<Number, Number> createStockChart() {
-    AreaChartView stockChart = new AreaChartView("Week", "Price");
-    stockChart.display("Price development", stock.prices());
-    stockChart.getChart().setLegendVisible(false);
-    return stockChart.getChart();
-  }
-
   private VBox createStatTiles() {
     VBox myQuantityBox = new VBox(10, new Label("Quantity"), quantityLabel);
-
     VBox gavBox = new VBox(10, new Label("GAV"), gavLabel);
     VBox profitBox = new VBox(10, new Label("Profit"), profitLabel, profitPercentLabel);
 
@@ -110,12 +122,12 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleBuy() {
     OrderFormView popup = new OrderFormView(
-        controller.gameId(),
+        queryController.gameId(),
         OrderSide.BUY,
         stock,
         this::closePopup,
         this::handleConfirmedOrder,
-        controller.previewOrderUseCase()
+        queryController.previewOrderUseCase()
     );
 
     getChildren().add(popup);
@@ -123,12 +135,12 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleSell() {
     OrderFormView popup = new OrderFormView(
-        controller.gameId(),
+        queryController.gameId(),
         OrderSide.SELL,
         stock,
         this::closePopup,
         this::handleConfirmedOrder,
-        controller.previewOrderUseCase()
+        queryController.previewOrderUseCase()
     );
 
     getChildren().add(popup);
@@ -138,8 +150,22 @@ public class StockDetailView extends StackPane implements Page {
     getChildren().removeIf(node -> node instanceof OrderFormView);
   }
 
+  private void refresh() {
+    stock = queryController.getStock(stock.symbol()).orElse(stock);
+    priceLabel.setText(stock.salesPrice() + " kr");
+    priceChangeLabel.setText(formatSigned(stock.priceChange()) + " kr");
+    percentChangeLabel.setText(formatSigned(stock.percentChange()) + "%");
+
+    AreaChartView chart = new AreaChartView("Week", "Price");
+    chart.display("Price development", stock.prices());
+    chart.getChart().setLegendVisible(false);
+    chartBox.getChildren().setAll(chart.getChart());
+
+    refreshHolding();
+  }
+
   private void refreshHolding() {
-    Optional<ShareDto> holding = controller.getHolding(stock.symbol());
+    Optional<ShareDto> holding = queryController.getHolding(stock.symbol());
     if (holding.isEmpty()) {
       myHoldingBox.setVisible(false);
       myHoldingBox.setManaged(false);
@@ -173,11 +199,13 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleConfirmedOrder(DraftOrder draftOrder) {
     try {
-      controller.placeOrder(draftOrder);
+      orderController.placeOrder(draftOrder);
+      errorLabel.setVisible(false);
       closePopup();
-      refreshHolding();
+      refresh();
     } catch (RuntimeException ex) {
-      System.out.println(ex.getMessage());
+      errorLabel.setText(ex.getMessage());
+      errorLabel.setVisible(true);
     }
   }
 }

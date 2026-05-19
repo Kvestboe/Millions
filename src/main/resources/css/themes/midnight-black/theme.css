@@ -1,0 +1,48 @@
+/* ============================================
+   Millions — Midnight Red Theme
+   Palett: nesten svart med rød aksent
+   ============================================ */
+
+.root {
+
+    /* --- Bakgrunner --- */
+    -bg-primary:    #050608;   /* Sidebakgrunn */
+    -bg-surface:    #0D0608;   /* Kort, navbar — svart med rød undertone */
+    -bg-elevated:   #160A0A;   /* Tabellrad, hover-overflater */
+    -bg-overlay:    #1E0C0C;   /* Popup, modal */
+
+    /* --- Aksenter --- */
+    -accent-gold:   #E53535;   /* Primær aksent — ren rød */
+    -accent-indigo: #B91C1C;   /* Sekundær aksent — dyp rød */
+    -accent-teal:   #FF6B6B;   /* Chart-fill, linjer */
+
+    /* --- Tekst --- */
+    -text-primary:   #F8FAFC;  /* Hovedtekst */
+    -text-secondary: #94A3B8;  /* Muted labels, metadata */
+    -text-disabled:  #475569;  /* Deaktivert */
+
+    /* --- Status --- */
+    -gain:  #22C55E;           /* Positiv endring */
+    -loss:  #EF4444;           /* Negativ endring */
+    -error: #F87171;           /* Feilmeldinger */
+    -warn:  #FACC15;           /* Advarsler */
+
+    /* --- Border --- */
+    -border:         #2A0A0A;  /* Standard border */
+    -border-subtle:  #160A0A;  /* Subtil separator */
+
+    /* --- Status-nivåer --- */
+    -status-dreamer:   #475569;   /* Grå */
+    -status-engineer:  #B91C1C;   /* Dyp rød */
+    -status-astronaut: #E53535;   /* Ren rød */
+}
+
+/* Chart-overrides for midnight red-tema */
+.chart-series-area-line {
+    -fx-stroke: #FF6B6B;
+    -fx-stroke-width: 2;
+}
+
+.chart-series-area-fill {
+    -fx-fill: linear-gradient(from 0% 0% to 0% 100%, #FF6B6B30, #FF6B6B05);
+}

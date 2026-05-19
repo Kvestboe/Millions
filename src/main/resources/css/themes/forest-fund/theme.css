@@ -1,0 +1,41 @@
+/* ============================================
+   Millions - Forest Fund Theme
+   Palett: rolig finansgrønn med dempet gull
+   ============================================ */
+
+.root {
+
+    /* --- Bakgrunner --- */
+    -bg-primary:    #07130D;   /* Sidebakgrunn */
+    -bg-surface:    #0D1F16;   /* Kort, navbar */
+    -bg-elevated:   #163526;   /* Tabellrad, hover-overflater */
+    -bg-overlay:    #1F4432;   /* Popup, modal */
+
+    /* --- Aksenter --- */
+    -accent-gold:   #D6B75A;   /* Primær aksent - coins, viktige tall */
+    -accent-indigo: #4D7C5A;   /* Sekundær aksent - aktiv knapp */
+    -accent-teal:   #34D399;   /* Chart-fill, linjer, highlight */
+
+    /* --- Tekst --- */
+    -text-primary:   #EEF8F1;  /* Hovedtekst */
+    -text-secondary: #8FA99A;  /* Muted labels, metadata */
+    -text-disabled:  #3F5F4E;  /* Deaktivert */
+
+    /* --- Status --- */
+    -gain:  #4ADE80;           /* Positiv endring */
+    -loss:  #F87171;           /* Negativ endring */
+    -error: #F87171;           /* Feilmeldinger */
+    -warn:  #FBBF24;           /* Advarsler */
+
+    /* --- Border --- */
+    -border:         #214832;  /* Standard border */
+    -border-subtle:  #163526;  /* Subtil separator */
+
+    /* --- Status-nivåer --- */
+    -status-dreamer:    #3F5F4E;   /* Grønn-grå */
+    -status-engineer:   #34D399;   /* Mint */
+    -status-astronaut:  #D6B75A;   /* Dempet gull */
+
+    /* --- Font --- */
+    -font-mono: "Courier New", monospace;
+}

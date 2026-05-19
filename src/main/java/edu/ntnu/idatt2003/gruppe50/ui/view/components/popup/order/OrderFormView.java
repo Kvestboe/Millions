@@ -1,11 +1,12 @@
-package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
+package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase.Request;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import java.util.UUID;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Region;

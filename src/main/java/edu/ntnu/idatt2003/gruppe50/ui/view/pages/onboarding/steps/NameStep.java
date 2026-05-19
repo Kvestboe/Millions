@@ -33,10 +33,10 @@ public class NameStep implements OnboardingStep {
     Label title = new Label("Who are you?");
     title.getStyleClass().add("page-title");
 
-    Label subtitle = new Label("Every astronaut needs a name.");
+    Label subtitle = new Label("Every trader needs a name.");
     subtitle.getStyleClass().add("label-muted");
 
-    Label fieldLabel = new Label("Your name");
+    Label fieldLabel = new Label("Your name:");
     fieldLabel.getStyleClass().add("field-label");
 
     nameField.setPromptText("E.g. Neil Armstrong...");

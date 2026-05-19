@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -83,27 +84,33 @@ public class OnboardingFlow {
     backBtn = new Button("← Back");
     backBtn.getStyleClass().add("btn-secondary");
     backBtn.setOnAction(_ -> goBack());
-    backBtn.setPrefWidth(120);
+    backBtn.setPrefWidth(160);
 
     nextBtn = new Button("Continue →");
     nextBtn.getStyleClass().add("btn-primary");
     nextBtn.setOnAction(_ -> goToNext());
-    nextBtn.setPrefWidth(120);
+    nextBtn.setPrefWidth(160);
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
-    spacer.setMaxWidth(125);
+    spacer.setMaxWidth(50);
 
-    HBox navBar = new HBox(20, backBtn, spacer, nextBtn);
+    HBox navBar = new HBox(15, backBtn, spacer, nextBtn);
     navBar.setAlignment(Pos.CENTER);
     navBar.setPrefHeight(72);
     navBar.setPadding(new Insets(16, 48, 24, 48));
     navBar.getStyleClass().add("navbar");
 
+    ScrollPane scrollableCenter = new ScrollPane(center);
+    scrollableCenter.setFitToWidth(true);
+    scrollableCenter.setFitToHeight(true);
+    scrollableCenter.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollableCenter.getStyleClass().add("onboarding-scroll");
+
     BorderPane root = new BorderPane();
     root.getStyleClass().add("root-bg");
     root.setTop(progressBar);
-    root.setCenter(center);    // ← center-feltet her
+    root.setCenter(scrollableCenter);   // ← center-feltet her
     root.setBottom(navBar);    // ← knapper alltid nederst
 
     return root;
@@ -164,7 +171,7 @@ public class OnboardingFlow {
     updateProgressBar();
 
     boolean isLast = currentIndex == steps.size() - 1;
-    nextBtn.setText(isLast ? "🚀 Launch Mission" : "Continue →");
+    nextBtn.setText(isLast ? "Enter the market →" : "Continue →");
   }
 
   private HBox buildProgressBar() {
@@ -211,7 +218,7 @@ public class OnboardingFlow {
         dot.setPrefWidth(10);
       } else if (i == currentIndex) {
         dot.getStyleClass().add("dot-active");
-        dot.setPrefWidth(20); // avlang gull-prikk
+        dot.setPrefWidth(20);
       } else {
         dot.getStyleClass().add("dot-inactive");
         dot.setPrefWidth(18);

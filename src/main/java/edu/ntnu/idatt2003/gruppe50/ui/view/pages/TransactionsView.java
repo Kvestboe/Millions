@@ -2,7 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory.createCard;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.TransactionType;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.TransactionType;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
@@ -50,7 +50,6 @@ public class TransactionsView extends BorderPane implements Page {
 
   @Override
   public Parent getView() {
-    applyFilters();
     return this;
   }
 
