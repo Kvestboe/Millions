@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
@@ -27,10 +28,12 @@ public class AreaChartView {
     chart.setTitle(title);
     series.setName(title);
     series.getNode().setStyle("-fx-stroke: #00C9A7;");
-    series.getData().clear();
+
+    List<XYChart.Data<Number, Number>> points = new ArrayList<>(history.size());
     for (int i = 0; i < history.size(); i++) {
-      series.getData().add(new XYChart.Data<>(i, history.get(i)));
+      points.add(new XYChart.Data<>(i, history.get(i)));
     }
+    series.getData().setAll(points);
   }
 
   public void appendPoint(int index, BigDecimal value) {
