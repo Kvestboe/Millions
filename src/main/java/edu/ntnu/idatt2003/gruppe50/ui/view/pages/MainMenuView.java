@@ -20,6 +20,7 @@ public class MainMenuView extends StackPane{
   private final Runnable onQuit;
   private final Runnable onSettings;
   private Runnable onLoadGame;
+  private Runnable onContinueGame;
 
   public MainMenuView(Runnable onNewGame, Runnable onSettings, Runnable onQuit) {
     this.onNewGame = onNewGame;
@@ -30,6 +31,10 @@ public class MainMenuView extends StackPane{
 
   public void setOnLoadGame(Runnable onLoadGame) {
     this.onLoadGame = onLoadGame;
+  }
+
+  public void setOnContinueGame(Runnable onContinueGame) {
+    this.onContinueGame = onContinueGame;
   }
 
   private void build() {
@@ -126,7 +131,11 @@ public class MainMenuView extends StackPane{
     HBox content = new HBox(8, icon, text, spacer, subtitle);
     content.setAlignment(Pos.CENTER_LEFT);
 
-    Button continueBtn = ButtonFactory.styled("", "btn-accent");
+    Button continueBtn = ButtonFactory.styled("", "btn-accent",() -> {
+      if (onContinueGame != null) {
+        onContinueGame.run();
+      }
+    });
     continueBtn.setGraphic(content);
     continueBtn.setMaxWidth(340);
 

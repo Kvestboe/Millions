@@ -10,7 +10,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.order.StopLossOrder;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,10 +26,10 @@ public final class GameSession {
   private final UUID gameId;
   private final Player player;
   private final Exchange exchange;
-  private final LocalDate runStartedAt;
+  private final LocalDateTime runStartedAt;
   private final Difficulty difficulty;
   private GameSessionState state;
-  private LocalDate lastPlayed;
+  private LocalDateTime lastPlayed;
   private List<BigDecimal> netWorthHistory;
 
   private GameSession(
@@ -38,8 +38,8 @@ public final class GameSession {
       Exchange exchange,
       Difficulty difficulty,
       GameSessionState state,
-      LocalDate runStartedAt,
-      LocalDate lastPlayed
+      LocalDateTime runStartedAt,
+      LocalDateTime lastPlayed
   ) {
     this.gameId = gameId;
     this.player = player;
@@ -56,8 +56,8 @@ public final class GameSession {
       Player player,
       Exchange exchange,
       GameSessionState state,
-      LocalDate runStartedAt,
-      LocalDate lastPlayed,
+      LocalDateTime runStartedAt,
+      LocalDateTime lastPlayed,
       Difficulty difficulty,
       List<BigDecimal> netWorthHistory
   ) {
@@ -83,8 +83,8 @@ public final class GameSession {
         exchange,
         difficulty,
         GameSessionState.ACTIVE,
-        LocalDate.now(),
-        LocalDate.now()
+        LocalDateTime.now(),
+        LocalDateTime.now()
     );
   }
 
@@ -106,8 +106,8 @@ public final class GameSession {
       Exchange exchange,
       Difficulty difficulty,
       GameSessionState state,
-      LocalDate runStartedAt,
-      LocalDate lastPlayed,
+      LocalDateTime runStartedAt,
+      LocalDateTime lastPlayed,
       List<BigDecimal> netWorthHistory
   ) {
     Validate.notNull(gameId, "Game id");
@@ -124,7 +124,7 @@ public final class GameSession {
    * Marks the session as opened today.
    */
   public void markOpened() {
-    lastPlayed = LocalDate.now();
+    lastPlayed = LocalDateTime.now();
   }
 
   /**
@@ -313,16 +313,16 @@ public final class GameSession {
    *
    * @return run start date
    */
-  public LocalDate getRunStartedAt() {
+  public LocalDateTime getRunStartedAt() {
     return runStartedAt;
   }
 
   /**
-   * Returns date the session was last opened.
+   * Returns date and time the session was last opened.
    *
-   * @return last played date
+   * @return last played date-time
    */
-  public LocalDate getLastPlayed() {
+  public LocalDateTime getLastPlayed() {
     return lastPlayed;
   }
 

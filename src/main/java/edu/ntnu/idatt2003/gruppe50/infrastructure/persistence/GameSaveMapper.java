@@ -129,10 +129,22 @@ public class GameSaveMapper {
         exchange,
         dto.difficulty() != null ? Difficulty.valueOf(dto.difficulty()) : Difficulty.EASY,
         GameSessionState.valueOf(dto.state()),
-        LocalDateTime.parse(dto.runStartedAt()).toLocalDate(),
-        LocalDateTime.parse(dto.lastPlayed()).toLocalDate(),
+        parseDateTime(dto.runStartedAt()),
+        parseDateTime(dto.lastPlayed()),
         dto.netWorthHistory()
     );
+  }
+
+  /**
+   * Parses a date string that may be either ISO LocalDateTime ("2024-01-15T10:30:00")
+   * or a legacy ISO LocalDate ("2024-01-15") from older save files.
+   */
+  private static LocalDateTime parseDateTime(String value) {
+    try {
+      return LocalDateTime.parse(value);
+    } catch (Exception e) {
+      return LocalDate.parse(value).atStartOfDay();
+    }
   }
 
   private static LimitOrder buildOrder(LimitOrderDto o, Map<String, Stock> stockMap, Player player) {
@@ -144,5 +156,4 @@ public class GameSaveMapper {
       default -> throw new IllegalArgumentException("Unknown order type: " + o.type());
     };
   }
-
 }
