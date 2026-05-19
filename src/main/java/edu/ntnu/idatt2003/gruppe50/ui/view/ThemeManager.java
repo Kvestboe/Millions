@@ -4,7 +4,8 @@ import javafx.scene.Scene;
 
 public class ThemeManager {
 
-  private String currentTheme = "teal";
+  private static final String DEFAULT_THEME = "default";
+  private String currentTheme = DEFAULT_THEME;
 
   public void apply(Scene scene) {
     scene.getStylesheets().clear();
@@ -18,7 +19,15 @@ public class ThemeManager {
     this.currentTheme = themeName;
   }
 
+  public void reset() {
+    currentTheme = DEFAULT_THEME;
+  }
+
   private String resource(String path) {
-    return getClass().getResource(path).toExternalForm();
+    var url = getClass().getResource(path);
+    if (url == null) {
+      throw new IllegalStateException("CSS resource not found:" + path);
+    }
+    return url.toExternalForm();
   }
 }

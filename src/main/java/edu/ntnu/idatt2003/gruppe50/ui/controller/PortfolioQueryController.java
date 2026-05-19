@@ -1,19 +1,22 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase.Request;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.PortfolioDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
-import edu.ntnu.idatt2003.gruppe50.shared.observer.Observable;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
-import edu.ntnu.idatt2003.gruppe50.ui.mapper.ShareDataMapper;
-import edu.ntnu.idatt2003.gruppe50.ui.model.PortfolioData;
-import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
-import java.util.List;
 import java.util.UUID;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-public final class PortfolioQueryController extends Observable implements Observer {
+public final class PortfolioQueryController implements Observer {
 
   private final UUID gameId;
   private final GetPortfolioUseCase getPortfolio;
+  private final SimpleObjectProperty<PortfolioDto> portfolio = new SimpleObjectProperty<>();
+  private final ObservableList<ShareDto> shares = FXCollections.observableArrayList();
 
   public PortfolioQueryController(
       UUID gameId,
@@ -23,28 +26,25 @@ public final class PortfolioQueryController extends Observable implements Observ
     this.gameId = gameId;
     this.getPortfolio = getPortfolio;
     exchange.addObserver(this);
+    refresh();
   }
 
-  public PortfolioData getPortfolio() {
-    GetPortfolioUseCase.Response response =
-        getPortfolio.execute(new GetPortfolioUseCase.Request(gameId));
+  public SimpleObjectProperty<PortfolioDto> getPortfolio() {
+    return portfolio;
+  }
 
-    // Although the shares are in the response already, it is more according to clean architecture
-    // to make clean new list of shares since it should be independent of application
-    List<ShareData> shares = response.shares().stream()
-        .map(ShareDataMapper::mapShare).toList();
-
-    return new PortfolioData(
-        response.cash(),
-        response.portfolioValue(),
-        response.netWorth(),
-        shares,
-        response.netWorthHistory()
-    );
+  public ObservableList<ShareDto> getShares() {
+    return shares;
   }
 
   @Override
   public void update() {
-    notifyObservers();
+    refresh();
+  }
+
+  private void refresh() {
+    PortfolioDto portfolioDto = getPortfolio.execute(new Request(gameId)).portfolio();
+    portfolio.set(portfolioDto);
+    shares.setAll(portfolioDto.shares());
   }
 }

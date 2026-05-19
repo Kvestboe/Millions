@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.gruppe50.application.query;
+package edu.ntnu.idatt2003.gruppe50.application.query.dto;
 
 public enum OrderType {
   MARKET,

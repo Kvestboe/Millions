@@ -96,11 +96,13 @@ public class CapitalStep implements OnboardingStep {
     HBox presets = new HBox(8);
     presets.setAlignment(Pos.CENTER);
 
-    List<String> amounts = difficulty == Difficulty.HARD
-        ? List.of("1 000", "2 000", "3 000", "5 000")
-        : difficulty == Difficulty.MEDIUM
-        ? List.of("5 000", "10 000", "15 000", "25 000")
-        : List.of("5 000", "10 000", "25 000", "50 000");
+    List<String> amounts = difficulty == null
+        ? List.of("5 000", "10 000", "25 000", "50 000")
+        : switch (difficulty) {
+          case HARD -> List.of("1 000", "2 000", "3 000", "5 000");
+          case MEDIUM -> List.of("5 000", "10 000", "15 000", "25 000");
+          case EASY -> List.of("5 000", "10 000", "25 000", "50 000");
+        };
 
     amounts.forEach(amount -> {
       Button btn = new Button(amount + " kr");

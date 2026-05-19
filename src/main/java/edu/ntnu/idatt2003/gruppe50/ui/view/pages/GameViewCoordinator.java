@@ -1,12 +1,13 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -14,6 +15,8 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.Consumer;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,8 +31,10 @@ public class GameViewCoordinator {
   private final GameSessionControllerBundle bundle;
   private final Runnable onMainMenu;
   private final Runnable onPlayAgain;
+  private final Consumer<String> onThemeChanged;
   private NavigationManager navManager;
   private BorderPane root;
+  private ShopView shopView;
 
   private HBox bottomBar;
   private Label weekValue;
@@ -38,14 +43,19 @@ public class GameViewCoordinator {
   private Label cashValue;
   private Button advanceButton;
 
-  private BigDecimal netWorthBeforeAdvance;
   private BigDecimal lastWeeklyDelta = BigDecimal.ZERO;
   private static final BigDecimal DANGER_ZONE_MULTIPLIER = new BigDecimal("1.15");
 
-  public GameViewCoordinator(GameSessionControllerBundle bundle, Runnable onMainMenu, Runnable onPlayAgain) {
+  public GameViewCoordinator(
+      GameSessionControllerBundle bundle,
+      Runnable onMainMenu,
+      Runnable onPlayAgain,
+      Consumer<String> onThemeChanged
+  ) {
     this.bundle = bundle;
     this.onMainMenu = onMainMenu;
     this.onPlayAgain = onPlayAgain;
+    this.onThemeChanged = onThemeChanged;
   }
 
   public Scene getScene() {
@@ -57,7 +67,7 @@ public class GameViewCoordinator {
     root.setCenter(navManager.getContentArea());
     bottomBar = buildBottomBar();
     root.setBottom(bottomBar);
-    refreshBottomBar();                          // initial render
+    refreshBottomBar();
     bundle.session().getExchange().addObserver(this::refreshBottomBar);
 
     navManager.navigateTo(PageId.DASHBOARD);
@@ -77,7 +87,7 @@ public class GameViewCoordinator {
       ));
     });
 
-    Scene scene = new Scene(root, 600, 400);
+    Scene scene = new Scene(root, WindowConfig.WIDTH, WindowConfig.HEIGHT);
     scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }
@@ -86,8 +96,9 @@ public class GameViewCoordinator {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
-    pages.put(PageId.MARKET, new MarketView(bundle.market()));
+    pages.put(PageId.MARKET, new MarketView(bundle.market(), this::navigateToStockDetail));
     pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game()));
+    pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
 
@@ -96,7 +107,10 @@ public class GameViewCoordinator {
 
   private void navigateToStockDetail(StockDto stock) {
     StockDetailView view = new StockDetailView(
-        stock, bundle.stockDetail(), () -> navManager.navigateTo(PageId.MARKET));
+        stock,
+        bundle.stockQuery(),
+        bundle.orderPlacement(),
+        () -> navManager.navigateTo(PageId.MARKET));
     navManager.show(view);
   }
 
@@ -138,16 +152,22 @@ public class GameViewCoordinator {
     bundle.game().advanceWeek();
     BigDecimal after = bundle.session().getPlayer().getNetWorth();
     lastWeeklyDelta = after.subtract(before);
+
+    bundle.shop().advanceCoinExchange();
+    if (shopView != null) {
+      shopView.refresh();
+    }
+
     refreshBottomBar();
     // TODO: åpne weekly-summary popup her senere
   }
 
   private void refreshBottomBar() {
-    Player player        = bundle.session().getPlayer();
-    Exchange exchange    = bundle.session().getExchange();
+    Player player         = bundle.session().getPlayer();
+    Exchange exchange     = bundle.session().getExchange();
     Difficulty difficulty = bundle.session().getDifficulty();
 
-    BigDecimal netWorth   = player.getNetWorth();
+    BigDecimal netWorth = player.getNetWorth();
     BigDecimal threshold = player.getStartingMoney()
         .multiply(BigDecimal.valueOf(difficulty.getGameOverThreshold()));
     BigDecimal warningBand = threshold.multiply(DANGER_ZONE_MULTIPLIER);

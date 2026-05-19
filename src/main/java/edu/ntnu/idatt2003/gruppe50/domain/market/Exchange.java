@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -30,7 +31,20 @@ public class Exchange extends Observable {
   private final Random random;
   private final TransactionFactory factory;
   private int week;
-  private final List<LimitOrder> pendingOrders = new ArrayList<>();
+  private final List<LimitOrder> pendingOrders;
+
+  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders) {
+    return new Exchange(name, stockMap, factory, week, pendingOrders);
+  }
+
+  private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders) {
+    this.name = name;
+    this.stockMap = new HashMap<>(stockMap);
+    this.random = new Random();
+    this.factory = factory;
+    this.week = week;
+    this.pendingOrders = new ArrayList<>(pendingOrders);
+  }
 
   /**
    * Creates a new {@code exchange} with a name and stocks represented by symbols.
@@ -52,6 +66,7 @@ public class Exchange extends Observable {
     week = 1;
     random = new Random();
     this.factory = factory;
+    pendingOrders = new ArrayList<>();
   }
 
   /**

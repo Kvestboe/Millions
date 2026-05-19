@@ -1,84 +1,38 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
-
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.OrderType;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
-import edu.ntnu.idatt2003.gruppe50.application.query.OrderType;
-
-import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase.Request;
-import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import java.util.UUID;
 
-public class StockDetailController {
+public class OrderPlacementController {
 
   private final UUID gameId;
   private final BuyShareUseCase buyShare;
   private final SellShareUseCase sellShare;
-  private final GetPortfolioUseCase getPortfolio;
   private final PlaceBuyLimitOrderUseCase placeBuyLimitOrder;
   private final PlaceSellLimitOrderUseCase placeSellLimitOrder;
   private final PlaceStopLossOrderUseCase placeStopLossOrder;
-  private final PreviewOrderUseCase previewOrderUseCase;
-  private final Exchange exchange;
 
-  public StockDetailController(
+  public OrderPlacementController(
       UUID gameId,
       BuyShareUseCase buyShare,
       SellShareUseCase sellShare,
-      GetPortfolioUseCase getPortfolio,
-      PlaceBuyLimitOrderUseCase placeBuyLimitOrderUseCase,
-      PlaceSellLimitOrderUseCase sellLimitOrder,
-      PlaceStopLossOrderUseCase placeStopLossOrder,
-      PreviewOrderUseCase previewOrderUseCase, Exchange exchange
+      PlaceBuyLimitOrderUseCase placeBuyLimitOrder,
+      PlaceSellLimitOrderUseCase placeSellLimitOrder,
+      PlaceStopLossOrderUseCase placeStopLossOrder
   ) {
     this.gameId = gameId;
     this.buyShare = buyShare;
     this.sellShare = sellShare;
-    this.getPortfolio = getPortfolio;
-    this.placeBuyLimitOrder = placeBuyLimitOrderUseCase;
-    this.placeSellLimitOrder = sellLimitOrder;
+    this.placeBuyLimitOrder = placeBuyLimitOrder;
+    this.placeSellLimitOrder = placeSellLimitOrder;
     this.placeStopLossOrder = placeStopLossOrder;
-    this.previewOrderUseCase = previewOrderUseCase;
-    this.exchange = exchange;
-  }
-  public void buy(String symbol, BigDecimal quantity) {
-    buyShare.execute(new BuyShareUseCase.Request(gameId, symbol, quantity));
-  }
-
-  public Optional<ShareDto> getHolding(String symbol) {
-    List<ShareDto> portfolio = getPortfolio.execute(new Request(gameId)).shares();
-    return portfolio.stream()
-        .filter(s -> s.symbol().equals(symbol))
-        .findFirst();
-  }
-
-  public StockDto getStock(String symbol) {
-    Stock s = exchange.getStock(symbol);
-    return new StockDto(
-        s.getSymbol(),
-        s.getCompany(),
-        s.getHistoricalPrices(),
-        s.getSalesPrice(),
-        s.getLatestPriceChange(),
-        s.getLatestPriceChangePercent()
-    );
-  }
-
-  public Exchange exchange() {
-    return exchange;
   }
 
   public void placeOrder(DraftOrder draftOrder) {
@@ -108,7 +62,6 @@ public class StockDetailController {
   public void placeLimitOrder(DraftOrder draftOrder) {
     if (draftOrder.side() == OrderSide.BUY
         && draftOrder.orderType() == OrderType.TARGET_PRICE) {
-
       placeBuyLimitOrder.execute(new PlaceBuyLimitOrderUseCase.Request(
           gameId,
           draftOrder.stock().symbol(),
@@ -121,7 +74,6 @@ public class StockDetailController {
 
     if (draftOrder.side() == OrderSide.SELL
         && draftOrder.orderType() == OrderType.TARGET_PRICE) {
-
       placeSellLimitOrder.execute(new PlaceSellLimitOrderUseCase.Request(
           gameId,
           draftOrder.stock().symbol(),
@@ -134,7 +86,6 @@ public class StockDetailController {
 
     if (draftOrder.side() == OrderSide.SELL
         && draftOrder.orderType() == OrderType.STOP_LOSS) {
-
       placeStopLossOrder.execute(new PlaceStopLossOrderUseCase.Request(
           gameId,
           draftOrder.stock().symbol(),
@@ -146,13 +97,5 @@ public class StockDetailController {
     }
 
     throw new IllegalArgumentException("Unsupported order type");
-  }
-
-  public UUID gameId() {
-    return gameId;
-  }
-
-  public PreviewOrderUseCase previewOrderUseCase() {
-    return previewOrderUseCase;
   }
 }
