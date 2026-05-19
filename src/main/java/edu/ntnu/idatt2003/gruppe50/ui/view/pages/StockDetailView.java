@@ -9,6 +9,7 @@ import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order.OrderFormView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -97,9 +98,13 @@ public class StockDetailView extends StackPane implements Page {
   }
 
   private VBox createStatTiles() {
-    VBox myQuantityBox = new VBox(10, new Label("Quantity"), quantityLabel);
-    VBox gavBox = new VBox(10, new Label("GAV"), gavLabel);
-    VBox profitBox = new VBox(10, new Label("Profit"), profitLabel, profitPercentLabel);
+    VBox myQuantityBox = StatCardFactory.tile("QUANTITY", quantityLabel);
+    VBox gavBox = StatCardFactory.tile("GAV", gavLabel);
+    VBox profitBox = StatCardFactory.tile("PROFIT", profitLabel, profitPercentLabel);
+
+    HBox.setHgrow(myQuantityBox, Priority.ALWAYS);
+    HBox.setHgrow(gavBox, Priority.ALWAYS);
+    HBox.setHgrow(profitBox, Priority.ALWAYS);
 
     HBox numbersBox = new HBox(10, myQuantityBox, gavBox, profitBox);
 

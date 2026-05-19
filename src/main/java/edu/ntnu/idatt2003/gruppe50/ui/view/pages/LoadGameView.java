@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.LoadGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
 import java.math.RoundingMode;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -124,23 +125,18 @@ public class LoadGameView extends StackPane {
     });
 
     HBox panel = new HBox(12,
-        buildStatCard("PLAYER", nameVal),
-        buildStatCard("STATUS", statusVal),
-        buildStatCard("WEEK", weekVal),
-        buildStatCard("NET WORTH", netWorthVal),
-        buildStatCard("LAST PLAYED", lastPlayedVal)
+        statCard("PLAYER", nameVal),
+        statCard("STATUS", statusVal),
+        statCard("WEEK", weekVal),
+        statCard("NET WORTH", netWorthVal),
+        statCard("LAST PLAYED", lastPlayedVal)
     );
     panel.setAlignment(Pos.CENTER_LEFT);
     return panel;
   }
 
-  private VBox buildStatCard(String label, Label valueLabel) {
-    Label overline = new Label(label);
-    overline.getStyleClass().add("stat-label");
-    valueLabel.getStyleClass().add("stat-value");
-
-    VBox card = new VBox(4, overline, valueLabel);
-    card.getStyleClass().add("stat-card");
+  private VBox statCard(String label, Label valueLabel) {
+    VBox card = StatCardFactory.tile(label, valueLabel);
     HBox.setHgrow(card, Priority.ALWAYS);
     return card;
   }

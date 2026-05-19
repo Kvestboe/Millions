@@ -15,6 +15,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.model.WeekHolding;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.WeekSummaryPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -133,10 +134,10 @@ public class GameViewCoordinator {
     deltaValue    = new Label();
     cashValue     = new Label();
 
-    HBox week     = stat("Week",       weekValue,     "bottom-bar-value");
-    HBox netWorth = stat("Net worth",  netWorthValue, "bottom-bar-value-gold");
-    HBox delta    = stat("This week",  deltaValue,    "bottom-bar-value");
-    HBox cash     = stat("Cash",       cashValue,     "bottom-bar-value");
+    VBox week = StatCardFactory.compact("Week", weekValue, "bottom-bar-value");
+    VBox netWorth = StatCardFactory.compact("Net worth", netWorthValue, "bottom-bar-value-gold");
+    VBox delta = StatCardFactory.compact("This week", deltaValue, "bottom-bar-value");
+    VBox cash = StatCardFactory.compact("Cash", cashValue, "bottom-bar-value");
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -146,16 +147,6 @@ public class GameViewCoordinator {
     HBox bar = new HBox(week, netWorth, delta, cash, spacer, advanceButton);
     bar.getStyleClass().add("bottom-bar");
     return bar;
-  }
-
-  private HBox stat(String label, Label value, String valueClass) {
-    Label l = new Label(label.toUpperCase());
-    l.getStyleClass().add("bottom-bar-label");
-    value.getStyleClass().add(valueClass);
-
-    VBox box = new VBox(l, value);
-    box.getStyleClass().add("bottom-bar-stat");
-    return new HBox(box);
   }
 
   private void onAdvanceWeek() {

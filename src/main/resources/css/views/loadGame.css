@@ -18,29 +18,6 @@
 .load-game-subtitle {
     -fx-font-size: 13px;
     -fx-text-fill: -text-secondary;
-    -fx-font-family: "Courier New";
-}
-
-.stat-card {
-    -fx-background-color: -bg-elevated;
-    -fx-background-radius: 8;
-    -fx-border-color: -border;
-    -fx-border-radius: 8;
-    -fx-border-width: 0.5;
-    -fx-padding: 12 16 12 16;
-    -fx-spacing: 4;
-}
-
-.stat-label {
-    -fx-text-fill: -text-secondary;
-    -fx-font-size: 10px;
-    -fx-font-family: "Courier New";
-}
-
-.stat-value {
-    -fx-text-fill: -text-primary;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
 }
 
 .empty-state-label {
