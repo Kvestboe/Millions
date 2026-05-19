@@ -102,7 +102,6 @@ public class GameViewCoordinator {
 
     popupHost = new StackPane(root);
     Scene scene = new Scene(popupHost, WindowConfig.WIDTH, WindowConfig.HEIGHT);
-    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }
 

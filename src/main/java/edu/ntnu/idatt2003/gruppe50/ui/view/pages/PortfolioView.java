@@ -50,7 +50,7 @@ public class PortfolioView extends VBox implements Page {
     holdingsTitle.getStyleClass().add("section-title");
     this.getStyleClass().add("portfolio-view");
     this.getChildren().addAll(title, topSection, holdingsTitle, holdingsTable);
-    this.getStylesheets().add(getClass().getResource("/css/portfolio.css").toExternalForm());
+    this.getStylesheets().add(getClass().getResource("/css/views/portfolio.css").toExternalForm());
   }
 
   @Override

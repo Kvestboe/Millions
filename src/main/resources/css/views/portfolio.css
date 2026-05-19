@@ -1,0 +1,9 @@
+.portfolio-view {
+    -fx-background-color: -bg-primary;
+    -fx-padding: 24;
+    -fx-spacing: 16;
+}
+
+.card-container {
+    -fx-spacing: 12;
+}
