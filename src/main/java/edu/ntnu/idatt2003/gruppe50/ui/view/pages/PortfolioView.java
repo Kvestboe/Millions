@@ -5,7 +5,6 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.PortfolioDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import java.util.function.Consumer;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
@@ -28,7 +27,7 @@ public class PortfolioView extends VBox implements Page {
   private final TableView<ShareDto> holdingsTable;
   private final AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
 
-  public PortfolioView(PortfolioQueryController queryController, GameController gameController,
+  public PortfolioView(PortfolioQueryController queryController,
       Consumer<ShareDto> onShareSelected) {
     Label title = new Label("Portfolio");
     Label holdingsTitle = new Label("My holdings");

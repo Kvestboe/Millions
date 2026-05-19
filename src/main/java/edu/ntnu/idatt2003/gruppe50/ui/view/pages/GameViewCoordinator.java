@@ -111,7 +111,7 @@ public class GameViewCoordinator {
 
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
     pages.put(PageId.MARKET, new MarketView(bundle.market(), stock -> navigateToStockDetail(stock, PageId.MARKET)));
-    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game(),
+    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(),
         shareDto -> bundle.market().findBySymbol(shareDto.symbol())
             .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))));
     pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
