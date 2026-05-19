@@ -1,8 +1,6 @@
-package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
+package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week;
 
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekDetailListView;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekSummaryView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Region;

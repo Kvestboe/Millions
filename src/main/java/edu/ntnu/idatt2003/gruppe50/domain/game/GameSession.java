@@ -248,7 +248,6 @@ public final class GameSession {
     ensureActive();
     exchange.advance();
     netWorthHistory.add(player.getNetWorth());
-    exchange.notifyObservers();
     if (evaluateOutcome() != GameOutcome.ONGOING) {
       finish();
     }
