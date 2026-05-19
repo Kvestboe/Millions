@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class Stock {
 
+  private static final int PRICE_SCALE = 4;
+
   private final String symbol;
   private final String company;
   private final List<BigDecimal> prices;
@@ -80,7 +82,7 @@ public class Stock {
    */
   public void addNewSalesPrice(BigDecimal salesPrice) {
     Validate.positive(salesPrice, "Sales price");
-    prices.add(salesPrice);
+    prices.add(salesPrice.setScale(PRICE_SCALE, RoundingMode.HALF_UP));
   }
 
   /**

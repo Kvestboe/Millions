@@ -7,6 +7,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.Sale;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 public final class DtoMapper {
 
@@ -41,6 +42,17 @@ public final class DtoMapper {
   }
 
   public static StockDto createStockDto(Stock s) {
+    return new StockDto(
+        s.getSymbol(),
+        s.getCompany(),
+        List.of(),
+        s.getSalesPrice(),
+        s.getLatestPriceChange(),
+        s.getLatestPriceChangePercent()
+    );
+  }
+
+  public static StockDto createStockDetail(Stock s) {
     return new StockDto(
         s.getSymbol(),
         s.getCompany(),
