@@ -7,7 +7,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order.OrderFormView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
