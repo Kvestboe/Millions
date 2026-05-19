@@ -31,7 +31,8 @@ public record GameSessionControllerBundle(
         new MarketQueryController(session.getGameId(), m.getMarket, session.getExchange()),
         new PortfolioQueryController(session.getGameId(), m.getPortfolio, session.getExchange()),
         new TransactionQueryController(session.getGameId(), m.getTransactions, session.getExchange()),
-        new StockDetailQueryController(session.getGameId(), m.getPortfolio, m.previewOrder),
+        new StockDetailQueryController(
+            session.getGameId(), m.getPortfolio, m.getMarket, m.previewOrder, session.getExchange()),
         new OrderPlacementController(
             session.getGameId(),
             m.buyShare,

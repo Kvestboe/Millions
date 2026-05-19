@@ -5,6 +5,7 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order.OrderFormView;
@@ -21,10 +22,11 @@ import javafx.scene.layout.VBox;
 
 public class StockDetailView extends StackPane implements Page {
 
-  private final StockDto stock;
+  private StockDto stock;
   private final StockDetailQueryController queryController;
   private final OrderPlacementController orderController;
   private final Runnable onBack;
+  private final Observer exchangeObserver = this::refresh;
 
   // Header-felter (oppdateres i refresh)
   private final Label priceLabel = new Label();
@@ -67,7 +69,14 @@ public class StockDetailView extends StackPane implements Page {
     errorLabel.getStyleClass().add("error-label");
     errorLabel.setVisible(false);
 
-    refreshHolding();
+    refresh();
+
+    queryController.subscribe(exchangeObserver);
+    sceneProperty().addListener((obs, oldScene, newScene) -> {
+      if (newScene == null) {
+        queryController.unsubscribe(exchangeObserver);
+      }
+    });
   }
 
   @Override
@@ -142,6 +151,7 @@ public class StockDetailView extends StackPane implements Page {
   }
 
   private void refresh() {
+    stock = queryController.getStock(stock.symbol()).orElse(stock);
     priceLabel.setText(stock.salesPrice() + " kr");
     priceChangeLabel.setText(formatSigned(stock.priceChange()) + " kr");
     percentChangeLabel.setText(formatSigned(stock.percentChange()) + "%");

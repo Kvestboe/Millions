@@ -45,7 +45,7 @@ public class ShopItemFactory {
             "A calm green trading desk theme.",
             "forest-fund",
             35,
-            new BigDecimal("50 000")
+            new BigDecimal("50000")
         ),
         createThemeItem(
           "theme-vintage-cream",
@@ -53,7 +53,7 @@ public class ShopItemFactory {
           "A vintage cream theme.",
           "vintage-cream",
           50,
-          new BigDecimal("100 000")
+          new BigDecimal("100000")
         ),
         createThemeItem(
             "theme-copper-shadow",
@@ -61,7 +61,7 @@ public class ShopItemFactory {
             "A warm copper and shadow theme.",
             "copper-shadow",
             70,
-            new BigDecimal("200 000")
+            new BigDecimal("200000")
         ),
         createThemeItem(
             "theme-royal-gold",
@@ -69,7 +69,7 @@ public class ShopItemFactory {
             "A premium gold portfolio theme.",
             "royal-gold",
             120,
-            new BigDecimal("800 000")
+            new BigDecimal("800000")
         )
     );
   }
