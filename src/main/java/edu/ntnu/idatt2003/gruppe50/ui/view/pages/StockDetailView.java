@@ -1,10 +1,10 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.application.query.ShareDto;
-import edu.ntnu.idatt2003.gruppe50.application.query.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
-import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.OrderFormView;
@@ -21,11 +21,10 @@ import javafx.scene.layout.VBox;
 
 public class StockDetailView extends StackPane implements Page {
 
-  private final StockDetailController controller;
+  private final StockDto stock;
+  private final StockDetailQueryController queryController;
+  private final OrderPlacementController orderController;
   private final Runnable onBack;
-
-  // Mutable — refreshes etter advance
-  private StockDto stock;
 
   // Header-felter (oppdateres i refresh)
   private final Label priceLabel = new Label();
@@ -44,12 +43,13 @@ public class StockDetailView extends StackPane implements Page {
   private final VBox content = new VBox(10);
   private final Button sell = new Button("Sell");
 
-  // Holder en referanse slik at vi kan removeObserver senere
-  private final Observer exchangeObserver = this::refresh;
+  private final Label errorLabel = new Label();
 
-  public StockDetailView(StockDto stock, StockDetailController controller, Runnable onBack) {
+  public StockDetailView(StockDto stock, StockDetailQueryController queryController,
+      OrderPlacementController orderController, Runnable onBack) {
     this.stock = stock;
-    this.controller = controller;
+    this.queryController = queryController;
+    this.orderController = orderController;
     this.onBack = onBack;
 
     Button backBtn = new Button("Back");
@@ -64,17 +64,10 @@ public class StockDetailView extends StackPane implements Page {
 
     getChildren().addAll(content);
 
-    refresh();
+    errorLabel.getStyleClass().add("error-label");
+    errorLabel.setVisible(false);
 
-    // Lytt på exchange-endringer (advance, buy, sell, order fill)
-    controller.exchange().addObserver(exchangeObserver);
-
-    // Rydd opp når viewet detaches fra scenen
-    sceneProperty().addListener((obs, oldScene, newScene) -> {
-      if (newScene == null) {
-        controller.exchange().removeObserver(exchangeObserver);
-      }
-    });
+    refreshHolding();
   }
 
   @Override
@@ -120,17 +113,27 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleBuy() {
     OrderFormView popup = new OrderFormView(
-        controller.gameId(), OrderSide.BUY, stock,
-        this::closePopup, this::handleConfirmedOrder,
-        controller.previewOrderUseCase());
+        queryController.gameId(),
+        OrderSide.BUY,
+        stock,
+        this::closePopup,
+        this::handleConfirmedOrder,
+        queryController.previewOrderUseCase()
+    );
+
     getChildren().add(popup);
   }
 
   private void handleSell() {
     OrderFormView popup = new OrderFormView(
-        controller.gameId(), OrderSide.SELL, stock,
-        this::closePopup, this::handleConfirmedOrder,
-        controller.previewOrderUseCase());
+        queryController.gameId(),
+        OrderSide.SELL,
+        stock,
+        this::closePopup,
+        this::handleConfirmedOrder,
+        queryController.previewOrderUseCase()
+    );
+
     getChildren().add(popup);
   }
 
@@ -138,10 +141,7 @@ public class StockDetailView extends StackPane implements Page {
     getChildren().removeIf(node -> node instanceof OrderFormView);
   }
 
-  /** Henter ferskt stock-snapshot og oppdaterer alle dynamiske felter. */
   private void refresh() {
-    this.stock = controller.getStock(stock.symbol());
-
     priceLabel.setText(stock.salesPrice() + " kr");
     priceChangeLabel.setText(formatSigned(stock.priceChange()) + " kr");
     percentChangeLabel.setText(formatSigned(stock.percentChange()) + "%");
@@ -155,7 +155,7 @@ public class StockDetailView extends StackPane implements Page {
   }
 
   private void refreshHolding() {
-    Optional<ShareDto> holding = controller.getHolding(stock.symbol());
+    Optional<ShareDto> holding = queryController.getHolding(stock.symbol());
     if (holding.isEmpty()) {
       myHoldingBox.setVisible(false);
       myHoldingBox.setManaged(false);
@@ -189,11 +189,13 @@ public class StockDetailView extends StackPane implements Page {
 
   private void handleConfirmedOrder(DraftOrder draftOrder) {
     try {
-      controller.placeOrder(draftOrder);
+      orderController.placeOrder(draftOrder);
+      errorLabel.setVisible(false);
       closePopup();
       refresh();
     } catch (RuntimeException ex) {
-      System.out.println(ex.getMessage());
+      errorLabel.setText(ex.getMessage());
+      errorLabel.setVisible(true);
     }
   }
 }
