@@ -85,7 +85,7 @@ public class GameViewCoordinator {
     bundle.session().getExchange().addObserver(this::refreshBottomBar);
 
     navManager.navigateTo(PageId.DASHBOARD);
-    bundle.market().setOnStockSelected(this::navigateToStockDetail);
+    bundle.market().setOnStockSelected(stock -> navigateToStockDetail(stock, PageId.MARKET));
 
     bundle.game().setOutcomeListener(outcome -> {
       GameSession session = bundle.session();
@@ -110,8 +110,10 @@ public class GameViewCoordinator {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
-    pages.put(PageId.MARKET, new MarketView(bundle.market(), this::navigateToStockDetail));
-    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game()));
+    pages.put(PageId.MARKET, new MarketView(bundle.market(), stock -> navigateToStockDetail(stock, PageId.MARKET)));
+    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game(),
+        shareDto -> bundle.market().findBySymbol(shareDto.symbol())
+            .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))));
     pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
@@ -119,12 +121,12 @@ public class GameViewCoordinator {
     return pages;
   }
 
-  private void navigateToStockDetail(StockDto stock) {
+  private void navigateToStockDetail(StockDto stock, PageId backTo) {
     StockDetailView view = new StockDetailView(
         stock,
         bundle.stockQuery(),
         bundle.orderPlacement(),
-        () -> navManager.navigateTo(PageId.MARKET));
+        () -> navManager.navigateTo(backTo));
     navManager.show(view);
   }
 

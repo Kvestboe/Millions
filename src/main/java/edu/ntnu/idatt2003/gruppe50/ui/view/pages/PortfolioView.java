@@ -4,6 +4,7 @@ import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactor
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.PortfolioDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
+import java.util.function.Consumer;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
@@ -27,7 +28,8 @@ public class PortfolioView extends VBox implements Page {
   private final TableView<ShareDto> holdingsTable;
   private final AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
 
-  public PortfolioView(PortfolioQueryController queryController, GameController gameController) {
+  public PortfolioView(PortfolioQueryController queryController, GameController gameController,
+      Consumer<ShareDto> onShareSelected) {
     Label title = new Label("Portfolio");
     Label holdingsTitle = new Label("My holdings");
 
@@ -35,7 +37,7 @@ public class PortfolioView extends VBox implements Page {
 
     VBox cardContainer = createCardContainer(p);
     AreaChart<Number, Number> chart = createNetWorthChart(p.get());
-    holdingsTable = createHoldingsTable();
+    holdingsTable = createHoldingsTable(onShareSelected);
 
     holdingsTable.setItems(queryController.getShares());
 
@@ -94,8 +96,8 @@ public class PortfolioView extends VBox implements Page {
     return netWorthChart.getChart();
   }
 
-  private TableView<ShareDto> createHoldingsTable() {
-    TableView<ShareDto> holdingsTable = createTable(List.of(
+  private TableView<ShareDto> createHoldingsTable(Consumer<ShareDto> onShareSelected) {
+    TableView<ShareDto> t = createTable(List.of(
         ColumnPresets.text("Symbol", ShareDto::symbol),
         ColumnPresets.text("Company", ShareDto::stock),
         ColumnPresets.bigDecimal("Quantity", ShareDto::quantity),
@@ -103,10 +105,15 @@ public class PortfolioView extends VBox implements Page {
         ColumnPresets.currency("Current value", ShareDto::currentShareValue),
         ColumnPresets.signedCurrency("Gain/Loss", ShareDto::gain),
         ColumnPresets.signedPercent("Change %", ShareDto::percentageGain)
-
     ));
-    holdingsTable.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
-    return holdingsTable;
+    t.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
+    t.setOnMousePressed(_ -> {
+      ShareDto selected = holdingsTable.getSelectionModel().getSelectedItem();
+      if (selected != null) {
+        onShareSelected.accept(selected);
+      }
+    });
+    return t;
   }
 
 }

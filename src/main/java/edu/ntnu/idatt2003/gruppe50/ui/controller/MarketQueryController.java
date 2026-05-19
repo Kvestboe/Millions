@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase.Response;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import javafx.collections.FXCollections;
@@ -32,6 +33,10 @@ public final class MarketQueryController implements Observer {
 
   public ObservableList<StockDto> getStocks() {
     return stocks;
+  }
+
+  public Optional<StockDto> findBySymbol(String symbol) {
+    return stocks.stream().filter(s -> s.symbol().equals(symbol)).findFirst();
   }
 
   public void setOnStockSelected(Consumer<StockDto> onStockSelected) {
