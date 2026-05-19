@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javafx.scene.Node;
@@ -39,9 +40,11 @@ public class GameViewCoordinator {
   private final GameSessionControllerBundle bundle;
   private final Runnable onMainMenu;
   private final Runnable onPlayAgain;
+  private final Consumer<String> onThemeChanged;
   private NavigationManager navManager;
   private BorderPane root;
-  private StackPane popupHost;   // ← ny linje
+  private StackPane popupHost;
+  private ShopView shopView;
 
   private HBox bottomBar;
   private Label weekValue;
@@ -54,10 +57,11 @@ public class GameViewCoordinator {
   private BigDecimal lastWeeklyDelta = BigDecimal.ZERO;
   private static final BigDecimal DANGER_ZONE_MULTIPLIER = new BigDecimal("1.15");
 
-  public GameViewCoordinator(GameSessionControllerBundle bundle, Runnable onMainMenu, Runnable onPlayAgain) {
+  public GameViewCoordinator(GameSessionControllerBundle bundle, Runnable onMainMenu, Runnable onPlayAgain, Consumer<String> onThemeChanged) {
     this.bundle = bundle;
     this.onMainMenu = onMainMenu;
     this.onPlayAgain = onPlayAgain;
+    this.onThemeChanged = onThemeChanged;
   }
 
   public Scene getScene() {
@@ -101,6 +105,7 @@ public class GameViewCoordinator {
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
     pages.put(PageId.MARKET, new MarketView(bundle.market()));
     pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game()));
+    pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
 
@@ -152,6 +157,11 @@ public class GameViewCoordinator {
     BigDecimal before = session.getPlayer().getNetWorth();
 
     bundle.game().advanceWeek();
+    bundle.shop().advanceCoinExchange();
+
+    if (shopView != null) {
+      shopView.refresh();
+    }
 
     if (session.getState() == GameSessionState.FINISHED) {
       refreshBottomBar();

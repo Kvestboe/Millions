@@ -60,7 +60,10 @@ public final class App extends Application {
   public void switchToGame(UUID gameId) {
     module.loadGameSession.execute(new LoadGameSessionUseCase.Request(gameId));
     GameSessionControllerBundle bundle = module.gameBundle(gameId);
-    Scene scene = new GameViewCoordinator(bundle, this::showMainMenu, this::showNewGame).getScene();
+    Scene scene = new GameViewCoordinator(bundle, this::showMainMenu, this::showNewGame, themeName -> {
+      themeManager.setTheme(themeName);
+      themeManager.apply(stage.getScene());
+    }).getScene();
     themeManager.apply(scene);
     stage.setFullScreen(isFullscreen);
     stage.setScene(scene);
