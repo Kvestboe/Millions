@@ -16,6 +16,7 @@ import edu.ntnu.idatt2003.gruppe50.application.query.GetPendingOrdersUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetStockDetailUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTradingLogUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionMarkersUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
@@ -40,6 +41,7 @@ public final class AppModule {
   public final GetTradingLogUseCase getTradingLog = new GetTradingLogUseCase(sessions);
   public final GetMarketUseCase getMarket = new GetMarketUseCase(sessions);
   public final GetStockDetailUseCase getStockDetail = new GetStockDetailUseCase(sessions);
+  public final GetTransactionMarkersUseCase getTransactionMarkers = new GetTransactionMarkersUseCase(sessions);
   public final PlaceBuyLimitOrderUseCase buyLimitOrder = new PlaceBuyLimitOrderUseCase(sessions);
   public final PlaceSellLimitOrderUseCase sellLimitOrder = new PlaceSellLimitOrderUseCase(sessions);
   public final GetPendingOrdersUseCase getPendingOrders = new GetPendingOrdersUseCase(sessions);

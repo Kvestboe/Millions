@@ -19,3 +19,27 @@
 .portfolio-view .table-view .table-row-cell:empty {
     -fx-background-color: -bg-surface;
 }
+
+/* Buy marker dots (series 1 = blue) */
+.portfolio-view .chart-series-area-line.default-color1,
+.portfolio-view .chart-series-area-fill.default-color1 {
+    -fx-stroke: transparent; -fx-fill: transparent;
+}
+.portfolio-view .chart-area-symbol.default-color1 {
+    -fx-background-color: #3B82F6, -bg-surface;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* Sell marker dots (series 2 = red) */
+.portfolio-view .chart-series-area-line.default-color2,
+.portfolio-view .chart-series-area-fill.default-color2 {
+    -fx-stroke: transparent; -fx-fill: transparent;
+}
+.portfolio-view .chart-area-symbol.default-color2 {
+    -fx-background-color: #EF4444, -bg-surface;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}

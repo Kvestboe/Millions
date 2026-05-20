@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetStockDetailUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionMarkersUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
@@ -16,6 +17,7 @@ public class StockDetailQueryController {
   private final UUID gameId;
   private final GetPortfolioUseCase getPortfolio;
   private final GetStockDetailUseCase getStockDetail;
+  private final GetTransactionMarkersUseCase getTransactionMarkers;
   private final PreviewOrderUseCase previewOrderUseCase;
   private final Exchange exchange;
 
@@ -23,12 +25,14 @@ public class StockDetailQueryController {
       UUID gameId,
       GetPortfolioUseCase getPortfolio,
       GetStockDetailUseCase getStockDetail,
+      GetTransactionMarkersUseCase getTransactionMarkers,
       PreviewOrderUseCase previewOrderUseCase,
       Exchange exchange
   ) {
     this.gameId = gameId;
     this.getPortfolio = getPortfolio;
     this.getStockDetail = getStockDetail;
+    this.getTransactionMarkers = getTransactionMarkers;
     this.previewOrderUseCase = previewOrderUseCase;
     this.exchange = exchange;
   }
@@ -43,6 +47,10 @@ public class StockDetailQueryController {
 
   public Optional<StockDto> getStock(String symbol) {
     return getStockDetail.execute(new GetStockDetailUseCase.Request(gameId, symbol));
+  }
+
+  public GetTransactionMarkersUseCase.Response getTransactionMarkers(String symbol) {
+    return getTransactionMarkers.execute(new GetTransactionMarkersUseCase.Request(gameId, symbol));
   }
 
   public void subscribe(Observer observer) {

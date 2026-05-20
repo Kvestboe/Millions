@@ -195,6 +195,8 @@ public class StockDetailView extends StackPane implements Page {
 
     priceChart.display("Price development", stock.prices());
     priceChart.getChart().setLegendVisible(false);
+    var markers = queryController.getTransactionMarkers(stock.symbol());
+    priceChart.setMarkers(markers.buyWeeks(), markers.sellWeeks(), stock.prices());
 
     refreshHolding();
   }

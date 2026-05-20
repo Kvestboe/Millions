@@ -41,9 +41,10 @@ public class PortfolioView extends VBox implements Page {
 
     holdingsTable.setItems(queryController.getShares());
 
-    p.addListener((_, _, portfolio) ->
-        netWorthChart.display("Net Worth", portfolio.netWorthHistory())
-    );
+    p.addListener((_, _, portfolio) -> {
+      netWorthChart.display("Net Worth", portfolio.netWorthHistory());
+      netWorthChart.setMarkers(portfolio.buyWeeks(), portfolio.sellWeeks(), portfolio.netWorthHistory());
+    });
 
     HBox topSection = new HBox(16, cardContainer, chart);
     HBox.setHgrow(chart, Priority.ALWAYS);
@@ -94,6 +95,7 @@ public class PortfolioView extends VBox implements Page {
 
   private AreaChart<Number, Number> createNetWorthChart(PortfolioDto portfolio) {
     netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
+    netWorthChart.setMarkers(portfolio.buyWeeks(), portfolio.sellWeeks(), portfolio.netWorthHistory());
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
   }
