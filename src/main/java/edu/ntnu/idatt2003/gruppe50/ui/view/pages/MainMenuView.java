@@ -158,6 +158,7 @@ public class MainMenuView extends StackPane{
 
     newGameBtn.setOnAction(e -> onNewGame.run());
     loadGameBtn.setOnAction(e -> { if (onLoadGame != null) onLoadGame.run(); });
+    leaderboardBtn.setOnAction(e -> { if (onLeaderboard != null) onLeaderboard.run();});
 
     HBox.setHgrow(newGameBtn, Priority.ALWAYS);
     HBox.setHgrow(loadGameBtn, Priority.ALWAYS);
