@@ -31,6 +31,58 @@ public final class DtoMapper {
     );
   }
 
+  /**
+   * Creates one portfolio row for multiple share lots of the same stock.
+   *
+   * <p>The returned DTO uses total quantity, weighted average purchase price
+   * and total gain/loss across all lots.
+   *
+   * @param shares share lots for the same stock
+   * @return an aggregated share DTO for portfolio display
+   * @throws IllegalArgumentException if shares is null or empty
+   */
+  public static ShareDto createAggregatedShareDto(List<Share> shares) {
+    if (shares == null || shares.isEmpty()) {
+      throw new IllegalArgumentException("Shares cannot be null or empty");
+    }
+
+    Share first = shares.getFirst();
+
+    BigDecimal totalQuantity = shares.stream()
+        .map(Share::getQuantity)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    BigDecimal totalPurchaseValue = shares.stream()
+        .map(share -> share.getPurchasePrice().multiply(share.getQuantity()))
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    BigDecimal gav = totalPurchaseValue.divide(
+        totalQuantity,
+        2,
+        RoundingMode.HALF_UP
+    );
+
+    BigDecimal currentPrice = first.getStock().getSalesPrice();
+    BigDecimal currentShareValue = currentPrice.multiply(totalQuantity);
+    BigDecimal gain = currentShareValue.subtract(totalPurchaseValue);
+
+    BigDecimal percentageGain = currentPrice.subtract(gav)
+        .divide(gav, 4, RoundingMode.HALF_UP)
+        .multiply(BigDecimal.valueOf(100));
+
+    return new ShareDto(
+        first.getShareId(),
+        first.getStock().getSymbol(),
+        first.getStock().getCompany(),
+        totalQuantity,
+        gav,
+        currentPrice,
+        currentShareValue,
+        gain,
+        percentageGain
+    );
+  }
+
   public static TransactionType defineTransactionType(Transaction transaction) {
     if (transaction instanceof Purchase) {
       return TransactionType.PURCHASE;
