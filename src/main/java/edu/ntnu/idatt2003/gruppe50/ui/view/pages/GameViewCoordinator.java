@@ -26,6 +26,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.List;
@@ -231,13 +232,20 @@ public class GameViewCoordinator {
         .sorted((a, b) -> b.weeklyDelta().abs().compareTo(a.weeklyDelta().abs()))
         .toList();
 
+    BigDecimal hangarCost = bundle.session().getPlayer().getStartingMoney()
+        .multiply(BigDecimal.valueOf(bundle.session().getDifficulty().getHangarCostRate()))
+        .setScale(0, RoundingMode.HALF_UP);
+
     return new WeekSummary(
         prevWeek,
         bundle.session().getExchange().getWeek(),
-        before, after,
-        player.getMoney(),
+        before,
+        after,
+        bundle.session().getPlayer().getMoney(),
+        hangarCost,
         holdings,
-        List.of(), List.of()
+        List.of(),
+        List.of()
     );
   }
 

@@ -9,11 +9,21 @@ public record WeekSummary(
     BigDecimal netWorthBefore,
     BigDecimal netWorthAfter,
     BigDecimal cash,
+    BigDecimal hangarCost,
     List<WeekHolding> holdings,
     List<String> news,
     List<String> notifications
 ) {
   public BigDecimal weeklyDelta() {
     return netWorthAfter.subtract(netWorthBefore);
+  }
+
+  /**
+   * Returns the portfolio movement before weekly hangar cost is deducted.
+   *
+   * @return weekly net worth delta plus the hangar cost
+   */
+  public BigDecimal portfolioMovement() {
+    return weeklyDelta().add(hangarCost);
   }
 }
