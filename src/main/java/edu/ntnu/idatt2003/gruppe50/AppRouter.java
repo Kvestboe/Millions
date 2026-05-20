@@ -9,6 +9,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
+import edu.ntnu.idatt2003.gruppe50.ui.view.pages.LeaderboardView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.LoadGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.LoadGameView;
@@ -51,6 +52,7 @@ public final class AppRouter {
   public void showMainMenu() {
     MainMenuView menu = new MainMenuView(this::showNewGame, this::showSettings, Platform::exit);
     menu.setOnLoadGame(this::showLoadGame);
+    menu.setOnLeaderboard(this::showLeaderboard);
     menu.setOnContinueGame(this::showContinueGame);
     show(new Scene(menu, WindowConfig.WIDTH, WindowConfig.HEIGHT));
   }
@@ -103,8 +105,15 @@ public final class AppRouter {
         themeName -> {
           themeManager.setTheme(themeName);
           themeManager.apply(stage.getScene());
-        }
+        },
+        module.leaderboard,
+        module.leaderboardFile
     ).getScene());
+  }
+
+  private void showLeaderboard() {
+    LeaderboardView view = new LeaderboardView(module.leaderboard, this::showMainMenu);
+    show(new Scene(view, WindowConfig.WIDTH, WindowConfig.HEIGHT));
   }
 
   private void showSettings() {

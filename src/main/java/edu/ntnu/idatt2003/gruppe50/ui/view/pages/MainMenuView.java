@@ -20,6 +20,7 @@ public class MainMenuView extends StackPane{
   private final Runnable onQuit;
   private final Runnable onSettings;
   private Runnable onLoadGame;
+  private Runnable onLeaderboard;
   private Runnable onContinueGame;
 
   public MainMenuView(Runnable onNewGame, Runnable onSettings, Runnable onQuit) {
@@ -31,6 +32,10 @@ public class MainMenuView extends StackPane{
 
   public void setOnLoadGame(Runnable onLoadGame) {
     this.onLoadGame = onLoadGame;
+  }
+
+  public void setOnLeaderboard(Runnable onLeaderboard) {
+    this.onLeaderboard = onLeaderboard;
   }
 
   public void setOnContinueGame(Runnable onContinueGame) {
@@ -148,7 +153,8 @@ public class MainMenuView extends StackPane{
 
     Button newGameBtn    = ButtonFactory.iconButton("✚", "New Game",    onNewGame);
     Button loadGameBtn   = ButtonFactory.iconButton("⬆", "Load Game",   () -> { if (onLoadGame != null) onLoadGame.run(); });
-    Button leaderboardBtn = ButtonFactory.iconButton("★", "Leaderboard", () -> {});
+    Button leaderboardBtn = ButtonFactory.iconButton("★", "Leaderboard",() -> { if (onLeaderboard != null) onLeaderboard.run(); });
+    leaderboardBtn.setOnAction(e -> { if (onLeaderboard != null) onLeaderboard.run();});
 
     HBox.setHgrow(newGameBtn, Priority.ALWAYS);
     HBox.setHgrow(loadGameBtn, Priority.ALWAYS);

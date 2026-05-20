@@ -20,9 +20,11 @@ import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionMarkersUseCas
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
+import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.JsonFileGameSessionRepository;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.LeaderboardFileHandler;
 import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
 import java.util.UUID;
 
@@ -49,6 +51,8 @@ public final class AppModule {
   public final PreviewOrderUseCase previewOrder = new PreviewOrderUseCase(sessions);
   public final GetAllSavesUseCase getAllSaves = new GetAllSavesUseCase(sessions);
   public final DeleteSaveUseCase deleteSave = new DeleteSaveUseCase(sessions);
+  public final LeaderboardFileHandler leaderboardFile = new LeaderboardFileHandler();
+  public final Leaderboard leaderboard = leaderboardFile.load();
   public final SoundManager soundManager = new SoundManager();
 
   public GameSessionControllerBundle gameBundle(UUID gameId) {
