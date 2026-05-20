@@ -3,3 +3,19 @@
     -fx-padding: 24;
     -fx-spacing: 16;
 }
+
+.info-card .card-value {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.info-card .net-worth-value {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.portfolio-view .table-view .table-row-cell:empty {
+    -fx-background-color: -bg-surface;
+}

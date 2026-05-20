@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -90,11 +91,12 @@ public class LoadGameView extends StackPane {
     ));
     table.setItems(controller.getSaves());
     table.setPrefHeight(220);
-    table.setOnMousePressed(_ -> {
-      SaveSummaryDto selected = table.getSelectionModel().getSelectedItem();
-      if (selected != null) {
-        controller.select(selected);
-      }
+    table.setRowFactory(_ -> {
+      TableRow<SaveSummaryDto> row = new TableRow<>();
+      row.setOnMousePressed(_ -> {
+        if (!row.isEmpty()) controller.select(row.getItem());
+      });
+      return row;
     });
     return table;
   }

@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -78,6 +79,8 @@ public class PortfolioView extends VBox implements Page {
     portfolioValueCard.getStyleClass().add("info-card");
     cashBalanceCard.getStyleClass().add("info-card");
     netWorthCard.getStyleClass().add("info-card");
+    portfolioValueLabel.getStyleClass().add("card-value");
+    playerCashLabel.getStyleClass().add("card-value");
     netWorthLabel.getStyleClass().add("net-worth-value");
 
     VBox container = new VBox(portfolioValueCard, cashBalanceCard, netWorthCard);
@@ -106,11 +109,12 @@ public class PortfolioView extends VBox implements Page {
         ColumnPresets.signedPercent("Change %", ShareDto::percentageGain)
     ));
     t.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
-    t.setOnMousePressed(_ -> {
-      ShareDto selected = holdingsTable.getSelectionModel().getSelectedItem();
-      if (selected != null) {
-        onShareSelected.accept(selected);
-      }
+    t.setRowFactory(_ -> {
+      TableRow<ShareDto> row = new TableRow<>();
+      row.setOnMousePressed(_ -> {
+        if (!row.isEmpty()) onShareSelected.accept(row.getItem());
+      });
+      return row;
     });
     return t;
   }
