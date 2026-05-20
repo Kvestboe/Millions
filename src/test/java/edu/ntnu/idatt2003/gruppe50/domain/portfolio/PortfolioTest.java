@@ -24,9 +24,9 @@ class PortfolioTest {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("330"));
     Stock stock2 = new Stock("AAPL", "Apple", bd("400"));
 
-    share1 = new Share(stock, bd("5"), bd("310"));
-    share2 = new Share(stock, bd("10"), bd("320"));
-    share3 = new Share(stock2, bd("10"), bd("400"));
+    share1 = new Share(stock, bd("5"), bd("310"), 1);
+    share2 = new Share(stock, bd("10"), bd("320"), 1);
+    share3 = new Share(stock2, bd("10"), bd("400"), 1);
   }
 
   @Test
@@ -163,7 +163,7 @@ class PortfolioTest {
     portfolio.addShare(share1);
     portfolio.addShare(share2);
     portfolio.addShare(share3);
-    assertEquals(bd("8815.350"), portfolio.getNetWorth());
+    assertEquals(0, bd("8815.350").compareTo(portfolio.getNetWorth()));
   }
 
   // Helper method

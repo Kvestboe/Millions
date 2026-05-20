@@ -15,7 +15,7 @@ public class PurchaseCalculatorTest {
   @BeforeEach
   void setup() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("100"));
-    share = new Share(stock, bd("5"), bd("100"));
+    share = new Share(stock, bd("5"), bd("100"), 1);
     calc = new PurchaseCalculator(share);
   }
 
@@ -31,7 +31,7 @@ public class PurchaseCalculatorTest {
 
   @Test
   void calculateGross_returnsCorrectValue() {
-    assertEquals(bd("500"), calc.calculateGross());
+    assertEquals(0, bd("500").compareTo(calc.calculateGross()));
   }
 
   @Test

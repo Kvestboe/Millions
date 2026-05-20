@@ -1,0 +1,33 @@
+/* ============================================
+   Millions - Default Dark Theme
+   Palett: mørk blåsvart med gull-aksent
+   ============================================ */
+
+.root {
+
+    /* --- Bakgrunner --- */
+    -bg-primary: #061016; /* Sidebakgrunn */
+    -bg-surface: #0D1E2A; /* Kort, navbar */
+    -bg-elevated: #132838; /* Input, hover-overflater */
+    -bg-overlay: #193245; /* Popup, modal */
+
+    /* --- Aksenter --- */
+    -accent-gold: #FFD166; /* Primær aksent */
+    -accent-indigo: #5B6EE1; /* Sekundær aksent */
+    -accent-teal: #00BFA6; /* Chart-fill, linjer */
+
+    /* --- Tekst --- */
+    -text-primary: #F8FAFC; /* Hovedtekst */
+    -text-secondary: #7D8CA3; /* Muted labels */
+    -text-disabled: #3D4A5C; /* Deaktivert */
+
+    /* --- Status --- */
+    -gain: #4ADE80; /* Positiv endring */
+    -loss: #F87171; /* Negativ endring */
+    -error: #F87171; /* Feilmeldinger */
+    -warn:  #FACC15; /* Advarsler */
+
+    /* --- Border --- */
+    -border:         #1F3344; /* Standard border */
+    -border-subtle:  #132838; /* Subtil separator */
+}

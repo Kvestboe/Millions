@@ -1,9 +1,10 @@
 package edu.ntnu.idatt2003.gruppe50.application.query;
 
-import static edu.ntnu.idatt2003.gruppe50.application.query.DtoMapper.createShareDto;
-import static edu.ntnu.idatt2003.gruppe50.application.query.DtoMapper.defineTransactionType;
+import static edu.ntnu.idatt2003.gruppe50.application.query.dto.DtoMapper.createShareDto;
+import static edu.ntnu.idatt2003.gruppe50.application.query.dto.DtoMapper.defineTransactionType;
 
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.TransactionDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;

@@ -1,6 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.domain.trade;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -120,5 +122,53 @@ public class TransactionArchive {
         .map(Transaction::getWeek)
         .distinct()
         .count();
+  }
+
+  public int size() {
+    return transactions.size();
+  }
+
+  public long countPurchases() {
+    return transactions.stream().filter(t -> t instanceof Purchase).count();
+  }
+
+  public long countSales() {
+    return transactions.stream().filter(t -> t instanceof Sale).count();
+  }
+
+  public BigDecimal totalCommission() {
+    return transactions.stream()
+        .map(t -> t.getCalculator().calculateCommission())
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  public BigDecimal totalTax() {
+    return transactions.stream()
+        .map(t -> t.getCalculator().calculateTax())
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  /**
+   * Realized profit/loss across all committed sales: for each sale,
+   * (net proceeds after fees/taxes) − (purchase-price cost basis).
+   */
+  public BigDecimal realizedProfitLoss() {
+    return transactions.stream()
+        .filter(t -> t instanceof Sale)
+        .map(s -> s.getCalculator().calculateTotal()
+            .subtract(s.getShare().getPurchasePrice().multiply(s.getShare().getQuantity())))
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  /** Most recent {@code limit} transactions, newest first. */
+  public List<Transaction> recent(int limit) {
+    if (limit < 0) {
+      throw new IllegalArgumentException("Limit cannot be negative");
+    }
+    int size = transactions.size();
+    int start = Math.max(0, size - limit);
+    List<Transaction> reversed = new ArrayList<>(transactions.subList(start, size));
+    Collections.reverse(reversed);
+    return List.copyOf(reversed);
   }
 }

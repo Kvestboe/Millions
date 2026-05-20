@@ -1,0 +1,135 @@
+.transactions-view {
+    -fx-background-color: -bg-primary;
+    -fx-padding: 24;
+    -fx-spacing: 16;
+}
+
+.trading-log-card {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+    -fx-padding: 18 20 18 20;
+}
+
+.trading-log-card .stat-card {
+    -fx-padding: 10 12 10 12;
+}
+
+.trading-log-card .stat-value {
+    -fx-font-size: 13px;
+}
+
+.trading-log-title {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New";
+}
+
+.trading-log-count {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+}
+
+.trading-log-header {
+    -fx-border-color: transparent transparent -border-subtle transparent;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-padding: 0 0 12 0;
+}
+
+.section-overline {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 10px;
+    -fx-font-family: "Courier New";
+    -fx-font-weight: bold;
+}
+
+.pnl-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.buy-sell-bar {
+    -fx-pref-height: 6;
+    -fx-min-height: 6;
+    -fx-background-radius: 3;
+    -fx-background-color: -bg-elevated;
+}
+
+.buy-sell-bar-buy {
+    -fx-background-color: -gain;
+    -fx-background-radius: 3 0 0 3;
+}
+
+.buy-sell-bar-sell {
+    -fx-background-color: -loss;
+    -fx-background-radius: 0 3 3 0;
+}
+
+.mix-count-buy {
+    -fx-text-fill: -gain;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.mix-count-sell {
+    -fx-text-fill: -loss;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.mix-separator {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 11px;
+}
+
+.activity-wrapper {
+    -fx-min-height: 80;
+    -fx-alignment: center;
+}
+
+.empty-activity {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+    -fx-opacity: 0.7;
+}
+
+.activity-row {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 6;
+    -fx-padding: 6 10 6 10;
+}
+
+.activity-row .label {
+    -fx-font-size: 11px;
+}
+
+.activity-row .gain,
+.activity-row .loss {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.activity-symbol {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.activity-meta {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 11px;
+}
+
+.activity-total {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.filter-toolbar {
+    -fx-spacing: 12;
+    -fx-alignment: center-left;
+}

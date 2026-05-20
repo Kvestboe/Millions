@@ -78,14 +78,14 @@ class StockTest {
   @Test
   void addNewSalesPrice_updatesLatestSalesPrice() {
     stock.addNewSalesPrice(bd(340));
-    assertEquals(bd(340), stock.getSalesPrice());
+    assertEquals(0, bd(340).compareTo(stock.getSalesPrice()));
   }
 
   @Test
   void addNewSalesPrice_multipleUpdates_returnsMostRecent() {
     stock.addNewSalesPrice(bd(340));
     stock.addNewSalesPrice(bd(350));
-    assertEquals(bd(350), stock.getSalesPrice());
+    assertEquals(0, bd(350).compareTo(stock.getSalesPrice()));
   }
 
   @Test
@@ -107,28 +107,28 @@ class StockTest {
   void getHighestPrice_returnsHighest() {
     stock.addNewSalesPrice(bd(340));
     stock.addNewSalesPrice(bd(320));
-    assertEquals(bd(340), stock.getHighestPrice());
+    assertEquals(0, bd(340).compareTo(stock.getHighestPrice()));
   }
 
   @Test
   void getLowestPrice_returnsLowest() {
     stock.addNewSalesPrice(bd(100));
     stock.addNewSalesPrice(bd(200));
-    assertEquals(bd(100), stock.getLowestPrice());
+    assertEquals(0, bd(100).compareTo(stock.getLowestPrice()));
   }
 
   @Test
   void getLatestPriceChange_priceIncrease_positiveChangeReturned() {
     stock.addNewSalesPrice(bd(100));
     stock.addNewSalesPrice(bd(120));
-    assertEquals(bd(20), stock.getLatestPriceChange());
+    assertEquals(0, bd(20).compareTo(stock.getLatestPriceChange()));
   }
 
   @Test
   void getLatestPriceChange_priceDecrease_negativeChangeReturned() {
     stock.addNewSalesPrice(bd(120));
     stock.addNewSalesPrice(bd(100));
-    assertEquals(bd(-20), stock.getLatestPriceChange());
+    assertEquals(0, bd(-20).compareTo(stock.getLatestPriceChange()));
   }
 
   @Test

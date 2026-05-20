@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -16,6 +17,7 @@ public class Share {
   private final Stock stock;
   private final BigDecimal quantity;
   private final BigDecimal purchasePrice;
+  private final int purchaseWeek;
 
   /**
    * Creates a new {@code Share} with the given stock, quantity and purchase price.
@@ -25,17 +27,24 @@ public class Share {
    * @param purchasePrice the purchase price per unit
    * @throws IllegalArgumentException if any argument is null, zero or negative.
    */
-  public Share(Stock stock, BigDecimal quantity, BigDecimal purchasePrice) {
+  public Share(Stock stock, BigDecimal quantity, BigDecimal purchasePrice, int purchaseWeek) {
     shareId = UUID.randomUUID();
     Validate.notNull(stock, "Stock");
     Validate.positive(quantity, "Quantity");
     Validate.positive(purchasePrice, "Purchase price");
+    Validate.positiveInt(purchaseWeek, "Purchase week");
 
     this.stock = stock;
     this.quantity = quantity;
-    this.purchasePrice = purchasePrice;
+    this.purchasePrice = Money.round(purchasePrice);
+    this.purchaseWeek = purchaseWeek;
   }
 
+  /**
+   * Returns the Share ID associated with this share
+   *
+   * @return the share ID
+   */
   public UUID getShareId() {
     return shareId;
   }
@@ -65,5 +74,14 @@ public class Share {
    */
   public BigDecimal getPurchasePrice() {
     return purchasePrice;
+  }
+
+  /**
+   * Returns the week this share was purchased.
+   *
+   * @return the purchase week
+   */
+  public int getPurchaseWeek() {
+    return purchaseWeek;
   }
 }

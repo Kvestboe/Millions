@@ -1,0 +1,11 @@
+.market-root {
+    -fx-background-color: -bg-primary;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+}
+
+.market-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}

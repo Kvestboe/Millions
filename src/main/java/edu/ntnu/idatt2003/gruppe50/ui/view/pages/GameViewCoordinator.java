@@ -1,86 +1,282 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
+import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameOutcome;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameResult;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
+import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
+import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.LeaderboardFileHandler;
+import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
+import edu.ntnu.idatt2003.gruppe50.ui.model.WeekHolding;
+import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.WeekSummaryPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.function.Consumer;
+
+import java.util.stream.Collectors;
+
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 public class GameViewCoordinator {
 
-  private final GameController gameController;
-  private final PortfolioQueryController portfolioQueryController;
-  private final TransactionQueryController transactionQueryController;
-  private final BuyShareUseCase buyShare;
-  private final SellShareUseCase sellShare;
-  private final UUID gameId;
-  private final Exchange exchange;
-  private final Player player;
+  private final GameSessionControllerBundle bundle;
+  private final Runnable onMainMenu;
+  private final Runnable onPlayAgain;
+  private final Consumer<String> onThemeChanged;
+  private final Leaderboard leaderboard;
+  private final LeaderboardFileHandler leaderboardFile;
   private NavigationManager navManager;
-  private final GetPortfolioUseCase getPortfolio;
+  private BorderPane root;
+  private ShopView shopView;
+  private StackPane popupHost;   // ← ny linje
 
-  public GameViewCoordinator(GameController gameController,
-                             PortfolioQueryController portfolioQueryController, TransactionQueryController transactionQueryController,
-                             BuyShareUseCase buyShare, SellShareUseCase sellShare,
-                             UUID gameId, Exchange exchange, Player player, GetPortfolioUseCase getPortfolio) {
-    this.transactionQueryController = transactionQueryController;
-    this.sellShare = sellShare;
-    this.exchange = exchange;
-    this.player = player;
-    this.gameController = gameController;
-    this.portfolioQueryController = portfolioQueryController;
-    this.buyShare = buyShare;
-    this.gameId = gameId;
-    this.getPortfolio = getPortfolio;
+  private HBox bottomBar;
+  private Label weekValue;
+  private Label netWorthValue;
+  private Label deltaValue;
+  private Label cashValue;
+  private Button advanceButton;
+
+  private BigDecimal lastWeeklyDelta = BigDecimal.ZERO;
+  private static final BigDecimal DANGER_ZONE_MULTIPLIER = new BigDecimal("1.15");
+
+  public GameViewCoordinator(
+      GameSessionControllerBundle bundle,
+      Runnable onMainMenu,
+      Runnable onPlayAgain,
+      Consumer<String> onThemeChanged,
+      Leaderboard leaderboard,
+      LeaderboardFileHandler leaderboardFile
+
+  ) {
+    this.bundle = bundle;
+    this.onMainMenu = onMainMenu;
+    this.onPlayAgain = onPlayAgain;
+    this.onThemeChanged = onThemeChanged;
+    this.leaderboard = leaderboard;
+    this.leaderboardFile = leaderboardFile;
   }
 
   public Scene getScene() {
-    this.navManager = new NavigationManager(buildPages());
+    navManager = new NavigationManager(buildPages());
     NavBar navBar = new NavBar(navManager::navigateTo);
 
-    BorderPane root = new BorderPane();
+    root = new BorderPane();
     root.setTop(navBar);
     root.setCenter(navManager.getContentArea());
+    bottomBar = buildBottomBar();
+    root.setBottom(bottomBar);
+    refreshBottomBar();
+    bundle.session().getExchange().addObserver(this::refreshBottomBar);
 
     navManager.navigateTo(PageId.DASHBOARD);
+    bundle.market().setOnStockSelected(stock -> navigateToStockDetail(stock, PageId.MARKET));
 
-    Scene scene = new Scene(root, 600, 400);
-    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+    bundle.game().setOutcomeListener(outcome -> {
+      GameSession session = bundle.session();
+      BigDecimal finalNetWorth = session.getPlayer().getNetWorth();
+      int weeksPlayed = session.getExchange().getWeek();
+      Difficulty difficulty = session.getDifficulty();
+
+      GameResult result = new GameResult(
+          outcome == GameOutcome.WON,
+          finalNetWorth,
+          session.getPlayer().getStartingMoney(),
+          weeksPlayed,
+          difficulty
+      );
+
+      if (outcome == GameOutcome.WON) {
+        LeaderboardEntry entry = new LeaderboardEntry(
+            session.getPlayer().getName(),
+            LeaderboardEntry.calculateScore(weeksPlayed, result.startingCapital()),
+            weeksPlayed,
+            finalNetWorth,
+            result.startingCapital(),
+            difficulty,
+            LocalDate.now()
+        );
+        leaderboard.add(entry);
+        leaderboardFile.save(leaderboard);
+      }
+
+      root.setTop(null);
+      root.setBottom(null);
+      navManager.show(new GameOverView(result, onPlayAgain, onMainMenu));
+    });
+
+    popupHost = new StackPane(root);
+    Scene scene = new Scene(popupHost, WindowConfig.WIDTH, WindowConfig.HEIGHT);
     return scene;
   }
 
   private Map<PageId, Page> buildPages() {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
-    MarketController marketController =
-        new MarketController(exchange, player, this::navigateToStockDetail);
 
-    pages.put(PageId.DASHBOARD, new DashboardView(gameController));
-    pages.put(PageId.MARKET, new MarketView(marketController));
-    pages.put(PageId.PORTFOLIO, new PortfolioView(portfolioQueryController, gameController));
-    pages.put(PageId.TRANSACTIONS, new TransactionsView(transactionQueryController));
+    pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
+    pages.put(PageId.MARKET, new MarketView(bundle.market(), stock -> navigateToStockDetail(stock, PageId.MARKET)));
+    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(),
+        shareDto -> bundle.market().findBySymbol(shareDto.symbol())
+            .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))));
+    pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
+    pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
+    pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
 
     return pages;
   }
 
-  private void navigateToStockDetail(Stock stock) {
-    StockDetailController controller = new StockDetailController(
-        gameId, buyShare, sellShare, portfolioQueryController, getPortfolio);
+  private void navigateToStockDetail(StockDto stock, PageId backTo) {
     StockDetailView view = new StockDetailView(
-        stock, controller, () -> navManager.navigateTo(PageId.MARKET));
+        stock,
+        bundle.stockQuery(),
+        bundle.orderPlacement(),
+        () -> navManager.navigateTo(backTo));
     navManager.show(view);
+  }
+
+  private HBox buildBottomBar() {
+    weekValue     = new Label();
+    netWorthValue = new Label();
+    deltaValue    = new Label();
+    cashValue     = new Label();
+
+    VBox week = StatCardFactory.compact("Week", weekValue, "bottom-bar-value");
+    VBox netWorth = StatCardFactory.compact("Net worth", netWorthValue, "bottom-bar-value-gold");
+    VBox delta = StatCardFactory.compact("This week", deltaValue, "bottom-bar-value");
+    VBox cash = StatCardFactory.compact("Cash", cashValue, "bottom-bar-value");
+
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+    advanceButton = ButtonFactory.styled("", "advance-button", this::onAdvanceWeek);
+
+    HBox bar = new HBox(week, netWorth, delta, cash, spacer, advanceButton);
+    bar.getStyleClass().add("bottom-bar");
+    return bar;
+  }
+
+  private void onAdvanceWeek() {
+    GameSession session = bundle.session();
+    int prevWeek = session.getExchange().getWeek();
+    BigDecimal before = session.getPlayer().getNetWorth();
+
+    bundle.game().advanceWeek();
+
+    if (session.getState() == GameSessionState.FINISHED) {
+      refreshBottomBar();
+      return;
+    }
+
+    BigDecimal after = session.getPlayer().getNetWorth();
+    lastWeeklyDelta = after.subtract(before);
+
+    bundle.shop().advanceCoinExchange();
+    if (shopView != null) {
+      shopView.refresh();
+    }
+
+    refreshBottomBar();
+
+    WeekSummary summary = buildWeekSummary(prevWeek, before, after);
+
+    Node[] holder = new Node[1];
+    WeekSummaryPopup popup = new WeekSummaryPopup(summary, () -> closePopup(holder[0]));
+    holder[0] = popup;
+    showPopup(popup);
+  }
+
+  private WeekSummary buildWeekSummary(int prevWeek, BigDecimal before, BigDecimal after) {
+    Player player = bundle.session().getPlayer();
+
+    List<WeekHolding> holdings = player.getPortfolio().getShares().stream()
+        .collect(Collectors.groupingBy(s -> s.getStock().getSymbol()))
+        .entrySet().stream()
+        .map(e -> {
+          Stock stock = e.getValue().get(0).getStock();
+          BigDecimal qty = e.getValue().stream()
+              .map(Share::getQuantity)
+              .reduce(BigDecimal.ZERO, BigDecimal::add);
+          BigDecimal delta = stock.getLatestPriceChange().multiply(qty);
+          BigDecimal percent = stock.getLatestPriceChangePercent();
+          return new WeekHolding(stock.getSymbol(), qty, delta, percent);
+        })
+        .sorted((a, b) -> b.weeklyDelta().abs().compareTo(a.weeklyDelta().abs()))
+        .toList();
+
+    return new WeekSummary(
+        prevWeek,
+        bundle.session().getExchange().getWeek(),
+        before, after,
+        player.getMoney(),
+        holdings,
+        List.of(), List.of()
+    );
+  }
+
+  private void refreshBottomBar() {
+    Player player         = bundle.session().getPlayer();
+    Exchange exchange     = bundle.session().getExchange();
+    Difficulty difficulty = bundle.session().getDifficulty();
+
+    BigDecimal netWorth = player.getNetWorth();
+    BigDecimal threshold = player.getStartingMoney()
+        .multiply(BigDecimal.valueOf(difficulty.getGameOverThreshold()));
+    BigDecimal warningBand = threshold.multiply(DANGER_ZONE_MULTIPLIER);
+    boolean danger = netWorth.compareTo(warningBand) < 0;
+
+    weekValue.setText("Week " + exchange.getWeek());
+    netWorthValue.setText(MoneyFormat.formatCurrency(netWorth));
+
+    deltaValue.setText(MoneyFormat.formatSignedCurrency(lastWeeklyDelta));
+    deltaValue.getStyleClass().removeAll("gain", "loss");
+    if (lastWeeklyDelta.signum() > 0) deltaValue.getStyleClass().add("gain");
+    if (lastWeeklyDelta.signum() < 0) deltaValue.getStyleClass().add("loss");
+
+    if (danger) {
+      cashValue.setText("Game over at " + MoneyFormat.formatCurrency(threshold));
+    } else {
+      cashValue.setText(MoneyFormat.formatCurrency(player.getMoney()));
+    }
+
+    advanceButton.setText("Advance to Week " + (exchange.getWeek() + 1) + " →");
+
+    bottomBar.getStyleClass().remove("bottom-bar-danger");
+    if (danger) bottomBar.getStyleClass().add("bottom-bar-danger");
+  }
+
+  private void showPopup(Node popup) {
+    popupHost.getChildren().add(popup);
+  }
+
+  private void closePopup(Node popup) {
+    popupHost.getChildren().remove(popup);
   }
 }

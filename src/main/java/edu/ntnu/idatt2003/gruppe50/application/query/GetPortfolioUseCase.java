@@ -1,13 +1,19 @@
 package edu.ntnu.idatt2003.gruppe50.application.query;
 
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.DtoMapper;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.PortfolioDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /** Retrieves portfolio-related data for a game session. */
 public final class GetPortfolioUseCase {
@@ -47,7 +53,11 @@ public final class GetPortfolioUseCase {
 
     List<BigDecimal> netWorthHistory = session.getNetWorthHistory();
 
-    return new Response(cash, portfolioValue, netWorth, shares, netWorthHistory);
+    var archive = player.getTransactionArchive().getTransactions();
+    Set<Integer> buyWeeks  = archive.stream().filter(t ->  t instanceof Purchase).map(t -> t.getWeek()).collect(Collectors.toSet());
+    Set<Integer> sellWeeks = archive.stream().filter(t -> !(t instanceof Purchase)).map(t -> t.getWeek()).collect(Collectors.toSet());
+
+    return new Response(new PortfolioDto(cash, portfolioValue, netWorth, shares, netWorthHistory, buyWeeks, sellWeeks));
   }
 
   /**
@@ -59,16 +69,6 @@ public final class GetPortfolioUseCase {
 
   /**
    * Portfolio aggregate response for the UI layer.
-   *
-   * @param cash available player cash
-   * @param portfolioValue current portfolio liquidation value
-   * @param netWorth total net worth (cash + portfolio)
-   * @param shares current owned shares as DTOs
    */
-  public record Response(
-      BigDecimal cash,
-      BigDecimal portfolioValue,
-      BigDecimal netWorth,
-      List<ShareDto> shares,
-      List<BigDecimal> netWorthHistory) {}
+  public record Response(PortfolioDto portfolio) {}
 }

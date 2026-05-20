@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components;
 
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 import java.util.EnumMap;
 import java.util.Map;
@@ -52,14 +53,11 @@ public class NavBar extends HBox {
   }
 
   private Button createNavButton(PageId pageId, NavListener listener) {
-    Button btn = new Button(pageId.getLabel());
-    btn.getStyleClass().add("nav-button");
-
+    Button btn = ButtonFactory.styled(pageId.getLabel(), "nav-button");
     btn.setOnMousePressed(_ -> {
       setActive(pageId);
       listener.onNavSelectedItem(pageId);
     });
-
     return btn;
   }
 }

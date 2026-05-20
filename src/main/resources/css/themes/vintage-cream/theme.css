@@ -1,0 +1,51 @@
+/* ============================================
+   Millions — Vintage Light Theme
+   Palett: lys krem med kobber-aksent
+   ============================================ */
+
+.root {
+
+    /* --- Bakgrunner --- */
+    -bg-primary:    #FAF1E6;   /* Lys krem — sidebakgrunn */
+    -bg-surface:    #F0E2CF;   /* Kort, navbar */
+    -bg-elevated:   #E8D5BA;   /* Tabellrad, hover-overflater */
+    -bg-overlay:    #DEC9A8;   /* Popup, modal */
+
+    /* --- Aksenter --- */
+    -accent-gold:   #C6855B;   /* Kobber — primær aksent */
+    -accent-indigo: #7B5EA7;   /* Dempet lilla — sekundær aksent */
+    -accent-teal:   #5C8A6A;   /* Dempet grønn — chart-linje */
+
+    /* --- Tekst --- */
+    -text-primary:   #3F2A26;  /* Mørk brun — hovedtekst */
+    -text-secondary: #8A6D5F;  /* Muted brun — labels, metadata */
+    -text-disabled:  #C4A882;  /* Deaktivert */
+
+    /* --- Status --- */
+    -gain:  #5C8A3A;            /* Dempet olivengrønn */
+    -loss:  #B5421F;            /* Dempet terrakotta-rød */
+    -error: #B5421F;
+    -warn:  #C6855B;
+
+    /* --- Border --- */
+    -border:         #D9C4AA;  /* Standard border */
+    -border-subtle:  #E8D5BA;  /* Subtil separator */
+
+    /* --- Status-nivåer --- */
+    -status-dreamer:   #8A6D5F;   /* Muted brun */
+    -status-engineer:  #7B5EA7;   /* Lilla */
+    -status-astronaut: #C6855B;   /* Kobber */
+
+    /* Chart gradient — må hardkodes her siden JavaFX
+       ikke støtter variabler i linear-gradient() */
+}
+
+/* Chart-overrides for vintage-tema */
+.chart-series-area-line {
+    -fx-stroke: #5C8A6A;
+    -fx-stroke-width: 2;
+}
+
+.chart-series-area-fill {
+    -fx-fill: linear-gradient(from 0% 0% to 0% 100%, #5C8A6A30, #5C8A6A05);
+}

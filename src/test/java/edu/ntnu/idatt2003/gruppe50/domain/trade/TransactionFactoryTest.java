@@ -16,7 +16,7 @@ public class TransactionFactoryTest {
   void setup() {
     factory = new TransactionFactory();
     Stock stock = new Stock("AAPL", "Apple", bd("250"));
-    share = new Share(stock, bd("3"), bd("250"));
+    share = new Share(stock, bd("3"), bd("250"), 1);
   }
 
   @Test

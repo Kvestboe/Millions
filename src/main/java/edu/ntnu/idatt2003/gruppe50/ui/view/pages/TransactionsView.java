@@ -1,122 +1,116 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory.createCard;
-
-import edu.ntnu.idatt2003.gruppe50.application.query.TransactionType;
-import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.TransactionType;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnDefinition;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.TradingLogCard;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.SearchBarFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ToggleBarFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;
+import java.util.Arrays;
 import java.util.List;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
-public class TransactionsView extends BorderPane implements Page {
+public class TransactionsView extends VBox implements Page {
+
+  private static final List<TransactionType> FILTER_VALUES =
+      Arrays.asList(null, TransactionType.PURCHASE, TransactionType.SALE);
+
+  private static final double TRADING_LOG_WIDTH = 380;
 
   private final TransactionQueryController queryController;
-  private final ObservableList<TransactionData> transactions = FXCollections.observableArrayList();
   private final TableView<TransactionData> table;
   private final TextField searchField;
-  private final RadioButton allFilterButton;
-  private final RadioButton purchaseFilterButton;
-  private final RadioButton saleFilterButton;
+
+  private TransactionType selectedType = null;
 
   public TransactionsView(TransactionQueryController queryController) {
     this.queryController = queryController;
-    this.table = makeTransactionTable();
-    this.searchField = createSearchField();
-    this.allFilterButton = new RadioButton("All");
-    this.purchaseFilterButton = new RadioButton("Purchase");
-    this.saleFilterButton = new RadioButton("Sale");
-    setupTypeFilters();
-    this.table.setItems(transactions);
-    setTop(createCard(createFilterBar()));
-    setCenter(createCard("History", table));
+    this.table = createTransactionTable();
+    this.searchField = SearchBarFactory.createSearchField(
+        "Search by symbol, company or type...",
+        this::applyFilters
+    );
+
+    Label title = new Label("Transactions");
+    title.getStyleClass().add("page-title");
+
+    TradingLogCard tradingLog = new TradingLogCard(queryController.getTradingLog());
+    tradingLog.setMinWidth(TRADING_LOG_WIDTH);
+    tradingLog.setPrefWidth(TRADING_LOG_WIDTH);
+    tradingLog.setMaxWidth(TRADING_LOG_WIDTH);
+
+    VBox rightColumn = buildRightColumn();
+
+    HBox content = new HBox(16, tradingLog, rightColumn);
+    HBox.setHgrow(rightColumn, Priority.ALWAYS);
+    VBox.setVgrow(content, Priority.ALWAYS);
+
+    queryController.getTransactions()
+        .addListener((ListChangeListener<TransactionData>) _ -> applyFilters());
+
+    getStyleClass().add("transactions-view");
+    getStylesheets().add(getClass().getResource("/css/views/transactions.css").toExternalForm());
+    getChildren().addAll(title, content);
+
+    applyFilters();
   }
 
   @Override
   public Parent getView() {
-    refreshTransactions();
     return this;
   }
 
-  private TableView<TransactionData> makeTransactionTable() {
-    TableView<TransactionData> transactionTable = TableFactory.createTable(List.of(
-        new ColumnDefinition<>("Symbol", t -> new ReadOnlyStringWrapper(t.share().symbol())),
-        new ColumnDefinition<>("Company", t -> new ReadOnlyStringWrapper(t.share().stock())),
-        new ColumnDefinition<>("Type", t -> new ReadOnlyStringWrapper(t.type().name())),
-        new ColumnDefinition<>("Week", t -> new ReadOnlyObjectWrapper<>(t.week())),
-        new ColumnDefinition<>("Commission", t ->
-            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.commissionFee()))
-        ),
-        new ColumnDefinition<>("Tax", t ->
-            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.taxFee()))
-        ),
-        new ColumnDefinition<>("Total", t ->
-            new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(t.total()))
-        )
+  private VBox buildRightColumn() {
+    Label historyTitle = new Label("History");
+    historyTitle.getStyleClass().add("section-title");
+
+    VBox column = new VBox(12, historyTitle, buildFilterToolbar(), table);
+    VBox.setVgrow(table, Priority.ALWAYS);
+    return column;
+  }
+
+  private HBox buildFilterToolbar() {
+    HBox segmented = ToggleBarFactory.of(
+        List.of("All", "Purchase", "Sell"),
+        0,
+        i -> {
+          selectedType = FILTER_VALUES.get(i);
+          applyFilters();
+        }
+    );
+
+    HBox.setHgrow(searchField, Priority.ALWAYS);
+
+    HBox toolbar = new HBox(searchField, segmented);
+    toolbar.getStyleClass().add("filter-toolbar");
+    return toolbar;
+  }
+
+  private TableView<TransactionData> createTransactionTable() {
+    TableView<TransactionData> t = TableFactory.createTable(List.of(
+        ColumnPresets.text("Symbol", x -> x.share().symbol()),
+        ColumnPresets.text("Company", x -> x.share().stock()),
+        ColumnPresets.text("Type", x -> x.type().name()),
+        ColumnPresets.integer("Week", TransactionData::week),
+        ColumnPresets.currency("Commission", TransactionData::commissionFee),
+        ColumnPresets.currency("Tax", TransactionData::taxFee),
+        ColumnPresets.currency("Total", TransactionData::total)
     ));
-    transactionTable.setPlaceholder(new Label("No transactions yet."));
-    return transactionTable;
-  }
-
-  private TextField createSearchField() {
-    TextField field = new TextField();
-    field.setPromptText("Search by symbol, company or type...");
-    field.textProperty().addListener((_, _, _) -> applyFilters());
-    field.setMaxWidth(Double.MAX_VALUE);
-    return field;
-  }
-
-  private HBox createFilterBar() {
-    return new HBox(searchField, allFilterButton, purchaseFilterButton, saleFilterButton);
-  }
-
-  private void setupTypeFilters() {
-    ToggleGroup group = new ToggleGroup();
-    allFilterButton.setToggleGroup(group);
-    purchaseFilterButton.setToggleGroup(group);
-    saleFilterButton.setToggleGroup(group);
-    allFilterButton.setSelected(true);
-    group.selectedToggleProperty().addListener((_, _, _) -> applyFilters());
-  }
-
-  private TransactionType selectedTypeFilter() {
-    if (purchaseFilterButton.isSelected()) {
-      return TransactionType.PURCHASE;
-    }
-    if (saleFilterButton.isSelected()) {
-      return TransactionType.SALE;
-    }
-    return null;
+    t.setPlaceholder(new Label("No transactions yet."));
+    return t;
   }
 
   private void applyFilters() {
     String query = searchField.getText();
-    TransactionType selectedType = selectedTypeFilter();
-    if (query == null || query.isBlank()) {
-      if (selectedType == null) {
-        table.getItems().setAll(queryController.getTransactions());
-      } else {
-        table.getItems().setAll(queryController.onSearch("", selectedType));
-      }
-    } else {
-      table.getItems().setAll(queryController.onSearch(query, selectedType));
-    }
-  }
-
-  private void refreshTransactions() {
-    applyFilters();
+    table.getItems().setAll(queryController.onSearch(query, selectedType));
   }
 }

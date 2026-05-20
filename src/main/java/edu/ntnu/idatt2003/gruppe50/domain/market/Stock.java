@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.domain.market;
 
+import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -15,6 +16,19 @@ public class Stock {
   private final String symbol;
   private final String company;
   private final List<BigDecimal> prices;
+
+  private Stock(String symbol, String company, List<BigDecimal> prices) {
+    this.symbol = symbol;
+    this.company = company;
+    this.prices = new ArrayList<>(prices.size());
+    for (BigDecimal price : prices) {
+      this.prices.add(Money.round(price));
+    }
+  }
+
+  public static Stock rehydrate(String symbol, String company, List<BigDecimal> prices) {
+    return new Stock(symbol, company, prices);
+  }
 
   /**
    * Creates a new {@code Stock} with an initial sales price.
@@ -70,7 +84,7 @@ public class Stock {
    */
   public void addNewSalesPrice(BigDecimal salesPrice) {
     Validate.positive(salesPrice, "Sales price");
-    prices.add(salesPrice);
+    prices.add(Money.round(salesPrice));
   }
 
   /**

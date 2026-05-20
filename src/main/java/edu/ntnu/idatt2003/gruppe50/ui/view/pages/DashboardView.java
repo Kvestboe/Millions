@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory.createCard;
 
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -81,12 +82,9 @@ public class DashboardView extends BorderPane implements Page {
   }
 
   private Button buildAdvanceButton() {
-    Button btn = new Button("Advance\nWeek");
-    btn.getStyleClass().add("advance-button");
-
+    Button btn = ButtonFactory.styled("Advance\nWeek", "advance-button", gameController::advanceWeek);
     btn.setMaxWidth(Double.MAX_VALUE);
     btn.setMaxHeight(Double.MAX_VALUE);
-    btn.setOnAction(e -> gameController.advanceWeek());
     return btn;
   }
 }

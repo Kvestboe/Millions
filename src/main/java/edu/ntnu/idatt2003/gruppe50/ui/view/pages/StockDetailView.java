@@ -1,56 +1,97 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
-import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailController;
-import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
+import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
+import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
+import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order.OrderFormView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
-import java.util.List;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+public class StockDetailView extends StackPane implements Page {
 
-public class StockDetailView extends VBox implements Page {
+  private static final double STOCK_DATA_CARD_WIDTH = 380;
 
-  private final Stock stock;
-  private final StockDetailController controller;
+  private StockDto stock;
+  private final StockDetailQueryController queryController;
+  private final OrderPlacementController orderController;
   private final Runnable onBack;
+  private final Observer exchangeObserver = this::refresh;
 
+  // Header-felter (oppdateres i refresh)
+  private final Label priceLabel = new Label();
+  private final Label priceChangeLabel = new Label();
+  private final Label percentChangeLabel = new Label();
+
+  private final AreaChartView priceChart = new AreaChartView("Week", "Price");
+  private final VBox chartBox = new VBox(priceChart.getChart());
+
+  // Holding-felter (uendret)
   private final Label quantityLabel = new Label();
   private final Label gavLabel = new Label();
   private final Label profitLabel = new Label();
   private final Label profitPercentLabel = new Label();
-  private final TextField quantityField = new TextField();
-  private final VBox myHoldingBox = new VBox(10);
+  private final VBox myHoldingBox = new VBox(14);
+  private final VBox content = new VBox(10);
+  private final Button sell = ButtonFactory.secondary("Sell");
 
-  public StockDetailView(Stock stock, StockDetailController controller, Runnable onBack) {
+  private final Label errorLabel = new Label();
+
+  public StockDetailView(StockDto stock, StockDetailQueryController queryController,
+      OrderPlacementController orderController, Runnable onBack) {
     this.stock = stock;
-    this.controller = controller;
+    this.queryController = queryController;
+    this.orderController = orderController;
     this.onBack = onBack;
 
-    Button backBtn = new Button("Back");
-    backBtn.setOnAction(e -> onBack.run());
+    Button backBtn = ButtonFactory.secondary("Back", onBack);
+    HBox backRow = new HBox(backBtn);
 
-    getChildren().addAll(
-        backBtn,
-        createHeader(),
-        createStockChart(),
-        createStatTiles(),
-        createButtonRow());
+    VBox stockDataCard = createHeader();
+    stockDataCard.setMinWidth(STOCK_DATA_CARD_WIDTH);
+    stockDataCard.setPrefWidth(STOCK_DATA_CARD_WIDTH);
+    stockDataCard.setMaxWidth(STOCK_DATA_CARD_WIDTH);
 
-    refreshHolding();
+    VBox rightColumn = new VBox(16, chartBox, createStatTiles(), createButtonRow());
+    VBox.setVgrow(chartBox, Priority.ALWAYS);
+
+    HBox splitRow = new HBox(16, stockDataCard, rightColumn);
+    HBox.setHgrow(rightColumn, Priority.ALWAYS);
+    VBox.setVgrow(splitRow, Priority.ALWAYS);
+
+    content.getChildren().addAll(backRow, splitRow);
+    content.getStyleClass().add("stock-detail-view");
+    getStylesheets().add(getClass().getResource("/css/views/stockDetail.css").toExternalForm());
+
+    getChildren().addAll(content);
+
+    errorLabel.getStyleClass().add("error-label");
+    errorLabel.setVisible(false);
+
+    refresh();
+
+    queryController.subscribe(exchangeObserver);
+    sceneProperty().addListener((obs, oldScene, newScene) -> {
+      if (newScene == null) {
+        queryController.unsubscribe(exchangeObserver);
+      }
+    });
   }
 
   @Override
@@ -59,109 +100,155 @@ public class StockDetailView extends VBox implements Page {
   }
 
   private VBox createHeader() {
-    VBox header = new VBox(10);
+    Label symbol = new Label(stock.symbol());
+    symbol.getStyleClass().add("stock-symbol");
 
-    HBox nameBox = new HBox(10,
-        new Label(stock.getSymbol()),
-        new Label(stock.getCompany()));
+    Label company = new Label(stock.company());
+    company.getStyleClass().add("stock-company");
 
-    HBox priceBox = new HBox(10,
-        new Label(stock.getSalesPrice() + " kr"),
-        new Label(formatSigned(stock.getLatestPriceChange()) + " kr"),
-        new Label(formatSigned(stock.getLatestPriceChangePercent()) + "%"));
+    HBox nameBox = new HBox(12, symbol, company);
+    nameBox.setAlignment(Pos.CENTER_LEFT);
 
-    header.getChildren().addAll(nameBox, priceBox);
+    VBox priceTile = StatCardFactory.tile("PRICE", priceLabel);
+    VBox changeTile = StatCardFactory.tile("CHANGE", priceChangeLabel);
+    VBox percentTile = StatCardFactory.tile("CHANGE %", percentChangeLabel);
+
+    priceTile.setMaxWidth(Double.MAX_VALUE);
+    changeTile.setMaxWidth(Double.MAX_VALUE);
+    percentTile.setMaxWidth(Double.MAX_VALUE);
+
+    VBox priceColumn = new VBox(10, priceTile, changeTile, percentTile);
+
+    VBox header = new VBox(14, nameBox, priceColumn);
+    header.getStyleClass().add("card");
     return header;
   }
 
-  private AreaChart<Number, Number> createStockChart() {
-    AreaChartView stockChart = new AreaChartView("Week", "Price");
-    stockChart.display("Price development", stock.getHistoricalPrices());
-    stockChart.getChart().setLegendVisible(false);
-    return stockChart.getChart();
-  }
-
   private VBox createStatTiles() {
-    VBox myQuantityBox = new VBox(10, new Label("Quantity"), quantityLabel);
+    VBox myQuantityBox = StatCardFactory.tile("QUANTITY", quantityLabel);
+    VBox gavBox = StatCardFactory.tile("GAV", gavLabel);
+    VBox profitBox = StatCardFactory.tile("PROFIT", profitLabel, profitPercentLabel);
 
-    VBox gavBox = new VBox(10, new Label("GAV"), gavLabel);
-    VBox profitBox = new VBox(10, new Label("Profit"), profitLabel, profitPercentLabel);
+    HBox.setHgrow(myQuantityBox, Priority.ALWAYS);
+    HBox.setHgrow(gavBox, Priority.ALWAYS);
+    HBox.setHgrow(profitBox, Priority.ALWAYS);
 
     HBox numbersBox = new HBox(10, myQuantityBox, gavBox, profitBox);
 
-    myHoldingBox.getChildren().addAll(new Label("My holding"), numbersBox);
+    Label holdingTitle = new Label("My holding");
+    holdingTitle.getStyleClass().add("section-title");
+    myHoldingBox.getChildren().addAll(holdingTitle, numbersBox);
+    myHoldingBox.getStyleClass().add("card");
     return myHoldingBox;
   }
 
   private HBox createButtonRow() {
-    quantityField.setPromptText("Quantity");
-    HBox.setHgrow(quantityField, Priority.ALWAYS);
-
-    Button buy = new Button("Buy");
+    Button buy = ButtonFactory.primary("Buy", this::handleBuy);
     buy.setMaxWidth(Double.MAX_VALUE);
     HBox.setHgrow(buy, Priority.ALWAYS);
-    buy.setOnAction(e -> handleBuy());
 
-    Button sell = new Button("Sell");
     sell.setMaxWidth(Double.MAX_VALUE);
     HBox.setHgrow(sell, Priority.ALWAYS);
     sell.setOnAction(e -> handleSell());
 
-    return new HBox(10, quantityField, buy, sell);
+    return new HBox(10, buy, sell);
   }
 
   private void handleBuy() {
-    try {
-      BigDecimal quantity = new BigDecimal(quantityField.getText().trim());
-      controller.buy(stock.getSymbol(), quantity);
-      quantityField.clear();
-      refreshHolding();
-    } catch (NumberFormatException ex) {
-      // TODO: vis feilmelding til bruker
-    }
+    OrderFormView popup = new OrderFormView(
+        queryController.gameId(),
+        OrderSide.BUY,
+        stock,
+        this::closePopup,
+        this::handleConfirmedOrder,
+        queryController.previewOrderUseCase()
+    );
+
+    getChildren().add(popup);
   }
 
   private void handleSell() {
-    Optional<UUID> sold = controller.sellOneOf(stock.getSymbol());
-    if (sold.isEmpty()) {
-      // vis melding: "Du eier ingen aksjer av dette selskapet"
-      return;
-    }
+    OrderFormView popup = new OrderFormView(
+        queryController.gameId(),
+        OrderSide.SELL,
+        stock,
+        this::closePopup,
+        this::handleConfirmedOrder,
+        queryController.previewOrderUseCase()
+    );
+
+    getChildren().add(popup);
+  }
+
+  private void closePopup() {
+    getChildren().removeIf(node -> node instanceof OrderFormView);
+  }
+
+  private void refresh() {
+    stock = queryController.getStock(stock.symbol()).orElse(stock);
+    priceLabel.setText(MoneyFormat.formatCurrency(stock.salesPrice()));
+    priceChangeLabel.setText(MoneyFormat.formatSignedCurrency(stock.priceChange()));
+    percentChangeLabel.setText(MoneyFormat.formatSignedPercent(stock.percentChange()));
+
+    applySignClass(priceChangeLabel, stock.priceChange());
+    applySignClass(percentChangeLabel, stock.percentChange());
+
+    priceChart.display("Price development", stock.prices());
+    priceChart.getChart().setLegendVisible(false);
+    var markers = queryController.getTransactionMarkers(stock.symbol());
+    priceChart.setMarkers(markers.buyWeeks(), markers.sellWeeks(), stock.prices());
+
     refreshHolding();
   }
 
-
+  private void applySignClass(Label label, BigDecimal value) {
+    label.getStyleClass().removeAll("gain", "loss");
+    int sign = value.signum();
+    if (sign > 0) label.getStyleClass().add("gain");
+    if (sign < 0) label.getStyleClass().add("loss");
+  }
 
   private void refreshHolding() {
-    Optional<ShareData> holding = controller.getHolding(stock.getSymbol());
+    Optional<ShareDto> holding = queryController.getHolding(stock.symbol());
     if (holding.isEmpty()) {
       myHoldingBox.setVisible(false);
       myHoldingBox.setManaged(false);
+      sell.setVisible(false);
+      sell.setManaged(false);
       return;
     }
     myHoldingBox.setVisible(true);
     myHoldingBox.setManaged(true);
+    sell.setVisible(true);
+    sell.setManaged(true);
 
-    ShareData s = holding.get();
-    quantityLabel.setText(s.quantity().toString());
-    gavLabel.setText(s.purchasePrice() + " kr");
+    ShareDto s = holding.get();
     quantityLabel.setText(s.quantity().setScale(0, RoundingMode.HALF_UP).toString());
-    gavLabel.setText(s.purchasePrice().setScale(2, RoundingMode.HALF_UP) + " kr");
+    gavLabel.setText(MoneyFormat.formatCurrency(s.purchasePrice()));
 
     BigDecimal profit = s.currentShareValue()
         .subtract(s.purchasePrice().multiply(s.quantity()));
-    profitLabel.setText(formatSigned(profit) + " kr");
-    profitLabel.setText(formatSigned(profit.setScale(2, RoundingMode.HALF_UP)) + " kr");
+    profitLabel.setText(MoneyFormat.formatSignedCurrency(profit));
 
     BigDecimal percent = s.currentPrice()
         .subtract(s.purchasePrice())
-        .divide(s.purchasePrice(), 2, RoundingMode.HALF_UP)
+        .divide(s.purchasePrice(), 4, RoundingMode.HALF_UP)
         .multiply(BigDecimal.valueOf(100));
-    profitPercentLabel.setText(formatSigned(percent) + "%");
-    profitPercentLabel.setText(formatSigned(percent.setScale(2, RoundingMode.HALF_UP)) + "%");
+    profitPercentLabel.setText(MoneyFormat.formatSignedPercent(percent));
+
+    applySignClass(profitLabel, profit);
+    applySignClass(profitPercentLabel, percent);
   }
 
-  private String formatSigned(BigDecimal value) {
-    return (value.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + value;
+  private void handleConfirmedOrder(DraftOrder draftOrder) {
+    try {
+      orderController.placeOrder(draftOrder);
+      errorLabel.setVisible(false);
+      closePopup();
+      refresh();
+    } catch (RuntimeException ex) {
+      errorLabel.setText(ex.getMessage());
+      errorLabel.setVisible(true);
+    }
   }
 }

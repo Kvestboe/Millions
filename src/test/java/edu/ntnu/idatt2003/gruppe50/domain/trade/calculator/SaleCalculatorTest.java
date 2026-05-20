@@ -15,7 +15,7 @@ public class SaleCalculatorTest {
   @BeforeEach
   void setup() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("100"));
-    share = new Share(stock, bd("5"), bd("100"));
+    share = new Share(stock, bd("5"), bd("100"), 1);
     calc = new SaleCalculator(share);
   }
 
@@ -31,7 +31,7 @@ public class SaleCalculatorTest {
 
   @Test
   void calculateGross_returnsCorrectValue() {
-    assertEquals(bd("500"), calc.calculateGross());
+    assertEquals(0, bd("500").compareTo(calc.calculateGross()));
   }
 
   @Test
@@ -47,11 +47,11 @@ public class SaleCalculatorTest {
   @Test
   void calculateTax_profitableSale_tax30Percent() {
     Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("200"));
-    share = new Share(stock, bd("1"), bd("100"));
+    share = new Share(stock, bd("1"), bd("100"), 1);
     calc = new SaleCalculator(share);
     BigDecimal profit = bd("100").subtract(calc.calculateCommission());
 
-    assertEquals(profit.multiply(bd("0.3")), calc.calculateTax());
+    assertEquals(0, profit.multiply(bd("0.3")).compareTo(calc.calculateTax()));
   }
 
   @Test

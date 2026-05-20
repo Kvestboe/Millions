@@ -1,0 +1,48 @@
+/* ============================================
+   Millions — Royal Gold Theme
+   Palett: dyp burgunder/vinrød med gull-aksent
+   ============================================ */
+
+.root {
+
+    /* --- Bakgrunner --- */
+    -bg-primary:    #1A0A0E;   /* Dyp burgunder-svart */
+    -bg-surface:    #26101A;   /* Vin-rød surface */
+    -bg-elevated:   #341525;   /* Løftet surface */
+    -bg-overlay:    #421A2E;   /* Popup, modal */
+
+    /* --- Aksenter --- */
+    -accent-gold:   #FFD700;   /* Klassisk pure gold */
+    -accent-indigo: #8B1A3A;   /* Dyp burgunder — sekundær */
+    -accent-teal:   #C9956B;   /* Kobber/bronse — chart */
+
+    /* --- Tekst --- */
+    -text-primary:   #F5ECD7;  /* Varm kremhvit */
+    -text-secondary: #8B7355;  /* Dempet gull-brun */
+    -text-disabled:  #4A3020;  /* Deaktivert */
+
+    /* --- Status --- */
+    -gain:  #4ADE80;            /* Grønn — beholdes for lesbarhet */
+    -loss:  #F87171;            /* Rød — beholdes for lesbarhet */
+    -error: #F87171;
+    -warn:  #D4AF37;
+
+    /* --- Border --- */
+    -border:         #3D1828;  /* Standard border */
+    -border-subtle:  #26101A;  /* Subtil separator */
+
+    /* --- Status-nivåer --- */
+    -status-dreamer:   #4A3020;   /* Muted brun */
+    -status-engineer:  #8B1A3A;   /* Burgunder */
+    -status-astronaut: #D4AF37;   /* Kongeleg gull */
+}
+
+/* Chart-overrides for royal gold-tema */
+.chart-series-area-line {
+    -fx-stroke: #C9956B;
+    -fx-stroke-width: 2;
+}
+
+.chart-series-area-fill {
+    -fx-fill: linear-gradient(from 0% 0% to 0% 100%, #C9956B30, #C9956B05);
+}
