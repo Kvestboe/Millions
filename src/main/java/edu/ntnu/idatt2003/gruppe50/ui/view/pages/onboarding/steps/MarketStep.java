@@ -32,6 +32,7 @@ public class MarketStep implements OnboardingStep {
   private int selectedIndex = 0;
   private String selectedMarketName = "S&P 500";
   private String selectedDisplayName = "S&P 500 (default)";
+  private final Label errorLabel = new Label();
 
   /**
    * Constructs a MarketStep.
@@ -83,7 +84,10 @@ public class MarketStep implements OnboardingStep {
     options.setMaxWidth(500);
     options.setAlignment(Pos.CENTER);
 
-    container.getChildren().addAll(title, subtitle, options, selectedLabel);
+    errorLabel.getStyleClass().add("error-label");
+    errorLabel.setVisible(false);
+
+    container.getChildren().addAll(title, subtitle, options, selectedLabel, errorLabel);
     return container;
   }
 
@@ -102,11 +106,16 @@ public class MarketStep implements OnboardingStep {
   ) {
     VBox card = buildCard(icon, name, description);
     card.setOnMouseClicked(_ -> {
-      loadDefaultFile(resourcePath);
+      if (!loadDefaultFile(resourcePath)) {
+        showError("Could not load " + name);
+        return;
+      }
+
       selectedMarketName = name;
       selectedDisplayName = "Selected: " + name;
       selectedLabel.setText(selectedDisplayName);
       selectCard(card);
+      clearError();
     });
     return card;
   }
@@ -131,6 +140,7 @@ public class MarketStep implements OnboardingStep {
         selectedDisplayName = "Selected: " + file.getName();
         selectedLabel.setText(selectedDisplayName);
         selectCard(card);
+        clearError();
       }
     });
 
@@ -181,19 +191,27 @@ public class MarketStep implements OnboardingStep {
   /**
    * Loads a bundled CSV resource as a temporary file.
    *
-   * @param resourcePath the classpath resource path
+   * <p>The selected file is set only when the resource exists and can be copied.
+   * If loading fails, the selected file is cleared and {@code false} is returned.
+   *
+   * @param resourcePath the classpath resource path to the bundled CSV file
+   * @return true if the resource was loaded successfully, false otherwise
    */
-  private void loadDefaultFile(String resourcePath) {
+  private boolean loadDefaultFile(String resourcePath) {
     try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
       if (is == null) {
-        return;
+        selectedFile = null;
+        return false;
       }
+
       File temp = File.createTempFile("market", ".csv");
       temp.deleteOnExit();
       Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
       selectedFile = temp;
+      return true;
     } catch (IOException e) {
       selectedFile = null;
+      return false;
     }
   }
 
@@ -204,9 +222,13 @@ public class MarketStep implements OnboardingStep {
    */
   @Override
   public boolean isValid() {
-    return selectedFile != null;
-  }
+    if (selectedFile == null) {
+      return showError("Please choose a market");
+    }
 
+    clearError();
+    return true;
+  }
   /**
    * Sets the chosen stock file and market display name on the shared onboarding data.
    *
@@ -216,5 +238,23 @@ public class MarketStep implements OnboardingStep {
   public void contribute(OnboardingFlowData data) {
     data.stockFile = selectedFile;
     data.marketName = selectedMarketName;
+  }
+
+  /**
+   * Shows a validation message when no market file is available.
+   *
+   * @param message the message to show
+   * @return false so validation can return directly
+   */
+  private boolean showError(String message) {
+    errorLabel.setText(message);
+    errorLabel.setVisible(true);
+    return false;
+  }
+
+  /** Clears the validation message when a market file is selected. */
+  private void clearError() {
+    errorLabel.setText("");
+    errorLabel.setVisible(false);
   }
 }

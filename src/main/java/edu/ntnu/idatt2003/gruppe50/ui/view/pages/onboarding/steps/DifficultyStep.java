@@ -21,6 +21,7 @@ public class DifficultyStep implements OnboardingStep {
 
   private Difficulty selected = null;
   private final List<VBox> cards = new ArrayList<>();
+  private final Label errorLabel = new Label();
 
   /**
    * Builds and returns the difficulty selection layout.
@@ -49,7 +50,10 @@ public class DifficultyStep implements OnboardingStep {
     HBox cardRow = new HBox(16, easy, medium, hard);
     cardRow.setAlignment(Pos.CENTER);
 
-    container.getChildren().addAll(title, subtitle, cardRow);
+    errorLabel.getStyleClass().add("error-label");
+    errorLabel.setVisible(false);
+
+    container.getChildren().addAll(title, subtitle, cardRow, errorLabel);
     return container;
   }
 
@@ -115,6 +119,7 @@ public class DifficultyStep implements OnboardingStep {
     selected = difficulty;
     cards.forEach(card -> card.getStyleClass().remove("diff-card-selected"));
     clicked.getStyleClass().add("diff-card-selected");
+    clearError();
   }
 
   /**
@@ -124,7 +129,12 @@ public class DifficultyStep implements OnboardingStep {
    */
   @Override
   public boolean isValid() {
-    return selected != null;
+    if (selected == null) {
+      return showError("Please choose a mission");
+    }
+
+    clearError();
+    return true;
   }
 
   /**
@@ -135,5 +145,23 @@ public class DifficultyStep implements OnboardingStep {
   @Override
   public void contribute(OnboardingFlowData data) {
     data.difficulty = selected;
+  }
+
+  /**
+   * Shows a validation message when no difficulty has been selected.
+   *
+   * @param message the message to show
+   * @return false so validation can return directly
+   */
+  private boolean showError(String message) {
+    errorLabel.setText(message);
+    errorLabel.setVisible(true);
+    return false;
+  }
+
+  /** Clears the validation message when a difficulty has been selected. */
+  private void clearError() {
+    errorLabel.setText("");
+    errorLabel.setVisible(false);
   }
 }
