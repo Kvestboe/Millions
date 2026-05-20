@@ -4,6 +4,7 @@ import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameOutcome;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameResult;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
@@ -103,14 +104,21 @@ public class GameViewCoordinator {
       int weeksPlayed = session.getExchange().getWeek();
       Difficulty difficulty = session.getDifficulty();
 
+      GameResult result = new GameResult(
+          outcome == GameOutcome.WON,
+          finalNetWorth,
+          session.getPlayer().getStartingMoney(),
+          weeksPlayed,
+          difficulty
+      );
+
       if (outcome == GameOutcome.WON) {
-        BigDecimal start = session.getPlayer().getStartingMoney();
         LeaderboardEntry entry = new LeaderboardEntry(
             session.getPlayer().getName(),
-            LeaderboardEntry.calculateScore(weeksPlayed, start),
+            LeaderboardEntry.calculateScore(weeksPlayed, result.startingCapital()),
             weeksPlayed,
             finalNetWorth,
-            start,
+            result.startingCapital(),
             difficulty,
             LocalDate.now()
         );
@@ -120,10 +128,7 @@ public class GameViewCoordinator {
 
       root.setTop(null);
       root.setBottom(null);
-      navManager.show(new GameOverView(
-          outcome, finalNetWorth, weeksPlayed, difficulty,
-          onPlayAgain, onMainMenu
-      ));
+      navManager.show(new GameOverView(result, onPlayAgain, onMainMenu));
     });
 
     popupHost = new StackPane(root);

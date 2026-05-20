@@ -1,6 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import java.util.function.Consumer;
+
+import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,11 +19,17 @@ public class SettingsView extends VBox {
 
   private final Runnable onBack;
   private final Consumer<Boolean> onFullscreen;
-  private Slider volumeSlider;
+  private final SoundManager soundManager;
 
-  public SettingsView(Runnable onBack, Consumer<Boolean> onFullscreen) {
+  private Button masterToggle;
+  private Slider masterSlider;
+  private Button musicToggle;
+  private Button sfxToggle;
+
+  public SettingsView(Runnable onBack, Consumer<Boolean> onFullscreen, SoundManager soundManager) {
     this.onBack = onBack;
     this.onFullscreen = onFullscreen;
+    this.soundManager = soundManager;
     build();
   }
 
@@ -34,11 +42,18 @@ public class SettingsView extends VBox {
     setPadding(new Insets(40));
     setAlignment(Pos.TOP_LEFT);
 
+    HBox musicRow = buildMusicRow();
+    HBox sfxRow = buildSfxRow();
+    HBox masterRow = buildMasterVolumeRow();
+
     getChildren().addAll(
         buildHeader(),
         buildSectionLabel("GENERAL"),
         buildFullscreenRow(),
-        buildSoundRow(),
+        buildSectionLabel("SOUND"),
+        masterRow,
+        musicRow,
+        sfxRow,
         buildSectionLabel("LANGUAGE"),
         buildLanguageRow()
     );
@@ -97,82 +112,129 @@ public class SettingsView extends VBox {
     return row;
   }
 
-  private HBox buildSoundRow() {
-    Label title = new Label("Sound");
+  private HBox buildMasterVolumeRow() {
+    Label title = new Label("Master volume");
     title.getStyleClass().add("settings-row-title");
 
-    Label subtitle = new Label("Enable sound effects and music");
+    Label subtitle = new Label("Overall sound level");
     subtitle.getStyleClass().add("settings-row-subtitle");
 
     VBox text = new VBox(2, title, subtitle);
 
-    volumeSlider = new Slider(0, 100, 65);
-    volumeSlider.getStyleClass().add("volume-slider");
-    volumeSlider.setPrefWidth(400);
-    volumeSlider.setMaxWidth(400);
+    int initialPercent = (int) Math.round(soundManager.getMasterVolume() * 100);
 
-    Label volumeLabel = new Label("65%");
-    volumeLabel.getStyleClass().add("settings-row-subtitle");
+    masterSlider = new Slider(0, 100, initialPercent);
+    masterSlider.getStyleClass().add("volume-slider");
+    masterSlider.setPrefWidth(400);
+    masterSlider.setMaxWidth(400);
 
-    volumeSlider.valueProperty().addListener((obs, oldVal, newVal) ->
-        volumeLabel.setText((int) newVal.doubleValue() + "%")
-    );
+    Label valueLabel = new Label(initialPercent + "%");
+    valueLabel.getStyleClass().add("settings-row-subtitle");
 
-    HBox sliderRow = new HBox(8, volumeSlider, volumeLabel);
-    HBox.setHgrow(volumeSlider, Priority.ALWAYS);
-    sliderRow.setAlignment(Pos.CENTER_LEFT);
+    masterSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+      int p = newVal.intValue();
+      valueLabel.setText(p + "%");
+      soundManager.setMasterVolume(p / 100.0);
+    });
 
-    VBox soundContent = new VBox(10, text, sliderRow);
-    HBox.setHgrow(soundContent, Priority.ALWAYS);
+    HBox sliderRow = new HBox(8, masterSlider, valueLabel);
+    HBox.setHgrow(masterSlider, Priority.ALWAYS);
+
+    VBox content = new VBox(10, text, sliderRow);
+    HBox.setHgrow(content, Priority.ALWAYS);
 
     Region spacer = new Region();
 
-    Button toggle = createToggle(true);
+    // Master toggle
+    masterToggle = createToggle(soundManager.isMasterEnabled());
+    if (soundManager.isMasterEnabled()) {
+      ((Label) masterToggle.getGraphic()).setTranslateX(10);
+    }
+    masterToggle.setOnAction(e -> {
+      boolean isOn = masterToggle.getStyleClass().contains("toggle-on");
+      boolean newState = !isOn;
 
-    // Felles metoder for å styre tilstand
-    Runnable turnOn = () -> {
-      if (toggle.getStyleClass().contains("toggle-off")) {
-        toggle.getStyleClass().remove("toggle-off");
-        toggle.getStyleClass().add("toggle-on");
-        TranslateTransition t = new TranslateTransition(
-            Duration.millis(500), (Label) toggle.getGraphic());
-        t.setToX(10);
-        t.play();
-        if (volumeSlider.getValue() == 0) {
-          volumeSlider.setValue(65);
-        }
-      }
-    };
+      setToggleState(masterToggle, newState);
+      soundManager.setMasterEnabled(newState);
+      masterSlider.setDisable(!newState);
 
-    Runnable turnOff = () -> {
-      if (toggle.getStyleClass().contains("toggle-on")) {
-        toggle.getStyleClass().remove("toggle-on");
-        toggle.getStyleClass().add("toggle-off");
-        TranslateTransition t = new TranslateTransition(
-            Duration.millis(500), (Label) toggle.getGraphic());
-        t.setToX(-10);
-        t.play();
-        volumeSlider.setValue(0);
-      }
-    };
+      // Snu music + sfx visuelt og oppdater SoundManager
+      setToggleState(musicToggle, newState);
+      setToggleState(sfxToggle, newState);
+      soundManager.setMusicEnabled(newState);
+      soundManager.setSfxEnabled(newState);
+    });
+
+    masterSlider.setDisable(!soundManager.isMasterEnabled());
+
+    HBox row = new HBox(content, spacer, masterToggle);
+    row.setAlignment(Pos.CENTER_LEFT);
+    row.getStyleClass().add("settings-row");
+    return row;
+  }
+
+  private HBox buildMusicRow() {
+    return buildToggleRow(
+        "Music",
+        "Play background music",
+        soundManager.isMusicEnabled(),
+        newState -> {
+          soundManager.setMusicEnabled(newState);
+          if (newState) {
+            ensureMasterOn();
+          }
+        },
+        btn -> musicToggle = btn
+    );
+  }
+
+  private HBox buildSfxRow() {
+    return buildToggleRow(
+        "Sound effects",
+        "Play UI clicks and game sounds",
+        soundManager.isSfxEnabled(),
+        newState -> {
+          soundManager.setSfxEnabled(newState);
+          if (newState) {
+            ensureMasterOn();
+          }
+        },
+        btn -> sfxToggle = btn
+    );
+  }
+
+  private HBox buildToggleRow(String titleText, String subtitleText, boolean initial,
+                              Consumer<Boolean> onChange,
+                              Consumer<Button> toggleRef) {
+    Label title = new Label(titleText);
+    title.getStyleClass().add("settings-row-title");
+
+    Label subtitle = new Label(subtitleText);
+    subtitle.getStyleClass().add("settings-row-subtitle");
+
+    VBox text = new VBox(2, title, subtitle);
+
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+    Button toggle = createToggle(initial);
+    toggleRef.accept(toggle);
+    if (initial) ((Label) toggle.getGraphic()).setTranslateX(10);
 
     toggle.setOnAction(e -> {
-      if (toggle.getStyleClass().contains("toggle-on")) {
-        turnOff.run();
-      } else {
-        turnOn.run();
-      }
+      boolean isOn = toggle.getStyleClass().contains("toggle-on");
+      toggle.getStyleClass().remove(isOn ? "toggle-on" : "toggle-off");
+      toggle.getStyleClass().add(isOn ? "toggle-off" : "toggle-on");
+
+      TranslateTransition t = new TranslateTransition(
+          Duration.millis(150), (Label) toggle.getGraphic());
+      t.setToX(isOn ? -10 : 10);
+      t.play();
+
+      onChange.accept(!isOn);
     });
 
-    volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-      if (newVal.doubleValue() > 0) {
-        turnOn.run();
-      } else {
-        turnOff.run();
-      }
-    });
-
-    HBox row = new HBox(soundContent, spacer, toggle);
+    HBox row = new HBox(text, spacer, toggle);
     row.setAlignment(Pos.CENTER_LEFT);
     row.getStyleClass().add("settings-row");
     return row;
@@ -214,6 +276,26 @@ public class SettingsView extends VBox {
     row.setAlignment(Pos.CENTER_LEFT);
     row.getStyleClass().add("settings-row");
     return row;
+  }
+
+  private void setToggleState(Button toggle, boolean on) {
+    boolean currentlyOn = toggle.getStyleClass().contains("toggle-on");
+    if (currentlyOn == on) return;
+
+    toggle.getStyleClass().remove(currentlyOn ? "toggle-on" : "toggle-off");
+    toggle.getStyleClass().add(on ? "toggle-on" : "toggle-off");
+
+    TranslateTransition t = new TranslateTransition(
+        Duration.millis(150), (Label) toggle.getGraphic());
+    t.setToX(on ? 10 : -10);
+    t.play();
+  }
+
+  private void ensureMasterOn() {
+    if (soundManager.isMasterEnabled()) return;
+    setToggleState(masterToggle, true);
+    soundManager.setMasterEnabled(true);
+    masterSlider.setDisable(false);
   }
 
   private Button createToggle(boolean initialState) {
