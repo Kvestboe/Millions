@@ -25,7 +25,7 @@ class ShareTest {
 
     assertEquals(stock, share.getStock());
     assertEquals(bd("3"), share.getQuantity());
-    assertEquals(bd("250"), share.getPurchasePrice());
+    assertEquals(0, bd("250").compareTo(share.getPurchasePrice()));
   }
 
   @Test
@@ -76,7 +76,7 @@ class ShareTest {
 
   @Test
   void getPurchasePrice_returnsPurchasePrice() {
-    assertEquals(bd("310"), share.getPurchasePrice());
+    assertEquals(0, bd("310").compareTo(share.getPurchasePrice()));
   }
 
   // Helper method

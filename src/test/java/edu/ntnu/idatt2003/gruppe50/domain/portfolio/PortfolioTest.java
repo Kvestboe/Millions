@@ -163,7 +163,7 @@ class PortfolioTest {
     portfolio.addShare(share1);
     portfolio.addShare(share2);
     portfolio.addShare(share3);
-    assertEquals(bd("8815.350"), portfolio.getNetWorth());
+    assertEquals(0, bd("8815.350").compareTo(portfolio.getNetWorth()));
   }
 
   // Helper method
