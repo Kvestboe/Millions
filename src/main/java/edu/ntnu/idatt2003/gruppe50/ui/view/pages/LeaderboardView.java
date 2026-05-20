@@ -76,7 +76,8 @@ public class LeaderboardView extends VBox {
     });
 
     TableColumn<LeaderboardEntry, String> nameCol = new TableColumn<>("Player");
-    nameCol.setCellValueFactory(new PropertyValueFactory<>("playerName"));
+    nameCol.setCellValueFactory(c ->
+        new SimpleObjectProperty<>(c.getValue().playerName()));
 
     TableColumn<LeaderboardEntry, Number> scoreCol = new TableColumn<>();
     scoreCol.setGraphic(buildScoreHeader());
