@@ -1062,3 +1062,18 @@
 .week-summary-popup .bottom-bar-value      { -fx-text-fill: -text-primary; }
 .week-summary-popup .bottom-bar-value-gold { -fx-text-fill: -accent-gold; }
 .week-summary-popup .holding-row .label    { -fx-text-fill: -text-primary; }
+/* btn-accent finnes ikke ennå */
+.btn-accent {
+    -fx-background-color: -accent-gold;
+    -fx-text-fill: -bg-primary;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-padding: 10 18 10 18;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-accent:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}

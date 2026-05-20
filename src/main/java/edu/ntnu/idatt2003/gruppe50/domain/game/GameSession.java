@@ -250,6 +250,12 @@ public final class GameSession {
    */
   public void advanceWeek() {
     ensureActive();
+
+    BigDecimal hangarCost = player.getStartingMoney()
+        .multiply(BigDecimal.valueOf(difficulty.getHangarCostRate()))
+        .setScale(2, RoundingMode.HALF_UP);
+    player.withdrawMoney(hangarCost);
+
     exchange.advance();
     netWorthHistory.add(player.getNetWorth());
     exchange.notifyObservers();

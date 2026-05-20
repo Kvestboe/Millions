@@ -3,6 +3,8 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import edu.ntnu.idatt2003.gruppe50.GameSessionControllerBundle;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameOutcome;
+import edu.ntnu.idatt2003.gruppe50.domain.game.GameResult;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
@@ -89,16 +91,17 @@ public class GameViewCoordinator {
 
     bundle.game().setOutcomeListener(outcome -> {
       GameSession session = bundle.session();
-      BigDecimal finalNetWorth = session.getPlayer().getNetWorth();
-      int weeksPlayed = session.getExchange().getWeek();
-      Difficulty difficulty = session.getDifficulty();
+      GameResult result = new GameResult(
+          outcome == GameOutcome.WON,
+          session.getPlayer().getNetWorth(),
+          session.getPlayer().getStartingMoney(),
+          session.getExchange().getWeek(),
+          session.getDifficulty()
+      );
 
       root.setTop(null);
       root.setBottom(null);
-      navManager.show(new GameOverView(
-          outcome, finalNetWorth, weeksPlayed, difficulty,
-          onPlayAgain, onMainMenu
-      ));
+      navManager.show(new GameOverView(result, onPlayAgain, onMainMenu));
     });
 
     popupHost = new StackPane(root);
