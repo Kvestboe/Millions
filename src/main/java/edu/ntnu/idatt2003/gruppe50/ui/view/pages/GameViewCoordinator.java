@@ -134,7 +134,7 @@ public class GameViewCoordinator {
     });
 
     popupHost = new StackPane(root);
-    Scene scene = new Scene(popupHost, WindowConfig.WIDTH, WindowConfig.HEIGHT);
+    Scene scene = new Scene(popupHost);
     return scene;
   }
 

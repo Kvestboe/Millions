@@ -54,7 +54,7 @@ public final class AppRouter {
     menu.setOnLoadGame(this::showLoadGame);
     menu.setOnLeaderboard(this::showLeaderboard);
     menu.setOnContinueGame(this::showContinueGame);
-    show(new Scene(menu, WindowConfig.WIDTH, WindowConfig.HEIGHT));
+    show(new Scene(menu));
   }
 
   private void showLoadGame() {
@@ -65,7 +65,7 @@ public final class AppRouter {
         this::switchToGame
     );
     LoadGameView view = new LoadGameView(controller, this::showMainMenu);
-    show(new Scene(view, WindowConfig.WIDTH, WindowConfig.HEIGHT));
+    show(new Scene(view));
   }
 
   private void showNewGame() {
@@ -113,7 +113,7 @@ public final class AppRouter {
 
   private void showLeaderboard() {
     LeaderboardView view = new LeaderboardView(module.leaderboard, this::showMainMenu);
-    show(new Scene(view, WindowConfig.WIDTH, WindowConfig.HEIGHT));
+    show(new Scene(view));
   }
 
   private void showSettings() {
@@ -123,9 +123,10 @@ public final class AppRouter {
           isFullscreen = fullscreen;
           stage.setFullScreen(fullscreen);
         },
-        soundManager   // ← ny parameter
+        stage.isFullScreen(),
+        soundManager
     );
-    show(new Scene(settings, WindowConfig.WIDTH, WindowConfig.HEIGHT));
+    show(new Scene(settings));
   }
 
   private void show(Scene scene) {
@@ -137,9 +138,10 @@ public final class AppRouter {
       }
         });
 
+    boolean wasFullscreen = isFullscreen;
     themeManager.apply(scene);
     stage.setScene(scene);
-    stage.setFullScreen(isFullscreen);
+    stage.setFullScreen(wasFullscreen);
     stage.show();
   }
 }

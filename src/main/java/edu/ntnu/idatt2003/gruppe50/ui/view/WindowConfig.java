@@ -2,8 +2,8 @@ package edu.ntnu.idatt2003.gruppe50.ui.view;
 
 public final class WindowConfig {
 
-  public static final int WIDTH = 1280;
-  public static final int HEIGHT = 800;
+  public static final int WIDTH = 900;
+  public static final int HEIGHT = 600;
 
   private WindowConfig() {}
 }

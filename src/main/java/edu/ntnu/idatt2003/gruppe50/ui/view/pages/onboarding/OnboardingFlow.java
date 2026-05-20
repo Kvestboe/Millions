@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.CapitalStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.LaunchStep;
@@ -71,7 +72,7 @@ public class OnboardingFlow {
   public Scene getScene() {
     Parent root = buildLayout();
     showCurrentStep();
-    return new Scene(root, 900, 600);
+    return new Scene(root);
   }
 
   /**
