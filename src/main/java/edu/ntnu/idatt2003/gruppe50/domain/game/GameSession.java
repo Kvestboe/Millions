@@ -7,6 +7,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.StopLossOrder;
+import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -62,7 +63,10 @@ public final class GameSession {
       List<BigDecimal> netWorthHistory
   ) {
     this(gameId, player, exchange, difficulty, state, runStartedAt, lastPlayed);
-    this.netWorthHistory = netWorthHistory;
+    this.netWorthHistory = new ArrayList<>(netWorthHistory.size());
+    for (BigDecimal value : netWorthHistory) {
+      this.netWorthHistory.add(Money.round(value));
+    }
   }
 
   /**

@@ -52,7 +52,7 @@ public class PlayerTest {
   @Test
   void addMoney_increasesBalanceByGivenAmount() {
     player.addMoney(bd("10"));
-    assertEquals(bd("110"), player.getMoney());
+    assertEquals(0, bd("110").compareTo(player.getMoney()));
   }
 
   @Test
@@ -73,7 +73,7 @@ public class PlayerTest {
   @Test
   void withdrawMoney_decreasesBalanceByGivenAmount() {
     player.withdrawMoney(bd("10"));
-    assertEquals(bd("90"), player.getMoney());
+    assertEquals(0, bd("90").compareTo(player.getMoney()));
   }
 
   @Test

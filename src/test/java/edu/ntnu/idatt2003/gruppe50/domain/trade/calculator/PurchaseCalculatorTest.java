@@ -31,7 +31,7 @@ public class PurchaseCalculatorTest {
 
   @Test
   void calculateGross_returnsCorrectValue() {
-    assertEquals(bd("500"), calc.calculateGross());
+    assertEquals(0, bd("500").compareTo(calc.calculateGross()));
   }
 
   @Test

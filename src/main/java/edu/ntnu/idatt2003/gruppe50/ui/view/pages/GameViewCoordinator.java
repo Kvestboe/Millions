@@ -19,6 +19,8 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekHolding;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.WeekSummaryPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
@@ -96,7 +98,7 @@ public class GameViewCoordinator {
     bundle.session().getExchange().addObserver(this::refreshBottomBar);
 
     navManager.navigateTo(PageId.DASHBOARD);
-    bundle.market().setOnStockSelected(this::navigateToStockDetail);
+    bundle.market().setOnStockSelected(stock -> navigateToStockDetail(stock, PageId.MARKET));
 
     bundle.game().setOutcomeListener(outcome -> {
       GameSession session = bundle.session();
@@ -133,7 +135,6 @@ public class GameViewCoordinator {
 
     popupHost = new StackPane(root);
     Scene scene = new Scene(popupHost, WindowConfig.WIDTH, WindowConfig.HEIGHT);
-    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
     return scene;
   }
 
@@ -141,8 +142,10 @@ public class GameViewCoordinator {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
-    pages.put(PageId.MARKET, new MarketView(bundle.market(), this::navigateToStockDetail));
-    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(), bundle.game()));
+    pages.put(PageId.MARKET, new MarketView(bundle.market(), stock -> navigateToStockDetail(stock, PageId.MARKET)));
+    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(),
+        shareDto -> bundle.market().findBySymbol(shareDto.symbol())
+            .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))));
     pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
@@ -150,12 +153,12 @@ public class GameViewCoordinator {
     return pages;
   }
 
-  private void navigateToStockDetail(StockDto stock) {
+  private void navigateToStockDetail(StockDto stock, PageId backTo) {
     StockDetailView view = new StockDetailView(
         stock,
         bundle.stockQuery(),
         bundle.orderPlacement(),
-        () -> navManager.navigateTo(PageId.MARKET));
+        () -> navManager.navigateTo(backTo));
     navManager.show(view);
   }
 
@@ -165,31 +168,19 @@ public class GameViewCoordinator {
     deltaValue    = new Label();
     cashValue     = new Label();
 
-    HBox week     = stat("Week",       weekValue,     "bottom-bar-value");
-    HBox netWorth = stat("Net worth",  netWorthValue, "bottom-bar-value-gold");
-    HBox delta    = stat("This week",  deltaValue,    "bottom-bar-value");
-    HBox cash     = stat("Cash",       cashValue,     "bottom-bar-value");
+    VBox week = StatCardFactory.compact("Week", weekValue, "bottom-bar-value");
+    VBox netWorth = StatCardFactory.compact("Net worth", netWorthValue, "bottom-bar-value-gold");
+    VBox delta = StatCardFactory.compact("This week", deltaValue, "bottom-bar-value");
+    VBox cash = StatCardFactory.compact("Cash", cashValue, "bottom-bar-value");
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    advanceButton = new Button();
-    advanceButton.getStyleClass().add("advance-button");
-    advanceButton.setOnAction(_ -> onAdvanceWeek());
+    advanceButton = ButtonFactory.styled("", "advance-button", this::onAdvanceWeek);
 
     HBox bar = new HBox(week, netWorth, delta, cash, spacer, advanceButton);
     bar.getStyleClass().add("bottom-bar");
     return bar;
-  }
-
-  private HBox stat(String label, Label value, String valueClass) {
-    Label l = new Label(label.toUpperCase());
-    l.getStyleClass().add("bottom-bar-label");
-    value.getStyleClass().add(valueClass);
-
-    VBox box = new VBox(l, value);
-    box.getStyleClass().add("bottom-bar-stat");
-    return new HBox(box);
   }
 
   private void onAdvanceWeek() {

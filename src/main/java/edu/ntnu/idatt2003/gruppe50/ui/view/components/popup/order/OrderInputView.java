@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.OrderType;
 import javafx.collections.FXCollections;
@@ -113,12 +114,8 @@ public class OrderInputView extends VBox{
   }
 
   private HBox buildFormActions() {
-    Button cancelBtn = new Button("Cancel");
-    cancelBtn.setOnAction(e -> onCancel.run());
-
-    Button nextBtn = new Button("Next");
-    nextBtn.getStyleClass().add("primary");
-    nextBtn.setOnAction(e -> handleNext());
+    Button cancelBtn = ButtonFactory.secondary("Cancel", onCancel);
+    Button nextBtn = ButtonFactory.styled("Next", "primary", this::handleNext);
 
     HBox actions = new HBox(10, cancelBtn, nextBtn);
     actions.setAlignment(Pos.CENTER_RIGHT);

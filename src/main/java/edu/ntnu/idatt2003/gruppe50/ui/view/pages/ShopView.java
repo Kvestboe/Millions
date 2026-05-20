@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.function.Consumer;
 
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -146,10 +147,8 @@ public class ShopView extends ScrollPane implements Page {
         (observable, oldValue, newValue) -> updateBuyPreview()
     );
 
-    Button buyButton = new Button();
-    buyButton.getStyleClass().add("shop-buy-button");
+    Button buyButton = ButtonFactory.styled("", "shop-buy-button", this::buyCoins);
     buyButton.textProperty().bind(buyPreviewLabel.textProperty());
-    buyButton.setOnAction(event -> buyCoins());
 
     HBox buyRow = new HBox(8, coinAmountField, buyButton);
     buyRow.setAlignment(Pos.CENTER_LEFT);
@@ -199,10 +198,9 @@ public class ShopView extends ScrollPane implements Page {
     Label meta = new Label(createThemeMetaText(item));
     meta.getStyleClass().add("theme-card-meta");
 
-    Button button = new Button(createThemeButtonText(item));
-    button.getStyleClass().add("theme-buy-button");
+    Button button = ButtonFactory.styled(
+        createThemeButtonText(item), "theme-buy-button", () -> purchaseItem(item));
     button.setDisable(isActiveTheme(item));
-    button.setOnAction(event -> purchaseItem(item));
 
     Region spacer = new Region();
     VBox.setVgrow(spacer, Priority.ALWAYS);

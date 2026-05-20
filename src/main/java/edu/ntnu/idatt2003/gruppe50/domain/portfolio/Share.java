@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class Share {
 
     this.stock = stock;
     this.quantity = quantity;
-    this.purchasePrice = purchasePrice;
+    this.purchasePrice = Money.round(purchasePrice);
     this.purchaseWeek = purchaseWeek;
   }
 

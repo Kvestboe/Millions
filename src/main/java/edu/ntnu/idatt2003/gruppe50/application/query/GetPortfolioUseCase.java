@@ -8,9 +8,12 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /** Retrieves portfolio-related data for a game session. */
 public final class GetPortfolioUseCase {
@@ -50,7 +53,11 @@ public final class GetPortfolioUseCase {
 
     List<BigDecimal> netWorthHistory = session.getNetWorthHistory();
 
-    return new Response(new PortfolioDto(cash, portfolioValue, netWorth, shares, netWorthHistory));
+    var archive = player.getTransactionArchive().getTransactions();
+    Set<Integer> buyWeeks  = archive.stream().filter(t ->  t instanceof Purchase).map(t -> t.getWeek()).collect(Collectors.toSet());
+    Set<Integer> sellWeeks = archive.stream().filter(t -> !(t instanceof Purchase)).map(t -> t.getWeek()).collect(Collectors.toSet());
+
+    return new Response(new PortfolioDto(cash, portfolioValue, netWorth, shares, netWorthHistory, buyWeeks, sellWeeks));
   }
 
   /**

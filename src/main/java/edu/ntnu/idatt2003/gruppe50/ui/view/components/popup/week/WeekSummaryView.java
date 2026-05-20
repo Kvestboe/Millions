@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekHolding;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -87,9 +88,7 @@ public class WeekSummaryView extends VBox {
   }
 
   private Button sectionButton(String label, int count, Runnable onClick) {
-    Button btn = new Button(label + "  (" + count + ")");
-    btn.getStyleClass().add("section-button");
-    btn.setOnAction(e -> onClick.run());
+    Button btn = ButtonFactory.styled(label + "  (" + count + ")", "section-button", onClick);
     btn.setDisable(count == 0);
     return btn;
   }
@@ -129,9 +128,7 @@ public class WeekSummaryView extends VBox {
   }
 
   private HBox buildActions() {
-    Button cont = new Button("Continue →");
-    cont.getStyleClass().add("primary");
-    cont.setOnAction(e -> onClose.run());
+    Button cont = ButtonFactory.styled("Continue →", "primary", onClose);
     HBox row = new HBox(cont);
     row.setAlignment(Pos.CENTER_RIGHT);
     return row;

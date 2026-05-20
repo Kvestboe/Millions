@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.domain.shop;
 
+import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -36,12 +37,12 @@ public class CoinExchange {
   public CoinExchange(BigDecimal startingCapital) {
     Validate.positive(startingCapital, "Starting capital");
 
-    BigDecimal basePrice = BASE_PRICE_PER_COIN.multiply(
+    BigDecimal basePrice = Money.round(BASE_PRICE_PER_COIN.multiply(
         startingCapital.divide(BASE_CAPITAL, 4, RoundingMode.HALF_UP)
-    );
+    ));
 
-    this.minPrice = basePrice.multiply(MIN_MULTIPLIER);
-    this.maxPrice = basePrice.multiply(MAX_MULTIPLIER);
+    this.minPrice = Money.round(basePrice.multiply(MIN_MULTIPLIER));
+    this.maxPrice = Money.round(basePrice.multiply(MAX_MULTIPLIER));
 
     priceHistory.add(basePrice);
   }
@@ -73,7 +74,7 @@ public class CoinExchange {
    */
   public BigDecimal calculateCost(int coins) {
     Validate.positiveInt(coins, "Coins");
-    return getCurrentPricePerCoin().multiply(BigDecimal.valueOf(coins));
+    return Money.round(getCurrentPricePerCoin().multiply(BigDecimal.valueOf(coins)));
   }
 
   /**
@@ -89,7 +90,7 @@ public class CoinExchange {
     BigDecimal multiplier = BigDecimal.ONE.add(BigDecimal.valueOf(change));
 
     BigDecimal newPrice = currentPrice.multiply(multiplier);
-    priceHistory.add(clamp(newPrice));
+    priceHistory.add(Money.round(clamp(newPrice)));
   }
 
   private BigDecimal clamp(BigDecimal price) {

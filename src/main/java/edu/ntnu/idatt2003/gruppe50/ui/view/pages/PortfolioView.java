@@ -4,7 +4,7 @@ import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactor
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.PortfolioDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
+import java.util.function.Consumer;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -27,7 +28,8 @@ public class PortfolioView extends VBox implements Page {
   private final TableView<ShareDto> holdingsTable;
   private final AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
 
-  public PortfolioView(PortfolioQueryController queryController, GameController gameController) {
+  public PortfolioView(PortfolioQueryController queryController,
+      Consumer<ShareDto> onShareSelected) {
     Label title = new Label("Portfolio");
     Label holdingsTitle = new Label("My holdings");
 
@@ -35,13 +37,14 @@ public class PortfolioView extends VBox implements Page {
 
     VBox cardContainer = createCardContainer(p);
     AreaChart<Number, Number> chart = createNetWorthChart(p.get());
-    holdingsTable = createHoldingsTable();
+    holdingsTable = createHoldingsTable(onShareSelected);
 
     holdingsTable.setItems(queryController.getShares());
 
-    p.addListener((_, _, portfolio) ->
-        netWorthChart.display("Net Worth", portfolio.netWorthHistory())
-    );
+    p.addListener((_, _, portfolio) -> {
+      netWorthChart.display("Net Worth", portfolio.netWorthHistory());
+      netWorthChart.setMarkers(portfolio.buyWeeks(), portfolio.sellWeeks(), portfolio.netWorthHistory());
+    });
 
     HBox topSection = new HBox(16, cardContainer, chart);
     HBox.setHgrow(chart, Priority.ALWAYS);
@@ -50,7 +53,7 @@ public class PortfolioView extends VBox implements Page {
     holdingsTitle.getStyleClass().add("section-title");
     this.getStyleClass().add("portfolio-view");
     this.getChildren().addAll(title, topSection, holdingsTitle, holdingsTable);
-    this.getStylesheets().add(getClass().getResource("/css/portfolio.css").toExternalForm());
+    this.getStylesheets().add(getClass().getResource("/css/views/portfolio.css").toExternalForm());
   }
 
   @Override
@@ -77,6 +80,8 @@ public class PortfolioView extends VBox implements Page {
     portfolioValueCard.getStyleClass().add("info-card");
     cashBalanceCard.getStyleClass().add("info-card");
     netWorthCard.getStyleClass().add("info-card");
+    portfolioValueLabel.getStyleClass().add("card-value");
+    playerCashLabel.getStyleClass().add("card-value");
     netWorthLabel.getStyleClass().add("net-worth-value");
 
     VBox container = new VBox(portfolioValueCard, cashBalanceCard, netWorthCard);
@@ -90,12 +95,13 @@ public class PortfolioView extends VBox implements Page {
 
   private AreaChart<Number, Number> createNetWorthChart(PortfolioDto portfolio) {
     netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
+    netWorthChart.setMarkers(portfolio.buyWeeks(), portfolio.sellWeeks(), portfolio.netWorthHistory());
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
   }
 
-  private TableView<ShareDto> createHoldingsTable() {
-    TableView<ShareDto> holdingsTable = createTable(List.of(
+  private TableView<ShareDto> createHoldingsTable(Consumer<ShareDto> onShareSelected) {
+    TableView<ShareDto> t = createTable(List.of(
         ColumnPresets.text("Symbol", ShareDto::symbol),
         ColumnPresets.text("Company", ShareDto::stock),
         ColumnPresets.bigDecimal("Quantity", ShareDto::quantity),
@@ -103,10 +109,16 @@ public class PortfolioView extends VBox implements Page {
         ColumnPresets.currency("Current value", ShareDto::currentShareValue),
         ColumnPresets.signedCurrency("Gain/Loss", ShareDto::gain),
         ColumnPresets.signedPercent("Change %", ShareDto::percentageGain)
-
     ));
-    holdingsTable.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
-    return holdingsTable;
+    t.setPlaceholder(new Label("You don't own any shares yet. Go to the Market to buy!"));
+    t.setRowFactory(_ -> {
+      TableRow<ShareDto> row = new TableRow<>();
+      row.setOnMousePressed(_ -> {
+        if (!row.isEmpty()) onShareSelected.accept(row.getItem());
+      });
+      return row;
+    });
+    return t;
   }
 
 }

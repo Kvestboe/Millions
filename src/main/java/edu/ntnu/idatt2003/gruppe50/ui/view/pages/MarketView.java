@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
@@ -67,6 +68,7 @@ public class MarketView extends VBox implements Page {
     VBox box = new VBox(10, title, searchField, table);
     VBox.setVgrow(table, Priority.ALWAYS);
     box.getStyleClass().add("market-root");
+    box.getStylesheets().add(getClass().getResource("/css/views/market.css").toExternalForm());
     return box;
   }
 
@@ -87,11 +89,12 @@ public class MarketView extends VBox implements Page {
         ColumnPresets.signedPercent("+/- (%)", StockDto::percentChange)
     ));
     marketTable.setItems(queryController.getStocks());
-    marketTable.setOnMousePressed(_ -> {
-      StockDto selected = table.getSelectionModel().getSelectedItem();
-      if (selected != null) {
-        onStockSelected.accept(selected);
-      }
+    marketTable.setRowFactory(_ -> {
+      TableRow<StockDto> row = new TableRow<>();
+      row.setOnMousePressed(_ -> {
+        if (!row.isEmpty()) onStockSelected.accept(row.getItem());
+      });
+      return row;
     });
     return marketTable;
   }

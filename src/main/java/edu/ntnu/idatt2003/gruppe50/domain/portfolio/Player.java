@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.InsufficientCoinsException;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
+import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -45,8 +46,8 @@ public class Player {
       TransactionArchive transactions
   ) {
     this.name = name;
-    this.startingMoney = startingMoney;
-    this.money = money;
+    this.startingMoney = Money.round(startingMoney);
+    this.money = Money.round(money);
     this.portfolio = portfolio;
     this.transactionArchive = transactions;
   }
@@ -96,7 +97,7 @@ public class Player {
    */
   public void addMoney(BigDecimal amount) {
     Validate.positive(amount, "Amount");
-    money = money.add(amount);
+    money = Money.round(money.add(amount));
   }
 
   /**
@@ -107,7 +108,7 @@ public class Player {
    */
   public void withdrawMoney(BigDecimal amount) {
     Validate.positive(amount, "Amount");
-    money = money.subtract(amount);
+    money = Money.round(money.subtract(amount));
   }
 
   /**

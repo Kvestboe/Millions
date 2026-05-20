@@ -31,7 +31,7 @@ public class SaleCalculatorTest {
 
   @Test
   void calculateGross_returnsCorrectValue() {
-    assertEquals(bd("500"), calc.calculateGross());
+    assertEquals(0, bd("500").compareTo(calc.calculateGross()));
   }
 
   @Test
@@ -51,7 +51,7 @@ public class SaleCalculatorTest {
     calc = new SaleCalculator(share);
     BigDecimal profit = bd("100").subtract(calc.calculateCommission());
 
-    assertEquals(profit.multiply(bd("0.3")), calc.calculateTax());
+    assertEquals(0, profit.multiply(bd("0.3")).compareTo(calc.calculateTax()));
   }
 
   @Test
