@@ -17,6 +17,13 @@ public class AreaChartView {
 
   public AreaChartView(String xlabel, String ylabel) {
     NumberAxis xaxis = new NumberAxis();
+    xaxis.setAutoRanging(false);
+    xaxis.setLowerBound(1);
+    xaxis.setUpperBound(1);
+    xaxis.setTickUnit(1);
+    xaxis.setMinorTickVisible(false);
+    xaxis.setForceZeroInRange(false);
+
     NumberAxis yaxis = new NumberAxis();
 
     xaxis.setLabel(xlabel);
@@ -43,9 +50,12 @@ public class AreaChartView {
 
     List<XYChart.Data<Number, Number>> points = new ArrayList<>(history.size());
     for (int i = 0; i < history.size(); i++) {
-      points.add(new XYChart.Data<>(i, history.get(i)));
+      points.add(new XYChart.Data<>(i + 1, history.get(i)));
     }
     series.getData().setAll(points);
+    NumberAxis xaxis = (NumberAxis) chart.getXAxis();
+    xaxis.setLowerBound(1);
+    xaxis.setUpperBound(Math.max(history.size(), 2));
   }
 
   public void setMarkers(Set<Integer> buyWeeks, Set<Integer> sellWeeks, List<BigDecimal> history) {
@@ -56,8 +66,9 @@ public class AreaChartView {
   private List<XYChart.Data<Number, Number>> toPoints(Set<Integer> weeks, List<BigDecimal> history) {
     List<XYChart.Data<Number, Number>> points = new ArrayList<>(weeks.size());
     for (int week : weeks) {
-      if (week < history.size()) {
-        points.add(new XYChart.Data<>(week, history.get(week)));
+      int idx = week - 1;
+      if (idx >= 0 && idx < history.size()) {
+        points.add(new XYChart.Data<>(week, history.get(idx)));   // x = faktisk uke
       }
     }
     return points;

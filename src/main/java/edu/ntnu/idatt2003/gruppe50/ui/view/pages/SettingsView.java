@@ -19,6 +19,7 @@ public class SettingsView extends VBox {
 
   private final Runnable onBack;
   private final Consumer<Boolean> onFullscreen;
+  private final boolean initialFullscreen;
   private final SoundManager soundManager;
 
   private Button masterToggle;
@@ -26,9 +27,10 @@ public class SettingsView extends VBox {
   private Button musicToggle;
   private Button sfxToggle;
 
-  public SettingsView(Runnable onBack, Consumer<Boolean> onFullscreen, SoundManager soundManager) {
+  public SettingsView(Runnable onBack, Consumer<Boolean> onFullscreen, boolean initialFullscreen, SoundManager soundManager) {
     this.onBack = onBack;
     this.onFullscreen = onFullscreen;
+    this.initialFullscreen = initialFullscreen;
     this.soundManager = soundManager;
     build();
   }
@@ -92,17 +94,14 @@ public class SettingsView extends VBox {
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    Button toggle = createToggle(false);
+    Button toggle = createToggle(initialFullscreen);
+    if (initialFullscreen) {
+      ((Label) toggle.getGraphic()).setTranslateX(10);
+    }
+
     toggle.setOnAction(e -> {
       boolean isOn = toggle.getStyleClass().contains("toggle-on");
-      toggle.getStyleClass().remove(isOn ? "toggle-on" : "toggle-off");
-      toggle.getStyleClass().add(isOn ? "toggle-off" : "toggle-on");
-
-      TranslateTransition t = new TranslateTransition(
-          Duration.millis(150), (Label) toggle.getGraphic());
-      t.setToX(isOn ? -10 : 10);
-      t.play();
-
+      setToggleState(toggle, !isOn);
       onFullscreen.accept(!isOn);
     });
 

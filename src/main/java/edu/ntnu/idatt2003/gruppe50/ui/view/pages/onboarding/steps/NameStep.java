@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 public class NameStep implements OnboardingStep {
 
   private final TextField nameField = new TextField();
+  private final Label errorLabel = new Label();
 
   /**
    * Builds and returns the name input layout.
@@ -43,8 +44,29 @@ public class NameStep implements OnboardingStep {
     nameField.getStyleClass().add("input-field");
     nameField.setMaxWidth(Double.MAX_VALUE);
 
-    container.getChildren().addAll(title, subtitle, fieldLabel, nameField);
+    errorLabel.getStyleClass().add("error-label");
+    errorLabel.setVisible(false);
+
+    container.getChildren().addAll(title, subtitle, fieldLabel, nameField, errorLabel);
     return container;
+  }
+
+  /**
+   * Shows a validation message for invalid name input.
+   *
+   * @param message the message to show
+   * @return false so callers can return directly from validation
+   */
+  private boolean showError(String message) {
+    errorLabel.setText(message);
+    errorLabel.setVisible(true);
+    return false;
+  }
+
+  /** Clears the validation message when the name input is valid. */
+  private void clearError() {
+    errorLabel.setText("");
+    errorLabel.setVisible(false);
   }
 
   /**
@@ -54,7 +76,11 @@ public class NameStep implements OnboardingStep {
    */
   @Override
   public boolean isValid() {
-    return !nameField.getText().isBlank();
+    if (nameField.getText().isBlank()) {
+      return showError("Please enter your name");
+    }
+    clearError();
+    return true;
   }
 
   /**

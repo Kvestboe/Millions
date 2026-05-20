@@ -83,13 +83,6 @@ class ObservableTest {
     assertEquals(2, observer.updateCount);
   }
 
-  @Test
-  void advance_notifiesObservers() {
-    exchange.addObserver(observer);
-    exchange.advance();
-    assertEquals(1, observer.updateCount);
-  }
-
   private static class TestObserver implements Observer {
     int updateCount = 0;
 

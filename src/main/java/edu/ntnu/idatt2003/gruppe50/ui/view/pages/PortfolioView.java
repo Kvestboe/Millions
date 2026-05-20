@@ -105,7 +105,7 @@ public class PortfolioView extends VBox implements Page {
         ColumnPresets.text("Symbol", ShareDto::symbol),
         ColumnPresets.text("Company", ShareDto::stock),
         ColumnPresets.bigDecimal("Quantity", ShareDto::quantity),
-        ColumnPresets.currency("Purchase price", ShareDto::purchasePrice),
+        ColumnPresets.currency("GAV", ShareDto::purchasePrice),
         ColumnPresets.currency("Current value", ShareDto::currentShareValue),
         ColumnPresets.signedCurrency("Gain/Loss", ShareDto::gain),
         ColumnPresets.signedPercent("Change %", ShareDto::percentageGain)
