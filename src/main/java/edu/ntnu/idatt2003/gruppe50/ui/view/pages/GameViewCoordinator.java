@@ -234,7 +234,7 @@ public class GameViewCoordinator {
 
     BigDecimal hangarCost = bundle.session().getPlayer().getStartingMoney()
         .multiply(BigDecimal.valueOf(bundle.session().getDifficulty().getHangarCostRate()))
-        .setScale(0, RoundingMode.HALF_UP);
+        .setScale(2, RoundingMode.HALF_UP);
 
     return new WeekSummary(
         prevWeek,
