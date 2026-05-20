@@ -30,6 +30,7 @@ public class MarketStep implements OnboardingStep {
   private File selectedFile;
   private Label selectedLabel;
   private int selectedIndex = 0;
+  private String selectedMarketName = "S&P 500";
   private String selectedDisplayName = "S&P 500 (default)";
 
   /**
@@ -68,8 +69,7 @@ public class MarketStep implements OnboardingStep {
     VBox sp500  = createMarketOption("US", "S&P 500",
         "Top 500 US stocks by market cap", "/data/sp500.csv");
     VBox oslo   = createMarketOption("NO", "Oslo Børs",
-        "Norwegian stock exchange", "/data/oslo.csv");
-    // TODO: replace label and file with the fun market once created
+        "Norwegian stock exchange", "/data/osloBørs.csv");
     VBox funMkt = createMarketOption("🎲", "???",
         "A very serious market. Definitely not a joke.", "/data/fun.csv");
     VBox custom = createCustomOption();
@@ -103,6 +103,7 @@ public class MarketStep implements OnboardingStep {
     VBox card = buildCard(icon, name, description);
     card.setOnMouseClicked(_ -> {
       loadDefaultFile(resourcePath);
+      selectedMarketName = name;
       selectedDisplayName = "Selected: " + name;
       selectedLabel.setText(selectedDisplayName);
       selectCard(card);
@@ -126,6 +127,7 @@ public class MarketStep implements OnboardingStep {
       File file = chooser.showOpenDialog(stage);
       if (file != null) {
         selectedFile = file;
+        selectedMarketName = file.getName();
         selectedDisplayName = "Selected: " + file.getName();
         selectedLabel.setText(selectedDisplayName);
         selectCard(card);
@@ -206,12 +208,13 @@ public class MarketStep implements OnboardingStep {
   }
 
   /**
-   * Sets the chosen stock file on the shared onboarding data.
+   * Sets the chosen stock file and market display name on the shared onboarding data.
    *
    * @param data the shared mutable onboarding data object
    */
   @Override
   public void contribute(OnboardingFlowData data) {
     data.stockFile = selectedFile;
+    data.marketName = selectedMarketName;
   }
 }
