@@ -26,4 +26,28 @@ public record WeekSummary(
   public BigDecimal portfolioMovement() {
     return weeklyDelta().add(hangarCost);
   }
+
+  /**
+   * Returns the gross movement of all holdings before fees, tax and hangar cost.
+   *
+   * @return the sum of all holding deltas for the week
+   */
+  public BigDecimal holdingsMovement() {
+    return holdings.stream()
+        .map(WeekHolding::weeklyDelta)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  /**
+   * Returns the impact from fees and tax on the weekly portfolio movement.
+   *
+   * <p>This is the difference between the net portfolio movement and the gross
+   * holdings movement. It is usually negative when profitable holdings are taxed
+   * or affected by sales commission.
+   *
+   * @return fees and tax impact for the week
+   */
+  public BigDecimal feesAndTaxImpact() {
+    return portfolioMovement().subtract(holdingsMovement());
+  }
 }

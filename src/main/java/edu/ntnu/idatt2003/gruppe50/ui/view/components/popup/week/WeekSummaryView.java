@@ -90,8 +90,14 @@ public class WeekSummaryView extends VBox {
     Label header = new Label("Weekly breakdown");
     header.getStyleClass().add("popup-title");
 
+    BigDecimal taxEffect = summary.feesAndTaxImpact();
+    String taxEffectLabel = taxEffect.signum() >= 0
+        ? "Reduced tax liability"
+        : "Tax and fee drag";
+
     VBox rows = new VBox(6,
-        row("Portfolio movement", MoneyFormat.formatSignedCurrency(summary.portfolioMovement())),
+        row("Holdings movement", MoneyFormat.formatSignedCurrency(summary.holdingsMovement())),
+        row(taxEffectLabel, MoneyFormat.formatSignedCurrency(taxEffect)),
         row("Hangar cost", MoneyFormat.formatSignedCurrency(summary.hangarCost().negate())),
         row("Weekly result", MoneyFormat.formatSignedCurrency(summary.weeklyDelta()))
     );
