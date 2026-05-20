@@ -43,12 +43,15 @@ public record GameSessionControllerBundle(
         ),
         new OrdersController(session.getGameId(), m.getPendingOrders, session.getExchange()),
         new ShopController(
+            session.getGameId(),
             new Shop(
                 new CoinExchange(session.getPlayer().getStartingMoney()),
                 ShopItemFactory.createDefaultItems()
             ),
             session.getPlayer(),
-            session.getDifficulty()
+            session.getDifficulty(),
+            m.buyCoins,
+            m.purchaseShopItem
         )
     );
   }

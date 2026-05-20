@@ -7,6 +7,7 @@ import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,16 +33,31 @@ public class Player {
       String name,
       BigDecimal startingMoney,
       BigDecimal money,
+      int coins,
+      String activeTheme,
+      List<String> ownedThemes,
       Portfolio portfolio,
       TransactionArchive transactions
   ) {
-    return new Player(name, startingMoney, money, portfolio, transactions);
+    return new Player(
+        name,
+        startingMoney,
+        money,
+        coins,
+        activeTheme,
+        ownedThemes,
+        portfolio,
+        transactions
+    );
   }
 
   private Player(
       String name,
       BigDecimal startingMoney,
       BigDecimal money,
+      int coins,
+      String activeTheme,
+      List<String> ownedThemes,
       Portfolio portfolio,
       TransactionArchive transactions
   ) {
@@ -50,6 +66,20 @@ public class Player {
     this.money = Money.round(money);
     this.portfolio = portfolio;
     this.transactionArchive = transactions;
+
+    this.coins = Math.max(0, coins);
+
+    this.activeTheme = activeTheme == null || activeTheme.isBlank()
+        ? DEFAULT_THEME
+        : activeTheme;
+
+    this.ownedThemes.add(DEFAULT_THEME);
+
+    if (ownedThemes != null) {
+      this.ownedThemes.addAll(ownedThemes);
+    }
+
+    this.ownedThemes.add(this.activeTheme);
   }
 
   /**

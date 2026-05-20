@@ -143,11 +143,23 @@ public class GameViewCoordinator {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
-    pages.put(PageId.MARKET, new MarketView(bundle.market(), stock -> navigateToStockDetail(stock, PageId.MARKET)));
-    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(),
+    pages.put(PageId.MARKET, new MarketView(
+        bundle.market(),
+        stock -> navigateToStockDetail(stock, PageId.MARKET)
+    ));
+    pages.put(PageId.PORTFOLIO, new PortfolioView(
+        bundle.portfolio(),
         shareDto -> bundle.market().findBySymbol(shareDto.symbol())
-            .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))));
-    pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
+            .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))
+    ));
+    pages.put(PageId.SHOP, shopView = new ShopView(
+        bundle.shop(),
+        onThemeChanged,
+        () -> {
+          bundle.portfolio().update();
+          refreshBottomBar();
+        }
+    ));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
 

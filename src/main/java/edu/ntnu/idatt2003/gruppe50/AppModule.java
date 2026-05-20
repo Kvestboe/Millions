@@ -2,11 +2,13 @@ package edu.ntnu.idatt2003.gruppe50;
 
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.BuyCoinsUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.PurchaseShopItemUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.DeleteSaveUseCase;
@@ -54,6 +56,8 @@ public final class AppModule {
   public final LeaderboardFileHandler leaderboardFile = new LeaderboardFileHandler();
   public final Leaderboard leaderboard = leaderboardFile.load();
   public final SoundManager soundManager = new SoundManager();
+  public final BuyCoinsUseCase buyCoins = new BuyCoinsUseCase(sessions);
+  public final PurchaseShopItemUseCase purchaseShopItem = new PurchaseShopItemUseCase(sessions);
 
   public GameSessionControllerBundle gameBundle(UUID gameId) {
     GameSession session = sessions.findById(gameId).orElseThrow(GameSessionNotFoundException::new);
