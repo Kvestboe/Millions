@@ -278,8 +278,6 @@ public class Exchange extends Observable {
     });
 
     processPendingOrders();
-
-    notifyObservers();
   }
 
   /**
