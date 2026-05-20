@@ -143,6 +143,7 @@ public class MainMenuView extends StackPane{
     continueBtn.setGraphic(content);
     continueBtn.setMaxWidth(340);
     continueBtn.getStyleClass().add("btn-accent");
+    continueBtn.setOnAction(e -> { if (onContinueGame != null) onContinueGame.run(); });
 
     return continueBtn;
   }
