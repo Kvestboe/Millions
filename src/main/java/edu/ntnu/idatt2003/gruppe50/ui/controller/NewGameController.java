@@ -46,7 +46,7 @@ public final class NewGameController {
 
     List<Stock> stocks = loadStocks(stockFile);
     Player player = createPlayer(playerName, startingCapital);
-    Exchange exchange = createExchange(stocks);
+    Exchange exchange = createExchange(stocks, difficulty);
 
     return startGameSession.execute(
         new StartGameSessionUseCase.Request(player, exchange, difficulty)).gameId();
@@ -60,7 +60,7 @@ public final class NewGameController {
     return new Player(name, startingCapital);
   }
 
-  private Exchange createExchange(List<Stock> stocks) {
-    return new Exchange("Stock exchange", stocks, new TransactionFactory());
+  private Exchange createExchange(List<Stock> stocks, Difficulty difficulty) {
+    return new Exchange("Stock exchange", stocks, new TransactionFactory(), difficulty.toVolatilityProfile());
   }
 }
