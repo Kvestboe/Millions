@@ -98,8 +98,12 @@ public final class AppRouter {
 
   public void switchToGame(UUID gameId) {
     module.loadGameSession.execute(new LoadGameSessionUseCase.Request(gameId));
+
+    GameSessionControllerBundle bundle = module.gameBundle(gameId);
+    themeManager.setTheme(bundle.session().getPlayer().getActiveTheme());
+
     show(new GameViewCoordinator(
-        module.gameBundle(gameId),
+        bundle,
         this::showMainMenu,
         this::showNewGame,
         themeName -> {

@@ -69,7 +69,7 @@ public final class PreviewOrderUseCase {
 
     int week = session.getExchange().getWeek();
 
-    return new Response(price, subTotal, commission, tax, total, week);
+    return new Response(price, subTotal, commission, tax, total, week, session.getPlayer().getMoney());
   }
 
 
@@ -87,7 +87,8 @@ public final class PreviewOrderUseCase {
       BigDecimal commission,
       BigDecimal tax,
       BigDecimal total,
-      int week
+      int week,
+      BigDecimal availableCash
   ) {}
 
 }

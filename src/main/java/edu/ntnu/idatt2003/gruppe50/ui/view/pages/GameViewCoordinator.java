@@ -26,6 +26,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.List;
@@ -142,11 +143,23 @@ public class GameViewCoordinator {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
-    pages.put(PageId.MARKET, new MarketView(bundle.market(), stock -> navigateToStockDetail(stock, PageId.MARKET)));
-    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(),
+    pages.put(PageId.MARKET, new MarketView(
+        bundle.market(),
+        stock -> navigateToStockDetail(stock, PageId.MARKET)
+    ));
+    pages.put(PageId.PORTFOLIO, new PortfolioView(
+        bundle.portfolio(),
         shareDto -> bundle.market().findBySymbol(shareDto.symbol())
-            .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))));
-    pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
+            .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))
+    ));
+    pages.put(PageId.SHOP, shopView = new ShopView(
+        bundle.shop(),
+        onThemeChanged,
+        () -> {
+          bundle.portfolio().update();
+          refreshBottomBar();
+        }
+    ));
     pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
 
@@ -231,13 +244,20 @@ public class GameViewCoordinator {
         .sorted((a, b) -> b.weeklyDelta().abs().compareTo(a.weeklyDelta().abs()))
         .toList();
 
+    BigDecimal hangarCost = bundle.session().getPlayer().getStartingMoney()
+        .multiply(BigDecimal.valueOf(bundle.session().getDifficulty().getHangarCostRate()))
+        .setScale(2, RoundingMode.HALF_UP);
+
     return new WeekSummary(
         prevWeek,
         bundle.session().getExchange().getWeek(),
-        before, after,
-        player.getMoney(),
+        before,
+        after,
+        bundle.session().getPlayer().getMoney(),
+        hangarCost,
         holdings,
-        List.of(), List.of()
+        List.of(),
+        List.of()
     );
   }
 
