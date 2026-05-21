@@ -60,4 +60,13 @@ public class NavBar extends HBox {
     });
     return btn;
   }
+
+  public void updatePlayerInfo(String name, String status, double progress) {
+    nameLabel.setText(name);
+    statusLabel.setText(status);
+    levelProgress.setProgress(progress);
+
+    levelProgress.getStyleClass().removeIf(c -> c.startsWith("level-progress-"));
+    levelProgress.getStyleClass().add("level-progress-" + status.toLowerCase());
+  }
 }

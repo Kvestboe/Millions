@@ -57,7 +57,8 @@ public class GameViewCoordinator {
   private NavigationManager navManager;
   private BorderPane root;
   private ShopView shopView;
-  private StackPane popupHost;   // ← ny linje
+  private StackPane popupHost;
+  private NavBar navBar;
 
   private HBox bottomBar;
   private Label weekValue;
@@ -87,8 +88,8 @@ public class GameViewCoordinator {
   }
 
   public Scene getScene() {
-    navManager = new NavigationManager(buildPages());
-    NavBar navBar = new NavBar(navManager::navigateTo);
+    navBar = new NavBar(navManager::navigateTo);
+    refreshNavBar();
 
     root = new BorderPane();
     root.setTop(navBar);
@@ -290,6 +291,8 @@ public class GameViewCoordinator {
 
     bottomBar.getStyleClass().remove("bottom-bar-danger");
     if (danger) bottomBar.getStyleClass().add("bottom-bar-danger");
+
+    refreshNavBar();
   }
 
   private void showPopup(Node popup) {
@@ -298,5 +301,26 @@ public class GameViewCoordinator {
 
   private void closePopup(Node popup) {
     popupHost.getChildren().remove(popup);
+  }
+
+  private void refreshNavBar() {
+    Player player     = bundle.session().getPlayer();
+    Exchange exchange = bundle.session().getExchange();
+
+    String status = player.getStatus(exchange);
+    BigDecimal money = player.getMoney();
+    BigDecimal start = player.getStartingMoney();
+
+    double progress = switch (status) {
+      case "Investor"   -> money.subtract(start.multiply(BigDecimal.valueOf(1.2)))
+          .divide(start.multiply(BigDecimal.valueOf(0.8)), 4, RoundingMode.HALF_UP)
+          .doubleValue();
+      case "Speculator" -> 1.0;
+      default           -> money.subtract(start)
+          .divide(start.multiply(BigDecimal.valueOf(0.2)), 4, RoundingMode.HALF_UP)
+          .doubleValue();
+    };
+
+    navBar.updatePlayerInfo(player.getName(), status, Math.max(0.02, Math.clamp(progress, 0.0, 1.0)));
   }
 }
