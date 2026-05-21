@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.domain.market;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
@@ -25,7 +26,7 @@ public class ExchangeTest {
     aapl = new Stock("AAPL", "Apple", bd(100));
     kog = new Stock("KOG", "Kongsberg", bd(200));
     eqnr = new Stock("EQNR", "Equinor", bd(50));
-    exchange = new Exchange("test", List.of(aapl, kog, eqnr), new TransactionFactory());
+    exchange = new Exchange("test", List.of(aapl, kog, eqnr), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile());
     player = new Player("test", bd(1000));
   }
 
@@ -33,27 +34,27 @@ public class ExchangeTest {
   void constructor_nullName_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> new Exchange(null, List.of(aapl), new TransactionFactory()));
+        () -> new Exchange(null, List.of(aapl), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile()));
   }
 
   @Test
   void constructor_blankName_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> new Exchange("", List.of(aapl), new TransactionFactory()));
+        () -> new Exchange("", List.of(aapl), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile()));
   }
 
   @Test
   void constructor_nullStocks_throwsException() {
     assertThrows(
-        IllegalArgumentException.class, () -> new Exchange("Test", null, new TransactionFactory()));
+        IllegalArgumentException.class, () -> new Exchange("Test", null, new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile()));
   }
 
   @Test
   void constructor_emptyList_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> new Exchange("Test", new ArrayList<>(), new TransactionFactory()));
+        () -> new Exchange("Test", new ArrayList<>(), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile()));
   }
 
   @Test

@@ -1077,3 +1077,53 @@
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
 }
+
+/* ── Player identity section ───────────────────────────────────── */
+
+.avatar-circle {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 50%;
+    -fx-border-color: -accent-gold;
+    -fx-border-radius: 50%;
+    -fx-border-width: 2;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-alignment: center;
+    -fx-font-size: 18px;
+}
+
+.player-name {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.player-status {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 11px;
+}
+
+.level-progress .track {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 3;
+}
+
+.level-progress .bar {
+    -fx-background-color: -accent-indigo;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3;
+}
+
+.level-progress-investor .bar {
+    -fx-background-color: -accent-gold;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3;
+}
+
+.level-progress-speculator .bar {
+    -fx-background-color: -accent-teal;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3;
+}

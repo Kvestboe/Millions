@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
@@ -156,7 +157,7 @@ public class PlayerTest {
   // helper method
   private Exchange exchangeAtWeek(int week) {
     Exchange ex =
-        new Exchange("OSL", List.of(new Stock("AAPL", "Apple", bd(100))), new TransactionFactory());
+        new Exchange("OSL", List.of(new Stock("AAPL", "Apple", bd(100))), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile());
     for (int i = 0; i < week; i++) {
       ex.advance();
     }

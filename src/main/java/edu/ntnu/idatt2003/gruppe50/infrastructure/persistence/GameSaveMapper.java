@@ -127,12 +127,15 @@ public class GameSaveMapper {
         .map(o -> buildOrder(o, stockMap, player))
         .toList();
 
+    Difficulty difficulty = Difficulty.valueOf(dto.difficulty());
+
     Exchange exchange = Exchange.rehydrate(
         dto.exchange().name(),
         stockMap,
         factory,
         dto.exchange().week(),
-        orders
+        orders,
+        difficulty.toVolatilityProfile()
     );
 
     return GameSession.rehydrate(
