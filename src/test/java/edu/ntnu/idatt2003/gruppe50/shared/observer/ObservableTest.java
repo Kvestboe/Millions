@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.shared.observer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
@@ -18,7 +19,7 @@ class ObservableTest {
   @BeforeEach
   void setUp() {
     Stock stock = new Stock("AAPL", "Apple", new BigDecimal("100.00"));
-    exchange = new Exchange("TestExchange", List.of(stock), new TransactionFactory());
+    exchange = new Exchange("TestExchange", List.of(stock), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile());
     observer = new TestObserver();
   }
 

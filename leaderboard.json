@@ -1,0 +1,25 @@
+[ {
+  "playerName" : "Kristian",
+  "score" : 2828.42712474619,
+  "weeksPlayed" : 1000,
+  "finalNetWorth" : 1000000,
+  "startingCapital" : 5000,
+  "difficulty" : "HARD",
+  "completedDate" : "2026-05-20"
+}, {
+  "playerName" : "Marius",
+  "score" : 505.9644256269407,
+  "weeksPlayed" : 500,
+  "finalNetWorth" : 1000000,
+  "startingCapital" : 25000,
+  "difficulty" : "MEDIUM",
+  "completedDate" : "2026-05-20"
+}, {
+  "playerName" : "Stonk Master",
+  "score" : 158.11388300841898,
+  "weeksPlayed" : 200,
+  "finalNetWorth" : 1000000,
+  "startingCapital" : 50000,
+  "difficulty" : "EASY",
+  "completedDate" : "2026-05-20"
+} ]

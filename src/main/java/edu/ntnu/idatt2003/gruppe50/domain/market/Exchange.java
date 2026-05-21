@@ -32,14 +32,16 @@ public class Exchange extends Observable {
   private final TransactionFactory factory;
   private int week;
   private final List<LimitOrder> pendingOrders;
+  private final VolatilityProfile volatility;
 
-  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders) {
-    return new Exchange(name, stockMap, factory, week, pendingOrders);
+  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility) {
+    return new Exchange(name, stockMap, factory, week, pendingOrders, volatility);
   }
 
-  private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders) {
+  private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility) {
     this.name = name;
     this.stockMap = new HashMap<>(stockMap);
+    this.volatility = volatility;
     this.random = new Random();
     this.factory = factory;
     this.week = week;
@@ -54,7 +56,7 @@ public class Exchange extends Observable {
    * @param factory the transaction factory used
    * @throws IllegalArgumentException if any parameter is null or invalid
    */
-  public Exchange(String name, List<Stock> stocks, TransactionFactory factory) {
+  public Exchange(String name, List<Stock> stocks, TransactionFactory factory, VolatilityProfile volatility) {
     Validate.notBlank(name, "Name");
     Validate.notEmpty(stocks, "Stocks");
 
@@ -66,6 +68,7 @@ public class Exchange extends Observable {
     week = 1;
     random = new Random();
     this.factory = factory;
+    this.volatility = volatility;
     pendingOrders = new ArrayList<>();
   }
 
@@ -268,16 +271,18 @@ public class Exchange extends Observable {
    */
   public void advance() {
     this.week++;
-
     stockMap.replaceAll((_, stock) -> {
-      BigDecimal multiplier = BigDecimal.valueOf(Math.exp((random.nextDouble() - 0.5) * 0.4));
-
-      BigDecimal newPrice = stock.getSalesPrice().multiply(multiplier);
-      stock.addNewSalesPrice(newPrice);
+      double multiplier = computeMultiplier(stock);
+      stock.addNewSalesPrice(stock.getSalesPrice().multiply(BigDecimal.valueOf(multiplier)));
       return stock;
     });
-
     processPendingOrders();
+  }
+
+  private double computeMultiplier(Stock stock) {
+    double bias = 1 - volatility.upChance();
+    double raw = Math.exp((random.nextDouble() - bias) * 0.4);
+    return Math.clamp(raw, 1 - volatility.maxLoss(), 1 + volatility.maxGain());
   }
 
   /**

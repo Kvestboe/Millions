@@ -88,6 +88,7 @@ public class GameViewCoordinator {
   }
 
   public Scene getScene() {
+    navManager = new NavigationManager(buildPages());
     navBar = new NavBar(navManager::navigateTo);
     refreshNavBar();
 
@@ -295,16 +296,8 @@ public class GameViewCoordinator {
     refreshNavBar();
   }
 
-  private void showPopup(Node popup) {
-    popupHost.getChildren().add(popup);
-  }
-
-  private void closePopup(Node popup) {
-    popupHost.getChildren().remove(popup);
-  }
-
   private void refreshNavBar() {
-    Player player     = bundle.session().getPlayer();
+    Player player   = bundle.session().getPlayer();
     Exchange exchange = bundle.session().getExchange();
 
     String status = player.getStatus(exchange);
@@ -321,6 +314,14 @@ public class GameViewCoordinator {
           .doubleValue();
     };
 
-    navBar.updatePlayerInfo(player.getName(), status, Math.max(0.02, Math.clamp(progress, 0.0, 1.0)));
+    navBar.updatePlayerInfo(player.getName(), status, Math.clamp(progress, 0.0, 1.0));
+  }
+
+  private void showPopup(Node popup) {
+    popupHost.getChildren().add(popup);
+  }
+
+  private void closePopup(Node popup) {
+    popupHost.getChildren().remove(popup);
   }
 }
