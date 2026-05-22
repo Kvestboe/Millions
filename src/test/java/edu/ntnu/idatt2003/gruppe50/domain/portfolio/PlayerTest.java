@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
+import static edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status.INVESTOR;
+import static edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status.NOVICE;
+import static edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status.SPECULATOR;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
@@ -119,37 +122,37 @@ public class PlayerTest {
   void getStatus_beforeWeek10_returnsNovice() {
     tradeForWeeks(1);
     player.addMoney(bd(1000));
-    assertEquals("Novice", player.getStatus());
+    assertEquals(NOVICE, player.getStatus());
   }
 
   @Test
   void getStatus_week10_over20Percent_returnsInvestor() {
     tradeForWeeks(10);
     player.addMoney(bd(21));
-    assertEquals("Investor", player.getStatus());
+    assertEquals(INVESTOR, player.getStatus());
   }
 
   @Test
   void getStatus_week10_under20Percent_returnsNotInvestor() {
     tradeForWeeks(10);
-    player.addMoney(bd(20));
-    assertEquals("Novice", player.getStatus());
-    assertNotEquals("Investor", player.getStatus());
+    player.addMoney(bd(1));
+    assertEquals(NOVICE, player.getStatus());
+    assertNotEquals(INVESTOR, player.getStatus());
   }
 
   @Test
   void getStatus_week20_over100Percent_returnsSpeculator() {
     tradeForWeeks(20);
     player.addMoney(bd(101));
-    assertEquals("Speculator", player.getStatus());
+    assertEquals(SPECULATOR, player.getStatus());
   }
 
   @Test
   void getStatus_week20_under100Percent_returnsNotSpeculator() {
     tradeForWeeks(20);
-    player.addMoney(bd(100));
-    assertNotEquals("Speculator", player.getStatus());
-    assertEquals("Investor", player.getStatus());
+    player.addMoney(bd(50));
+    assertNotEquals(SPECULATOR, player.getStatus());
+    assertEquals(INVESTOR, player.getStatus());
   }
 
   // helper: registers one transaction per week so countDistinctWeeks() == weeks

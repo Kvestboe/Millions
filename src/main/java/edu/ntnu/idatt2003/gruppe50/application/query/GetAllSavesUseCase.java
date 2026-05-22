@@ -19,7 +19,7 @@ public final class GetAllSavesUseCase {
             s.getGameId(),
             s.getPlayer().getName(),
             s.getExchange().getWeek(),
-            s.getPlayer().getStatus(),
+            s.getPlayer().getStatus().displayName(),
             s.getPlayer().getNetWorth(),
             s.getLastPlayed(),
             s.getState() == GameSessionState.FINISHED

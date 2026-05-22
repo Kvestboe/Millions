@@ -11,8 +11,10 @@ import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
 import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.LevelGap;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.LeaderboardFileHandler;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
@@ -298,41 +300,17 @@ public class GameViewCoordinator {
 
   private void refreshNavBar() {
     Player player = bundle.session().getPlayer();
+    Status status = player.getStatus();
 
-    String status = player.getStatus();
-    BigDecimal netWorth = player.getNetWorth();
-    BigDecimal start = player.getStartingMoney();
-    int tradedWeeks = player.getTransactionArchive().countDistinctWeeks();
-
-    double progress;
-    String tip;
-
-    switch (status) {
-      case "Speculator" -> {
-        progress = 1.0;
-        tip = "You've reached the highest status — Speculator.";
-      }
-      case "Investor" -> {
-        double equity = netWorth.subtract(start.multiply(BigDecimal.valueOf(1.2)))
-            .divide(start.multiply(BigDecimal.valueOf(0.8)), 4, RoundingMode.HALF_UP)
-            .doubleValue();
-        double time = (tradedWeeks - 10) / 10.0;          // 10 → 20 uker
-        progress = Math.min(equity, time);
-        tip = nextStatusTip("Speculator", equity, tradedWeeks, 20,
-            start.multiply(BigDecimal.TWO));
-      }
-      default -> {
-        double equity = netWorth.subtract(start)
-            .divide(start.multiply(BigDecimal.valueOf(0.2)), 4, RoundingMode.HALF_UP)
-            .doubleValue();
-        double time = tradedWeeks / 10.0;                 // 0 → 10 uker
-        progress = Math.min(equity, time);
-        tip = nextStatusTip("Investor", equity, tradedWeeks, 10,
-            start.multiply(BigDecimal.valueOf(1.2)));
-      }
+    navBar.updatePlayerInfo(player.getName(), status);
+    if (status == Status.SPECULATOR) {
+      navBar.setProgressVisible(false);
+    } else {
+      navBar.setProgressVisible(true);
+      navBar.setProgress(player.getProgressToNextLevel());
+      player.getGapToNextLevel().ifPresent(gap ->
+          navBar.setProgressTooltip(formatGap(status.next(), gap)));
     }
-
-    navBar.updatePlayerInfo(player.getName(), status, Math.clamp(progress, 0.0, 1.0), tip);
   }
 
   /**
@@ -369,5 +347,24 @@ public class GameViewCoordinator {
 
   private void closePopup(Node popup) {
     popupHost.getChildren().remove(popup);
+  }
+
+  private String formatGap(Status next, LevelGap gap) {
+    boolean weeks = gap.weeksRemaining() > 0;
+    boolean money = gap.moneyRemaining().signum() > 0;
+    String weekText = gap.weeksRemaining()
+        + (gap.weeksRemaining() == 1 ? " more week" : " more weeks") + " of trading";
+    String moneyText = MoneyFormat.formatCurrency(gap.moneyRemaining()) + " more net worth";
+
+    if (weeks && money) {
+      return "To reach " + next.displayName() + ":\n" + weekText + " and " + moneyText + ".";
+    }
+    if (weeks) {
+      return "To reach " + next.displayName() + ":\n" + weekText + ".";
+    }
+    if (money) {
+      return "To reach " + next.displayName() + ":\n" + moneyText + ".";
+    }
+    return "Ready to advance to " + next.displayName() + "!";
   }
 }
