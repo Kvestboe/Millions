@@ -150,7 +150,7 @@ public class PlayerTest {
   @Test
   void getStatus_week20_under100Percent_returnsNotSpeculator() {
     tradeForWeeks(20);
-    player.addMoney(bd(1));
+    player.addMoney(bd(50));
     assertNotEquals(SPECULATOR, player.getStatus());
     assertEquals(INVESTOR, player.getStatus());
   }
