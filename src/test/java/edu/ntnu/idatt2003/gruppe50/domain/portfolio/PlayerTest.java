@@ -5,10 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -113,55 +116,49 @@ public class PlayerTest {
   }
 
   @Test
-  void getStatus_nullExchange_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> player.getStatus(null));
-  }
-
-  @Test
   void getStatus_beforeWeek10_returnsNovice() {
-    Exchange ex = exchangeAtWeek(1);
+    tradeForWeeks(1);
     player.addMoney(bd(1000));
-    assertEquals("Novice", player.getStatus(ex));
+    assertEquals("Novice", player.getStatus());
   }
 
   @Test
   void getStatus_week10_over20Percent_returnsInvestor() {
-    Exchange ex = exchangeAtWeek(10);
+    tradeForWeeks(10);
     player.addMoney(bd(21));
-    assertEquals("Investor", player.getStatus(ex));
+    assertEquals("Investor", player.getStatus());
   }
 
   @Test
   void getStatus_week10_under20Percent_returnsNotInvestor() {
-    Exchange ex = exchangeAtWeek(10);
+    tradeForWeeks(10);
     player.addMoney(bd(20));
-    assertEquals("Novice", player.getStatus(ex));
-    assertNotEquals("Investor", player.getStatus(ex));
+    assertEquals("Novice", player.getStatus());
+    assertNotEquals("Investor", player.getStatus());
   }
 
   @Test
   void getStatus_week20_over100Percent_returnsSpeculator() {
-    Exchange ex = exchangeAtWeek(20);
+    tradeForWeeks(20);
     player.addMoney(bd(101));
-    assertEquals("Speculator", player.getStatus(ex));
+    assertEquals("Speculator", player.getStatus());
   }
 
   @Test
   void getStatus_week20_under100Percent_returnsNotSpeculator() {
-    Exchange ex = exchangeAtWeek(20);
+    tradeForWeeks(20);
     player.addMoney(bd(100));
-    assertNotEquals("Speculator", player.getStatus(ex));
-    assertEquals("Investor", player.getStatus(ex));
+    assertNotEquals("Speculator", player.getStatus());
+    assertEquals("Investor", player.getStatus());
   }
 
-  // helper method
-  private Exchange exchangeAtWeek(int week) {
-    Exchange ex =
-        new Exchange("OSL", List.of(new Stock("AAPL", "Apple", bd(100))), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile());
-    for (int i = 0; i < week; i++) {
-      ex.advance();
+  // helper: registers one transaction per week so countDistinctWeeks() == weeks
+  private void tradeForWeeks(int weeks) {
+    Stock stock = new Stock("AAPL", "Apple", bd(100));
+    for (int week = 1; week <= weeks; week++) {
+      Share share = new Share(stock, bd("1"), bd("100"), week);
+      player.getTransactionArchive().add(new Purchase(share, week, UUID.randomUUID()));
     }
-    return ex;
   }
 
   private BigDecimal bd(double num) {

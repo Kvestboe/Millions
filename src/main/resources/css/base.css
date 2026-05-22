@@ -1105,9 +1105,15 @@
     -fx-font-size: 11px;
 }
 
+.level-progress {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
 .level-progress .track {
-    -fx-background-color: -bg-elevated;
+    -fx-background-color: -border;
     -fx-background-radius: 3;
+    -fx-padding: 0;
 }
 
 .level-progress .bar {

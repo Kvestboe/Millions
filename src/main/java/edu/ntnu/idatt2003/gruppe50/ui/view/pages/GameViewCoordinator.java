@@ -297,24 +297,70 @@ public class GameViewCoordinator {
   }
 
   private void refreshNavBar() {
-    Player player   = bundle.session().getPlayer();
-    Exchange exchange = bundle.session().getExchange();
+    Player player = bundle.session().getPlayer();
 
-    String status = player.getStatus(exchange);
-    BigDecimal money = player.getMoney();
+    String status = player.getStatus();
+    BigDecimal netWorth = player.getNetWorth();
     BigDecimal start = player.getStartingMoney();
+    int tradedWeeks = player.getTransactionArchive().countDistinctWeeks();
 
-    double progress = switch (status) {
-      case "Investor"   -> money.subtract(start.multiply(BigDecimal.valueOf(1.2)))
-          .divide(start.multiply(BigDecimal.valueOf(0.8)), 4, RoundingMode.HALF_UP)
-          .doubleValue();
-      case "Speculator" -> 1.0;
-      default           -> money.subtract(start)
-          .divide(start.multiply(BigDecimal.valueOf(0.2)), 4, RoundingMode.HALF_UP)
-          .doubleValue();
-    };
+    double progress;
+    String tip;
 
-    navBar.updatePlayerInfo(player.getName(), status, Math.clamp(progress, 0.0, 1.0));
+    switch (status) {
+      case "Speculator" -> {
+        progress = 1.0;
+        tip = "You've reached the highest status — Speculator.";
+      }
+      case "Investor" -> {
+        double equity = netWorth.subtract(start.multiply(BigDecimal.valueOf(1.2)))
+            .divide(start.multiply(BigDecimal.valueOf(0.8)), 4, RoundingMode.HALF_UP)
+            .doubleValue();
+        double time = (tradedWeeks - 10) / 10.0;          // 10 → 20 uker
+        progress = Math.min(equity, time);
+        tip = nextStatusTip("Speculator", equity, tradedWeeks, 20,
+            start.multiply(BigDecimal.TWO));
+      }
+      default -> {
+        double equity = netWorth.subtract(start)
+            .divide(start.multiply(BigDecimal.valueOf(0.2)), 4, RoundingMode.HALF_UP)
+            .doubleValue();
+        double time = tradedWeeks / 10.0;                 // 0 → 10 uker
+        progress = Math.min(equity, time);
+        tip = nextStatusTip("Investor", equity, tradedWeeks, 10,
+            start.multiply(BigDecimal.valueOf(1.2)));
+      }
+    }
+
+    navBar.updatePlayerInfo(player.getName(), status, Math.clamp(progress, 0.0, 1.0), tip);
+  }
+
+  /**
+   * Builds a hint describing what the player still needs to reach the next status.
+   *
+   * @param next           name of the next status level
+   * @param equityProgress net-worth progress toward that level, 0.0–1.0
+   * @param tradedWeeks    number of distinct weeks the player has traded
+   * @param weeksNeeded    weeks required for the next status
+   * @param netWorthTarget net worth required for the next status
+   * @return a human-readable hint
+   */
+  private String nextStatusTip(String next, double equityProgress,
+                               int tradedWeeks, int weeksNeeded, BigDecimal netWorthTarget) {
+    boolean equityDone = equityProgress >= 1.0;
+    int weeksLeft = Math.max(0, weeksNeeded - tradedWeeks);
+
+    if (equityDone && weeksLeft > 0) {
+      return "Net worth is high enough for " + next + " — keep trading "
+          + weeksLeft + " more " + (weeksLeft == 1 ? "week" : "weeks") + ".";
+    }
+    if (!equityDone && weeksLeft == 0) {
+      return "You've traded enough — reach "
+          + MoneyFormat.formatCurrency(netWorthTarget) + " net worth for " + next + ".";
+    }
+    return "To reach " + next + ": "
+        + MoneyFormat.formatCurrency(netWorthTarget) + " net worth and "
+        + weeksLeft + " more " + (weeksLeft == 1 ? "week" : "weeks") + " of trading.";
   }
 
   private void showPopup(Node popup) {

@@ -9,10 +9,12 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 /**
  * Top navigation bar for the application.
@@ -29,6 +31,7 @@ public class NavBar extends HBox {
   private final Label nameLabel;
   private final Label statusLabel;
   private final ProgressBar levelProgress;
+  private final Tooltip levelTip = new Tooltip();
 
   /**
    * Listener interface for navigation events triggered by the nav bar.
@@ -73,6 +76,8 @@ public class NavBar extends HBox {
     levelProgress.getStyleClass().add("level-progress");
     levelProgress.setPrefWidth(120);
     levelProgress.setPrefHeight(6);
+    levelTip.setShowDelay(Duration.millis(200));
+    levelProgress.setTooltip(levelTip);
 
     VBox playerInfo = new VBox(2, nameLabel, statusLabel, levelProgress);
     playerInfo.setAlignment(Pos.CENTER_RIGHT);
@@ -98,11 +103,13 @@ public class NavBar extends HBox {
    * @param name     the player's name
    * @param status   the player's current status label (e.g. "Novice", "Investor", "Speculator")
    * @param progress progress toward the next status level, between {@code 0.0} and {@code 1.0}
+   * @param tip      hover text explaining what is still needed for the next level
    */
-  public void updatePlayerInfo(String name, String status, double progress) {
+  public void updatePlayerInfo(String name, String status, double progress, String tip) {
     nameLabel.setText(name);
     statusLabel.setText(status);
     levelProgress.setProgress(progress);
+    levelTip.setText(tip);
 
     levelProgress.getStyleClass().removeIf(c -> c.startsWith("level-progress-"));
     levelProgress.getStyleClass().add("level-progress-" + status.toLowerCase());
