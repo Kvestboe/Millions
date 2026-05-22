@@ -7,6 +7,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
 import javafx.css.PseudoClass;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -49,11 +50,29 @@ public class NavBar extends HBox {
   }
 
   /**
+   * Listener for actions triggered from the account dropdown menu.
+   */
+  public interface AccountMenuListener {
+
+    /** Called when the user selects "Settings". */
+    void onSettings();
+
+    /** Called when the user selects "Leaderboard". */
+    void onLeaderboard();
+
+    /** Called when the user selects "Main Menu". */
+    void onMainMenu();
+
+    /** Called when the user selects "Save & Quit". */
+    void onSaveAndQuit();
+  }
+
+  /**
    * Constructs the navigation bar and registers the given listener for navigation events.
    *
    * @param listener the listener to notify when a navigation button is clicked
    */
-  public NavBar(NavListener listener) {
+  public NavBar(NavListener listener, NavBar.AccountMenuListener accountListener) {
     this.getStyleClass().add("navbar");
 
     Logo logo = new Logo();
@@ -62,13 +81,14 @@ public class NavBar extends HBox {
     navLinks.getStyleClass().add("nav-links");
     navLinks.setMaxWidth(Region.USE_PREF_SIZE);
     navLinks.setAlignment(Pos.CENTER);
+    navLinks.setMinWidth(Region.USE_PREF_SIZE);
+    navLinks.setMaxWidth(Region.USE_PREF_SIZE);   // den du har fra før
 
     for (PageId id : PageId.values()) {
       Button btn = createNavButton(id, listener);
       buttons.put(id, btn);
       navLinks.getChildren().add(btn);
     }
-
 
     levelProgress = new ProgressBar(0);
     levelProgress.getStyleClass().add("level-progress");
@@ -91,7 +111,14 @@ public class NavBar extends HBox {
     statusLabel.setAlignment(Pos.CENTER_RIGHT);
     statusLabel.prefWidthProperty().bind(levelProgress.prefWidthProperty());
 
-    VBox playerInfo = new VBox(2, nameLabel, statusLabel, levelProgress);
+    Label progressHelp = new Label("?");
+    progressHelp.getStyleClass().add("progress-help");
+    Tooltip.install(progressHelp, levelTip);     // samme tooltip som baren
+
+    HBox progressRow = new HBox(4, levelProgress, progressHelp);
+    progressRow.setAlignment(Pos.CENTER_RIGHT);
+
+    VBox playerInfo = new VBox(2, nameLabel, statusLabel, progressRow);
     playerInfo.setAlignment(Pos.CENTER_RIGHT);
 
     Label avatarIcon = new Label("");
@@ -100,16 +127,30 @@ public class NavBar extends HBox {
     HBox playerSection = new HBox(10, playerInfo, avatarIcon);
     playerSection.setAlignment(Pos.CENTER_RIGHT);
 
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-    HBox sides = new HBox(logo, spacer, playerSection);
-    sides.setAlignment(Pos.CENTER);
+    NavDropdown account = new NavDropdown(playerSection);
+    account.hideArrow();
+    account.addItem("Settings",     accountListener::onSettings);
+    account.addDisabledItem("Achievements");        // TODO: koble når feature finnes
+    account.addItem("Leaderboard",  accountListener::onLeaderboard);
+    account.addSeparator();
+    account.addItem("Save & Main Menu",    accountListener::onMainMenu);
+    account.addItem("Save & Quit",  accountListener::onSaveAndQuit);
 
-    StackPane center = new StackPane(sides, navLinks);
-    StackPane.setAlignment(navLinks, Pos.CENTER);
-    HBox.setHgrow(center, Priority.ALWAYS);
+    HBox leftZone = new HBox(logo);
+    leftZone.setAlignment(Pos.CENTER);
 
-    this.getChildren().add(center);
+    HBox rightZone = new HBox(account);
+    rightZone.setAlignment(Pos.CENTER_RIGHT);
+
+    NumberBinding sideWidth =
+        Bindings.max(logo.widthProperty(), account.widthProperty());
+    leftZone.prefWidthProperty().bind(sideWidth);
+    rightZone.prefWidthProperty().bind(sideWidth);
+
+    HBox.setHgrow(leftZone, Priority.ALWAYS);
+    HBox.setHgrow(rightZone, Priority.ALWAYS);
+
+    this.getChildren().setAll(leftZone, navLinks, rightZone);
 
     setActive(PageId.DASHBOARD);
   }
