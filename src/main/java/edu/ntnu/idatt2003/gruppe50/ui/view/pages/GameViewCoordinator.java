@@ -37,6 +37,7 @@ import java.util.function.Consumer;
 
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -53,6 +54,8 @@ public class GameViewCoordinator {
   private final GameSessionControllerBundle bundle;
   private final Runnable onMainMenu;
   private final Runnable onPlayAgain;
+  private final Runnable onSettings;
+  private final Runnable onLeaderboard;
   private final Consumer<String> onThemeChanged;
   private final Leaderboard leaderboard;
   private final LeaderboardFileHandler leaderboardFile;
@@ -75,7 +78,7 @@ public class GameViewCoordinator {
   public GameViewCoordinator(
       GameSessionControllerBundle bundle,
       Runnable onMainMenu,
-      Runnable onPlayAgain,
+      Runnable onPlayAgain, Runnable onSettings, Runnable onLeaderboard,
       Consumer<String> onThemeChanged,
       Leaderboard leaderboard,
       LeaderboardFileHandler leaderboardFile
@@ -84,6 +87,8 @@ public class GameViewCoordinator {
     this.bundle = bundle;
     this.onMainMenu = onMainMenu;
     this.onPlayAgain = onPlayAgain;
+    this.onSettings = onSettings;
+    this.onLeaderboard = onLeaderboard;
     this.onThemeChanged = onThemeChanged;
     this.leaderboard = leaderboard;
     this.leaderboardFile = leaderboardFile;
@@ -91,7 +96,12 @@ public class GameViewCoordinator {
 
   public Scene getScene() {
     navManager = new NavigationManager(buildPages());
-    navBar = new NavBar(navManager::navigateTo);
+    navBar = new NavBar(navManager::navigateTo, new NavBar.AccountMenuListener() {
+      @Override public void onSettings()    { onSettings.run(); }
+      @Override public void onLeaderboard() { onLeaderboard.run(); }
+      @Override public void onMainMenu()    { onMainMenu.run(); }
+      @Override public void onSaveAndQuit() { Platform.exit(); }
+    });
     refreshNavBar();
 
     root = new BorderPane();

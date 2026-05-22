@@ -6,9 +6,9 @@
 /* --- Container --- */
 .navbar {
     -fx-background-color: -bg-surface;
-    -fx-min-height: 52;
-    -fx-pref-height: 52;
-    -fx-max-height: 52;
+    -fx-min-height: 56;
+    -fx-pref-height: 56;
+    -fx-max-height: 56;
     -fx-padding: 0 20 0 20;
     -fx-alignment: center-left;
     -fx-spacing: 14;
@@ -93,16 +93,16 @@
     -fx-border-color: -border;
     -fx-border-radius: 8;
     -fx-border-width: 1;
-    -fx-padding: 4;
+    -fx-padding: 6;                /* var 4 */
 }
 .menu-item {
     -fx-background-color: transparent;
     -fx-background-radius: 5;
-    -fx-padding: 6 14 6 12;
+    -fx-padding: 9 18 9 16;        /* var 6 14 6 12 */
 }
 .menu-item .label {
     -fx-text-fill: -text-secondary;
-    -fx-font-size: 13px;
+    -fx-font-size: 15px;           /* var 13px */
 }
 .menu-item:focused {
     -fx-background-color: -nav-active-bg;
@@ -114,12 +114,12 @@
 /* --- Player-sone --- */
 .player-name {
     -fx-text-fill: -text-primary;
-    -fx-font-size: 13px;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
 .player-status {
     -fx-text-fill: -accent-gold;
-    -fx-font-size: 11px;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 .avatar-circle {
@@ -138,4 +138,27 @@
     -fx-text-fill: -text-primary;
     -fx-padding: 8 12 8 12;
     -fx-background-radius: 6;
+}
+
+.nav-dropdown-no-arrow > .arrow-button {
+    -fx-padding: 0;
+}
+.nav-dropdown-no-arrow > .arrow-button > .arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.progress-help {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 100;
+    -fx-min-width: 14;
+    -fx-min-height: 14;
+    -fx-alignment: center;
+}
+.progress-help:hover {
+    -fx-text-fill: -text-primary;
+    -fx-background-color: -accent-gold;
 }

@@ -11,6 +11,6 @@ public class Logo extends HBox {
     appName.getStyleClass().add("logo-label");
 
     this.getChildren().add(appName);
-    this.setAlignment(Pos.CENTER);
+    this.setAlignment(Pos.CENTER_LEFT);
   }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -66,7 +67,11 @@ public class TransactionsView extends VBox implements Page {
 
   @Override
   public Parent getView() {
-    return this;
+    ScrollPane scroll = new ScrollPane(this);
+    scroll.setFitToWidth(true);
+    scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scroll.getStyleClass().add("app-scroll");
+    return scroll;
   }
 
   private VBox buildRightColumn() {

@@ -180,7 +180,7 @@ public class ShopView extends ScrollPane implements Page {
 
     card.prefWidthProperty().bind(
         themesGrid.widthProperty()
-            .subtract(THEME_CARD_GAP * (THEME_CARDS_PER_ROW - 1))
+            .subtract(THEME_CARD_GAP * THEME_CARDS_PER_ROW)
             .divide(THEME_CARDS_PER_ROW)
     );
 
