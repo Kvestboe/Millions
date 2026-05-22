@@ -137,7 +137,7 @@ public class NavBar extends HBox {
     account.addItem("Save & Quit",  accountListener::onSaveAndQuit);
 
     HBox leftZone = new HBox(logo);
-    leftZone.setAlignment(Pos.CENTER);
+    leftZone.setAlignment(Pos.CENTER_LEFT);
 
     HBox rightZone = new HBox(account);
     rightZone.setAlignment(Pos.CENTER_RIGHT);
