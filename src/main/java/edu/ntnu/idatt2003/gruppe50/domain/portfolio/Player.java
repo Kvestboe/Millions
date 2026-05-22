@@ -177,16 +177,16 @@ public class Player {
    * <p>Calculates the players status based on their net worth
    * and for how many weeks they have played.
    *
-   * @param exchange the exchange the user is trading their stocks in
    * @return the players status title as a string
    * @throws IllegalArgumentException if {@code exchange} is null
    */
-  public String getStatus(Exchange exchange) {
-    Validate.notNull(exchange, "Exchange");
-    int week = exchange.getWeek();
-    if (money.compareTo(startingMoney.multiply(BigDecimal.TWO)) > 0 && week >= 20) {
+  public String getStatus() {
+    int tradedWeeks = transactionArchive.countDistinctWeeks();
+    BigDecimal netWorth = getNetWorth();
+
+    if (netWorth.compareTo(startingMoney.multiply(BigDecimal.TWO)) > 0 && tradedWeeks >= 20) {
       return "Speculator";
-    } else if (money.compareTo(startingMoney.multiply(BigDecimal.valueOf(1.2))) > 0 && week >= 10) {
+    } else if (netWorth.compareTo(startingMoney.multiply(BigDecimal.valueOf(1.2))) > 0 && tradedWeeks >= 10) {
       return "Investor";
     } else {
       return "Novice";
