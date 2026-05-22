@@ -61,8 +61,8 @@ public class LeaderboardFileHandler {
     return List.of(
         new LeaderboardEntry(
             "Kristian",
-            LeaderboardEntry.calculateScore(1000, new BigDecimal("5000")),
-            1000,
+            LeaderboardEntry.calculateScore(3000, new BigDecimal("5000")),
+            3000,
             new BigDecimal("1000000"),
             new BigDecimal("5000"),
             Difficulty.HARD,
@@ -70,8 +70,8 @@ public class LeaderboardFileHandler {
         ),
         new LeaderboardEntry(
             "Marius",
-            LeaderboardEntry.calculateScore(500, new BigDecimal("25000")),
-            500,
+            LeaderboardEntry.calculateScore(1000, new BigDecimal("25000")),
+            1000,
             new BigDecimal("1000000"),
             new BigDecimal("25000"),
             Difficulty.MEDIUM,
@@ -79,8 +79,8 @@ public class LeaderboardFileHandler {
         ),
         new LeaderboardEntry(
             "Stonk Master",
-            LeaderboardEntry.calculateScore(200, new BigDecimal("100000")),
-            200,
+            LeaderboardEntry.calculateScore(500, new BigDecimal("50000")),
+            500,
             new BigDecimal("1000000"),
             new BigDecimal("50000"),
             Difficulty.EASY,
