@@ -8,6 +8,8 @@
 .root {
     -fx-background-color: -bg-primary;
     -fx-font-family: "System";
+    -nav-active-bg:     rgba(255, 209, 102, 0.12);
+    -nav-active-border: rgba(255, 209, 102, 0.25);
 }
 
 
@@ -1132,4 +1134,9 @@
     -fx-background-color: -accent-teal;
     -fx-background-insets: 0;
     -fx-background-radius: 3;
+}
+
+.onboarding-navbar {
+    -fx-padding: 0 20 0 20;
+    -fx-spacing: 15;
 }

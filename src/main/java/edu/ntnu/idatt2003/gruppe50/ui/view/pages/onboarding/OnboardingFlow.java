@@ -97,7 +97,7 @@ public class OnboardingFlow {
     navBar.setAlignment(Pos.CENTER);
     navBar.setPrefHeight(72);
     navBar.setPadding(new Insets(16, 48, 24, 48));
-    navBar.getStyleClass().add("navbar");
+    navBar.getStyleClass().add("onboarding-navbar");
 
     ScrollPane scrollableCenter = new ScrollPane(center);
     scrollableCenter.setFitToWidth(true);
@@ -108,8 +108,8 @@ public class OnboardingFlow {
     BorderPane root = new BorderPane();
     root.getStyleClass().add("root-bg");
     root.setTop(progressBar);
-    root.setCenter(scrollableCenter);   // ← center-feltet her
-    root.setBottom(navBar);    // ← knapper alltid nederst
+    root.setCenter(scrollableCenter);
+    root.setBottom(navBar);
 
     return root;
   }
@@ -153,12 +153,10 @@ public class OnboardingFlow {
    * Also updates the Next button label on the final step.
    */
   private void showCurrentStep() {
-    // Sett difficulty på CapitalStep
     if (steps.get(currentIndex) instanceof CapitalStep capitalStep) {
       capitalStep.setDifficulty(flowData.difficulty);
     }
 
-    // Sett flowData på LaunchStep
     if (steps.get(currentIndex) instanceof LaunchStep launchStep) {
       launchStep.setFlowData(flowData);
     }

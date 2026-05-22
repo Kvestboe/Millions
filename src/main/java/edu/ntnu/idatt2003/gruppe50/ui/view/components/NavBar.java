@@ -1,9 +1,12 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components;
 
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 import java.util.EnumMap;
 import java.util.Map;
+
+import javafx.beans.binding.Bindings;
 import javafx.css.PseudoClass;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,6 +16,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -25,7 +29,6 @@ import javafx.util.Duration;
  */
 public class NavBar extends HBox {
 
-  private static final PseudoClass ACTIVE = PseudoClass.getPseudoClass("active-nav");
   private final Map<PageId, Button> buttons = new EnumMap<>(PageId.class);
 
   private final Label nameLabel;
@@ -54,11 +57,11 @@ public class NavBar extends HBox {
     this.getStyleClass().add("navbar");
 
     Logo logo = new Logo();
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    HBox navLinks = new HBox(4);
+    HBox navLinks = new HBox(6);
     navLinks.getStyleClass().add("nav-links");
+    navLinks.setMaxWidth(Region.USE_PREF_SIZE);
+    navLinks.setAlignment(Pos.CENTER);
 
     for (PageId id : PageId.values()) {
       Button btn = createNavButton(id, listener);
@@ -66,62 +69,92 @@ public class NavBar extends HBox {
       navLinks.getChildren().add(btn);
     }
 
-    nameLabel = new Label("");
-    nameLabel.getStyleClass().add("player-name");
-
-    statusLabel = new Label("");
-    statusLabel.getStyleClass().add("player-status");
 
     levelProgress = new ProgressBar(0);
     levelProgress.getStyleClass().add("level-progress");
-    levelProgress.setPrefWidth(120);
+    levelProgress.setMinHeight(6);
     levelProgress.setPrefHeight(6);
+    levelProgress.setMaxHeight(6);
+    levelProgress.prefWidthProperty().bind(
+        Bindings.max(90, Bindings.min(170, widthProperty().multiply(0.1))));
     levelTip.setShowDelay(Duration.millis(200));
+    levelTip.getStyleClass().add("level-tooltip");
     levelProgress.setTooltip(levelTip);
+
+    nameLabel = new Label("");
+    nameLabel.getStyleClass().add("player-name");
+    nameLabel.setAlignment(Pos.CENTER_RIGHT);
+    nameLabel.prefWidthProperty().bind(levelProgress.prefWidthProperty());
+
+    statusLabel = new Label("");
+    statusLabel.getStyleClass().add("player-status");
+    statusLabel.setAlignment(Pos.CENTER_RIGHT);
+    statusLabel.prefWidthProperty().bind(levelProgress.prefWidthProperty());
 
     VBox playerInfo = new VBox(2, nameLabel, statusLabel, levelProgress);
     playerInfo.setAlignment(Pos.CENTER_RIGHT);
 
-    Label avatarIcon = new Label("🚀");
+    Label avatarIcon = new Label("");
     avatarIcon.getStyleClass().add("avatar-circle");
 
     HBox playerSection = new HBox(10, playerInfo, avatarIcon);
     playerSection.setAlignment(Pos.CENTER_RIGHT);
 
-    this.getChildren().addAll(logo, spacer, navLinks, playerSection);
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+    HBox sides = new HBox(logo, spacer, playerSection);
+    sides.setAlignment(Pos.CENTER);
+
+    StackPane center = new StackPane(sides, navLinks);
+    StackPane.setAlignment(navLinks, Pos.CENTER);
+    HBox.setHgrow(center, Priority.ALWAYS);
+
+    this.getChildren().add(center);
 
     setActive(PageId.DASHBOARD);
   }
 
   /**
-   * Updates the player identity section with current player data.
-   *
-   * <p>Also swaps the progress bar CSS class to match the player's current status,
-   * allowing per-status color theming via {@code .level-progress-novice},
-   * {@code .level-progress-investor}, and {@code .level-progress-speculator}.
-   *
-   * @param name     the player's name
-   * @param status   the player's current status label (e.g. "Novice", "Investor", "Speculator")
-   * @param progress progress toward the next status level, between {@code 0.0} and {@code 1.0}
-   * @param tip      hover text explaining what is still needed for the next level
+   * Updates the player's name and status display.
    */
-  public void updatePlayerInfo(String name, String status, double progress, String tip) {
+  public void updatePlayerInfo(String name, Status status) {
     nameLabel.setText(name);
-    statusLabel.setText(status);
-    levelProgress.setProgress(progress);
-    levelTip.setText(tip);
+    statusLabel.setText(status.displayName());
 
     levelProgress.getStyleClass().removeIf(c -> c.startsWith("level-progress-"));
-    levelProgress.getStyleClass().add("level-progress-" + status.toLowerCase());
+    levelProgress.getStyleClass().add("level-progress-" + status.name().toLowerCase());
   }
 
+  /**
+   * Sets the level progress bar value, expected in [0.0, 1.0].
+   */
+  public void setProgress(double progress) {
+    levelProgress.setProgress(progress);
+  }
+
+  public void setProgressTooltip(String text) {
+    levelTip.setText(text);
+  }
+
+  /**
+   * Shows or hides the level progress bar (hidden at top status).
+   */
+  public void setProgressVisible(boolean visible) {
+    levelProgress.setVisible(visible);
+    levelProgress.setManaged(visible);
+  }
   /**
    * Marks the given page's navigation button as active and deactivates all others.
    *
    * @param activePage the {@link PageId} of the currently active page
    */
   public void setActive(PageId activePage) {
-    buttons.forEach((id, btn) -> btn.pseudoClassStateChanged(ACTIVE, id == activePage));
+    buttons.forEach((id, btn) -> {
+      btn.getStyleClass().remove("nav-button-active");
+      if (id == activePage) {
+        btn.getStyleClass().add("nav-button-active");
+      }
+    });
   }
 
   /**
