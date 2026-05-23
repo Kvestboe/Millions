@@ -15,6 +15,7 @@ import javafx.collections.ListChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -116,6 +117,10 @@ public class TransactionsView extends VBox implements Page {
         ColumnPresets.currency("Tax", TransactionData::taxFee),
         ColumnPresets.currency("Total", TransactionData::total)
     ));
+    TableColumn<TransactionData, ?> weekCol = t.getColumns().get(3);
+    weekCol.setSortType(TableColumn.SortType.DESCENDING);
+    t.getSortOrder().setAll(weekCol);
+
     t.setPlaceholder(new Label("No transactions yet."));
     t.setOnMousePressed(_ -> {
       TransactionData row = t.getSelectionModel().getSelectedItem();
@@ -129,5 +134,6 @@ public class TransactionsView extends VBox implements Page {
   private void applyFilters() {
     String query = searchField.getText();
     table.getItems().setAll(queryController.onSearch(query, selectedType));
+    table.sort();
   }
 }
