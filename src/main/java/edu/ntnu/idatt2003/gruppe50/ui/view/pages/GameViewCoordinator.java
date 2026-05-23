@@ -174,7 +174,9 @@ public class GameViewCoordinator {
           refreshBottomBar();
         }
     ));
-    pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
+    pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions(),
+        t -> bundle.market().findBySymbol(t.share().symbol())
+            .ifPresent(stock -> navigateToStockDetail(stock, PageId.TRANSACTIONS))));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
 
     return pages;

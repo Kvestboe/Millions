@@ -10,6 +10,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ToggleBarFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -33,9 +34,12 @@ public class TransactionsView extends VBox implements Page {
 
   private TransactionType selectedType = null;
 
-  public TransactionsView(TransactionQueryController queryController) {
+  public TransactionsView(
+      TransactionQueryController queryController,
+      Consumer<TransactionData> onTransactionSelected
+  ) {
     this.queryController = queryController;
-    this.table = createTransactionTable();
+    this.table = createTransactionTable(onTransactionSelected);
     this.searchField = SearchBarFactory.createSearchField(
         "Search by symbol, company or type...",
         this::applyFilters
@@ -100,7 +104,9 @@ public class TransactionsView extends VBox implements Page {
     return toolbar;
   }
 
-  private TableView<TransactionData> createTransactionTable() {
+  private TableView<TransactionData> createTransactionTable(
+      Consumer<TransactionData> onTransactionSelected
+  ) {
     TableView<TransactionData> t = TableFactory.createTable(List.of(
         ColumnPresets.text("Symbol", x -> x.share().symbol()),
         ColumnPresets.text("Company", x -> x.share().stock()),
@@ -111,6 +117,12 @@ public class TransactionsView extends VBox implements Page {
         ColumnPresets.currency("Total", TransactionData::total)
     ));
     t.setPlaceholder(new Label("No transactions yet."));
+    t.setOnMousePressed(_ -> {
+      TransactionData row = t.getSelectionModel().getSelectedItem();
+      if (row != null) {
+        onTransactionSelected.accept(row);
+      }
+    });
     return t;
   }
 
