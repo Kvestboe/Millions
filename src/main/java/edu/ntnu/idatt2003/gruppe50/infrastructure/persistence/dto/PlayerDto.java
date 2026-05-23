@@ -9,8 +9,9 @@ public record PlayerDto(
     String name,
     BigDecimal startingMoney,
     BigDecimal money,
+    int coins,
+    String activeTheme,
+    List<String> ownedThemes,
     List<ShareDto> shares,
     List<TransactionDto> transactions
-) {
-
-}
+) {}

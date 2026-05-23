@@ -50,11 +50,12 @@ public final class AppRouter {
   }
 
   public void showMainMenu() {
-    MainMenuView menu = new MainMenuView(this::showNewGame, this::showSettings, Platform::exit);
+    MainMenuView menu = new MainMenuView(
+        this::showNewGame, () -> showSettings(this::showMainMenu), Platform::exit);
+    menu.setOnLeaderboard(() -> showLeaderboard(this::showMainMenu));
     menu.setOnLoadGame(this::showLoadGame);
-    menu.setOnLeaderboard(this::showLeaderboard);
     menu.setOnContinueGame(this::showContinueGame);
-    show(new Scene(menu, WindowConfig.WIDTH, WindowConfig.HEIGHT));
+    show(new Scene(menu));
   }
 
   private void showLoadGame() {
@@ -65,7 +66,7 @@ public final class AppRouter {
         this::switchToGame
     );
     LoadGameView view = new LoadGameView(controller, this::showMainMenu);
-    show(new Scene(view, WindowConfig.WIDTH, WindowConfig.HEIGHT));
+    show(new Scene(view));
   }
 
   private void showNewGame() {
@@ -98,34 +99,39 @@ public final class AppRouter {
 
   public void switchToGame(UUID gameId) {
     module.loadGameSession.execute(new LoadGameSessionUseCase.Request(gameId));
-    show(new GameViewCoordinator(
-        module.gameBundle(gameId),
+    GameSessionControllerBundle bundle = module.gameBundle(gameId);
+    themeManager.setTheme(bundle.session().getPlayer().getActiveTheme());
+
+    Scene[] gameScene = new Scene[1];   // holder bryter sirkelen
+    GameViewCoordinator coordinator = new GameViewCoordinator(
+        bundle,
         this::showMainMenu,
         this::showNewGame,
+        () -> showSettings(() -> show(gameScene[0])),
+        () -> showLeaderboard(() -> show(gameScene[0])),
         themeName -> {
           themeManager.setTheme(themeName);
           themeManager.apply(stage.getScene());
         },
         module.leaderboard,
-        module.leaderboardFile
-    ).getScene());
+        module.leaderboardFile);
+    gameScene[0] = coordinator.getScene();
+    show(gameScene[0]);
   }
 
-  private void showLeaderboard() {
-    LeaderboardView view = new LeaderboardView(module.leaderboard, this::showMainMenu);
-    show(new Scene(view, WindowConfig.WIDTH, WindowConfig.HEIGHT));
-  }
 
-  private void showSettings() {
+  private void showSettings(Runnable onBack) {
     SettingsView settings = new SettingsView(
-        this::showMainMenu,
-        fullscreen -> {
-          isFullscreen = fullscreen;
-          stage.setFullScreen(fullscreen);
-        },
-        soundManager   // ← ny parameter
-    );
-    show(new Scene(settings, WindowConfig.WIDTH, WindowConfig.HEIGHT));
+        onBack,
+        fullscreen -> { isFullscreen = fullscreen; stage.setFullScreen(fullscreen); },
+        stage.isFullScreen(),
+        soundManager);
+    show(new Scene(settings));
+  }
+
+  private void showLeaderboard(Runnable onBack) {
+    LeaderboardView view = new LeaderboardView(module.leaderboard, onBack);
+    show(new Scene(view));
   }
 
   private void show(Scene scene) {
@@ -137,9 +143,10 @@ public final class AppRouter {
       }
         });
 
+    boolean wasFullscreen = isFullscreen;
     themeManager.apply(scene);
     stage.setScene(scene);
-    stage.setFullScreen(isFullscreen);
+    stage.setFullScreen(wasFullscreen);
     stage.show();
   }
 }

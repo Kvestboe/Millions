@@ -12,10 +12,11 @@ import java.math.BigDecimal;
  * @param difficulty      the chosen difficulty level
  * @param startingCapital the starting capital in kr
  * @param stockFile       the CSV file containing stock data for the game session
+ * @param marketName
  */
 public record OnboardingData(
     String playerName,
     Difficulty difficulty,
     BigDecimal startingCapital,
-    File stockFile
-) {}
+    File stockFile,
+    String marketName) {}

@@ -69,8 +69,8 @@ public class LaunchStep implements OnboardingStep {
     String capitalLabel = flowData.startingCapital != null
         ? flowData.startingCapital.toPlainString() + " kr" : "—";
 
-    String fileLabel = flowData.stockFile != null
-        ? flowData.stockFile.getName() : "—";
+    String fileLabel = flowData.marketName != null
+        ? flowData.marketName : "—";
 
     String gameOverLabel = "";
     if (flowData.difficulty != null && flowData.startingCapital != null) {

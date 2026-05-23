@@ -6,7 +6,10 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -32,16 +35,31 @@ public class Player {
       String name,
       BigDecimal startingMoney,
       BigDecimal money,
+      int coins,
+      String activeTheme,
+      List<String> ownedThemes,
       Portfolio portfolio,
       TransactionArchive transactions
   ) {
-    return new Player(name, startingMoney, money, portfolio, transactions);
+    return new Player(
+        name,
+        startingMoney,
+        money,
+        coins,
+        activeTheme,
+        ownedThemes,
+        portfolio,
+        transactions
+    );
   }
 
   private Player(
       String name,
       BigDecimal startingMoney,
       BigDecimal money,
+      int coins,
+      String activeTheme,
+      List<String> ownedThemes,
       Portfolio portfolio,
       TransactionArchive transactions
   ) {
@@ -50,6 +68,20 @@ public class Player {
     this.money = Money.round(money);
     this.portfolio = portfolio;
     this.transactionArchive = transactions;
+
+    this.coins = Math.max(0, coins);
+
+    this.activeTheme = activeTheme == null || activeTheme.isBlank()
+        ? DEFAULT_THEME
+        : activeTheme;
+
+    this.ownedThemes.add(DEFAULT_THEME);
+
+    if (ownedThemes != null) {
+      this.ownedThemes.addAll(ownedThemes);
+    }
+
+    this.ownedThemes.add(this.activeTheme);
   }
 
   /**
@@ -147,20 +179,63 @@ public class Player {
    * <p>Calculates the players status based on their net worth
    * and for how many weeks they have played.
    *
-   * @param exchange the exchange the user is trading their stocks in
    * @return the players status title as a string
    * @throws IllegalArgumentException if {@code exchange} is null
    */
-  public String getStatus(Exchange exchange) {
-    Validate.notNull(exchange, "Exchange");
-    int week = exchange.getWeek();
-    if (money.compareTo(startingMoney.multiply(BigDecimal.TWO)) > 0 && week >= 20) {
-      return "Speculator";
-    } else if (money.compareTo(startingMoney.multiply(BigDecimal.valueOf(1.2))) > 0 && week >= 10) {
-      return "Investor";
-    } else {
-      return "Novice";
+  public Status getStatus() {
+    int weeks = transactionArchive.countDistinctWeeks();
+    BigDecimal netWorth = getNetWorth();
+    if (meets(Status.SPECULATOR, weeks, netWorth)) return Status.SPECULATOR;
+    if (meets(Status.INVESTOR,  weeks, netWorth)) return Status.INVESTOR;
+    return Status.NOVICE;
+  }
+
+  private boolean meets(Status s, int weeks, BigDecimal netWorth) {
+    return weeks >= s.getRequiredWeeks()
+        && netWorth.compareTo(targetNetWorth(s)) >= 0;
+  }
+
+  /**
+   * Progress toward the next status level, in [0.0, 1.0].
+   * Returns 1.0 when the player is already at the highest level.
+   */
+  public double getProgressToNextLevel() {
+    Status current = getStatus();
+    Status next = current.next();
+    if (next == null) {
+      return 1.0;                       // SPECULATOR – ingen neste
     }
+
+    int weeks = transactionArchive.countDistinctWeeks();
+    double weekProgress = clamp(
+        (double) (weeks - current.getRequiredWeeks())
+            / (next.getRequiredWeeks() - current.getRequiredWeeks()));
+
+    double gainProgress = gainProgress(current, next);
+
+    return Math.min(weekProgress, gainProgress);
+  }
+
+  private double gainProgress(Status current, Status next) {
+    BigDecimal currentTarget = targetNetWorth(current);
+    BigDecimal nextTarget    = targetNetWorth(next);
+    BigDecimal span = nextTarget.subtract(currentTarget);
+    if (span.signum() <= 0) {
+      return 1.0;                       // vakt mot divisjon på null
+    }
+    double p = getNetWorth().subtract(currentTarget)
+        .divide(span, 6, RoundingMode.HALF_UP)
+        .doubleValue();
+    return clamp(p);
+  }
+
+  /** Net worth required to hold the given status. */
+  private BigDecimal targetNetWorth(Status status) {
+    return startingMoney.add(startingMoney.multiply(status.getRequiredGain()));
+  }
+
+  private static double clamp(double v) {
+    return Math.clamp(v, 0.0, 1.0);
   }
 
   /**
@@ -251,5 +326,19 @@ public class Player {
    */
   public Set<String> getOwnedThemes() {
     return Set.copyOf(ownedThemes);
+  }
+
+  /** What the player still needs for the next level; empty at top status. */
+  public Optional<LevelGap> getGapToNextLevel() {
+    Status next = getStatus().next();
+    if (next == null) {
+      return Optional.empty();
+    }
+    int weeksLeft = Math.max(0,
+        next.getRequiredWeeks() - transactionArchive.countDistinctWeeks());
+    BigDecimal moneyLeft = targetNetWorth(next)
+        .subtract(getNetWorth())
+        .max(BigDecimal.ZERO);
+    return Optional.of(new LevelGap(weeksLeft, moneyLeft));
   }
 }

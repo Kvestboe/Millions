@@ -38,6 +38,7 @@ public class WeekSummaryView extends VBox {
     getChildren().setAll(
         buildHero(),
         buildStatRow(),
+        buildWeeklyBreakdown(),
         buildSectionButtons(),
         buildHoldingsBlock(),
         buildActions()
@@ -75,6 +76,35 @@ public class WeekSummaryView extends VBox {
     tile.getStyleClass().add("stat-tile");
     HBox.setHgrow(tile, Priority.ALWAYS);
     return tile;
+  }
+
+  /**
+   * Builds a breakdown of the weekly result.
+   *
+   * <p>The portfolio movement shows the net worth change before hangar cost,
+   * while weekly result includes the hangar cost deduction.
+   *
+   * @return a VBox containing the weekly breakdown rows
+   */
+  private VBox buildWeeklyBreakdown() {
+    Label header = new Label("Weekly breakdown");
+    header.getStyleClass().add("popup-title");
+
+    BigDecimal taxEffect = summary.feesAndTaxImpact();
+    String taxEffectLabel = taxEffect.signum() >= 0
+        ? "Reduced tax liability"
+        : "Tax and fee drag";
+
+    VBox rows = new VBox(6,
+        row("Holdings movement", MoneyFormat.formatSignedCurrency(summary.holdingsMovement())),
+        row(taxEffectLabel, MoneyFormat.formatSignedCurrency(taxEffect)),
+        row("Hangar cost", MoneyFormat.formatSignedCurrency(summary.hangarCost().negate())),
+        row("Weekly result", MoneyFormat.formatSignedCurrency(summary.weeklyDelta()))
+    );
+
+    VBox block = new VBox(8, header, rows);
+    block.getStyleClass().add("card");
+    return block;
   }
 
   private HBox buildSectionButtons() {

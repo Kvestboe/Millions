@@ -1,0 +1,203 @@
+# Norwegian stocks on Oslo Børs
+# Ticker,Name,Price
+
+EQNR,Equinor,375.00
+ORK,Orkla,108.20
+KOG,Kongsberg Gruppen,316.00
+FRO,Frontline PLC,355.20
+VAR,Vår Energi,49.22
+AKRBP,Aker BP,361.60
+DNB,DNB Bank,288.50
+SALM,SalMar,593.00
+NHY,Norsk Hydro,107.75
+MOWI,Mowi,204.20
+CMBT,CMB.TECH,155.80
+KOMA,Kongsberg Maritime,56.68
+NAS,Norwegian Air Shuttle,14.75
+CRNA,Circio Holding,9.32
+DNO,DNO,19.99
+BAKKA,Bakkafrost,473.00
+TEL,Telenor,158.20
+NOD,Nordic Semiconductor,200.20
+VEND,Vend Marketplaces,249.00
+BWLPG,BW LPG,204.40
+BNOR,BlueNord,598.00
+CADLR,Cadeler,62.25
+SUBC,Subsea 7,323.40
+TOM,Tomra Systems,98.65
+YAR,Yara International,536.00
+ELK,Elkem,29.92
+AKER,Aker,1240.00
+ENVI,Envipco Holding,47.90
+HAUTO,Höegh Autoliners,146.90
+MPCC,MPC Container Ships,24.19
+STB,Storebrand,182.40
+KIT,Kitron,108.70
+NORBT,Norbit,190.30
+HAFNI,Hafnia,82.25
+OKEA,OKEA,41.25
+BELCO,Belships,26.80
+AASB,Aasen Sparebank,127.00
+WAWI,Wallenius Wilhelmsen,155.30
+GJF,Gjensidige Forsikring,259.40
+LSG,Lerøy Seafood Group,46.24
+ODL,Odfjell Drilling,93.30
+NORCO,Norconsult,35.90
+HUNT,Hunter Group,7.08
+MGN,Magnora,28.60
+SB1NO,SpareBank 1 Sør-Norge,193.40
+B2I,B2 Impact,23.20
+GSF,Grieg Seafood,32.48
+PNOR,PetroNor E&P,18.06
+VOW,Vow,2.62
+SMOP,Smartoptics Group,53.60
+ENDUR,Endúr,125.60
+PRS,Prosafe,4.29
+CAPSL,Capital Tankers,126.00
+COIL,Constellation Oil Services,140.00
+MING,SpareBank 1 SMN,189.44
+SPOL,SpareBank 1 Østlandet,193.34
+SOFTX,SoftOx Solutions,0.12
+SPN,Sparebanken Norge,192.32
+NAPA,Napatech,47.85
+AKAST,Akastor,14.20
+NONG,SpareBank 1 Nord-Norge,146.70
+ATEA,Atea,158.00
+PARB,Pareto Bank,69.20
+ACR,Axactor,5.04
+SNI,Stolt-Nielsen,311.50
+KOA,Kongsberg Automotive,2.01
+PLSV,Paratus Energy Services,50.60
+EPR,Europris,92.50
+AFG,AF Gruppen,158.40
+AIRX,Airthings,2.05
+AKBM,Aker BioMarine,7.86
+AKSO,Aker Solutions,42.70
+AKVA,AKVA Group,78.40
+ALT,Alternus Energy Group,6.10
+ALNG,Awilco LNG,6.52
+ARR,Arribatec Group,3.62
+ASA,Atlantic Sapphire,1.42
+ASC,Arctic Securities,16.20
+AUTO,AutoStore Holdings,10.85
+AZT,ArcticZymes Technologies,27.10
+BEWI,BEWI,27.80
+BONHR,Bonheur,284.00
+BOR,Borregaard,146.00
+BRG,Borregaard,146.00
+BWE,BW Energy,33.75
+BWO,BW Offshore,35.40
+CAMBI,Cambi,17.20
+CEQ,Cavendish Hydrogen,4.55
+CLOUD,Cloudberry Clean Energy,9.74
+CONTX,ContextVision,11.80
+CRAYN,Crayon Group Holding,125.60
+CYVIZ,Cyviz,41.00
+DOFG,DOF Group,140.30
+DSRT,Desert Control,8.66
+EAM,EAM Solar,1.86
+EIOF,Eidesvik Offshore,18.80
+ELABS,Elliptic Laboratories,12.44
+ELE,Element,0.18
+EMGS,Electromagnetic Geoservices,3.18
+ENTRA,Entra,104.80
+EQVA,Eqva,3.96
+EXTX,Exact Therapeutics,9.10
+FJORD,Fjordkraft Holding,34.50
+FLNG,Flex LNG,270.00
+GENT,Gentian Diagnostics,52.20
+GIG,Gaming Innovation Group,28.60
+GOGL,Golden Ocean Group,93.40
+HBC,Hofseth BioCare,3.92
+HEX,Hexagon Composites,10.08
+HPUR,Hexagon Purus,5.72
+HUDL,Huddlestock Fintech,1.44
+HYARD,Havyard Group,8.88
+IDEX,IDEX Biometrics,0.41
+IOX,Interoil Exploration and Production,0.84
+ITERA,Itera,10.90
+JIN,Jinhui Shipping and Transportation,6.74
+KAHOT,Kahoot!,35.00
+KCC,Klaveness Combination Carriers,90.00
+KID,Kid,164.00
+KMCP,KMC Properties,6.12
+KOMPL,Komplett,8.48
+KRI,Kristiania,20.00
+LIFE,Lifecare,2.94
+MEDI,Medistim,248.00
+MELG,Melhus Sparebank,175.00
+MORG,Morrow Bank,7.78
+MULTI,Multiconsult,223.00
+NAVA,Navamedic,38.20
+NKR,Nekkar,12.60
+NOAP,Nordic Aqua Partners,67.40
+NOM,Nordic Mining,21.80
+NORTH,North Energy,2.82
+NRC,NRC Group,16.80
+NTI,Norsk Titanium,2.36
+ODF,Odfjell,142.00
+OET,Odfjell Technology,69.40
+OLT,Olav Thon Eiendomsselskap,266.00
+OTEC,Otello Corporation,12.10
+OTS,Ocean Team,1.25
+PEN,Panoro Energy,40.50
+PEXIP,Pexip Holding,46.80
+PHLY,Philly Shipyard,90.20
+PLT,PoLight,3.16
+PPG,Pioneer Property Group,94.00
+PROT,Protector Forsikring,467.40
+QEC,Questerre Energy,1.84
+QFR,Quantafuel,1.20
+REACH,Reach Subsea,10.92
+RECSI,REC Silicon,2.08
+RIVER,Havila Shipping,9.60
+ROM,RomReal,1.58
+SAGA,Saga Pure,1.28
+SATURN,Saturn Oil & Gas,21.70
+SCANA,Scana,3.24
+SDSD,S.D. Standard ETC,1.82
+SHLF,Shelf Drilling,17.90
+SIOFF,Siem Offshore,42.40
+SKUE,Skue Sparebank,224.00
+SOGN,Sogn Sparebank,175.00
+SOON,SpareBank 1 Østfold Akershus,350.00
+SOR,Sparebanken Sør,174.00
+SPIR,Spir Group,9.30
+SSG,Self Storage Group,37.80
+SVEG,Sparebanken Vest,152.00
+TECH,Techstep,4.08
+TECO,TECO 2030,0.15
+TIETO,Tietoevry,174.20
+TRE,Treasure,29.00
+VEI,Veidekke,154.00
+VOLUE,Volue,42.50
+WSTEP,Webstep,22.00
+XXL,XXL,1.04
+ZAL,Zaptec,15.35
+ZWIPE,Zwipe,0.28
+2020,2020 Bulkers,142.00
+ABG,ABG Sundal Collier,9.34
+ABL,ABL Group,13.80
+AGLX,Agilyx,24.20
+AKH,Aker Horizons,2.52
+AKOBO,Akobo Minerals,4.96
+ANDF,Andfjord Salmon,42.80
+AQUIL,Aquila Holdings,1.76
+ARGEO,Argeo,13.20
+ASTK,Asetek,5.40
+BALT,Baltic Sea Properties,62.00
+BCS,Bergen Carbon Solutions,7.14
+BGBIO,BerGenBio,6.70
+BLUEN,BlueNord,598.00
+BMA,Byggma,44.00
+BOUV,Bouvet,70.10
+BRB,BRAbank,3.88
+BSP,Black Sea Property,0.62
+CARAS,Carasent,12.45
+CIRCIO,Circio Holding,9.32
+DGB,DigiPlex,15.00
+DLTX,DLTx,0.95
+ECIT,ECIT,8.70
+ELO,Elopak,47.20
+ENSU,Ensurge Micropower,0.12
+FROG,Frogner,20.00

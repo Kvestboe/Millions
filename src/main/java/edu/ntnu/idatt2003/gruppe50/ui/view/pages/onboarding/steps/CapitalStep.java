@@ -72,7 +72,10 @@ public class CapitalStep implements OnboardingStep {
     capitalField.getStyleClass().add("input-field");
     capitalField.setPrefWidth(400);
     capitalField.setMaxWidth(400);
-    capitalField.textProperty().addListener((_, _, _) -> updateGameOverLabel());
+    capitalField.textProperty().addListener((_, _, _) -> {
+      updateGameOverLabel();
+      clearError();
+    });
 
     errorLabel.getStyleClass().add("error-label");
     errorLabel.setVisible(false);
@@ -143,17 +146,32 @@ public class CapitalStep implements OnboardingStep {
   public boolean isValid() {
     try {
       BigDecimal capital = Parse.parseBigDecimal(capitalField.getText());
+
       if (capital.compareTo(BigDecimal.ZERO) <= 0) {
-        return false;
+        return showError("Starting capital must be greater than 0 kr");
       }
+
       if (difficulty != null) {
         return difficulty.getMaxStartingCapital()
-            .map(max -> capital.compareTo(max) <= 0)
-            .orElse(true);
+            .map(max -> {
+              if (capital.compareTo(max) > 0) {
+                return showError("Maximum for " + difficulty.name()
+                    + " is " + max.toPlainString() + " kr");
+              }
+
+              clearError();
+              return true;
+            })
+            .orElseGet(() -> {
+              clearError();
+              return true;
+            });
       }
+
+      clearError();
       return true;
     } catch (Exception e) {
-      return false;
+      return showError("Starting capital must be a valid number");
     }
   }
 
@@ -165,5 +183,23 @@ public class CapitalStep implements OnboardingStep {
   @Override
   public void contribute(OnboardingFlowData data) {
     data.startingCapital = Parse.parseBigDecimal(capitalField.getText());
+  }
+
+  /**
+   * Shows a validation message when the starting capital is invalid.
+   *
+   * @param message the message to show
+   * @return false so validation can return directly
+   */
+  private boolean showError(String message) {
+    errorLabel.setText(message);
+    errorLabel.setVisible(true);
+    return false;
+  }
+
+  /** Clears the validation message when the starting capital is valid. */
+  private void clearError() {
+    errorLabel.setText("");
+    errorLabel.setVisible(false);
   }
 }
