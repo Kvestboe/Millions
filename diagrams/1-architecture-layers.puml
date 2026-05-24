@@ -1,0 +1,142 @@
+@startuml architecture-layers
+title Layered architecture  (Clean / Hexagonal)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 35
+skinparam ranksep 65
+skinparam defaultFontSize 11
+hide empty members
+hide circle
+
+top to bottom direction
+
+' ── UI ───────────────────────────────────────────────────────
+package "ui" as UI #D6EAF8 {
+  class "Pages & Components" as UIViews {
+    14 JavaFX pages
+    Onboarding flow (5 steps)
+    NavBar, AreaChartView
+    WeekSummaryPopup
+    Order popups
+    ButtonFactory, TableFactory
+  }
+  class "Controllers" as UICtrl {
+    GameController
+    DashboardQueryController
+    MarketQueryController
+    PortfolioQueryController
+    OrderPlacementController
+    OrdersController
+    TransactionQueryController
+    ShopController
+    LeaderboardController
+    StockDetailQueryController
+  }
+  class "UI Models & Mappers" as UIModel {
+    ShareData, DraftOrder
+    WeekSummary, TradingLogData
+    TransactionData
+    ShareDataMapper
+    TransactionDataMapper
+  }
+}
+
+' ── APPLICATION ──────────────────────────────────────────────
+package "application" as APP #D5F5E3 {
+  class "Commands" as CMD {
+    StartGameSession, LoadGameSession
+    AdvanceWeek, FinishGameSession
+    BuyShare, SellShare
+    PlaceBuyLimitOrder
+    PlaceSellLimitOrder
+    PlaceStopLossOrder
+    BuyCoins, PurchaseShopItem
+  }
+  class "Queries" as QRY {
+    GetPortfolio, GetMarket
+    GetStockDetail
+    GetTransactions, GetTradingLog
+    GetPendingOrders, PreviewOrder
+    GetTransactionMarkers
+    GetAllSaves, DeleteSave
+  }
+  class "DTOs" as DTO {
+    PortfolioDto, ShareDto
+    StockDto, TransactionDto
+    PendingOrderDto
+    TradingLogDto, SaveSummaryDto
+    DtoMapper
+  }
+}
+
+' ── DOMAIN ───────────────────────────────────────────────────
+package "domain" as DOM #FFF9C4 {
+  together {
+    class GameSession <<aggregate root>>
+    class Exchange <<aggregate root>>
+  }
+  class "Entities & Value Objects" as Model {
+    Player, Portfolio, Share
+    Stock, TransactionArchive
+    Transaction, Purchase, Sale
+    LimitOrder, LimitBuy, LimitSell
+    StopLossOrder, Shop, CoinExchange
+    Leaderboard, GameResult
+  }
+  class "Enums & Factories" as Misc {
+    Difficulty, GameSessionState
+    GameOutcome, Status, OrderSide
+    TransactionFactory
+    ShopItemFactory
+  }
+  interface GameSessionRepository <<port>> {
+    findById(UUID)
+    save(GameSession)
+    findAll()
+    delete(UUID)
+  }
+}
+
+' ── INFRASTRUCTURE ───────────────────────────────────────────
+package "infrastructure" as INFRA #FFCCBC {
+  class JsonFileGameSessionRepository
+  class InMemoryGameSessionRepository
+  class LeaderboardFileHandler
+  class GameSaveMapper
+  class "Persistence DTOs" as pdto {
+    GameSaveDto, PlayerDto
+    ExchangeDto, ShareDto
+    StockDto, LimitOrderDto
+  }
+}
+
+' ── SHARED ───────────────────────────────────────────────────
+package "shared" as SHARED #EEEEEE {
+  class Utilities {
+    Money, MoneyFormat
+    Validate, Parse
+    Observable, Observer
+  }
+}
+
+' ── DEPENDENCIES ─────────────────────────────────────────────
+UI    -->  APP                            : calls
+APP   -->  DOM                            : uses
+INFRA ..|> GameSessionRepository          : implements
+INFRA -->  DOM                            : maps
+
+' ── LAYOUT HINTS (force vertical stacking) ───────────────────
+UICtrl  -[hidden]down-  CMD
+CMD     -[hidden]down-  GameSession
+Model   -[hidden]down-  JsonFileGameSessionRepository
+UIModel -[hidden]right- SHARED
+JsonFileGameSessionRepository -[hidden]right- InMemoryGameSessionRepository
+
+note bottom of GameSessionRepository
+  Domain defines the interface.
+  Infrastructure implements it.
+end note
+
+@enduml

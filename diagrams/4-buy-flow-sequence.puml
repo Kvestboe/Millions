@@ -1,0 +1,105 @@
+@startuml buy-flow-sequence
+title Sequence  —  User buys a share (flow across architectural layers)
+
+skinparam sequenceMessageAlign center
+skinparam roundCorner 5
+skinparam ParticipantPadding 12
+skinparam BoxPadding 10
+skinparam sequenceArrowThickness 1.3
+skinparam defaultFontSize 11
+
+box "ui  —  Presentation" #D6EAF8
+  participant ":MarketView" as UI
+  participant ":GameController" as Ctrl
+end box
+
+box "application  —  Use Case" #D5F5E3
+  participant ":BuyShareUseCase" as UC
+end box
+
+box "domain  —  Business Rules" #FFF9C4
+  participant ":GameSession\n<<aggregate root>>" as GS
+  participant ":Exchange\n<<aggregate root>>" as Ex
+  participant ":TransactionFactory" as TF
+  participant ":Purchase\n<<Transaction>>" as Tx
+  participant ":Player" as P
+end box
+
+box "infrastructure  —  Adapter" #FFCCBC
+  participant ":JsonFileGameSessionRepository\n<<implements GameSessionRepository>>" as Repo
+end box
+
+== 1. User clicks "Buy" in the UI ==
+UI -> Ctrl : buy("AAPL", 10)
+activate Ctrl
+Ctrl -> UC : execute(Request(gameId, "AAPL", 10))
+activate UC
+
+== 2. Load aggregate via the port ==
+UC -> Repo : findById(gameId)
+note right of UC
+  Use case is typed against the
+  <b>GameSessionRepository</b> interface.
+  The JSON adapter is injected at startup
+  by <b>AppModule</b> — the use case has
+  no knowledge of files or JSON.
+end note
+activate Repo
+Repo --> UC : Optional<GameSession>
+deactivate Repo
+
+== 3. Domain executes the business rules ==
+UC -> GS : buy("AAPL", 10)
+activate GS
+note right of GS : <i>ensureActive()</i>  —  guard:\nsession must be ACTIVE.
+GS -> Ex : buy("AAPL", 10, player)
+activate Ex
+Ex -> TF : createPurchase(share, week)
+activate TF
+TF --> Ex : Purchase
+deactivate TF
+
+Ex -> Tx : commit(player)
+activate Tx
+note right of Tx
+  Invariant check + mutation
+  happen inside the aggregate —
+  no domain rule leaks to the
+  application layer.
+end note
+Tx -> P : withdrawMoney(total)
+Tx -> P : portfolio.addShare(share)
+Tx -> P : transactionArchive.add(this)
+Tx --> Ex
+deactivate Tx
+Ex --> GS
+deactivate Ex
+GS --> UC
+deactivate GS
+
+== 4. Persist the mutated aggregate ==
+UC -> Repo : save(session)
+activate Repo
+note right of Repo
+  Adapter serializes the aggregate
+  to <i>saves/&lt;gameId&gt;.json</i>.
+  Domain objects never knew this happened.
+end note
+Repo --> UC
+deactivate Repo
+
+UC --> Ctrl
+deactivate UC
+Ctrl --> UI : (view re-queries via GetPortfolioUseCase)
+deactivate Ctrl
+
+' ── Key architectural takeaways ─────────────────────────────
+legend right
+  | **Step** | **Architectural principle** |
+  | 1   | UI knows only the **application** layer |
+  | 2   | Use case depends on the **port**, not the adapter (DIP) |
+  | 3   | All business rules live in the **domain** aggregate |
+  | 4   | Persistence is an **infrastructure** concern — invisible to the domain |
+endlegend
+
+@enduml

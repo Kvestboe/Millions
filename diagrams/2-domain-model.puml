@@ -1,0 +1,310 @@
+@startuml domain-model
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 25
+skinparam ranksep 40
+skinparam defaultFontSize 11
+hide empty members
+hide circle
+
+left to right direction
+
+' ══════════════════════════════════════════════════════
+'  GAME
+' ══════════════════════════════════════════════════════
+package "game" #BBDEFB {
+  class GameSession <<aggregate root>> {
+    UUID gameId
+    GameSessionState state
+    LocalDateTime lastPlayed
+    List<BigDecimal> netWorthHistory
+    --
+    buy(symbol, qty)
+    sell(symbol, qty)
+    advanceWeek() : GameOutcome
+    finish() : GameResult
+    evaluateOutcome() : GameOutcome
+  }
+  enum GameSessionState {
+    ACTIVE
+    FINISHED
+  }
+  enum GameOutcome {
+    ONGOING
+    WON
+    LOST
+  }
+  enum Difficulty {
+    EASY
+    MEDIUM
+    HARD
+    --
+    getUpChance()
+    getMaxGain() / getMaxLoss()
+    toVolatilityProfile()
+  }
+  class GameResult <<record>> {
+    boolean won
+    BigDecimal finalNetWorth
+    BigDecimal startingCapital
+    int weeksPlayed
+    Difficulty difficulty
+    --
+    calculateScore() : double
+  }
+  GameSession --> GameSessionState
+  GameSession --> Difficulty
+  GameSession ..> GameOutcome : produces
+  GameSession ..> GameResult : produces
+}
+
+' ══════════════════════════════════════════════════════
+'  PORTFOLIO
+' ══════════════════════════════════════════════════════
+package "portfolio" #C8E6C9 {
+  class Player <<entity>> {
+    String name
+    BigDecimal money
+    BigDecimal startingMoney
+    int coins
+    String activeTheme
+    Set<String> ownedThemes
+    --
+    getNetWorth() : BigDecimal
+    addMoney() / withdrawMoney()
+    addCoins() / spendCoins()
+    getStatus() : Status
+    getProgressToNextLevel() : LevelGap
+  }
+  class Portfolio <<entity>> {
+    Map<UUID, Share> shares
+    --
+    addShare(Share)
+    removeShare(UUID)
+    getNetWorth() : BigDecimal
+    contains(UUID) : boolean
+  }
+  class Share <<value object>> {
+    UUID shareId
+    BigDecimal quantity
+    BigDecimal purchasePrice
+    int purchaseWeek
+  }
+  class LevelGap <<record>> {
+    int weeksRemaining
+    BigDecimal moneyRemaining
+  }
+  enum Status {
+    NOVICE
+    INVESTOR
+    SPECULATOR
+    --
+    getRequiredWeeks()
+    getRequiredGain()
+    next() : Status
+  }
+
+  Player *-- "1" Portfolio
+  Player *-- "1" TransactionArchive
+  Player --> Status
+  Player ..> LevelGap : returns
+  Portfolio *-- "0..*" Share
+}
+
+' ══════════════════════════════════════════════════════
+'  TRADE
+' ══════════════════════════════════════════════════════
+package "trade" #FFCCBC {
+  class TransactionArchive <<entity>> {
+    List<Transaction> transactions
+    --
+    add(Transaction)
+    getTransactions(week) : List
+    countDistinctWeeks() : int
+    realizedProfitLoss() : BigDecimal
+    totalCommission() / totalTax()
+    recent(limit) : List
+  }
+  abstract class Transaction <<entity>> {
+    int week
+    UUID batchId
+    boolean committed
+    --
+    {abstract} commit(Player)
+    markCommitted()
+  }
+  class Purchase
+  class Sale
+  class TransactionFactory <<factory>> {
+    createPurchase(share, week) : Purchase
+    createSale(share, week) : Sale
+  }
+  enum OrderSide {
+    BUY
+    SELL
+  }
+
+  package "calculator" #FFE0D0 {
+    interface TransactionCalculator {
+      calculateGross() : BigDecimal
+      calculateCommission() : BigDecimal
+      calculateTax() : BigDecimal
+      calculateTotal() : BigDecimal
+    }
+    class PurchaseCalculator
+    class SaleCalculator
+
+    TransactionCalculator <|.. PurchaseCalculator
+    TransactionCalculator <|.. SaleCalculator
+  }
+
+  package "order" #FFD0C0 {
+    abstract class LimitOrder {
+      BigDecimal targetPrice
+      BigDecimal quantity
+      int expiryWeek
+      int currentWeek
+      --
+      {abstract} shouldTrigger(currentPrice) : boolean
+      {abstract} execute()
+      {abstract} label() : String
+      isExpired() : boolean
+    }
+    class LimitBuyOrder
+    class LimitSellOrder
+    class StopLossOrder
+
+    LimitOrder <|-- LimitBuyOrder
+    LimitOrder <|-- LimitSellOrder
+    LimitOrder <|-- StopLossOrder
+  }
+
+  Transaction <|-- Purchase
+  Transaction <|-- Sale
+  Transaction --> TransactionCalculator : uses
+  TransactionArchive o-- "0..*" Transaction
+}
+
+' ══════════════════════════════════════════════════════
+'  MARKET
+' ══════════════════════════════════════════════════════
+package "market" #E1BEE7 {
+  class Exchange <<aggregate root>> {
+    String name
+    int week
+    --
+    buy(symbol, qty) : Transaction
+    sell(symbol, qty) : Transaction
+    advance()
+    placeOrder(LimitOrder)
+    cancelOrder(order)
+    getGainers() / getLosers()
+    findStocks(query) : List
+  }
+  class Stock <<value object>> {
+    String symbol
+    String company
+    List<BigDecimal> prices
+    --
+    getSalesPrice() : BigDecimal
+    addNewSalesPrice(price)
+    getLatestPriceChange() : BigDecimal
+    getLatestPriceChangePercent() : BigDecimal
+    getHighestPrice() / getLowestPrice()
+  }
+  class VolatilityProfile <<record>> {
+    double upChance
+    double maxGain
+    double maxLoss
+  }
+
+  Exchange *-- "1..*" Stock
+  Exchange o-- "0..*" LimitOrder
+  Exchange --> VolatilityProfile
+  Exchange --> TransactionFactory : uses
+}
+
+' ══════════════════════════════════════════════════════
+'  SHOP
+' ══════════════════════════════════════════════════════
+package "shop" #FFF9C4 {
+  class Shop <<entity>> {
+    buyCoins(player, coins)
+    purchaseItem(player, itemId)
+  }
+  interface ShopItem {
+    getId() / getName()
+    getDescription()
+    getPrice(difficulty) : int
+    getRequiredNetWorth() : BigDecimal
+    applyTo(Player)
+  }
+  class ThemeItem <<shop item>> {
+    String themeId
+    Map<Difficulty, Integer> prices
+  }
+  class ShopItemFactory <<factory>> {
+    createDefaultItems() : List
+  }
+  class CoinExchange <<entity>> {
+    List<BigDecimal> priceHistory
+    --
+    getCurrentPricePerCoin() : BigDecimal
+    calculateCost(coins) : BigDecimal
+    advanceShop()
+  }
+
+  Shop *-- "1" CoinExchange
+  Shop --> "0..*" ShopItem
+  ShopItem <|.. ThemeItem
+  ShopItemFactory ..> ShopItem : creates
+}
+
+' ══════════════════════════════════════════════════════
+'  LEADERBOARD
+' ══════════════════════════════════════════════════════
+package "leaderboard" #FCE4EC {
+  class Leaderboard <<entity>> {
+    top(n) : List
+    add(LeaderboardEntry)
+    all() : List
+    replaceAll(entries)
+  }
+  class LeaderboardEntry <<record>> {
+    String playerName
+    double score
+    int weeksPlayed
+    BigDecimal finalNetWorth
+    BigDecimal startingCapital
+    Difficulty difficulty
+    LocalDate completedDate
+  }
+
+  Leaderboard *-- "0..*" LeaderboardEntry
+  LeaderboardEntry --> Difficulty
+}
+
+' ══════════════════════════════════════════════════════
+'  REPOSITORY PORT
+' ══════════════════════════════════════════════════════
+package "repository" #LightYellow {
+  interface GameSessionRepository <<port>> {
+    findById(UUID) : Optional<GameSession>
+    save(GameSession)
+    findAll() : List<GameSession>
+    delete(UUID)
+  }
+}
+
+' ══════════════════════════════════════════════════════
+'  CROSS-PACKAGE RELATIONSHIPS
+' ══════════════════════════════════════════════════════
+GameSession *-- "1" Player
+GameSession *-- "1" Exchange
+
+Share --> Stock
+LimitOrder --> Stock
+LimitOrder --> Player
+
+@enduml
