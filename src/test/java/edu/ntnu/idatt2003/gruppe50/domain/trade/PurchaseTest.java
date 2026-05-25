@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.domain.trade;
 
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.assertBigDecimalEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
@@ -95,7 +96,7 @@ public class PurchaseTest {
 
     BigDecimal moneyAfter = moneyBefore.subtract(purchase.getCalculator().calculateTotal());
 
-    assertEquals(moneyAfter, richPlayer.getMoney());
+    assertBigDecimalEquals(moneyAfter, richPlayer.getMoney());
     assertEquals(shareBefore + 1, richPlayer.getPortfolio().getShares().size());
     assertEquals(
         transactionArchiveBefore + 1,
