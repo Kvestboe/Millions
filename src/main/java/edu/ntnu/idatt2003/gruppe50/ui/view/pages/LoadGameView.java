@@ -46,11 +46,15 @@ public class LoadGameView extends StackPane {
     card.getStyleClass().add("load-game-card");
     card.setPrefWidth(760);
     card.setMaxWidth(760);
+    card.setMaxHeight(Double.MAX_VALUE);
     card.setAlignment(Pos.TOP_LEFT);
+
+    TableView<SaveSummaryDto> table = createSaveTable();
+    VBox.setVgrow(table, Priority.ALWAYS);
 
     card.getChildren().addAll(
         buildHeader(),
-        createSaveTable(),
+        table,
         createDetailPanel(),
         createButtons()
     );
@@ -86,7 +90,6 @@ public class LoadGameView extends StackPane {
         ColumnPresets.text("Last played", s -> s.lastPlayed().format(DATE_FORMAT))
     ));
     table.setItems(controller.getSaves());
-    table.setPrefHeight(220);
     table.setRowFactory(_ -> {
       TableRow<SaveSummaryDto> row = new TableRow<>();
       row.setOnMousePressed(_ -> {
