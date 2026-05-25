@@ -29,16 +29,13 @@ public class Sale extends Transaction {
   }
 
   /**
-   * Commits this sale transaction for the specified player.
+   * Commits this sale for the given player.
    *
-   * <p>The player receives money from the sale, the share is removed from the player's portfolio,
-   * and the transaction is added to the player's transaction archive.
+   * <p>The sale adds money, removes the share from the portfolio,
+   * and stores the transaction in the player's archive.
    *
-   * <p>If the transaction is already committed, this method does nothing.
-   *
-   * @param player the player for whom the transaction is committed
-   * @throws IllegalArgumentException if player is null
-   * @throws IllegalArgumentException if the player does not own the share
+   * @param player the player selling the share
+   * @throws IllegalArgumentException if {@code player} is null or does not own the share
    */
   @Override
   public void commit(Player player) {

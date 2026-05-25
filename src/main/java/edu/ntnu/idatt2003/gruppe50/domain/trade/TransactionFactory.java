@@ -14,6 +14,7 @@ public class TransactionFactory {
    * @param share the share to be purchased
    * @param week the week the purchase takes place
    * @return a new {@link Transaction} representing the purchase
+   * @throws IllegalArgumentException if the input is invalid
    */
   public Transaction createPurchase(Share share, int week) {
     return new Purchase(share, week, UUID.randomUUID());
@@ -25,6 +26,7 @@ public class TransactionFactory {
    * @param share the share to be sold
    * @param week the week the sale takes place
    * @return a new {@link Transaction} representing the sale
+   * @throws IllegalArgumentException if the input is invalid
    */
   public Transaction createSale(Share share, int week) {
     return new Sale(share, week, UUID.randomUUID());
@@ -39,6 +41,7 @@ public class TransactionFactory {
    * @param week the week the sale takes place
    * @param batchId the existing batch id to associate with this sale
    * @return a new {@link Transaction} representing the sale
+   * @throws IllegalArgumentException if the input is invalid
    */
   public Transaction createSale(Share share, int week, UUID batchId) {
     return new Sale(share, week, batchId);

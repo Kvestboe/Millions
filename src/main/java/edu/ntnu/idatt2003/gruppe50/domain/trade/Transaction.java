@@ -28,6 +28,7 @@ public abstract class Transaction {
    * @param share the share involved in the transaction
    * @param week the week number when the transaction occurred
    * @param calculator the calculator used in the transaction
+   * @param batchId the id grouping this transaction with related transactions
    * @throws IllegalArgumentException if {@code share} or {@code calculator} is
    *     {@code null}, or if {@code week} is not positive
    */
@@ -99,7 +100,7 @@ public abstract class Transaction {
   public abstract void commit(Player player);
 
   /**
-   * Sets committed to true
+   * Marks this transaction as committed.
    */
   protected void markCommitted() {
     this.committed = true;
