@@ -4,6 +4,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.InsufficientFundsException;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
@@ -139,12 +140,12 @@ public final class GameSession {
    * @param quantity quantity to buy
    * @throws GameSessionFinishedException if the session is finished
    */
-  public void buy(String symbol, BigDecimal quantity) {
+  public Transaction buy(String symbol, BigDecimal quantity) {
     ensureActive();
-    exchange.buy(symbol, quantity, player);
+    return exchange.buy(symbol, quantity, player);
   }
 
-  public void placeBuyLimitOrder(
+  public LimitBuyOrder  placeBuyLimitOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -167,8 +168,8 @@ public final class GameSession {
         currentWeek,
         expiryWeek
     );
-
     exchange.placeOrder(order);
+    return order;
   }
 
   /**
@@ -177,7 +178,7 @@ public final class GameSession {
    * @param shareId identifier of owned share to sell
    * @throws GameSessionFinishedException if the session is finished
    */
-  public void sell(String symbol, BigDecimal quantity) {
+  public List<Transaction> sell(String symbol, BigDecimal quantity) {
     if (state == GameSessionState.FINISHED) {
       throw new GameSessionFinishedException();
     }
@@ -187,10 +188,10 @@ public final class GameSession {
 
     Stock stock = exchange.getStock(symbol);
 
-    exchange.sellQuantity(stock, quantity, player);
+    return exchange.sellQuantity(stock, quantity, player);
   }
 
-  public void placeSellLimitOrder(
+  public LimitSellOrder  placeSellLimitOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -215,9 +216,10 @@ public final class GameSession {
     );
 
     exchange.placeOrder(order);
+    return order;
   }
 
-  public void placeStopLossOrder(
+  public StopLossOrder  placeStopLossOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -240,8 +242,8 @@ public final class GameSession {
         currentWeek,
         expiryWeek
     );
-
     exchange.placeOrder(order);
+    return order;
   }
 
   /**

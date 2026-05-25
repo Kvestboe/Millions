@@ -1,8 +1,12 @@
 package edu.ntnu.idatt2003.gruppe50.application.command;
 
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.OrderType;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -26,18 +30,23 @@ public final class PlaceBuyLimitOrderUseCase {
    * @param request input with game id, symbol, quantity, target price and duration
    * @throws GameSessionNotFoundException if the session does not exist
    */
-  public void execute(Request request) {
+  public Response execute(Request request) {
     GameSession session =
         repository.findById(request.gameId()).orElseThrow(GameSessionNotFoundException::new);
 
-    session.placeBuyLimitOrder(
+    LimitBuyOrder order = session.placeBuyLimitOrder(
+        request.symbol(), request.quantity(),
+        request.targetPrice(), request.duration()
+    );
+    repository.save(session);
+
+    return new Response(
         request.symbol(),
         request.quantity(),
         request.targetPrice(),
-        request.duration()
+        order.getCreatedWeek(),
+        order.getExpiryWeek()
     );
-
-    repository.save(session);
   }
 
   /**
@@ -55,5 +64,13 @@ public final class PlaceBuyLimitOrderUseCase {
       BigDecimal quantity,
       BigDecimal targetPrice,
       int duration
+  ) {}
+
+  public record Response(
+      String symbol,
+      BigDecimal quantity,
+      BigDecimal targetPrice,
+      int placedAtWeek,
+      int expiresAtWeek
   ) {}
 }
