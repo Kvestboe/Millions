@@ -50,8 +50,16 @@ public final class AppRouter {
   }
 
   public void showMainMenu() {
+    SaveSummaryDto latestSave = module.getAllSaves.execute().stream()
+        .max(Comparator.comparing(SaveSummaryDto::lastPlayed))
+        .orElse(null);
+
     MainMenuView menu = new MainMenuView(
-        this::showNewGame, () -> showSettings(this::showMainMenu), Platform::exit);
+        latestSave,
+        this::showNewGame,
+        () -> showSettings(this::showMainMenu),
+        Platform::exit
+    );
     menu.setOnLeaderboard(() -> showLeaderboard(this::showMainMenu));
     menu.setOnLoadGame(this::showLoadGame);
     menu.setOnContinueGame(this::showContinueGame);
