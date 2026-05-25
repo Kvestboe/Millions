@@ -168,8 +168,6 @@ public class MainMenuView extends StackPane{
   }
 
   private HBox buildSystemButtons() {
-    // Innstillinger + Avslutt
-    // Avslutt kobler onQuit til onAction
     Button settings = ButtonFactory.styled("⛭ Settings", "system-button", onSettings);
     Button quit = ButtonFactory.styled("✕ Quit", "system-button-danger", onQuit);
 
@@ -184,5 +182,4 @@ public class MainMenuView extends StackPane{
 
     return systemBox;
   }
-
 }
