@@ -23,6 +23,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekSummaryPopup;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.InsufficientCashPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 import java.math.BigDecimal;
@@ -212,9 +213,15 @@ public class GameViewCoordinator {
 
   private void onAdvanceWeek() {
     GameSession session = bundle.session();
+    BigDecimal hangarCost = session.getUpcomingHangarCost();
+
+    if (session.getPlayer().getMoney().compareTo(hangarCost) < 0) {
+      showInsufficientCashPopup(hangarCost);
+      return;
+    }
+
     int prevWeek = session.getExchange().getWeek();
     BigDecimal before = session.getPlayer().getNetWorth();
-
     bundle.game().advanceWeek();
 
     if (session.getState() == GameSessionState.FINISHED) {
@@ -376,5 +383,23 @@ public class GameViewCoordinator {
       return "To reach " + next.displayName() + ":\n" + moneyText + ".";
     }
     return "Ready to advance to " + next.displayName() + "!";
+  }
+
+  /**
+   * Shows a popup telling the player they don't have enough cash
+   * to pay the hangar rent, and that they need to sell shares first.
+   *
+   * @param hangarCost the rent the player must pay next week
+   */
+  private void showInsufficientCashPopup(BigDecimal hangarCost) {
+    BigDecimal playerCash = bundle.session().getPlayer().getMoney();
+    Node[] holder = new Node[1];
+    InsufficientCashPopup popup = new InsufficientCashPopup(
+        hangarCost,
+        playerCash,
+        () -> closePopup(holder[0])
+    );
+    holder[0] = popup;
+    showPopup(popup);
   }
 }
