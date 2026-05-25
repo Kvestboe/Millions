@@ -30,4 +30,7 @@
     /* --- Border --- */
     -border:         #3A251E; /* Standard border */
     -border-subtle:  #2A1B16; /* Subtil separator */
+
+    -nav-active-bg:     rgba(217, 138, 74, 0.12);
+    -nav-active-border: rgba(217, 138, 74, 0.25);
 }

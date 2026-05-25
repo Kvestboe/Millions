@@ -10,8 +10,6 @@
 .root {
     -fx-background-color: -bg-primary;
     -fx-font-family: "System";
-    -nav-active-bg:     rgba(255, 209, 102, 0.12);
-    -nav-active-border: rgba(255, 209, 102, 0.25);
 }
 
 .page-title {
