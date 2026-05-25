@@ -164,11 +164,9 @@ public class LeaderboardView extends StackPane {
         "Score = (1 000 000 / starting capital)^1.5 × (100 / √weeks)\n"
             + "Lower starting capital matters most, while fewer weeks gives a smaller bonus.");
     tooltip.getStyleClass().add("score-tooltip");
-    q.setTooltip(tooltip);
     q.setPickOnBounds(true);
     HBox h = new HBox(4, label, q);
     h.setAlignment(Pos.CENTER);
-    Tooltip.install(h, tooltip);
     h.setOnMouseEntered(_ -> showScoreTooltip(h, tooltip));
     h.setOnMouseExited(_ -> tooltip.hide());
     return h;

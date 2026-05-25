@@ -14,7 +14,7 @@
 .bottom-bar-value       { -fx-text-fill: -text-primary;   -fx-font-size: 16px; -fx-font-weight: bold; }
 .bottom-bar-value-gold  { -fx-text-fill: -accent-gold;    -fx-font-size: 16px; -fx-font-weight: bold; }
 
-/* Danger state (negativ cash) */
+/* Danger state (negative cash) */
 .bottom-bar-danger                          { -fx-background-color: rgba(239, 68, 68, 0.08); }
 .bottom-bar-danger .bottom-bar-value        { -fx-text-fill: -error; }
 .bottom-bar-danger .bottom-bar-value-gold   { -fx-text-fill: -error; }
