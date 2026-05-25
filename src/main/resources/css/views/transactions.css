@@ -1,9 +1,11 @@
+/* Container */
 .transactions-view {
     -fx-background-color: -bg-primary;
     -fx-padding: 24;
     -fx-spacing: 16;
 }
 
+/* Trading log card */
 .trading-log-card {
     -fx-background-color: -bg-surface;
     -fx-background-radius: 10;
@@ -21,6 +23,12 @@
     -fx-font-size: 13px;
 }
 
+.trading-log-header {
+    -fx-border-color: transparent transparent -border-subtle transparent;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-padding: 0 0 12 0;
+}
+
 .trading-log-title {
     -fx-text-fill: -accent-gold;
     -fx-font-size: 13px;
@@ -33,12 +41,7 @@
     -fx-font-size: 12px;
 }
 
-.trading-log-header {
-    -fx-border-color: transparent transparent -border-subtle transparent;
-    -fx-border-width: 0 0 0.5 0;
-    -fx-padding: 0 0 12 0;
-}
-
+/* Sections */
 .section-overline {
     -fx-text-fill: -text-secondary;
     -fx-font-size: 10px;
@@ -51,6 +54,7 @@
     -fx-font-weight: bold;
 }
 
+/* Buy/sell mix bar */
 .buy-sell-bar {
     -fx-pref-height: 6;
     -fx-min-height: 6;
@@ -85,15 +89,10 @@
     -fx-font-size: 11px;
 }
 
+/* Activity list */
 .activity-wrapper {
     -fx-min-height: 80;
     -fx-alignment: center;
-}
-
-.empty-activity {
-    -fx-text-fill: -text-secondary;
-    -fx-font-size: 12px;
-    -fx-opacity: 0.7;
 }
 
 .activity-row {
@@ -129,6 +128,13 @@
     -fx-font-weight: bold;
 }
 
+.empty-activity {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+    -fx-opacity: 0.7;
+}
+
+/* Filter toolbar */
 .filter-toolbar {
     -fx-spacing: 12;
     -fx-alignment: center-left;

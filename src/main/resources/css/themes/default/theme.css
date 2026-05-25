@@ -5,7 +5,6 @@
 
 .root {
 
-    /* --- Bakgrunner --- */
     -bg-primary: #061016; /* Sidebakgrunn */
     -bg-surface: #0D1E2A; /* Kort, navbar */
     -bg-elevated: #132838; /* Input, hover-overflater */
@@ -30,4 +29,7 @@
     /* --- Border --- */
     -border:         #1F3344; /* Standard border */
     -border-subtle:  #132838; /* Subtil separator */
+
+    -nav-active-bg:     rgba(255, 209, 102, 0.12);
+    -nav-active-border: rgba(255, 209, 102, 0.25);
 }

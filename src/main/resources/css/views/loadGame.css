@@ -1,4 +1,4 @@
-
+/* Card */
 .load-game-card {
     -fx-background-color: -bg-surface;
     -fx-background-radius: 12;
@@ -9,6 +9,7 @@
     -fx-spacing: 20;
 }
 
+/* Header */
 .load-game-title {
     -fx-font-size: 32px;
     -fx-font-weight: bold;
@@ -20,8 +21,14 @@
     -fx-text-fill: -text-secondary;
 }
 
-.empty-state-label {
-    -fx-text-fill: -text-secondary;
-    -fx-font-size: 14px;
-    -fx-opacity: 0.5;
+/* Table — selected row ring */
+.load-game-card .table-row-cell:filled:selected,
+.load-game-card .table-row-cell:filled:selected:hover {
+    -fx-background-color: -accent-gold, -bg-surface;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 6;
+}
+
+.load-game-card .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: -text-primary;
 }
