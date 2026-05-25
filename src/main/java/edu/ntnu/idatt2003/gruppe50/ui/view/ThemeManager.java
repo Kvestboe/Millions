@@ -8,11 +8,9 @@ public class ThemeManager {
   private String currentTheme = DEFAULT_THEME;
 
   public void apply(Scene scene) {
-    scene.getStylesheets().clear();
-    scene.getStylesheets().addAll(
-        resource("/css/themes/" + currentTheme + "/theme.css"),
+    scene.getStylesheets().setAll(
         resource("/css/base.css"),
-        resource("/css/views/navbar.css")
+        resource("/css/themes/" + currentTheme + "/theme.css")
     );
   }
 

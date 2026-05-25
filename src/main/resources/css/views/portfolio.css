@@ -1,26 +1,16 @@
+/* Container */
 .portfolio-view {
     -fx-background-color: -bg-primary;
     -fx-padding: 24;
     -fx-spacing: 16;
 }
 
-.info-card .card-value {
-    -fx-text-fill: -text-primary;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
-.info-card .net-worth-value {
-    -fx-text-fill: -accent-gold;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
+/* Table */
 .portfolio-view .table-view .table-row-cell:empty {
     -fx-background-color: -bg-surface;
 }
 
-/* Buy marker dots (series 1 = blue) */
+/* Chart — buy markers (series 1) */
 .portfolio-view .chart-series-area-line.default-color1,
 .portfolio-view .chart-series-area-fill.default-color1 {
     -fx-stroke: transparent; -fx-fill: transparent;
@@ -32,7 +22,7 @@
     -fx-padding: 5px;
 }
 
-/* Sell marker dots (series 2 = red) */
+/* Chart — sell markers (series 2) */
 .portfolio-view .chart-series-area-line.default-color2,
 .portfolio-view .chart-series-area-fill.default-color2 {
     -fx-stroke: transparent; -fx-fill: transparent;

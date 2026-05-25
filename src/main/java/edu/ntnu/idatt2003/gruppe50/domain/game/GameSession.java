@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.domain.game;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.InsufficientFundsException;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
@@ -247,15 +248,18 @@ public final class GameSession {
    * Advances the exchange one week.
    *
    * @throws GameSessionFinishedException if the session is finished
+   * @throws InsufficientFundsException if the player cannot afford the hangar cost
    */
   public void advanceWeek() {
     ensureActive();
 
-    BigDecimal hangarCost = player.getStartingMoney()
-        .multiply(BigDecimal.valueOf(difficulty.getHangarCostRate()))
-        .setScale(2, RoundingMode.HALF_UP);
-    player.withdrawMoney(hangarCost);
+    BigDecimal hangarCost = getUpcomingHangarCost();
+    if (player.getMoney().compareTo(hangarCost) < 0) {
+      throw new InsufficientFundsException(
+          "Not enough cash to pay hangar rent of " + hangarCost);
+    }
 
+    player.withdrawMoney(hangarCost);
     exchange.advance();
     netWorthHistory.add(player.getNetWorth());
     exchange.notifyObservers();
@@ -352,5 +356,16 @@ public final class GameSession {
 
   public Difficulty getDifficulty() {
     return difficulty;
+  }
+
+  /**
+   * Returns the hangar cost the player must pay on the next week advancement.
+   *
+   * @return the hangar cost for next week
+   */
+  public BigDecimal getUpcomingHangarCost() {
+    return player.getStartingMoney()
+        .multiply(BigDecimal.valueOf(difficulty.getHangarCostRate()))
+        .setScale(2, RoundingMode.HALF_UP);
   }
 }

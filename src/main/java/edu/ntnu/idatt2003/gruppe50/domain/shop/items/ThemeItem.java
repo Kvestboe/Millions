@@ -4,7 +4,6 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.ShopItem;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
-
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.Map;

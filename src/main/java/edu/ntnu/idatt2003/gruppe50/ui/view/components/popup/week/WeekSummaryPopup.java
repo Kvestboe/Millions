@@ -1,10 +1,11 @@
-package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup;
+package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week;
 
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekDetailListView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekSummaryView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -26,7 +27,7 @@ public class WeekSummaryPopup extends StackPane {
     this.card = new VBox(15);
     card.getStyleClass().add("week-summary-popup");
     card.setMaxWidth(560);
-    card.setMaxHeight(Region.USE_PREF_SIZE);
+    card.setMaxHeight(620);
 
     getChildren().addAll(backdrop, card);
 
@@ -43,7 +44,7 @@ public class WeekSummaryPopup extends StackPane {
         this::showNotifications,
         onClose
     );
-    card.getChildren().setAll(view);
+    card.getChildren().setAll(scrollable(view));
   }
 
   private void showNews() {
@@ -64,5 +65,15 @@ public class WeekSummaryPopup extends StackPane {
         onClose
     );
     card.getChildren().setAll(view);
+  }
+
+  private ScrollPane scrollable(VBox content) {
+    ScrollPane scroll = new ScrollPane(content);
+    scroll.setFitToWidth(true);
+    scroll.setMaxHeight(620);
+    scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scroll.getStyleClass().add("week-summary-scroll");
+    return scroll;
   }
 }
