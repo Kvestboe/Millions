@@ -7,6 +7,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;
 import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
@@ -28,6 +29,7 @@ public class OrdersView extends VBox implements Page {
     subtitle.getStyleClass().add("page-subtitle");
 
     this.table = createOrderTable();
+    table.sort();
 
     getChildren().addAll(title, subtitle, table);
   }
@@ -53,6 +55,9 @@ public class OrdersView extends VBox implements Page {
     orderTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     orderTable.setPlaceholder(new Label("No pending orders"));
 
+    TableColumn<PendingOrderDto, ?> weekCol = orderTable.getColumns().get(4);
+    weekCol.setSortType(TableColumn.SortType.DESCENDING);
+    orderTable.getSortOrder().setAll(weekCol);
     return orderTable;
   }
 }

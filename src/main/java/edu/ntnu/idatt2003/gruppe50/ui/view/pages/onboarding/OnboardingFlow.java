@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.CapitalStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.LaunchStep;
@@ -71,7 +72,7 @@ public class OnboardingFlow {
   public Scene getScene() {
     Parent root = buildLayout();
     showCurrentStep();
-    return new Scene(root, 900, 600);
+    return new Scene(root);
   }
 
   /**
@@ -96,7 +97,7 @@ public class OnboardingFlow {
     navBar.setAlignment(Pos.CENTER);
     navBar.setPrefHeight(72);
     navBar.setPadding(new Insets(16, 48, 24, 48));
-    navBar.getStyleClass().add("navbar");
+    navBar.getStyleClass().add("onboarding-navbar");
 
     ScrollPane scrollableCenter = new ScrollPane(center);
     scrollableCenter.setFitToWidth(true);
@@ -107,8 +108,8 @@ public class OnboardingFlow {
     BorderPane root = new BorderPane();
     root.getStyleClass().add("root-bg");
     root.setTop(progressBar);
-    root.setCenter(scrollableCenter);   // ← center-feltet her
-    root.setBottom(navBar);    // ← knapper alltid nederst
+    root.setCenter(scrollableCenter);
+    root.setBottom(navBar);
 
     return root;
   }
@@ -152,12 +153,10 @@ public class OnboardingFlow {
    * Also updates the Next button label on the final step.
    */
   private void showCurrentStep() {
-    // Sett difficulty på CapitalStep
     if (steps.get(currentIndex) instanceof CapitalStep capitalStep) {
       capitalStep.setDifficulty(flowData.difficulty);
     }
 
-    // Sett flowData på LaunchStep
     if (steps.get(currentIndex) instanceof LaunchStep launchStep) {
       launchStep.setFlowData(flowData);
     }

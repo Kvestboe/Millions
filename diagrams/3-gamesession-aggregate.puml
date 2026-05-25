@@ -1,0 +1,256 @@
+@startuml gamesession-aggregate
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 45
+skinparam defaultFontSize 11
+hide empty members
+hide circle
+
+top to bottom direction
+
+' ══════════════════════════════════════════════════════
+'  AGGREGATE ROOT
+' ══════════════════════════════════════════════════════
+class GameSession <<aggregate root>> #BBDEFB {
+  UUID gameId
+  GameSessionState state
+  LocalDateTime runStartedAt
+  LocalDateTime lastPlayed
+  List<BigDecimal> netWorthHistory
+  --
+  createNew(player, exchange, difficulty) : GameSession
+  rehydrate(...) : GameSession
+  markOpened()
+  buy(symbol, qty)
+  sell(symbol, qty)
+  placeBuyLimitOrder(symbol, qty, price, duration)
+  placeSellLimitOrder(symbol, qty, price, duration)
+  placeStopLossOrder(symbol, qty, price, duration)
+  advanceWeek() : GameOutcome
+  finish()
+  evaluateOutcome() : GameOutcome
+  getPendingOrders() : List<LimitOrder>
+}
+
+' ══════════════════════════════════════════════════════
+'  GAME STATE
+' ══════════════════════════════════════════════════════
+together {
+  enum Difficulty #E3F2FD {
+    EASY
+    MEDIUM
+    HARD
+    --
+    getUpChance() : double
+    getMaxGain() / getMaxLoss() : double
+    getGameOverThreshold() : BigDecimal
+    toVolatilityProfile() : VolatilityProfile
+  }
+  enum GameSessionState #E3F2FD {
+    ACTIVE
+    FINISHED
+  }
+  enum GameOutcome #E3F2FD {
+    ONGOING
+    WON
+    LOST
+  }
+  class GameResult <<record>> #E3F2FD {
+    boolean won
+    BigDecimal finalNetWorth
+    BigDecimal startingCapital
+    int weeksPlayed
+    Difficulty difficulty
+    --
+    calculateScore() : double
+  }
+}
+
+' ══════════════════════════════════════════════════════
+'  PLAYER SIDE
+' ══════════════════════════════════════════════════════
+class Player <<entity>> #C8E6C9 {
+  String name
+  BigDecimal money
+  BigDecimal startingMoney
+  int coins
+  String activeTheme
+  Set<String> ownedThemes
+  --
+  getNetWorth() : BigDecimal
+  addMoney(amount) / withdrawMoney(amount)
+  addCoins(n) / spendCoins(n)
+  getStatus() : Status
+  getProgressToNextLevel() : LevelGap
+  ownsTheme(id) : boolean
+}
+
+class Portfolio <<entity>> #C8E6C9 {
+  Map<UUID, Share> shares
+  --
+  addShare(Share) / removeShare(UUID)
+  getShare(UUID) : Share
+  getNetWorth() : BigDecimal
+  contains(UUID) : boolean
+}
+
+class Share <<value object>> #C8E6C9 {
+  UUID shareId
+  BigDecimal quantity
+  BigDecimal purchasePrice
+  int purchaseWeek
+}
+
+class TransactionArchive <<entity>> #C8E6C9 {
+  --
+  add(Transaction)
+  getTransactions() : List
+  getTransactions(week) : List
+  realizedProfitLoss() : BigDecimal
+  totalCommission() / totalTax()
+  recent(limit) : List
+  countDistinctWeeks() : int
+}
+
+enum Status #C8E6C9 {
+  NOVICE
+  INVESTOR
+  SPECULATOR
+}
+
+' ══════════════════════════════════════════════════════
+'  MARKET SIDE
+' ══════════════════════════════════════════════════════
+class Exchange <<aggregate root>> #E1BEE7 {
+  String name
+  int week
+  --
+  buy(symbol, qty) : Transaction
+  sell(symbol, qty) : Transaction
+  sellQuantity(symbol, qty) : Transaction
+  advance()
+  placeOrder(LimitOrder) / cancelOrder(order)
+  getPendingOrders() : List<LimitOrder>
+  getGainers() / getLosers() : List<Stock>
+  findStocks(query) : List<Stock>
+}
+
+class Stock <<value object>> #E1BEE7 {
+  String symbol
+  String company
+  List<BigDecimal> prices
+  --
+  getSalesPrice() : BigDecimal
+  addNewSalesPrice(price)
+  getLatestPriceChange() : BigDecimal
+  getLatestPriceChangePercent() : BigDecimal
+  getHistoricalPrices() : List
+}
+
+class VolatilityProfile <<record>> #E1BEE7 {
+  double upChance
+  double maxGain
+  double maxLoss
+}
+
+' ══════════════════════════════════════════════════════
+'  TRADE
+' ══════════════════════════════════════════════════════
+class TransactionFactory <<factory>> #FFCCBC {
+  createPurchase(share, week) : Purchase
+  createSale(share, week) : Sale
+}
+
+abstract class Transaction <<entity>> #FFCCBC {
+  int week
+  UUID batchId
+  boolean committed
+  --
+  {abstract} commit(Player)
+  markCommitted()
+  getCalculator() : TransactionCalculator
+}
+
+class Purchase #FFCCBC
+class Sale #FFCCBC
+
+interface TransactionCalculator #FFCCBC {
+  calculateGross() : BigDecimal
+  calculateCommission() : BigDecimal
+  calculateTax() : BigDecimal
+  calculateTotal() : BigDecimal
+}
+
+class PurchaseCalculator #FFCCBC
+class SaleCalculator #FFCCBC
+
+' ══════════════════════════════════════════════════════
+'  LIMIT ORDERS
+' ══════════════════════════════════════════════════════
+abstract class LimitOrder #FFF9C4 {
+  BigDecimal targetPrice
+  BigDecimal quantity
+  int expiryWeek
+  int currentWeek
+  --
+  {abstract} shouldTrigger(currentPrice) : boolean
+  {abstract} execute()
+  {abstract} label() : String
+  isExpired() : boolean
+  getCreatedWeek() / getExpiryWeek() : int
+}
+
+class LimitBuyOrder #FFF9C4
+class LimitSellOrder #FFF9C4
+class StopLossOrder #FFF9C4
+
+' ══════════════════════════════════════════════════════
+'  RELATIONSHIPS
+' ══════════════════════════════════════════════════════
+
+' GameSession owns
+GameSession *-- "1" Player        : owns >
+GameSession *-- "1" Exchange      : owns >
+GameSession --> Difficulty
+GameSession --> GameSessionState
+GameSession ..> GameOutcome       : evaluates >
+GameSession ..> GameResult        : produces >
+
+' Player tree
+Player *-- "1" Portfolio
+Player *-- "1" TransactionArchive
+Player --> Status
+Portfolio *-- "0..*" Share
+
+' Share links to Stock
+Share --> Stock                   : priced by >
+
+' Exchange tree
+Exchange *-- "1..*" Stock         : lists >
+Exchange o-- "0..*" LimitOrder    : manages >
+Exchange --> VolatilityProfile
+Exchange --> TransactionFactory   : uses >
+
+' Transaction hierarchy
+Transaction <|-- Purchase
+Transaction <|-- Sale
+Transaction --> TransactionCalculator : uses >
+TransactionArchive o-- "0..*" Transaction
+
+TransactionCalculator <|.. PurchaseCalculator
+TransactionCalculator <|.. SaleCalculator
+
+TransactionFactory ..> Purchase   : creates >
+TransactionFactory ..> Sale       : creates >
+
+' LimitOrder hierarchy
+LimitOrder <|-- LimitBuyOrder
+LimitOrder <|-- LimitSellOrder
+LimitOrder <|-- StopLossOrder
+
+LimitOrder --> Stock              : targets >
+LimitOrder --> Player             : belongs to >
+
+@enduml

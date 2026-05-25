@@ -8,6 +8,8 @@
 .root {
     -fx-background-color: -bg-primary;
     -fx-font-family: "System";
+    -nav-active-bg:     rgba(255, 209, 102, 0.12);
+    -nav-active-border: rgba(255, 209, 102, 0.25);
 }
 
 
@@ -1076,4 +1078,88 @@
 .btn-accent:hover {
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
+}
+
+/* ── Player identity section ───────────────────────────────────── */
+
+.avatar-circle {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 50%;
+    -fx-border-color: -accent-gold;
+    -fx-border-radius: 50%;
+    -fx-border-width: 2;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-alignment: center;
+    -fx-font-size: 18px;
+}
+
+.player-name {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.player-status {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 11px;
+}
+
+.level-progress {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.level-progress .track {
+    -fx-background-color: -border;
+    -fx-background-radius: 3;
+    -fx-padding: 0;
+}
+
+.level-progress .bar {
+    -fx-background-color: -accent-indigo;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3;
+}
+
+.level-progress-investor .bar {
+    -fx-background-color: -accent-gold;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3;
+}
+
+.level-progress-speculator .bar {
+    -fx-background-color: -accent-teal;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3;
+}
+
+.onboarding-navbar {
+    -fx-padding: 0 20 0 20;
+    -fx-spacing: 15;
+}
+
+.choice-box {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 6;
+    -fx-padding: 5 10 5 10;
+}
+.choice-box > .label {
+    -fx-text-fill: -text-primary;
+}
+.choice-box > .open-button > .arrow {
+    -fx-background-color: -text-secondary;
+}
+.choice-box:hover {
+    -fx-background-color: -bg-overlay;
+}
+
+.app-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.app-scroll > .viewport {
+    -fx-background-color: transparent;
 }

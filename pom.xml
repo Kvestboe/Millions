@@ -4,7 +4,7 @@
 
   <groupId>edu.ntnu.idatt2003.gruppe50</groupId>
   <artifactId>Millions</artifactId>
-  <version>v1.1.0</version>
+  <version>v0.1.0</version>
   <packaging>jar</packaging>
 
   <name>Millions</name>

@@ -29,7 +29,13 @@ public class OrderConfirmationView extends VBox {
 
     setSpacing(15);
 
-    getChildren().setAll(buildTitle(), buildDetails(), buildTotal(), buildActions());
+    getChildren().setAll(
+        buildTitle(),
+        buildDetails(),
+        buildTotal(),
+        buildValidationMessage(),
+        buildActions()
+    );
   }
 
   private Label buildTitle() {
@@ -59,8 +65,7 @@ public class OrderConfirmationView extends VBox {
 
     if (draftOrder.isLimit()) {
       details.getChildren().add(row("Duration", draftOrder.duration() + " weeks")
-//                                row("Expires, Week " + preview.expirationWeek()
-                                  );
+      );
     }
 
     return details;
@@ -74,7 +79,13 @@ public class OrderConfirmationView extends VBox {
 
   private HBox buildActions() {
     Button backBtn = ButtonFactory.secondary("Back", onBack);
-    Button confirmBtn = ButtonFactory.styled("Confirm", "primary", () -> onConfirm.accept(draftOrder));
+    Button confirmBtn = ButtonFactory.styled(
+        "Confirm",
+        "primary",
+        () -> onConfirm.accept(draftOrder)
+    );
+
+    confirmBtn.setDisable(hasInsufficientCash());
 
     HBox actions = new HBox(10, backBtn, confirmBtn);
     actions.setAlignment(Pos.CENTER_RIGHT);
@@ -92,5 +103,40 @@ public class OrderConfirmationView extends VBox {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     return new HBox(l, spacer, v);
+  }
+
+  /**
+   * Returns true if the player cannot afford this market buy order.
+   *
+   * @return true when the order is a market buy and total cost exceeds available cash
+   */
+  private boolean hasInsufficientCash() {
+    return draftOrder.side() == OrderSide.BUY
+        && !draftOrder.isLimit()
+        && preview.total().compareTo(preview.availableCash()) > 0;
+  }
+
+  /**
+   * Builds a validation label for order confirmation problems.
+   *
+   * @return a visible error label when the order cannot be confirmed,
+   *     otherwise a hidden unmanaged label
+   */
+  private Label buildValidationMessage() {
+    Label label = new Label();
+
+    label.getStyleClass().add("popup-error");
+
+    if (hasInsufficientCash()) {
+      label.setText("Not enough cash. Available: "
+          + MoneyFormat.formatCurrency(preview.availableCash()));
+      label.setVisible(true);
+      label.setManaged(true);
+    } else {
+      label.setVisible(false);
+      label.setManaged(false);
+    }
+
+    return label;
   }
 }

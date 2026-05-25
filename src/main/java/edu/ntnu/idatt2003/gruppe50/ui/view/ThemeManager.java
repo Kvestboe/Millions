@@ -11,7 +11,8 @@ public class ThemeManager {
     scene.getStylesheets().clear();
     scene.getStylesheets().addAll(
         resource("/css/themes/" + currentTheme + "/theme.css"),
-        resource("/css/base.css")
+        resource("/css/base.css"),
+        resource("/css/views/navbar.css")
     );
   }
 

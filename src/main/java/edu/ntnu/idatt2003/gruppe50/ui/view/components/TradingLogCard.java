@@ -8,9 +8,12 @@ import java.util.List;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -65,7 +68,7 @@ public class TradingLogCard extends VBox {
     return header;
   }
 
-  private VBox buildStatsGrid() {
+  private GridPane buildStatsGrid() {
     realizedPnLValue.getStyleClass().add("pnl-value");
 
     VBox pnl    = StatCardFactory.tile("REALIZED P/L", realizedPnLValue);
@@ -74,12 +77,31 @@ public class TradingLogCard extends VBox {
     VBox taxes  = StatCardFactory.tile("TAXES PAID", taxesValue);
 
     for (VBox tile : List.of(pnl, trades, fees, taxes)) {
-      HBox.setHgrow(tile, Priority.ALWAYS);
+      tile.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+      GridPane.setHgrow(tile, Priority.ALWAYS);
+      GridPane.setVgrow(tile, Priority.ALWAYS);
     }
 
-    HBox row1 = new HBox(8, pnl, trades);
-    HBox row2 = new HBox(8, fees, taxes);
-    return new VBox(8, row1, row2);
+    ColumnConstraints col = new ColumnConstraints();
+    col.setPercentWidth(50);
+    col.setHgrow(Priority.ALWAYS);
+
+    RowConstraints row = new RowConstraints();
+    row.setPercentHeight(50);
+    row.setVgrow(Priority.ALWAYS);
+
+    GridPane grid = new GridPane();
+    grid.setHgap(8);
+    grid.setVgap(8);
+    grid.getColumnConstraints().addAll(col, col);
+    grid.getRowConstraints().addAll(row, row);
+
+    grid.add(pnl,    0, 0);
+    grid.add(trades, 1, 0);
+    grid.add(fees,   0, 1);
+    grid.add(taxes,  1, 1);
+
+    return grid;
   }
 
   private VBox buildMixSection() {
@@ -118,8 +140,7 @@ public class TradingLogCard extends VBox {
     wrapper.getStyleClass().add("activity-wrapper");
     emptyActivity.getStyleClass().add("empty-activity");
 
-    VBox section = new VBox(8, overline, wrapper);
-    return section;
+    return new VBox(8, overline, wrapper);
   }
 
   private void update(TradingLogData data) {

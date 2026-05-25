@@ -79,7 +79,16 @@ public class GameSaveMapper {
         session.getRunStartedAt().toString(),
         session.getLastPlayed().toString(),
         session.getNetWorthHistory(),
-        new PlayerDto(player.getName(), player.getStartingMoney(), player.getMoney(), shares, transactions),
+        new PlayerDto(
+            player.getName(),
+            player.getStartingMoney(),
+            player.getMoney(),
+            player.getCoins(),
+            player.getActiveTheme(),
+            List.copyOf(player.getOwnedThemes()),
+            shares,
+            transactions
+        ),
         new ExchangeDto(exchange.getName(), exchange.getWeek(), stocks, orders)
     );
   }
@@ -107,6 +116,9 @@ public class GameSaveMapper {
         dto.player().name(),
         dto.player().startingMoney(),
         dto.player().money(),
+        dto.player().coins(),
+        dto.player().activeTheme(),
+        dto.player().ownedThemes(),
         Portfolio.rehydrate(shareMap),
         archive
     );
@@ -115,12 +127,15 @@ public class GameSaveMapper {
         .map(o -> buildOrder(o, stockMap, player))
         .toList();
 
+    Difficulty difficulty = Difficulty.valueOf(dto.difficulty());
+
     Exchange exchange = Exchange.rehydrate(
         dto.exchange().name(),
         stockMap,
         factory,
         dto.exchange().week(),
-        orders
+        orders,
+        difficulty.toVolatilityProfile()
     );
 
     return GameSession.rehydrate(

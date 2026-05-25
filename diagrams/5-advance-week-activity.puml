@@ -1,0 +1,93 @@
+@startuml advance-week-activity
+title Activity Diagram  —  Advance Week (`AdvanceWeekUseCase`)
+
+skinparam defaultFontSize 12
+skinparam activity {
+  BackgroundColor #FFF9C4
+  BorderColor #666666
+  DiamondBackgroundColor #FFE0B2
+  DiamondBorderColor #666666
+  ArrowColor #333333
+  StartColor #4CAF50
+  EndColor #E53935
+}
+skinparam partition {
+  BackgroundColor #FFFDE7
+  BorderColor #888888
+}
+
+start
+
+:User clicks "Next Week" in the UI;
+:Controller calls //AdvanceWeekUseCase.execute(Request)//;
+:Repository loads //GameSession// from JSON;
+
+if (Session state == ACTIVE?) then (no)
+  :Throw //GameSessionFinishedException//;
+  stop
+else (yes)
+endif
+
+:Calculate hangar cost
+//startingMoney × difficulty.hangarCostRate//;
+:Withdraw hangar cost from player;
+
+partition "Exchange.advance()" {
+  :Increment week counter;
+
+  while (More stocks to update?) is (yes)
+    :Compute price multiplier
+    using //VolatilityProfile// and randomness;
+    :Append new price to stock history;
+  endwhile (no)
+
+  while (More pending //LimitOrder//s?) is (yes)
+    if (Order is expired?) then (yes)
+      :Log expiration;
+      :Remove order from queue;
+    else (no)
+      if (//shouldTrigger(currentPrice)//?) then (yes)
+        :Attempt //order.execute(exchange)//;
+        if (Execution succeeded?) then (yes)
+        else (no)
+          :Catch exception
+          (e.g. insufficient funds);
+          :Log failure;
+        endif
+        :Remove order from queue;
+      else (no)
+        :Keep order pending;
+      endif
+    endif
+  endwhile (no)
+}
+
+:Append player.netWorth to history;
+:Notify UI observers
+(price chart, portfolio view, ...);
+
+partition "Evaluate Outcome" {
+  if (netWorth >= 1 000 000?) then (yes)
+    :outcome = WON;
+    :Finish session (state = FINISHED);
+  elseif (netWorth < loss threshold?) then (yes)
+    :outcome = LOST;
+    :Finish session (state = FINISHED);
+  else (still in game)
+    :outcome = ONGOING;
+  endif
+}
+
+:Repository saves //GameSession// to JSON;
+:Return //Result(outcome)// to controller;
+
+if (outcome != ONGOING?) then (yes)
+  :Notify //GameOutcomeListener//;
+  :UI navigates to //GameOverView//;
+  stop
+else (no)
+  :UI re-queries portfolio and market;
+  stop
+endif
+
+@enduml

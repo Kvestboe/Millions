@@ -10,6 +10,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -48,7 +49,11 @@ public final class GetPortfolioUseCase {
     BigDecimal netWorth = player.getNetWorth(); // the value of all player assets
 
     List<ShareDto> shares = portfolio.getShares().stream()
-        .map(DtoMapper::createShareDto)
+        .collect(Collectors.groupingBy(share -> share.getStock().getSymbol()))
+        .values()
+        .stream()
+        .map(DtoMapper::createAggregatedShareDto)
+        .sorted(Comparator.comparing(ShareDto::symbol))
         .toList();
 
     List<BigDecimal> netWorthHistory = session.getNetWorthHistory();

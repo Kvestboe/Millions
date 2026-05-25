@@ -36,11 +36,16 @@ public class OnboardingFlowData {
   public File stockFile;
 
   /**
+   * The display name of the chosen market. Set by MarketStep.
+   */
+  public String marketName;
+
+  /**
    * Converts this mutable container into an immutable {@link OnboardingData} record.
    *
    * @return a new OnboardingData with all collected values
    */
   public OnboardingData toOnboardingData() {
-    return new OnboardingData(playerName, difficulty, startingCapital, stockFile);
+    return new OnboardingData(playerName, difficulty, startingCapital, stockFile, marketName);
   }
 }

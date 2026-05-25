@@ -11,8 +11,10 @@ import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
 import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.LevelGap;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.LeaderboardFileHandler;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
@@ -26,6 +28,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.List;
@@ -34,6 +37,7 @@ import java.util.function.Consumer;
 
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -50,13 +54,16 @@ public class GameViewCoordinator {
   private final GameSessionControllerBundle bundle;
   private final Runnable onMainMenu;
   private final Runnable onPlayAgain;
+  private final Runnable onSettings;
+  private final Runnable onLeaderboard;
   private final Consumer<String> onThemeChanged;
   private final Leaderboard leaderboard;
   private final LeaderboardFileHandler leaderboardFile;
   private NavigationManager navManager;
   private BorderPane root;
   private ShopView shopView;
-  private StackPane popupHost;   // ← ny linje
+  private StackPane popupHost;
+  private NavBar navBar;
 
   private HBox bottomBar;
   private Label weekValue;
@@ -71,7 +78,7 @@ public class GameViewCoordinator {
   public GameViewCoordinator(
       GameSessionControllerBundle bundle,
       Runnable onMainMenu,
-      Runnable onPlayAgain,
+      Runnable onPlayAgain, Runnable onSettings, Runnable onLeaderboard,
       Consumer<String> onThemeChanged,
       Leaderboard leaderboard,
       LeaderboardFileHandler leaderboardFile
@@ -80,6 +87,8 @@ public class GameViewCoordinator {
     this.bundle = bundle;
     this.onMainMenu = onMainMenu;
     this.onPlayAgain = onPlayAgain;
+    this.onSettings = onSettings;
+    this.onLeaderboard = onLeaderboard;
     this.onThemeChanged = onThemeChanged;
     this.leaderboard = leaderboard;
     this.leaderboardFile = leaderboardFile;
@@ -87,7 +96,13 @@ public class GameViewCoordinator {
 
   public Scene getScene() {
     navManager = new NavigationManager(buildPages());
-    NavBar navBar = new NavBar(navManager::navigateTo);
+    navBar = new NavBar(navManager::navigateTo, new NavBar.AccountMenuListener() {
+      @Override public void onSettings()    { onSettings.run(); }
+      @Override public void onLeaderboard() { onLeaderboard.run(); }
+      @Override public void onMainMenu()    { onMainMenu.run(); }
+      @Override public void onSaveAndQuit() { Platform.exit(); }
+    });
+    refreshNavBar();
 
     root = new BorderPane();
     root.setTop(navBar);
@@ -134,7 +149,7 @@ public class GameViewCoordinator {
     });
 
     popupHost = new StackPane(root);
-    Scene scene = new Scene(popupHost, WindowConfig.WIDTH, WindowConfig.HEIGHT);
+    Scene scene = new Scene(popupHost);
     return scene;
   }
 
@@ -142,12 +157,26 @@ public class GameViewCoordinator {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
     pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
-    pages.put(PageId.MARKET, new MarketView(bundle.market(), stock -> navigateToStockDetail(stock, PageId.MARKET)));
-    pages.put(PageId.PORTFOLIO, new PortfolioView(bundle.portfolio(),
+    pages.put(PageId.MARKET, new MarketView(
+        bundle.market(),
+        stock -> navigateToStockDetail(stock, PageId.MARKET)
+    ));
+    pages.put(PageId.PORTFOLIO, new PortfolioView(
+        bundle.portfolio(),
         shareDto -> bundle.market().findBySymbol(shareDto.symbol())
-            .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))));
-    pages.put(PageId.SHOP, shopView = new ShopView(bundle.shop(), onThemeChanged, bundle.portfolio()::update));
-    pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions()));
+            .ifPresent(stock -> navigateToStockDetail(stock, PageId.PORTFOLIO))
+    ));
+    pages.put(PageId.SHOP, shopView = new ShopView(
+        bundle.shop(),
+        onThemeChanged,
+        () -> {
+          bundle.portfolio().update();
+          refreshBottomBar();
+        }
+    ));
+    pages.put(PageId.TRANSACTIONS, new TransactionsView(bundle.transactions(),
+        t -> bundle.market().findBySymbol(t.share().symbol())
+            .ifPresent(stock -> navigateToStockDetail(stock, PageId.TRANSACTIONS))));
     pages.put(PageId.ORDERS, new OrdersView(bundle.ordersController()));
 
     return pages;
@@ -231,13 +260,20 @@ public class GameViewCoordinator {
         .sorted((a, b) -> b.weeklyDelta().abs().compareTo(a.weeklyDelta().abs()))
         .toList();
 
+    BigDecimal hangarCost = bundle.session().getPlayer().getStartingMoney()
+        .multiply(BigDecimal.valueOf(bundle.session().getDifficulty().getHangarCostRate()))
+        .setScale(2, RoundingMode.HALF_UP);
+
     return new WeekSummary(
         prevWeek,
         bundle.session().getExchange().getWeek(),
-        before, after,
-        player.getMoney(),
+        before,
+        after,
+        bundle.session().getPlayer().getMoney(),
+        hangarCost,
         holdings,
-        List.of(), List.of()
+        List.of(),
+        List.of()
     );
   }
 
@@ -270,6 +306,51 @@ public class GameViewCoordinator {
 
     bottomBar.getStyleClass().remove("bottom-bar-danger");
     if (danger) bottomBar.getStyleClass().add("bottom-bar-danger");
+
+    refreshNavBar();
+  }
+
+  private void refreshNavBar() {
+    Player player = bundle.session().getPlayer();
+    Status status = player.getStatus();
+
+    navBar.updatePlayerInfo(player.getName(), status);
+    if (status == Status.SPECULATOR) {
+      navBar.setProgressVisible(false);
+    } else {
+      navBar.setProgressVisible(true);
+      navBar.setProgress(player.getProgressToNextLevel());
+      player.getGapToNextLevel().ifPresent(gap ->
+          navBar.setProgressTooltip(formatGap(status.next(), gap)));
+    }
+  }
+
+  /**
+   * Builds a hint describing what the player still needs to reach the next status.
+   *
+   * @param next           name of the next status level
+   * @param equityProgress net-worth progress toward that level, 0.0–1.0
+   * @param tradedWeeks    number of distinct weeks the player has traded
+   * @param weeksNeeded    weeks required for the next status
+   * @param netWorthTarget net worth required for the next status
+   * @return a human-readable hint
+   */
+  private String nextStatusTip(String next, double equityProgress,
+                               int tradedWeeks, int weeksNeeded, BigDecimal netWorthTarget) {
+    boolean equityDone = equityProgress >= 1.0;
+    int weeksLeft = Math.max(0, weeksNeeded - tradedWeeks);
+
+    if (equityDone && weeksLeft > 0) {
+      return "Net worth is high enough for " + next + " — keep trading "
+          + weeksLeft + " more " + (weeksLeft == 1 ? "week" : "weeks") + ".";
+    }
+    if (!equityDone && weeksLeft == 0) {
+      return "You've traded enough — reach "
+          + MoneyFormat.formatCurrency(netWorthTarget) + " net worth for " + next + ".";
+    }
+    return "To reach " + next + ": "
+        + MoneyFormat.formatCurrency(netWorthTarget) + " net worth and "
+        + weeksLeft + " more " + (weeksLeft == 1 ? "week" : "weeks") + " of trading.";
   }
 
   private void showPopup(Node popup) {
@@ -278,5 +359,24 @@ public class GameViewCoordinator {
 
   private void closePopup(Node popup) {
     popupHost.getChildren().remove(popup);
+  }
+
+  private String formatGap(Status next, LevelGap gap) {
+    boolean weeks = gap.weeksRemaining() > 0;
+    boolean money = gap.moneyRemaining().signum() > 0;
+    String weekText = gap.weeksRemaining()
+        + (gap.weeksRemaining() == 1 ? " more week" : " more weeks") + " of trading";
+    String moneyText = MoneyFormat.formatCurrency(gap.moneyRemaining()) + " more net worth";
+
+    if (weeks && money) {
+      return "To reach " + next.displayName() + ":\n" + weekText + " and " + moneyText + ".";
+    }
+    if (weeks) {
+      return "To reach " + next.displayName() + ":\n" + weekText + ".";
+    }
+    if (money) {
+      return "To reach " + next.displayName() + ":\n" + moneyText + ".";
+    }
+    return "Ready to advance to " + next.displayName() + "!";
   }
 }

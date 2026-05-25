@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
@@ -58,7 +59,11 @@ public class PortfolioView extends VBox implements Page {
 
   @Override
   public Parent getView() {
-    return this;
+    ScrollPane scroll = new ScrollPane(this);
+    scroll.setFitToWidth(true);
+    scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scroll.getStyleClass().add("app-scroll");
+    return scroll;
   }
 
   private VBox createCardContainer(SimpleObjectProperty<PortfolioDto> p) {
@@ -105,7 +110,7 @@ public class PortfolioView extends VBox implements Page {
         ColumnPresets.text("Symbol", ShareDto::symbol),
         ColumnPresets.text("Company", ShareDto::stock),
         ColumnPresets.bigDecimal("Quantity", ShareDto::quantity),
-        ColumnPresets.currency("Purchase price", ShareDto::purchasePrice),
+        ColumnPresets.currency("GAV", ShareDto::purchasePrice),
         ColumnPresets.currency("Current value", ShareDto::currentShareValue),
         ColumnPresets.signedCurrency("Gain/Loss", ShareDto::gain),
         ColumnPresets.signedPercent("Change %", ShareDto::percentageGain)
