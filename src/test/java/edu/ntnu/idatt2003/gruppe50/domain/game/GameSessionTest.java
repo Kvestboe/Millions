@@ -5,6 +5,7 @@ import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefault
 import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultPlayer;
 import static org.junit.jupiter.api.Assertions.*;
 
+import edu.ntnu.idatt2003.gruppe50.domain.market.VolatilityProfile;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import java.math.BigDecimal;
@@ -243,6 +244,74 @@ public class GameSessionTest {
     void placeBuyLimitOrder_zeroDuration_throwsException() {
       assertThrows(IllegalArgumentException.class,
           () -> session.placeBuyLimitOrder("AAPL", bd(1), bd(100), 0));
+    }
+  }
+
+  @Nested
+  class GameResultTests {
+
+    @Test
+    void calculateScore_notWon_returnsZero() {
+      GameResult result = new GameResult(false, bd(5000), bd(10000), 10, Difficulty.EASY);
+
+      assertEquals(0, result.calculateScore());
+    }
+
+    @Test
+    void calculateScore_won_returnsPositiveScore() {
+      GameResult result = new GameResult(true, bd(2_000_000), bd(10000), 10, Difficulty.EASY);
+
+      assertTrue(result.calculateScore() > 0);
+    }
+
+    @Test
+    void calculateScore_fewerWeeks_givesHigherScore() {
+      GameResult fast = new GameResult(true, bd(2_000_000), bd(10000), 5, Difficulty.EASY);
+      GameResult slow = new GameResult(true, bd(2_000_000), bd(10000), 50, Difficulty.EASY);
+
+      assertTrue(fast.calculateScore() > slow.calculateScore());
+    }
+  }
+
+  @Nested
+  class DifficultyTests {
+
+    @Test
+    void getMaxStartingCapital_easy_returnsEmpty() {
+      assertTrue(Difficulty.EASY.getMaxStartingCapital().isEmpty());
+    }
+
+    @Test
+    void getMaxStartingCapital_medium_returnsPresent() {
+      assertTrue(Difficulty.MEDIUM.getMaxStartingCapital().isPresent());
+      assertEquals(0,
+          new BigDecimal("25000").compareTo(Difficulty.MEDIUM.getMaxStartingCapital().get()));
+    }
+
+    @Test
+    void getMaxStartingCapital_hard_returnsPresent() {
+      assertTrue(Difficulty.HARD.getMaxStartingCapital().isPresent());
+      assertEquals(0,
+          new BigDecimal("5000").compareTo(Difficulty.HARD.getMaxStartingCapital().get()));
+    }
+
+    @Test
+    void toVolatilityProfile_returnsProfileWithMatchingValues() {
+      VolatilityProfile profile = Difficulty.EASY.toVolatilityProfile();
+
+      assertEquals(Difficulty.EASY.getUpChance(), profile.upChance());
+      assertEquals(Difficulty.EASY.getMaxGain(), profile.maxGain());
+      assertEquals(Difficulty.EASY.getMaxLoss(), profile.maxLoss());
+    }
+
+    @Test
+    void getGameOverThreshold_easy_returnsCorrectValue() {
+      assertEquals(0.40, Difficulty.EASY.getGameOverThreshold(), 0.001);
+    }
+
+    @Test
+    void getHangarCostRate_hard_isHigherThanEasy() {
+      assertTrue(Difficulty.HARD.getHangarCostRate() > Difficulty.EASY.getHangarCostRate());
     }
   }
 }

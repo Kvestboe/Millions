@@ -3,19 +3,17 @@ package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 import static edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status.INVESTOR;
 import static edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status.NOVICE;
 import static edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status.SPECULATOR;
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
-import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class PlayerTest {
@@ -23,22 +21,22 @@ public class PlayerTest {
 
   @BeforeEach
   void setup() {
-    player = new Player("test", bd("100"));
+    player = new Player("test", bd(100));
   }
 
   @Test
   void constructor_nullName_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> new Player(null, bd("100")));
+    assertThrows(IllegalArgumentException.class, () -> new Player(null, bd(100)));
   }
 
   @Test
   void constructor_blankName_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> new Player(" ", bd("100")));
+    assertThrows(IllegalArgumentException.class, () -> new Player(" ", bd(100)));
   }
 
   @Test
   void constructor_negativeMoney_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> new Player("test", bd("-100")));
+    assertThrows(IllegalArgumentException.class, () -> new Player("test", bd(-100)));
   }
 
   @Test
@@ -53,13 +51,13 @@ public class PlayerTest {
 
   @Test
   void getMoney_returnsCurrentBalance() {
-    assertEquals(bd("100"), player.getMoney());
+    assertEquals(bd(100), player.getMoney());
   }
 
   @Test
   void addMoney_increasesBalanceByGivenAmount() {
-    player.addMoney(bd("10"));
-    assertEquals(0, bd("110").compareTo(player.getMoney()));
+    player.addMoney(bd(10));
+    assertEquals(0, bd(110).compareTo(player.getMoney()));
   }
 
   @Test
@@ -69,18 +67,18 @@ public class PlayerTest {
 
   @Test
   void addMoney_negativeAmount_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> player.addMoney(bd("-10")));
+    assertThrows(IllegalArgumentException.class, () -> player.addMoney(bd(-10)));
   }
 
   @Test
   void addMoney_zeroAmount_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> player.addMoney(bd("0")));
+    assertThrows(IllegalArgumentException.class, () -> player.addMoney(bd(0)));
   }
 
   @Test
   void withdrawMoney_decreasesBalanceByGivenAmount() {
-    player.withdrawMoney(bd("10"));
-    assertEquals(0, bd("90").compareTo(player.getMoney()));
+    player.withdrawMoney(bd(10));
+    assertEquals(0, bd(90).compareTo(player.getMoney()));
   }
 
   @Test
@@ -90,12 +88,12 @@ public class PlayerTest {
 
   @Test
   void withdrawMoney_negativeAmount_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> player.withdrawMoney(bd("-10")));
+    assertThrows(IllegalArgumentException.class, () -> player.withdrawMoney(bd(-10)));
   }
 
   @Test
   void withdrawMoney_zeroAmount_throwsException() {
-    assertThrows(IllegalArgumentException.class, () -> player.withdrawMoney(bd("0")));
+    assertThrows(IllegalArgumentException.class, () -> player.withdrawMoney(bd(0)));
   }
 
   @Test
@@ -110,11 +108,11 @@ public class PlayerTest {
 
   @Test
   void getNetWorth_returnsCashAndPortfolioValue() {
-    Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd("100"));
-    Share share = new Share(stock, bd("5"), bd("100"), 1);
+    Stock stock = new Stock("KOG", "Kongsberg Gruppen", bd(100));
+    Share share = new Share(stock, bd(5), bd(100), 1);
     player.getPortfolio().addShare(share);
 
-    BigDecimal expectedPrice = bd("595"); // money(100) + portfolioNetWorth(495)
+    BigDecimal expectedPrice = bd(595);
     assertEquals(expectedPrice, player.getNetWorth().stripTrailingZeros());
   }
 
@@ -159,17 +157,52 @@ public class PlayerTest {
   private void tradeForWeeks(int weeks) {
     Stock stock = new Stock("AAPL", "Apple", bd(100));
     for (int week = 1; week <= weeks; week++) {
-      Share share = new Share(stock, bd("1"), bd("100"), week);
+      Share share = new Share(stock, bd(1), bd(100), week);
       player.getTransactionArchive().add(new Purchase(share, week, UUID.randomUUID()));
     }
   }
 
-  private BigDecimal bd(double num) {
-    return BigDecimal.valueOf(num);
-  }
+  @Nested
+  class StatusTests {
 
-  // Helper method
-  private BigDecimal bd(String value) {
-    return new BigDecimal(value);
+    @Test
+    void displayName_novice_returnsCapitalized() {
+      assertEquals("Novice", Status.NOVICE.displayName());
+    }
+
+    @Test
+    void displayName_investor_returnsCapitalized() {
+      assertEquals("Investor", Status.INVESTOR.displayName());
+    }
+
+    @Test
+    void displayName_speculator_returnsCapitalized() {
+      assertEquals("Speculator", Status.SPECULATOR.displayName());
+    }
+
+    @Test
+    void next_novice_returnsInvestor() {
+      assertEquals(Status.INVESTOR, Status.NOVICE.next());
+    }
+
+    @Test
+    void next_investor_returnsSpeculator() {
+      assertEquals(Status.SPECULATOR, Status.INVESTOR.next());
+    }
+
+    @Test
+    void next_speculator_returnsNull() {
+      assertNull(Status.SPECULATOR.next());
+    }
+
+    @Test
+    void getRequiredWeeks_novice_returnsZero() {
+      assertEquals(0, Status.NOVICE.getRequiredWeeks());
+    }
+
+    @Test
+    void getRequiredGain_novice_returnsZero() {
+      assertEquals(0, BigDecimal.ZERO.compareTo(Status.NOVICE.getRequiredGain()));
+    }
   }
 }

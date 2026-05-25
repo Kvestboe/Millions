@@ -77,7 +77,6 @@ public class ShopTest {
 
     @Test
     void purchaseItem_insufficientCoins_throwsInsufficientCoinsException() {
-      // "theme-midnight-black" costs 15 coins; player has 0
       assertThrows(InsufficientCoinsException.class,
           () -> shop.purchaseItem(player, "theme-midnight-black", Difficulty.EASY));
     }

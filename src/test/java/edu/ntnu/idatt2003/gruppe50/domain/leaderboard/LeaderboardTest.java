@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class LeaderboardTest {
@@ -111,5 +112,48 @@ public class LeaderboardTest {
     leaderboard.add(e2);
 
     assertEquals(2, leaderboard.all().size());
+  }
+
+  @Nested
+  class ScoreCalculationTests {
+
+    @Test
+    void calculateScore_zeroWeeks_returnsZero() {
+      assertEquals(0.0, LeaderboardEntry.calculateScore(0, BigDecimal.valueOf(10_000)), 0.001);
+    }
+
+    @Test
+    void calculateScore_negativeWeeks_returnsZero() {
+      assertEquals(0.0, LeaderboardEntry.calculateScore(-1, BigDecimal.valueOf(10_000)), 0.001);
+    }
+
+    @Test
+    void calculateScore_nullCapital_returnsZero() {
+      assertEquals(0.0, LeaderboardEntry.calculateScore(10, null), 0.001);
+    }
+
+    @Test
+    void calculateScore_zeroCapital_returnsZero() {
+      assertEquals(0.0, LeaderboardEntry.calculateScore(10, BigDecimal.ZERO), 0.001);
+    }
+
+    @Test
+    void calculateScore_capitalAtOneMillion_returnsZero() {
+      assertEquals(0.0,
+          LeaderboardEntry.calculateScore(10, BigDecimal.valueOf(1_000_000)), 0.001);
+    }
+
+    @Test
+    void calculateScore_validInput_returnsPositiveScore() {
+      assertTrue(LeaderboardEntry.calculateScore(10, BigDecimal.valueOf(10_000)) > 0);
+    }
+
+    @Test
+    void calculateScore_fewerWeeks_givesHigherScore() {
+      double fast = LeaderboardEntry.calculateScore(5, BigDecimal.valueOf(10_000));
+      double slow = LeaderboardEntry.calculateScore(50, BigDecimal.valueOf(10_000));
+
+      assertTrue(fast > slow);
+    }
   }
 }
