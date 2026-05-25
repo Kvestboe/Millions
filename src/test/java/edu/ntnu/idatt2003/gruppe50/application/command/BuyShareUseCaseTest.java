@@ -11,6 +11,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,20 @@ public class BuyShareUseCaseTest {
     assertThrows(
         GameSessionNotFoundException.class,
         () -> buyShare.execute(new BuyShareUseCase.Request(unknownId, "AAPL", bd(2))));
+  }
+
+  @Test
+  void execute_nonExistentSymbol_throwsExceptionAndKeepsOriginal() {
+    BigDecimal moneyBefore = session.getPlayer().getMoney();
+    int sharesBefore = session.getPlayer().getPortfolio().getShares().size();
+
+    assertThrows(
+        NoSuchElementException.class,
+        () -> buyShare.execute(new BuyShareUseCase.Request(session.getGameId(), "MSFT", bd(1))));
+
+    GameSession repositorySession = repository.findById(session.getGameId()).orElseThrow();
+    assertEquals(moneyBefore, repositorySession.getPlayer().getMoney());
+    assertEquals(sharesBefore, repositorySession.getPlayer().getPortfolio().getShares().size());
   }
 
   @Test
