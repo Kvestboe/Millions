@@ -1,25 +1,10 @@
-.story-icon {
-    -fx-font-size: 32px;
+/* Navbar */
+.onboarding-navbar {
+    -fx-padding: 0 20 0 20;
+    -fx-spacing: 15;
 }
 
-.game-title {
-    -fx-font-size: 36px;
-    -fx-font-weight: 800;
-    -fx-text-fill: -text-primary;
-}
-
-.story-text {
-    -fx-text-fill: -text-secondary;
-    -fx-font-size: 13px;
-    -fx-line-spacing: 5;
-}
-
-.story-italic {
-    -fx-text-fill: -text-primary;
-    -fx-font-size: 13px;
-    -fx-font-style: italic;
-}
-
+/* Progress indicator */
 .onboarding-progress {
     -fx-background-color: -bg-surface;
     -fx-border-color: -border;
@@ -51,6 +36,36 @@
     -fx-opacity: 0;
 }
 
+/* Scroll container */
+.onboarding-scroll,
+.onboarding-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Story step */
+.story-icon {
+    -fx-font-size: 32px;
+}
+
+.game-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -text-primary;
+}
+
+.story-text {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 5;
+}
+
+.story-italic {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+/* Difficulty cards */
 .diff-card {
     -fx-background-color: -bg-surface;
     -fx-background-radius: 12;
@@ -90,13 +105,12 @@
     -fx-font-size: 12px;
 }
 
-
-/* Title text color per difficulty */
+/* Difficulty colors (title text) */
 .diff-name-easy   { -fx-text-fill: #22c55e; }
 .diff-name-medium { -fx-text-fill: #eab308; }
 .diff-name-hard   { -fx-text-fill: #ef4444; }
 
-/* Selected state glow per difficulty — override the gold default */
+/* Difficulty colors (selected state) */
 .difficulty-card-easy.diff-card-selected {
     -fx-background-color: rgba(34, 197, 94, 0.06);
     -fx-border-color: #22c55e;
@@ -110,11 +124,7 @@
     -fx-border-color: #ef4444;
 }
 
-.onboarding-scroll,
-.onboarding-scroll > .viewport {
-    -fx-background-color: transparent;
-}
-
+/* Market step cards */
 .market-card {
     -fx-background-color: -bg-surface;
     -fx-background-radius: 10;
@@ -133,9 +143,4 @@
 .market-card-selected {
     -fx-background-color: rgba(255, 209, 102, 0.06);
     -fx-border-color: -accent-gold;
-}
-
-.onboarding-navbar {
-    -fx-padding: 0 20 0 20;
-    -fx-spacing: 15;
 }

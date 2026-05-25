@@ -1,4 +1,4 @@
-
+/* Container */
 .bottom-bar {
     -fx-background-color: -bg-surface;
     -fx-border-color: -border;
@@ -8,14 +8,14 @@
     -fx-alignment: center-left;
 }
 
+/* Stats */
 .bottom-bar-stat        { -fx-spacing: 2; -fx-alignment: center-left; }
 .bottom-bar-label       { -fx-text-fill: -text-secondary; -fx-font-size: 11px; }
 .bottom-bar-value       { -fx-text-fill: -text-primary;   -fx-font-size: 16px; -fx-font-weight: bold; }
 .bottom-bar-value-gold  { -fx-text-fill: -accent-gold;    -fx-font-size: 16px; -fx-font-weight: bold; }
 
-/* Danger-zone overstyringer (legges på ROT-noden) */
-.bottom-bar-danger                            { -fx-background-color: rgba(239, 68, 68, 0.08); }
-.bottom-bar-danger .bottom-bar-value          { -fx-text-fill: -error; }
-.bottom-bar-danger .bottom-bar-value-gold     { -fx-text-fill: -error; }
-.bottom-bar-danger .advance-button            { -fx-background-color: -error; }
-
+/* Danger state (negativ cash) */
+.bottom-bar-danger                          { -fx-background-color: rgba(239, 68, 68, 0.08); }
+.bottom-bar-danger .bottom-bar-value        { -fx-text-fill: -error; }
+.bottom-bar-danger .bottom-bar-value-gold   { -fx-text-fill: -error; }
+.bottom-bar-danger .advance-button          { -fx-background-color: -error; }

@@ -1,10 +1,25 @@
-
+/* Container */
 .shop-view {
     -fx-background-color: -bg-primary;
-    -fx-padding: 24 28 28 28;
-    -fx-spacing: 14;
+    -fx-padding: 32;
+    -fx-spacing: 16;
 }
 
+.shop-wrapper {
+    -fx-background-color: -bg-primary;
+    -fx-padding: 0;
+}
+
+.shop-scroll {
+    -fx-background-color: -bg-primary;
+    -fx-background: -bg-primary;
+}
+
+.shop-scroll > .viewport {
+    -fx-background-color: -bg-primary;
+}
+
+/* Header */
 .shop-coin-badge {
     -fx-background-color: -bg-elevated;
     -fx-border-color: -accent-gold;
@@ -23,6 +38,7 @@
     -fx-font-weight: bold;
 }
 
+/* Coin exchange panel */
 .coin-exchange-panel {
     -fx-background-color: -bg-surface;
     -fx-border-color: -accent-gold;
@@ -59,6 +75,7 @@
     -fx-padding: 8 10 8 10;
 }
 
+/* Buy buttons */
 .shop-buy-button,
 .theme-buy-button {
     -fx-background-color: -accent-gold;
@@ -76,6 +93,13 @@
     -fx-scale-y: 1.02;
 }
 
+.theme-buy-button:disabled {
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -gain;
+    -fx-opacity: 1;
+}
+
+/* Theme cards */
 .theme-grid {
     -fx-hgap: 12;
     -fx-vgap: 12;
@@ -111,33 +135,8 @@
     -fx-font-weight: bold;
 }
 
-.theme-buy-button:disabled {
-    -fx-background-color: -bg-elevated;
-    -fx-text-fill: -gain;
-    -fx-opacity: 1;
-}
-
+/* Status message */
 .shop-message {
     -fx-text-fill: -text-primary;
     -fx-font-size: 12px;
-}
-
-.shop-scroll {
-    -fx-background-color: -bg-primary;
-    -fx-background: -bg-primary;
-}
-
-.shop-scroll > .viewport {
-    -fx-background-color: -bg-primary;
-}
-
-.shop-wrapper {
-    -fx-background-color: -bg-primary;
-    -fx-padding: 0;
-}
-
-.shop-view {
-    -fx-background-color: -bg-primary;
-    -fx-padding: 32;
-    -fx-spacing: 16;
 }
