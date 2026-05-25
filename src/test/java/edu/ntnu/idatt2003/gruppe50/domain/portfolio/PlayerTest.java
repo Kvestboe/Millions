@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 import static edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status.INVESTOR;
 import static edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status.NOVICE;
 import static edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status.SPECULATOR;
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.assertBigDecimalEquals;
 import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -113,7 +114,7 @@ public class PlayerTest {
     player.getPortfolio().addShare(share);
 
     BigDecimal expectedPrice = bd(595);
-    assertEquals(expectedPrice, player.getNetWorth().stripTrailingZeros());
+    assertBigDecimalEquals(expectedPrice, player.getNetWorth());
   }
 
   @Test
