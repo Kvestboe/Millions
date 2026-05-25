@@ -36,10 +36,6 @@ public class LoadGameView extends StackPane {
   }
 
   private void build() {
-    getStylesheets().add(
-        getClass().getResource("/css/views/loadGame.css").toExternalForm()
-    );
-
     VBox card = buildCard();
     StackPane.setAlignment(card, Pos.CENTER);
     getChildren().add(card);

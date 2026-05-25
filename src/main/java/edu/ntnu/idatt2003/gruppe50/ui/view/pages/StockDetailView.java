@@ -34,7 +34,6 @@ public class StockDetailView extends StackPane implements Page {
   private final Runnable onBack;
   private final Observer exchangeObserver = this::refresh;
 
-  // Header-felter (oppdateres i refresh)
   private final Label priceLabel = new Label();
   private final Label priceChangeLabel = new Label();
   private final Label percentChangeLabel = new Label();
@@ -77,7 +76,6 @@ public class StockDetailView extends StackPane implements Page {
 
     content.getChildren().addAll(backRow, splitRow);
     content.getStyleClass().add("stock-detail-view");
-    getStylesheets().add(getClass().getResource("/css/views/stockDetail.css").toExternalForm());
 
     getChildren().addAll(content);
 

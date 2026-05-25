@@ -64,7 +64,6 @@ public class TransactionsView extends VBox implements Page {
         .addListener((ListChangeListener<TransactionData>) _ -> applyFilters());
 
     getStyleClass().add("transactions-view");
-    getStylesheets().add(getClass().getResource("/css/views/transactions.css").toExternalForm());
     getChildren().addAll(title, content);
 
     applyFilters();

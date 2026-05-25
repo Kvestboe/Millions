@@ -43,10 +43,6 @@ public class MainMenuView extends StackPane{
   }
 
   private void build() {
-    getStylesheets().add(
-        getClass().getResource("/css/views/mainMenu.css").toExternalForm()
-    );
-
     Canvas chart = buildChart();
     VBox content = buildContent();
 
@@ -168,8 +164,6 @@ public class MainMenuView extends StackPane{
   }
 
   private HBox buildSystemButtons() {
-    // Innstillinger + Avslutt
-    // Avslutt kobler onQuit til onAction
     Button settings = ButtonFactory.styled("⛭ Settings", "system-button", onSettings);
     Button quit = ButtonFactory.styled("✕ Quit", "system-button-danger", onQuit);
 
