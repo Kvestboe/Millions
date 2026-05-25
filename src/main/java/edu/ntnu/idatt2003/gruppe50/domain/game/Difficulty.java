@@ -27,9 +27,9 @@ public enum Difficulty {
   MEDIUM(0.50, 0.14, 0.14, 0.015, Optional.of(new BigDecimal("25000")), 0.50),
 
   /**
-   * Hard difficulty. Same up-chance as medium but asymmetric downside risk —
-   * losses can be significantly larger than gains. High hangar cost and
-   * starting capital capped at 5 000 kr.
+   * Hard difficulty. Same up-chance as medium, but with higher downside risk.
+   * Losses can be larger than gains. High hangar cost and starting capital
+   * capped at 5 000 kr.
    */
   HARD(0.46, 0.16, 0.16, 0.02, Optional.of(new BigDecimal("5000")), 0.60);
 
