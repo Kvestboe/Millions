@@ -3,7 +3,6 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import java.math.BigDecimal;
 
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -36,10 +35,10 @@ public class InsufficientCashPopup extends StackPane {
     title.getStyleClass().add("popup-title");
 
     Label explanation = new Label(
-        "Every week your hangar costs " + MoneyFormat.format(hangarCost) + ". "
-            + "You only have " + MoneyFormat.format(playerCash) + " in cash, "
+        "Every week your hangar costs " + MoneyFormat.formatCurrency(hangarCost) + ". "
+            + "You only have " + MoneyFormat.formatCurrency(playerCash) + " in cash, "
             + "because the rest is tied up in shares. "
-            + "Sell shares for at least " + MoneyFormat.format(missing) + " to continue to the next week.");
+            + "Sell shares for at least " + MoneyFormat.formatCurrency(missing) + " to continue to the next week.");
     explanation.setWrapText(true);
 
     Button close = new Button("Got it");
