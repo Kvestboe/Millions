@@ -4,39 +4,73 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
 import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.time.format.DateTimeFormatter;
 
-public class LeaderboardView extends VBox {
+public class LeaderboardView extends StackPane {
 
   private final Leaderboard leaderboard;
+  private final Runnable onBack;
   private final TableView<LeaderboardEntry> table = new TableView<>();
   private Difficulty active = Difficulty.EASY;
 
   public LeaderboardView(Leaderboard leaderboard, Runnable onBack) {
     this.leaderboard = leaderboard;
-    setSpacing(15);
-    setAlignment(Pos.TOP_CENTER);
-    getStyleClass().add("leaderboard-view");
+    this.onBack = onBack;
+    build();
+  }
 
-    Label title = new Label("🏆 Leaderboard");
-    title.getStyleClass().add("header-title");
+  private void build() {
+    VBox card = buildCard();
+    StackPane.setAlignment(card, Pos.CENTER);
+    getChildren().add(card);
+  }
 
-    HBox tabs = buildTabs();
+  private VBox buildCard() {
+    VBox card = new VBox(20);
+    card.getStyleClass().addAll("load-game-card", "leaderboard-view");
+    card.setPrefWidth(760);
+    card.setMaxWidth(760);
+    card.setMaxHeight(Double.MAX_VALUE);
+    card.setAlignment(Pos.TOP_LEFT);
+
     buildTable();
+    VBox.setVgrow(table, Priority.ALWAYS);
+    table.setMaxHeight(Double.MAX_VALUE);
 
-    Button back = new Button("Back");
-    back.setOnAction(e -> onBack.run());
+    card.getChildren().addAll(
+        buildHeader(),
+        buildTabs(),
+        table
+    );
+    return card;
+  }
 
-    getChildren().addAll(title, tabs, table, back);
-    refresh();
+  private StackPane buildHeader() {
+    Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
+
+    Label title = new Label("🏆 LEADERBOARD");
+    title.getStyleClass().add("load-game-title");
+
+    Label subtitle = new Label("TOP PLAYERS PER DIFFICULTY");
+    subtitle.getStyleClass().add("load-game-subtitle");
+
+    VBox titleBox = new VBox(2, title, subtitle);
+    titleBox.setAlignment(Pos.CENTER);
+
+    StackPane header = new StackPane(titleBox, backBtn);
+    StackPane.setAlignment(titleBox, Pos.CENTER);
+    StackPane.setAlignment(backBtn, Pos.CENTER_LEFT);
+    return header;
   }
 
   private HBox buildTabs() {
@@ -46,14 +80,16 @@ public class LeaderboardView extends VBox {
     for (Difficulty d : Difficulty.values()) {
       ToggleButton btn = new ToggleButton(d.name());
       btn.setToggleGroup(group);
-      btn.getStyleClass().add("difficulty-tab");
+      btn.getStyleClass().addAll("btn-secondary", "difficulty-tab");
       btn.setUserData(d);
       btn.setSelected(d == active);
+      btn.setMaxWidth(Double.MAX_VALUE);
       btn.setOnAction(e -> {
         if (!btn.isSelected()) { btn.setSelected(true); return; }
         active = (Difficulty) btn.getUserData();
         refresh();
       });
+      HBox.setHgrow(btn, Priority.ALWAYS);
       row.getChildren().add(btn);
     }
     return row;
@@ -61,17 +97,29 @@ public class LeaderboardView extends VBox {
 
   private void buildTable() {
     TableColumn<LeaderboardEntry, String> rankCol = new TableColumn<>("#");
+    rankCol.setCellValueFactory(c ->
+        new SimpleObjectProperty<>("#" + (table.getItems().indexOf(c.getValue()) + 1)));
     rankCol.setCellFactory(col -> new TableCell<>() {
-      @Override protected void updateItem(String unused, boolean empty) {
-        super.updateItem(unused, empty);
-        if (empty || getIndex() < 0) { setText(null); return; }
+      @Override protected void updateItem(String rankText, boolean empty) {
+        super.updateItem(rankText, empty);
+        getStyleClass().removeAll(
+            "leaderboard-rank-first",
+            "leaderboard-rank-second",
+            "leaderboard-rank-third"
+        );
+        if (empty || rankText == null) {
+          setText(null);
+          return;
+        }
         int rank = getIndex() + 1;
-        setText(switch (rank) {
-          case 1 -> "🥇";
-          case 2 -> "🥈";
-          case 3 -> "🥉";
-          default -> "#" + rank;
-        });
+        setText(rankText);
+        setAlignment(Pos.CENTER);
+        switch (rank) {
+          case 1 -> getStyleClass().add("leaderboard-rank-first");
+          case 2 -> getStyleClass().add("leaderboard-rank-second");
+          case 3 -> getStyleClass().add("leaderboard-rank-third");
+          default -> { }
+        }
       }
     });
 
@@ -86,6 +134,7 @@ public class LeaderboardView extends VBox {
       @Override protected void updateItem(Number v, boolean empty) {
         super.updateItem(v, empty);
         setText((empty || v == null) ? null : String.format("%,.1f", v.doubleValue()));
+        setAlignment(Pos.CENTER);
       }
     });
 
@@ -102,20 +151,34 @@ public class LeaderboardView extends VBox {
             .format(DateTimeFormatter.ISO_LOCAL_DATE)));
 
     table.getColumns().addAll(rankCol, nameCol, scoreCol, weeksCol, capCol, dateCol);
+    table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
     table.setPlaceholder(new Label("No winners on this difficulty yet."));
-    table.setMaxWidth(720);
+    refresh();
   }
 
   private HBox buildScoreHeader() {
     Label label = new Label("Score");
-    Label q = new Label(" ?");
+    Label q = new Label("?");
     q.getStyleClass().add("info-icon");
-    Tooltip.install(q, new Tooltip(
-        "Score = (1 000 000 ÷ starting capital)^1.5 ÷ weeks × 1000\n"
-            + "Lower starting capital weighs more than fewer weeks."));
-    HBox h = new HBox(2, label, q);
-    h.setAlignment(Pos.CENTER_LEFT);
+    Tooltip tooltip = new Tooltip(
+        "Score = (1 000 000 / starting capital)^1.5 × (100 / √weeks)\n"
+            + "Lower starting capital matters most, while fewer weeks gives a smaller bonus.");
+    tooltip.getStyleClass().add("score-tooltip");
+    q.setTooltip(tooltip);
+    q.setPickOnBounds(true);
+    HBox h = new HBox(4, label, q);
+    h.setAlignment(Pos.CENTER);
+    Tooltip.install(h, tooltip);
+    h.setOnMouseEntered(_ -> showScoreTooltip(h, tooltip));
+    h.setOnMouseExited(_ -> tooltip.hide());
     return h;
+  }
+
+  private void showScoreTooltip(HBox owner, Tooltip tooltip) {
+    var bounds = owner.localToScreen(owner.getBoundsInLocal());
+    if (bounds != null && !tooltip.isShowing()) {
+      tooltip.show(owner, bounds.getMinX(), bounds.getMaxY() + 8);
+    }
   }
 
   private void refresh() {

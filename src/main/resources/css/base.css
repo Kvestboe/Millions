@@ -11,6 +11,7 @@
 /* views */
 @import "views/bottomBar.css";
 @import "views/dashboard.css";
+@import "views/leaderboard.css";
 @import "views/loadGame.css";
 @import "views/mainMenu.css";
 @import "views/market.css";
@@ -47,17 +48,6 @@
     -fx-font-size: 10px;
 }
 
-.title-label {
-    -fx-text-fill: -text-primary;
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
-}
-
-.subtitle-label {
-    -fx-text-fill: -text-secondary;
-    -fx-font-size: 14px;
-}
-
 .field-label {
     -fx-text-fill: -text-primary;
     -fx-font-size: 14px;
@@ -66,10 +56,6 @@
 .error-label {
     -fx-text-fill: -error;
     -fx-font-size: 12px;
-}
-
-.file-name-label {
-    -fx-text-fill: -text-secondary;
 }
 
 .gain {
