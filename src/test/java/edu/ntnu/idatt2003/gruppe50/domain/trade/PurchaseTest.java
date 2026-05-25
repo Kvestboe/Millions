@@ -49,7 +49,7 @@ public class PurchaseTest {
   }
 
   @Test
-  void constructor_validArguments_createsShare() {
+  void constructor_validArguments_createsPurchase() {
     Stock stock2 = new Stock("AAPL", "Apple", new BigDecimal("265"));
     Share share2 = new Share(stock2, new BigDecimal("3"), new BigDecimal("250"), 1);
     Purchase purchase2 = new Purchase(share2, 12, UUID.randomUUID());

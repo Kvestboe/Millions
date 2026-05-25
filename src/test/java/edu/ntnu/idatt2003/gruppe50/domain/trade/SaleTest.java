@@ -51,7 +51,7 @@ public class SaleTest {
   }
 
   @Test
-  void constructor_validArguments_createsShare() {
+  void constructor_validArguments_createsSale() {
     Stock stock2 = new Stock("AAPL", "Apple", bd("265"));
     Share share2 = new Share(stock, bd("3"), bd("250"), 1);
     Sale sale2 = new Sale(share2, 12, UUID.randomUUID());

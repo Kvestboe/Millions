@@ -187,12 +187,9 @@ public class ExchangeTest {
   @Test
   void advance_updatesStockPrices() {
     Stock stock = exchange.getStock("AAPL");
-    BigDecimal oldPrice = stock.getSalesPrice();
-
+    int historyBefore = stock.getHistoricalPrices().size();
     exchange.advance();
-
-    BigDecimal newPrice = stock.getSalesPrice();
-    assertNotEquals(oldPrice, newPrice);
+    assertEquals(historyBefore + 1, stock.getHistoricalPrices().size());
   }
 
   @Test

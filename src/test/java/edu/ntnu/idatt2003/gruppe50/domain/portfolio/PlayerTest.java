@@ -98,8 +98,13 @@ public class PlayerTest {
   }
 
   @Test
-  void getPortfolio_returnsPortfolio() {
-    assertInstanceOf(Portfolio.class, player.getPortfolio());
+  void getPortfolio_initiallyEmpty() {
+    assertTrue(player.getPortfolio().getShares().isEmpty());
+  }
+
+  @Test
+  void getTransactionArchive_initiallyEmpty() {
+    assertTrue(player.getTransactionArchive().isEmpty());
   }
 
   @Test
