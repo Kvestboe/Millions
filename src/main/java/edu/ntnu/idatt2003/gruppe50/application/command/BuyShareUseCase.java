@@ -2,7 +2,10 @@ package edu.ntnu.idatt2003.gruppe50.application.command;
 
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -26,12 +29,25 @@ public final class BuyShareUseCase {
    * @param request input with game id, symbol and quantity
    * @throws GameSessionNotFoundException if the session does not exist
    */
-  public void execute(Request request) {
-    GameSession session =
-        repository.findById(request.gameId()).orElseThrow(GameSessionNotFoundException::new);
+  public Response execute(Request request) {
+    GameSession session = repository.findById(request.gameId())
+        .orElseThrow(GameSessionNotFoundException::new);
 
-    session.buy(request.symbol(), request.quantity());
+    Transaction tx = session.buy(request.symbol(), request.quantity());
     repository.save(session);
+
+    BigDecimal newHolding = session.getPlayer().getPortfolio()
+        .getShares(request.symbol()).stream()
+        .map(Share::getQuantity)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    return new Response(
+        request.symbol(),
+        request.quantity(),
+        tx.getCalculator().calculateTotal(),
+        newHolding,
+        tx.getWeek()
+    );
   }
 
   /**
@@ -42,4 +58,12 @@ public final class BuyShareUseCase {
    * @param quantity quantity to buy
    */
   public record Request(UUID gameId, String symbol, BigDecimal quantity) {}
+
+  public record Response(
+      String symbol,
+      BigDecimal quantity,
+      BigDecimal totalAmount,
+      BigDecimal newHoldingQuantity,
+      int week
+  ) {}
 }
