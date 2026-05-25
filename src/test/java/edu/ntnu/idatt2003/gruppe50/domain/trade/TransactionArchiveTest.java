@@ -32,7 +32,7 @@ public class TransactionArchiveTest {
   }
 
   @Test
-  void constructor_validArguments_createsShare() {
+  void add_duplicateTransaction_returnsFalse() {
     Purchase purchase = new Purchase(share, 1, UUID.randomUUID());
     assertTrue(archive.add(purchase));
     assertFalse(archive.add(purchase));

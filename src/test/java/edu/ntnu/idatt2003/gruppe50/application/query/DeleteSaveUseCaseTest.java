@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,5 +29,10 @@ public class DeleteSaveUseCaseTest {
     useCase.execute(session.getGameId());
 
     assertTrue(repository.findAll().isEmpty());
+  }
+
+  @Test
+  void execute_nonExistentId_doesNotThrow() {
+    assertDoesNotThrow(() -> useCase.execute(UUID.randomUUID()));
   }
 }

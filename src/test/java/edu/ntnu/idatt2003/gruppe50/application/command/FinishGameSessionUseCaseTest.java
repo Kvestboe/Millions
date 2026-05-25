@@ -2,11 +2,14 @@ package edu.ntnu.idatt2003.gruppe50.application.command;
 
 import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,5 +46,11 @@ public class FinishGameSessionUseCaseTest {
 
     GameSession repositorySession = repository.findById(session.getGameId()).orElseThrow();
     assertEquals(GameSessionState.FINISHED, repositorySession.getState());
+  }
+
+  @Test
+  void execute_nonExistentSession_throwsException() {
+    assertThrows(GameSessionNotFoundException.class,
+        () -> finishSession.execute(new FinishGameSessionUseCase.Request(UUID.randomUUID())));
   }
 }
