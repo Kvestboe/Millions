@@ -10,14 +10,6 @@
     -fx-border-width: 0 0 1 0;
 }
 
-.navbar-divider {
-    -fx-min-width: 1;
-    -fx-pref-width: 1;
-    -fx-max-width: 1;
-    -fx-pref-height: 24;
-    -fx-background-color: -border;
-}
-
 .logo-label {
     -fx-text-fill: -text-primary;
     -fx-font-size: 20px;

@@ -7,14 +7,6 @@
     -fx-padding: 16;
 }
 
-.card-box {
-    -fx-background-color: -bg-surface;
-    -fx-background-radius: 10;
-    -fx-border-color: -border;
-    -fx-border-radius: 10;
-    -fx-border-width: 0.5;
-}
-
 .info-card {
     -fx-background-color: -bg-surface;
     -fx-background-radius: 10;
@@ -105,13 +97,26 @@
     -fx-background-color: -bg-primary;
 }
 
-.net-worth-value {
-    -fx-font-size: 24px;
+.card-value {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: -accent-gold;
 }
 
+.card-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 12 0;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 1;
+}
 
+.net-worth-value {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
 
 .week-summary-popup {
     -fx-background-color: -bg-surface;
@@ -162,7 +167,6 @@
 .week-summary-popup .gain { -fx-text-fill: -gain; -fx-font-weight: bold; }
 .week-summary-popup .loss { -fx-text-fill: -loss; -fx-font-weight: bold; }
 
-/* Fjern hvit scroll-pane bakgrunn */
 .week-summary-popup .scroll-pane,
 .week-summary-popup .scroll-pane > .viewport {
     -fx-background-color: transparent;
@@ -177,3 +181,9 @@
 .week-summary-popup .bottom-bar-value      { -fx-text-fill: -text-primary; }
 .week-summary-popup .bottom-bar-value-gold { -fx-text-fill: -accent-gold; }
 .week-summary-popup .holding-row .label    { -fx-text-fill: -text-primary; }
+
+.header-title {
+    -fx-font-size: 52px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -accent-gold;
+}

@@ -28,12 +28,6 @@
     -fx-border-color: -accent-indigo;
 }
 
-.file-picker-row {
-    -fx-background-color: -bg-elevated;
-    -fx-background-radius: 8;
-    -fx-padding: 10;
-}
-
 .choice-box {
     -fx-background-color: -bg-elevated;
     -fx-background-radius: 6;
