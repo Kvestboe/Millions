@@ -22,7 +22,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.WeekSummaryPopup;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekSummaryPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.InsufficientCashPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
