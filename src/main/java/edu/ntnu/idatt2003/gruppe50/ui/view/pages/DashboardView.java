@@ -39,7 +39,7 @@ public class DashboardView extends BorderPane implements Page {
 
   private GridPane createGrid() {
     GridPane grid = new GridPane();
-    grid.getStyleClass().add("grid");
+    grid.getStyleClass().add("dashboard-grid");
 
     // Define the different card widths
     for (int i = 0; i < 5; i++) {
