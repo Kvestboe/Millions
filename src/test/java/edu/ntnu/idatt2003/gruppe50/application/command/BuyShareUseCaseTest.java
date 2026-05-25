@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.gruppe50.application;
+package edu.ntnu.idatt2003.gruppe50.application.command;
 
 import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.assertBigDecimalEquals;
 import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
@@ -6,7 +6,7 @@ import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefault
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.InMemoryGameSessionRepository;
