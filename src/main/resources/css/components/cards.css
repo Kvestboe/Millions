@@ -1,0 +1,179 @@
+.card {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+    -fx-padding: 16;
+}
+
+.card-box {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+}
+
+.info-card {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+    -fx-padding: 14 16 14 16;
+    -fx-spacing: 4;
+    -fx-min-width: 160;
+    -fx-alignment: center-left;
+}
+
+.info-card .label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+}
+
+.info-card-accent {
+    -fx-background-color: -bg-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -accent-gold;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+    -fx-padding: 14 16 14 16;
+    -fx-spacing: 4;
+    -fx-min-width: 160;
+    -fx-alignment: center-left;
+}
+
+.info-card-accent .label {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 12px;
+}
+
+.card-container {
+    -fx-spacing: 12;
+}
+
+.segmented-control {
+    -fx-spacing: 4;
+    -fx-padding: 4;
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 8;
+    -fx-alignment: center-left;
+}
+
+.segmented-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text-secondary;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-padding: 6 14 6 14;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.segmented-btn:hover {
+    -fx-text-fill: -text-primary;
+}
+
+.segmented-btn-active {
+    -fx-background-color: -bg-surface;
+    -fx-text-fill: -text-primary;
+}
+
+.stat-card {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 8;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-border-width: 0.5;
+    -fx-padding: 12 16 12 16;
+    -fx-spacing: 4;
+}
+
+.stat-label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 10px;
+}
+
+.stat-value {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.root-bg {
+    -fx-background-color: -bg-primary;
+}
+
+.net-worth-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -accent-gold;
+}
+
+
+
+.week-summary-popup {
+    -fx-background-color: -bg-surface;
+    -fx-padding: 24;
+    -fx-background-radius: 10;
+    -fx-spacing: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 20, 0, 0, 6);
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+}
+
+.week-summary-popup .label        { -fx-text-fill: -text-secondary; -fx-font-size: 14px; }
+.week-summary-popup .popup-title  { -fx-text-fill: -text-primary;  -fx-font-size: 20px; }
+
+.week-summary-popup .hero-title   { -fx-text-fill: -text-secondary; -fx-font-size: 16px; }
+.week-summary-popup .hero-delta   { -fx-font-size: 32px; -fx-font-weight: bold; }
+
+.week-summary-popup .stat-tile {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 8;
+    -fx-padding: 12 16 12 16;
+}
+
+.week-summary-popup .section-button {
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -text-primary;
+    -fx-background-radius: 8;
+    -fx-padding: 12 16 12 16;
+    -fx-cursor: hand;
+}
+.week-summary-popup .section-button:hover  { -fx-background-color: -bg-overlay; }
+.week-summary-popup .section-button:disabled { -fx-opacity: 0.5; -fx-cursor: default; }
+
+.week-summary-popup .button.primary {
+    -fx-background-color: -accent-indigo;
+    -fx-text-fill: -text-primary;
+}
+
+.week-summary-popup .holding-row {
+    -fx-padding: 8 12 8 12;
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 6;
+    -fx-alignment: center-left;
+}
+
+
+.week-summary-popup .gain { -fx-text-fill: -gain; -fx-font-weight: bold; }
+.week-summary-popup .loss { -fx-text-fill: -loss; -fx-font-weight: bold; }
+
+/* Fjern hvit scroll-pane bakgrunn */
+.week-summary-popup .scroll-pane,
+.week-summary-popup .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.week-summary-popup .section-button {
+    -fx-alignment: center;
+    -fx-content-display: left;
+    -fx-graphic-text-gap: 8;
+}
+
+.week-summary-popup .bottom-bar-value      { -fx-text-fill: -text-primary; }
+.week-summary-popup .bottom-bar-value-gold { -fx-text-fill: -accent-gold; }
+.week-summary-popup .holding-row .label    { -fx-text-fill: -text-primary; }

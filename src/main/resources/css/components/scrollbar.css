@@ -23,3 +23,11 @@
 .scroll-bar:vertical:hover {
     -fx-opacity: 1;
 }
+
+.app-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.app-scroll > .viewport {
+    -fx-background-color: transparent;
+}

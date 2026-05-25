@@ -33,3 +33,18 @@
     -fx-background-radius: 8;
     -fx-padding: 10;
 }
+
+.choice-box {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 6;
+    -fx-padding: 5 10 5 10;
+}
+.choice-box > .label {
+    -fx-text-fill: -text-primary;
+}
+.choice-box > .open-button > .arrow {
+    -fx-background-color: -text-secondary;
+}
+.choice-box:hover {
+    -fx-background-color: -bg-overlay;
+}

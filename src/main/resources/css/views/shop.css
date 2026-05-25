@@ -1,0 +1,143 @@
+
+.shop-view {
+    -fx-background-color: -bg-primary;
+    -fx-padding: 24 28 28 28;
+    -fx-spacing: 14;
+}
+
+.shop-coin-badge {
+    -fx-background-color: -bg-elevated;
+    -fx-border-color: -accent-gold;
+    -fx-border-radius: 8;
+    -fx-border-width: 0.5;
+    -fx-background-radius: 8;
+    -fx-padding: 7 10 7 10;
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.shop-section-label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+.coin-exchange-panel {
+    -fx-background-color: -bg-surface;
+    -fx-border-color: -accent-gold;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 16;
+}
+
+.shop-caption {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 8px;
+    -fx-font-weight: bold;
+}
+
+.shop-rate {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.shop-balance {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 10px;
+}
+
+.shop-coin-input {
+    -fx-background-color: -bg-elevated;
+    -fx-border-color: -border;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 12px;
+    -fx-padding: 8 10 8 10;
+}
+
+.shop-buy-button,
+.theme-buy-button {
+    -fx-background-color: -accent-gold;
+    -fx-text-fill: -bg-primary;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12 8 12;
+    -fx-cursor: hand;
+}
+
+.shop-buy-button:hover,
+.theme-buy-button:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.theme-grid {
+    -fx-hgap: 12;
+    -fx-vgap: 12;
+}
+
+.theme-card {
+    -fx-background-color: -bg-surface;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 12;
+}
+
+.theme-card:hover {
+    -fx-border-color: -accent-gold;
+}
+
+.theme-card-title {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.theme-card-description {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 10px;
+}
+
+.theme-card-meta {
+    -fx-text-fill: -accent-gold;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.theme-buy-button:disabled {
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -gain;
+    -fx-opacity: 1;
+}
+
+.shop-message {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 12px;
+}
+
+.shop-scroll {
+    -fx-background-color: -bg-primary;
+    -fx-background: -bg-primary;
+}
+
+.shop-scroll > .viewport {
+    -fx-background-color: -bg-primary;
+}
+
+.shop-wrapper {
+    -fx-background-color: -bg-primary;
+    -fx-padding: 0;
+}
+
+.shop-view {
+    -fx-background-color: -bg-primary;
+    -fx-padding: 32;
+    -fx-spacing: 16;
+}
