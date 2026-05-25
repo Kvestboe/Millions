@@ -3,6 +3,8 @@ package edu.ntnu.idatt2003.gruppe50.domain.game;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.InsufficientFundsException;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
@@ -141,9 +143,9 @@ public final class GameSession {
    * @param quantity quantity to buy
    * @throws GameSessionFinishedException if the session is finished
    */
-  public void buy(String symbol, BigDecimal quantity) {
+  public Transaction buy(String symbol, BigDecimal quantity) {
     ensureActive();
-    exchange.buy(symbol, quantity, player);
+    return exchange.buy(symbol, quantity, player);
   }
 
   /**
@@ -154,7 +156,7 @@ public final class GameSession {
    * @param targetPrice highest price the player is willing to pay
    * @param duration number of weeks the order should stay active
    */
-  public void placeBuyLimitOrder(
+  public LimitBuyOrder  placeBuyLimitOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -179,6 +181,7 @@ public final class GameSession {
     );
 
     exchange.placeOrder(order);
+    return order;
   }
 
   /**
@@ -188,7 +191,7 @@ public final class GameSession {
    * @param quantity quantity to sell
    * @throws GameSessionFinishedException if the session is finished
    */
-  public void sell(String symbol, BigDecimal quantity) {
+  public List<Transaction> sell(String symbol, BigDecimal quantity) {
     if (state == GameSessionState.FINISHED) {
       throw new GameSessionFinishedException();
     }
@@ -198,7 +201,7 @@ public final class GameSession {
 
     Stock stock = exchange.getStock(symbol);
 
-    exchange.sellQuantity(stock, quantity, player);
+    return exchange.sellQuantity(stock, quantity, player);
   }
 
   /**
@@ -209,7 +212,7 @@ public final class GameSession {
    * @param targetPrice lowest price the player is willing to sell for
    * @param duration number of weeks the order should stay active
    */
-  public void placeSellLimitOrder(
+  public LimitSellOrder  placeSellLimitOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -234,6 +237,7 @@ public final class GameSession {
     );
 
     exchange.placeOrder(order);
+    return order;
   }
 
   /**
@@ -244,7 +248,7 @@ public final class GameSession {
    * @param targetPrice price that triggers the sale
    * @param duration number of weeks the order should stay active
    */
-  public void placeStopLossOrder(
+  public StopLossOrder  placeStopLossOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -267,23 +271,26 @@ public final class GameSession {
         currentWeek,
         expiryWeek
     );
-
     exchange.placeOrder(order);
+    return order;
   }
 
   /**
    * Advances the exchange one week.
    *
    * @throws GameSessionFinishedException if the session is finished
+   * @throws InsufficientFundsException if the player cannot afford the hangar cost
    */
   public void advanceWeek() {
     ensureActive();
 
-    BigDecimal hangarCost = player.getStartingMoney()
-        .multiply(BigDecimal.valueOf(difficulty.getHangarCostRate()))
-        .setScale(2, RoundingMode.HALF_UP);
-    player.withdrawMoney(hangarCost);
+    BigDecimal hangarCost = getUpcomingHangarCost();
+    if (player.getMoney().compareTo(hangarCost) < 0) {
+      throw new InsufficientFundsException(
+          "Not enough cash to pay hangar rent of " + hangarCost);
+    }
 
+    player.withdrawMoney(hangarCost);
     exchange.advance();
     netWorthHistory.add(player.getNetWorth());
     exchange.notifyObservers();
@@ -404,5 +411,16 @@ public final class GameSession {
    */
   public Difficulty getDifficulty() {
     return difficulty;
+  }
+
+  /**
+   * Returns the hangar cost the player must pay on the next week advancement.
+   *
+   * @return the hangar cost for next week
+   */
+  public BigDecimal getUpcomingHangarCost() {
+    return player.getStartingMoney()
+        .multiply(BigDecimal.valueOf(difficulty.getHangarCostRate()))
+        .setScale(2, RoundingMode.HALF_UP);
   }
 }

@@ -23,11 +23,12 @@ public record GameResult(boolean won,
    * @return the calculated score, or 0 if the game was lost
    */
   public long calculateScore() {
-    if (!won) {
+    if (!won || weeksPlayed <= 0 || startingCapital == null || startingCapital.signum() <= 0) {
       return 0;
     }
-    double weekFactor = Math.pow(weeksPlayed, 1.5);
-    double capitalFactor = Math.sqrt(10_000.0 / startingCapital.doubleValue());
-    return Math.round((1_000_000.0 / weekFactor) * capitalFactor);
+    // Score formula made with help from AI.
+    double capitalFactor = Math.pow(1_000_000.0 / startingCapital.doubleValue(), 1.5);
+    double weekBonus = 100.0 / Math.sqrt(weeksPlayed);
+    return Math.round(capitalFactor * weekBonus);
   }
 }

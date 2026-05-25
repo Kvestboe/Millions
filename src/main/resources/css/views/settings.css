@@ -1,8 +1,10 @@
+/* Container */
 .settings-view {
     -fx-background-color: -bg-primary;
     -fx-max-width: 560px;
 }
 
+/* Sections */
 .settings-section-label {
     -fx-text-fill: -text-secondary;
     -fx-font-size: 16px;
@@ -10,6 +12,7 @@
     -fx-opacity: 1;
 }
 
+/* Rows */
 .settings-row {
     -fx-background-color: -bg-surface;
     -fx-border-color: -border;
@@ -31,23 +34,7 @@
     -fx-opacity: 0.6;
 }
 
-.toggle-thumb {
-    -fx-background-color: white;
-    -fx-background-radius: 50%;
-    -fx-min-width: 18px;
-    -fx-min-height: 18px;
-    -fx-max-width: 18px;
-    -fx-max-height: 18px;
-}
-
-.toggle-on .toggle-thumb {
-    -fx-translate-x: 10px;
-}
-
-.toggle-off .toggle-thumb {
-    -fx-translate-x: -10px;
-}
-
+/* Toggle switch */
 .toggle-on {
     -fx-background-color: -accent-indigo;
     -fx-background-radius: 12;
@@ -68,17 +55,19 @@
     -fx-padding: 0;
 }
 
-.lang-btn-active {
-    -fx-background-color: -accent-indigo;
-    -fx-text-fill: white;
-    -fx-font-size: 12px;
-    -fx-font-weight: 500;
-    -fx-background-radius: 6;
-    -fx-border-color: transparent;
-    -fx-padding: 7 14 7 14;
-    -fx-cursor: hand;
+.toggle-thumb {
+    -fx-background-color: white;
+    -fx-background-radius: 50%;
+    -fx-min-width: 18px;
+    -fx-min-height: 18px;
+    -fx-max-width: 18px;
+    -fx-max-height: 18px;
 }
 
+.toggle-on .toggle-thumb  { -fx-translate-x: 10px; }
+.toggle-off .toggle-thumb { -fx-translate-x: -10px; }
+
+/* Language buttons */
 .lang-btn {
     -fx-background-color: rgba(255, 255, 255, 0.06);
     -fx-text-fill: rgba(255, 255, 255, 0.5);
@@ -91,6 +80,18 @@
     -fx-cursor: hand;
 }
 
+.lang-btn-active {
+    -fx-background-color: -accent-indigo;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-padding: 7 14 7 14;
+    -fx-cursor: hand;
+}
+
+/* Volume slider */
 .volume-slider .track {
     -fx-background-color: rgba(255, 255, 255, 0.1);
     -fx-background-radius: 2;

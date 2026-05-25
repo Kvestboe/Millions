@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.domain.trade;
 
+import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.assertBigDecimalEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
@@ -51,7 +52,7 @@ public class SaleTest {
   }
 
   @Test
-  void constructor_validArguments_createsShare() {
+  void constructor_validArguments_createsSale() {
     Stock stock2 = new Stock("AAPL", "Apple", bd("265"));
     Share share2 = new Share(stock, bd("3"), bd("250"), 1);
     Sale sale2 = new Sale(share2, 12, UUID.randomUUID());
@@ -103,7 +104,7 @@ public class SaleTest {
 
     BigDecimal moneyAfter = moneyBefore.add(sale.getCalculator().calculateTotal());
 
-    assertEquals(moneyAfter, player.getMoney());
+    assertBigDecimalEquals(moneyAfter, player.getMoney());
     assertEquals(shareBefore - 1, player.getPortfolio().getShares().size());
     assertEquals(
         transactionArchiveBefore + 1, player.getTransactionArchive().getTransactions(12).size());

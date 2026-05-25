@@ -1,0 +1,99 @@
+/* Leaderboard-specific layout */
+.leaderboard-view {
+    -fx-spacing: 20;
+}
+
+/* Difficulty tabs */
+.difficulty-tab {
+    -fx-min-height: 40;
+    -fx-font-weight: bold;
+}
+
+.difficulty-tab:selected,
+.difficulty-tab:selected:hover {
+    -fx-background-color: -accent-gold;
+    -fx-text-fill: -bg-primary;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, #D4AF3760, 12, 0.35, 0, 0);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Info icon (tooltip anchor) */
+.info-icon {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 999;
+    -fx-border-color: -border;
+    -fx-border-radius: 999;
+    -fx-min-width: 18;
+    -fx-min-height: 18;
+    -fx-alignment: center;
+}
+
+.info-icon:hover {
+    -fx-text-fill: -accent-gold;
+    -fx-border-color: -accent-gold;
+}
+
+.score-tooltip {
+    -fx-font-size: 14px;
+    -fx-padding: 10 12 10 12;
+    -fx-background-radius: 8;
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -text-primary;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-border-width: 0.5;
+}
+
+.leaderboard-view .table-cell.leaderboard-rank-first {
+    -fx-text-fill: -accent-gold;
+    -fx-font-weight: bold;
+}
+
+.leaderboard-view .table-cell.leaderboard-rank-second {
+    -fx-text-fill: #DCE3EA;
+    -fx-font-weight: bold;
+}
+
+.leaderboard-view .table-cell.leaderboard-rank-third {
+    -fx-text-fill: #CD7F32;
+    -fx-font-weight: bold;
+}
+
+/* Leaderboard rows are read-only, so selection should not look active. */
+.load-game-card.leaderboard-view .table-row-cell:filled:selected,
+.load-game-card.leaderboard-view .table-row-cell:filled:selected:hover,
+.load-game-card.leaderboard-view .table-row-cell:filled:even:selected,
+.load-game-card.leaderboard-view .table-row-cell:filled:even:selected:hover {
+    -fx-background-color: -bg-surface;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.load-game-card.leaderboard-view .table-row-cell:filled:odd:selected,
+.load-game-card.leaderboard-view .table-row-cell:filled:odd:selected:hover {
+    -fx-background-color: -bg-elevated;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.load-game-card.leaderboard-view .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: -text-primary;
+}
+
+.load-game-card.leaderboard-view .table-row-cell:filled:selected .table-cell.leaderboard-rank-first {
+    -fx-text-fill: -accent-gold;
+}
+
+.load-game-card.leaderboard-view .table-row-cell:filled:selected .table-cell.leaderboard-rank-second {
+    -fx-text-fill: #DCE3EA;
+}
+
+.load-game-card.leaderboard-view .table-row-cell:filled:selected .table-cell.leaderboard-rank-third {
+    -fx-text-fill: #CD7F32;
+}

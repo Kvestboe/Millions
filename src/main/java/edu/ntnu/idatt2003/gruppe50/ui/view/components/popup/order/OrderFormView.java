@@ -6,14 +6,15 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import java.util.UUID;
+import java.util.function.Function;
 
+import edu.ntnu.idatt2003.gruppe50.ui.model.OrderReceipt;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import java.util.function.Consumer;
 
 public class OrderFormView extends StackPane {
 
@@ -21,7 +22,7 @@ public class OrderFormView extends StackPane {
   private final OrderSide side;
   private final StockDto stock;
   private final Runnable onClose;
-  private final Consumer<DraftOrder> onConfirmOrder;
+  private final Function<DraftOrder, OrderReceipt> onConfirmOrder;
   private final VBox card;
   private final PreviewOrderUseCase previewOrder;
 
@@ -30,7 +31,7 @@ public class OrderFormView extends StackPane {
       OrderSide side,
       StockDto stock,
       Runnable onClose,
-      Consumer<DraftOrder> onConfirmOrder,
+      Function<DraftOrder, OrderReceipt> onConfirmOrder,
       PreviewOrderUseCase previewOrder
   ) {
     this.gameId = gameId;
@@ -88,7 +89,16 @@ public class OrderFormView extends StackPane {
   }
 
   private void confirmOrder(DraftOrder draftOrder) {
-    onConfirmOrder.accept(draftOrder);
-    onClose.run();
+    try {
+      OrderReceipt receipt = onConfirmOrder.apply(draftOrder);
+      showReceipt(receipt);
+    } catch (RuntimeException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  private void showReceipt(OrderReceipt receipt) {
+    OrderReceiptView receiptView = new OrderReceiptView(receipt, onClose);
+    card.getChildren().setAll(receiptView);
   }
 }

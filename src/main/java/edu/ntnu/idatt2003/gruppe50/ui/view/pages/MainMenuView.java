@@ -43,10 +43,6 @@ public class MainMenuView extends StackPane{
   }
 
   private void build() {
-    getStylesheets().add(
-        getClass().getResource("/css/views/mainMenu.css").toExternalForm()
-    );
-
     Canvas chart = buildChart();
     VBox content = buildContent();
 
@@ -128,7 +124,7 @@ public class MainMenuView extends StackPane{
     Label text = new Label("Continue game");
 
     Label subtitle = new Label("Week 12");
-    subtitle.getStyleClass().add("button-subtitle");
+    subtitle.getStyleClass().add("main-menu-button-subtitle");
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -148,9 +144,6 @@ public class MainMenuView extends StackPane{
   }
 
   private HBox buildSecondaryButtons() {
-    // De tre ikonknappene: Nytt spill, Last inn, Ledertavle
-    // Returnerer HBox med tre knapper
-
     Button newGameBtn    = ButtonFactory.iconButton("✚", "New Game",    onNewGame);
     Button loadGameBtn   = ButtonFactory.iconButton("⬆", "Load Game",   () -> { if (onLoadGame != null) onLoadGame.run(); });
     Button leaderboardBtn = ButtonFactory.iconButton("★", "Leaderboard",() -> { if (onLeaderboard != null) onLeaderboard.run(); });

@@ -1,0 +1,44 @@
+.text-field {
+    -fx-background-color: -bg-elevated;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: -text-primary;
+    -fx-prompt-text-fill: -text-secondary;
+    -fx-font-size: 14px;
+    -fx-padding: 10 16 10 16;
+}
+
+.text-field:focused {
+    -fx-border-color: -accent-indigo;
+}
+
+.input-field {
+    -fx-background-color: -bg-elevated;
+    -fx-text-fill: -text-primary;
+    -fx-prompt-text-fill: -text-secondary;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.input-field:focused {
+    -fx-border-color: -accent-indigo;
+}
+
+.choice-box {
+    -fx-background-color: -bg-elevated;
+    -fx-background-radius: 6;
+    -fx-padding: 5 10 5 10;
+}
+.choice-box > .label {
+    -fx-text-fill: -text-primary;
+}
+.choice-box > .open-button > .arrow {
+    -fx-background-color: -text-secondary;
+}
+.choice-box:hover {
+    -fx-background-color: -bg-overlay;
+}

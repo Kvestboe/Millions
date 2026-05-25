@@ -35,10 +35,9 @@ public record LeaderboardEntry(
     if (weeks <= 0 || startingCapital == null || startingCapital.signum() <= 0) {
       return 0.0;
     }
-    double gainRatio = 1_000_000.0 / startingCapital.doubleValue();
-    if (gainRatio <= 1.0) {
-      return 0.0;
-    }
-    return Math.pow(gainRatio, 1.5) / weeks * 1_000.0;
+    // Score formula made with help from AI.
+    double capitalFactor = Math.pow(1_000_000.0 / startingCapital.doubleValue(), 1.5);
+    double weekBonus = 100.0 / Math.sqrt(weeks);
+    return capitalFactor * weekBonus;
   }
 }

@@ -35,8 +35,10 @@
     -status-dreamer:   #475569;   /* Grå */
     -status-engineer:  #B91C1C;   /* Dyp rød */
     -status-astronaut: #E53535;   /* Ren rød */
-}
 
+    -nav-active-bg:     rgba(214, 183, 90, 0.12);
+    -nav-active-border: rgba(214, 183, 90, 0.25);
+}
 /* Chart-overrides for midnight red-tema */
 .chart-series-area-line {
     -fx-stroke: #FF6B6B;
@@ -46,3 +48,4 @@
 .chart-series-area-fill {
     -fx-fill: linear-gradient(from 0% 0% to 0% 100%, #FF6B6B30, #FF6B6B05);
 }
+
