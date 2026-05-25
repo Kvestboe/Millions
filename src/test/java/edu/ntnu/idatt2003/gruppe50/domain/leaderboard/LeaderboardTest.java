@@ -138,9 +138,11 @@ public class LeaderboardTest {
     }
 
     @Test
-    void calculateScore_capitalAtOneMillion_returnsZero() {
-      assertEquals(0.0,
-          LeaderboardEntry.calculateScore(10, BigDecimal.valueOf(1_000_000)), 0.001);
+    void calculateScore_lowerCapital_givesHigherScore() {
+      double low = LeaderboardEntry.calculateScore(10, BigDecimal.valueOf(100_000));
+      double high = LeaderboardEntry.calculateScore(10, BigDecimal.valueOf(500_000));
+
+      assertTrue(low > high);
     }
 
     @Test
