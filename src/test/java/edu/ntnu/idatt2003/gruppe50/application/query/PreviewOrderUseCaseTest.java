@@ -50,7 +50,6 @@ public class PreviewOrderUseCaseTest {
     PreviewOrderUseCase.Response response = useCase.execute(new PreviewOrderUseCase.Request(
         session.getGameId(), "AAPL", bd(2), OrderSide.BUY, targetPrice));
 
-    // subtotal = targetPrice * quantity = 1 * 2 = 2
     assertEquals(0, response.subtotal().compareTo(bd(2)));
   }
 
@@ -72,7 +71,6 @@ public class PreviewOrderUseCaseTest {
 
   @Test
   void execute_sellSide_partialQuantity_returnsResponse() {
-    // Buy 3 shares first, then preview selling 2
     session.buy("AAPL", bd(3));
 
     PreviewOrderUseCase.Response response = useCase.execute(new PreviewOrderUseCase.Request(
@@ -92,8 +90,7 @@ public class PreviewOrderUseCaseTest {
   }
 
   @Test
-  void execute_sellSide_acrossMultipleLots_computesFifoCostBasis() {
-    // Buy at market price, then advance so second lot has different price
+  void execute_sellSide_acrossMultipleShares_computesFifoCostBasis() {
     session.buy("AAPL", bd(1));
     session.getExchange().getStock("AAPL").addNewSalesPrice(bd(600));
     session.buy("AAPL", bd(1));
