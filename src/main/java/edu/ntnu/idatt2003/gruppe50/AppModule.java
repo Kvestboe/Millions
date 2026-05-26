@@ -22,6 +22,7 @@ import edu.ntnu.idatt2003.gruppe50.application.query.GetStockDetailUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTradingLogUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionMarkersUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetWeeklyMoversUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
@@ -65,6 +66,7 @@ public final class AppModule {
   public final PurchaseShopItemUseCase purchaseShopItem = new PurchaseShopItemUseCase(sessions);
   public final GetGoalProgressUseCase getGoalProgress = new GetGoalProgressUseCase(sessions);
   public final GetStatusProgressUseCase getStatusProgress = new GetStatusProgressUseCase(sessions);
+  public final GetWeeklyMoversUseCase getWeeklyMovers = new GetWeeklyMoversUseCase(sessions);
 
   public GameSessionControllerBundle gameBundle(UUID gameId) {
     GameSession session = sessions.findById(gameId).orElseThrow(GameSessionNotFoundException::new);
