@@ -19,16 +19,13 @@ public class DashboardView extends BorderPane implements Page {
   public DashboardView(GameController gameController) {
     this.gameController = gameController;
 
-
     GridPane grid = createGrid();
 
-    grid.add(buildTradingLogCard(), 0, 0, 3, 1);
-    grid.add(buildMarketEventCard(), 3, 0, 2, 1);
-    grid.add(buildTimelineCard(), 0, 1, 2, 1);
-    grid.add(buildStatusCard(), 3, 1, 2, 1);
-    grid.add(buildWatchlistCard(), 0, 2, 2, 1);
-    grid.add(buildMoversCard(), 2, 2, 3, 1);
-    grid.add(buildAdvanceButton(), 2, 1, 1, 1);
+    grid.add(buildGoalProgressCard(),  0, 0, 2, 1);
+    grid.add(buildWatchlistCard(),     0, 1, 1, 1);
+    grid.add(buildMoversCard(),        1, 1, 1, 1);
+    grid.add(buildNotificationsCard(), 0, 2, 2, 1);
+
     this.setCenter(grid);
   }
 
@@ -41,36 +38,24 @@ public class DashboardView extends BorderPane implements Page {
     GridPane grid = new GridPane();
     grid.getStyleClass().add("dashboard-grid");
 
-    // Define the different card widths
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 2; i++) {
       ColumnConstraints col = new ColumnConstraints();
-      col.setPercentWidth(20);
+      col.setPercentWidth(50);
       grid.getColumnConstraints().add(col);
     }
 
-    for (int i = 0; i < 3; i++) {
+    double[] rowHeights = {20, 55, 25};
+    for (double h : rowHeights) {
       RowConstraints row = new RowConstraints();
-      row.setPercentHeight(i == 1 ? 25 : 37.5);
+      row.setPercentHeight(h);
       grid.getRowConstraints().add(row);
     }
 
     return grid;
   }
 
-  private VBox buildMarketEventCard() {
-    return createCard("Market events");
-  }
-
-  private VBox buildTradingLogCard() {
-    return createCard("Trading log");
-  }
-
-  private VBox buildTimelineCard() {
-    return createCard("Timeline");
-  }
-
-  private VBox buildStatusCard() {
-    return createCard("Status");
+  private VBox buildGoalProgressCard() {
+    return createCard("Goal progress");
   }
 
   private VBox buildWatchlistCard() {
@@ -81,10 +66,7 @@ public class DashboardView extends BorderPane implements Page {
     return createCard("This week's movers");
   }
 
-  private Button buildAdvanceButton() {
-    Button btn = ButtonFactory.styled("Advance\nWeek", "advance-button", gameController::advanceWeek);
-    btn.setMaxWidth(Double.MAX_VALUE);
-    btn.setMaxHeight(Double.MAX_VALUE);
-    return btn;
+  private VBox buildNotificationsCard() {
+    return createCard("Notifications");
   }
 }
