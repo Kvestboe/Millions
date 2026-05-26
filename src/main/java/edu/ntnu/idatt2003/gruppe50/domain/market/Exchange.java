@@ -7,6 +7,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observable;
@@ -309,7 +310,7 @@ public class Exchange extends Observable {
       if (order.isExpired(this.week)) {
         notifications.add(new Notification(
             NotificationType.ORDER_EXPIRED,
-            order.label() + " expired — " + describeOrder(order),
+            describeExpiredOrder(order),
             this.week
         ));
         LOG.log(Level.INFO, "Order expired for {0} on {1}",
@@ -322,14 +323,14 @@ public class Exchange extends Observable {
             order.execute(this);
             notifications.add(new Notification(
                 NotificationType.ORDER_FILLED,
-                order.label() + " filled — " + describeOrder(order),
+                describeFilledOrder(order),
                 this.week
             ));
             toRemove.add(order);
           } catch (RuntimeException e) {
             notifications.add(new Notification(
                 NotificationType.ORDER_FAILED,
-                order.label() + " failed — " + describeOrder(order),
+                describeFailedOrder(order),
                 this.week
             ));
             LOG.log(Level.WARNING, "Order triggered but failed for "
@@ -428,8 +429,25 @@ public class Exchange extends Observable {
     return notifications;
   }
 
-  private String describeOrder(LimitOrder order) {
+  private String describeFilledOrder(LimitOrder order) {
+    String verb = isBuy(order) ? "bought" : "sold";
     return order.getQuantity() + "× " + order.getStock().getSymbol()
-        + " at " + order.getTargetPrice() + " kr";
+        + " " + verb + " at " + order.getTargetPrice() + " kr";
+  }
+
+  private String describeExpiredOrder(LimitOrder order) {
+    String kind = isBuy(order) ? "buy order" : "sell order";
+    return order.getQuantity() + "× " + order.getStock().getSymbol()
+        + " " + kind + " at " + order.getTargetPrice() + " kr";
+  }
+
+  private String describeFailedOrder(LimitOrder order) {
+    String kind = isBuy(order) ? "buy" : "sell";
+    return order.getQuantity() + "× " + order.getStock().getSymbol()
+        + " " + kind + " failed at " + order.getTargetPrice() + " kr";
+  }
+
+  private boolean isBuy(LimitOrder order) {
+    return order instanceof LimitBuyOrder;
   }
 }
