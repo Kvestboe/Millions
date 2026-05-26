@@ -132,3 +132,57 @@
 .mover-row:hover {
     -fx-background-color: -bg-elevated;
 }
+
+.notification-row {
+    -fx-padding: 2 0 2 0;
+}
+
+.notification-message {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+}
+
+.notification-row {
+    -fx-padding: 12 0 12 0;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.notification-message {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 14px;
+}
+
+.notification-week {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+}
+
+.notification-pill {
+    -fx-padding: 4 10 4 10;
+    -fx-background-radius: 12;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-min-width: 64;
+    -fx-alignment: center;
+}
+
+.notification-pill-order_filled {
+    -fx-background-color: rgba(123, 92, 245, 0.20);
+    -fx-text-fill: -accent-purple;
+}
+
+.notification-pill-order_expired {
+    -fx-background-color: rgba(125, 140, 163, 0.20);
+    -fx-text-fill: -text-secondary;
+}
+
+.notification-pill-order_failed {
+    -fx-background-color: rgba(248, 113, 113, 0.20);
+    -fx-text-fill: -loss;
+}
+
+.notification-pill-level_up {
+    -fx-background-color: rgba(74, 222, 128, 0.20);
+    -fx-text-fill: -gain;
+}

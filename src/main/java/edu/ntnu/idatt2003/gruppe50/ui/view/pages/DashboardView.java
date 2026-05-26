@@ -3,13 +3,16 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory.createCard;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.GoalProgressDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.NotificationDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StatusProgressDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.WeeklyMoversDto;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationType;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -311,7 +314,56 @@ public class DashboardView extends BorderPane implements Page {
   }
 
   private VBox buildNotificationsCard() {
-    return createCard("Notifications");
+    VBox card = createCard("Notifications");
+    card.setSpacing(10);
+
+    // Container for notifikasjons-radene (rebuildes når listen endrer seg)
+    VBox rowsContainer = new VBox(8);
+    card.getChildren().add(rowsContainer);
+
+    Runnable apply = () -> {
+      rowsContainer.getChildren().clear();
+      for (NotificationDto dto : controller.getNotifications()) {
+        rowsContainer.getChildren().add(buildNotificationRow(dto));
+      }
+    };
+
+    apply.run();
+    controller.getNotifications().addListener((ListChangeListener<NotificationDto>) c -> apply.run());
+
+    return card;
+  }
+
+  private HBox buildNotificationRow(NotificationDto dto) {
+    Label pill = new Label(pillTextFor(dto.type()));
+    pill.getStyleClass().addAll(
+        "notification-pill",
+        "notification-pill-" + dto.type().name().toLowerCase()
+    );
+
+    Label message = new Label(dto.message());
+    message.getStyleClass().add("notification-message");
+    message.setWrapText(true);
+
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+    Label week = new Label("Wk " + dto.week());
+    week.getStyleClass().add("notification-week");
+
+    HBox row = new HBox(12, pill, message, spacer, week);
+    row.setAlignment(Pos.CENTER_LEFT);
+    row.getStyleClass().add("notification-row");
+    return row;
+  }
+
+  private static String pillTextFor(NotificationType type) {
+    return switch (type) {
+      case ORDER_FILLED  -> "FILLED";
+      case ORDER_EXPIRED -> "EXPIRED";
+      case ORDER_FAILED  -> "FAILED";
+      case LEVEL_UP      -> "LEVEL UP";
+    };
   }
 
   private void addToGrid(GridPane grid, Node card, int col, int row, int colSpan, int rowSpan) {

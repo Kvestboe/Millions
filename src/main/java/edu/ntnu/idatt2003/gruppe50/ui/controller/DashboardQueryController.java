@@ -1,9 +1,11 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetGoalProgressUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetNotificationsUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetStatusProgressUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetWeeklyMoversUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.GoalProgressDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.NotificationDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StatusProgressDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.WeeklyMoversDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
@@ -12,6 +14,8 @@ import java.util.UUID;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Controller for the dashboard view.
@@ -28,6 +32,9 @@ public class DashboardQueryController implements Observer {
   private final ObjectProperty<StatusProgressDto> statusProgress = new SimpleObjectProperty<>();
   private final GetWeeklyMoversUseCase getWeeklyMovers;
   private final ObjectProperty<WeeklyMoversDto> weeklyMovers = new SimpleObjectProperty<>();
+  private final GetNotificationsUseCase getNotifications;
+  private final ObservableList<NotificationDto> notifications = FXCollections.observableArrayList();
+
 
   /**
    * Creates a new dashboard query controller and registers it as an observer
@@ -42,12 +49,13 @@ public class DashboardQueryController implements Observer {
       GetGoalProgressUseCase getGoalProgress,
       GetStatusProgressUseCase getStatusProgress,
       GetWeeklyMoversUseCase getWeeklyMovers,
-      Exchange exchange
+      Exchange exchange, GetNotificationsUseCase getNotifications
   ) {
     this.gameId = gameId;
     this.getGoalProgress = getGoalProgress;
     this.getStatusProgress = getStatusProgress;
     this.getWeeklyMovers = getWeeklyMovers;
+    this.getNotifications = getNotifications;
     exchange.addObserver(this);
     refresh();
   }
@@ -72,6 +80,10 @@ public class DashboardQueryController implements Observer {
     return weeklyMovers;
   }
 
+  public ObservableList<NotificationDto> getNotifications() {
+    return notifications;
+  }
+
   /**
    * Called by the exchange whenever its state changes.
    */
@@ -87,5 +99,6 @@ public class DashboardQueryController implements Observer {
     goalProgress.set(getGoalProgress.execute(gameId));
     statusProgress.set(getStatusProgress.execute(gameId));
     weeklyMovers.set(getWeeklyMovers.execute(gameId));
+    notifications.setAll(getNotifications.execute(gameId));
   }
 }
