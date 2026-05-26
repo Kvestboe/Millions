@@ -271,10 +271,10 @@ public final class GameSession {
     exchange.advance();
     Status statusAfter = player.getStatus();
 
-    if (statusAfter != statusBefore) {
+    if (statusAfter.ordinal() > statusBefore.ordinal()) {
       exchange.getNotifications().add(new Notification(
           NotificationType.LEVEL_UP,
-          "Status update — You reached " + statusAfter.displayName() + " level!",
+          "You reached " + statusAfter.displayName() + " level",
           exchange.getWeek()
       ));
     }
