@@ -1,0 +1,72 @@
+@startuml use-cases-commands
+title Use Case Diagram (Commands)  —  Millions
+
+left to right direction
+
+skinparam defaultFontSize 12
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FFE5B4
+  BorderColor #444444
+  ArrowColor #333333
+}
+skinparam actor {
+  BackgroundColor #E0F0FF
+  BorderColor #444444
+}
+skinparam packageBackgroundColor #FAFAFA
+skinparam packageBorderColor #888888
+
+actor "Player" as player
+
+rectangle "Millions  —  Commands (state-mutating)" {
+
+  package "Game session" {
+    usecase "Start new game" as UC_NEW
+    usecase "Load saved game" as UC_LOAD
+    usecase "Save and quit" as UC_SAVE
+    usecase "Delete saved game" as UC_DELETE
+  }
+
+  package "Trading" {
+    usecase "Buy share" as UC_BUY
+    usecase "Sell share" as UC_SELL
+    usecase "Place buy limit order" as UC_LBUY
+    usecase "Place sell limit order" as UC_LSELL
+    usecase "Place stop-loss order" as UC_STOP
+    usecase "Preview order details\n(query — see fig 4)" as UC_PREVIEW #D4F4DD
+  }
+
+  package "Game progression" {
+    usecase "Advance week" as UC_WEEK
+  }
+
+  package "Shop" {
+    usecase "Exchange money for coins" as UC_COINS
+    usecase "Buy visual theme" as UC_THEME
+  }
+}
+
+player --> UC_NEW
+player --> UC_LOAD
+player --> UC_SAVE
+player --> UC_DELETE
+
+player --> UC_BUY
+player --> UC_SELL
+player --> UC_LBUY
+player --> UC_LSELL
+player --> UC_STOP
+
+player --> UC_WEEK
+
+player --> UC_COINS
+player --> UC_THEME
+
+UC_BUY   ..> UC_PREVIEW : <<include>>
+UC_SELL  ..> UC_PREVIEW : <<include>>
+UC_LBUY  ..> UC_PREVIEW : <<include>>
+UC_LSELL ..> UC_PREVIEW : <<include>>
+UC_STOP  ..> UC_PREVIEW : <<include>>
+
+@enduml

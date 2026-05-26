@@ -4,8 +4,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
+/** Simple application logo component. */
 public class Logo extends HBox {
 
+  /** Creates the logo component. */
   public Logo() {
     Label appName = new Label("Millions");
     appName.getStyleClass().add("logo-label");

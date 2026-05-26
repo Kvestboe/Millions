@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
+/** Input step for choosing order type, quantity, target price and duration. */
 public class OrderInputView extends VBox{
 
   private final OrderSide side;
@@ -33,6 +34,14 @@ public class OrderInputView extends VBox{
   private final VBox limitFieldsBox = new VBox(10);
   private final Label errorLabel = new Label();
 
+  /**
+   * Creates an order input view.
+   *
+   * @param side whether the order buys or sells
+   * @param stock stock being ordered
+   * @param onNext callback receiving a valid draft order
+   * @param onCancel action run when the user cancels
+   */
   public OrderInputView(OrderSide side, StockDto stock, Consumer<DraftOrder> onNext, Runnable onCancel) {
     this.side = side;
     this.stock = stock;

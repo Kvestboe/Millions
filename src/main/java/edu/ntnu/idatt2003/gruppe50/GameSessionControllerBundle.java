@@ -50,7 +50,7 @@ public record GameSessionControllerBundle(
             m.sellLimitOrder,
             m.stopLossOrder
         ),
-        new OrdersController(session.getGameId(), m.getPendingOrders, session.getExchange()),
+        new OrdersController(session.getGameId(), m.getPendingOrders, m.cancelOrder, session.getExchange()),
         new ShopController(
             session.getGameId(),
             new Shop(

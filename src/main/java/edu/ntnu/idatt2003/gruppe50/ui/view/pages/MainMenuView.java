@@ -15,6 +15,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+/**
+ * Main menu shown when the application starts.
+ *
+ * <p>Displays the game title, a "Continue game" shortcut when a previous
+ * save exists, and buttons for starting a new game, loading a game,
+ * opening the leaderboard, settings, or quitting. The background features
+ * a decorative line chart.
+ */
 public class MainMenuView extends StackPane{
 
   private final SaveSummaryDto latestSave;
@@ -25,6 +33,14 @@ public class MainMenuView extends StackPane{
   private Runnable onLeaderboard;
   private Runnable onContinueGame;
 
+  /**
+   * Constructs the main menu.
+   *
+   * @param latestSave the most recent save shown on the continue button, or null if none exists
+   * @param onNewGame action triggered when the player clicks "New game"
+   * @param onSettings action triggered when the player clicks "Settings"
+   * @param onQuit action triggered when the player clicks "Quit"
+   */
   public MainMenuView(SaveSummaryDto latestSave, Runnable onNewGame, Runnable onSettings, Runnable onQuit) {
     this.latestSave = latestSave;
     this.onNewGame = onNewGame;
@@ -33,14 +49,29 @@ public class MainMenuView extends StackPane{
     build();
   }
 
+  /**
+   * Registers the action triggered when the player clicks "Load game".
+   *
+   * @param onLoadGame action to run when "Load game" is clicked
+   */
   public void setOnLoadGame(Runnable onLoadGame) {
     this.onLoadGame = onLoadGame;
   }
 
+  /**
+   * Registers the action triggered when the player clicks "Leaderboard".
+   *
+   * @param onLeaderboard action to run when "Leaderboard" is clicked
+   */
   public void setOnLeaderboard(Runnable onLeaderboard) {
     this.onLeaderboard = onLeaderboard;
   }
 
+  /**
+   * Registers the action triggered when the player clicks "Continue game".
+   *
+   * @param onContinueGame action to run when "Continue game" is clicked
+   */
   public void setOnContinueGame(Runnable onContinueGame) {
     this.onContinueGame = onContinueGame;
   }
@@ -55,6 +86,11 @@ public class MainMenuView extends StackPane{
     getChildren().addAll(chart, content);
   }
 
+  /**
+   * Creates the decorative chart canvas anchored to the bottom of the menu.
+   *
+   * @return a canvas that renders the background chart
+   */
   private Canvas buildChart() {
     Canvas canvas = new Canvas();
     canvas.setHeight(100);
@@ -67,6 +103,12 @@ public class MainMenuView extends StackPane{
     return canvas;
   }
 
+  /**
+   * Draws the decorative line chart along the bottom of the menu.
+   *
+   * @param gc the graphics context to draw on
+   * @param width the current canvas width
+   */
   private void drawChart(GraphicsContext gc, double width) {
     gc.clearRect(0, 0, width, 100);
 
@@ -89,7 +131,7 @@ public class MainMenuView extends StackPane{
     separator.getStyleClass().add("menu-separator");
     separator.setMaxWidth(340);
 
-    Label versionLabel = new Label("v1.0.0");
+    Label versionLabel = new Label("v1.2.0");
     versionLabel.getStyleClass().add("version-label");
 
     VBox content = new VBox(14);
@@ -121,6 +163,15 @@ public class MainMenuView extends StackPane{
     return header;
   }
 
+  /**
+   * Builds the prominent "Continue game" button at the top of the menu.
+   *
+   * <p>When a save exists, the subtitle shows the player name and current
+   * week. When no save exists, the subtitle reads "No saved game" and the
+   * button is disabled.
+   *
+   * @return the configured continue button
+   */
   private Button buildPrimaryButton() {
     Label icon = new Label("▶");
 
@@ -183,5 +234,4 @@ public class MainMenuView extends StackPane{
 
     return systemBox;
   }
-
 }

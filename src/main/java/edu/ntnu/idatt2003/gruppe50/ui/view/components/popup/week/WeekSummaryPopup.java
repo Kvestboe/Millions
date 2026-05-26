@@ -10,12 +10,19 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+/** Modal popup that shows a week summary and related detail lists. */
 public class WeekSummaryPopup extends StackPane {
 
   private final WeekSummary summary;
   private final Runnable onClose;
   private final VBox card;
 
+  /**
+   * Creates a week summary popup.
+   *
+   * @param summary week summary data to display
+   * @param onClose action run when the popup closes
+   */
   public WeekSummaryPopup(WeekSummary summary, Runnable onClose) {
     this.summary = summary;
     this.onClose = onClose;

@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 
 /**
  * Onboarding step where the player selects a stock market (CSV file).
- * Offers S&P 500, Oslo Børs, a fun alternative market, or a custom file.
+ * Offers S&amp;P 500 500, Oslo Børs, a fun alternative market, or a custom file.
  * Valid when a file has been selected.
  */
 public class MarketStep implements OnboardingStep {

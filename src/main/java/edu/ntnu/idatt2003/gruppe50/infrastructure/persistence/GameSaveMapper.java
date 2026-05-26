@@ -31,8 +31,15 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/** Maps game sessions to and from persistence DTOs used for JSON saves. */
 public class GameSaveMapper {
 
+  /**
+   * Converts a game session into a serializable save DTO.
+   *
+   * @param session game session to convert
+   * @return DTO containing the complete save state
+   */
   public static GameSaveDto toDto(GameSession session) {
     Player player = session.getPlayer();
     Exchange exchange = session.getExchange();
@@ -94,6 +101,14 @@ public class GameSaveMapper {
     );
   }
 
+  /**
+   * Reconstructs a game session from a saved DTO.
+   *
+   * @param dto saved game-session data
+   * @param factory transaction factory used by the rehydrated exchange
+   * @return reconstructed game session
+   * @throws IllegalArgumentException if saved enum values or ids are invalid
+   */
   public static GameSession fromDto(GameSaveDto dto, TransactionFactory factory) {
     Map<String, Stock> stockMap = dto.exchange().stocks().stream()
         .map(s -> Stock.rehydrate(s.symbol(), s.company(), s.prices()))

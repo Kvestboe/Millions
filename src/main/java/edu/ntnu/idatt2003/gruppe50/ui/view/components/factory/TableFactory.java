@@ -5,9 +5,18 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+/** Factory for JavaFX tables built from column definitions. */
 public final class TableFactory {
 
   private TableFactory() {}
+
+  /**
+   * Creates a table from column definitions.
+   *
+   * @param definitionList column definitions to add to the table
+   * @param <T> row item type
+   * @return configured table view
+   */
 
   public static <T> TableView<T> createTable(List<ColumnDefinition<T, ?>> definitionList) {
     TableView<T> table = new TableView<>();

@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+/** File-based game session repository that stores saves as JSON files. */
 public final class JsonFileGameSessionRepository implements GameSessionRepository {
 
   private static final Path SAVE_DIR = Path.of("saves");
@@ -26,6 +27,12 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
   private final TransactionFactory factory;
   private final Map<UUID, GameSession> cache = new HashMap<>();
 
+  /**
+   * Creates a repository backed by JSON files in the saves directory.
+   *
+   * @param factory transaction factory used when saved sessions are rehydrated
+   * @throws RuntimeException if the save directory cannot be created
+   */
   public JsonFileGameSessionRepository(TransactionFactory factory) {
     this.factory = factory;
     this.mapper = new ObjectMapper()
@@ -39,6 +46,7 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void save(GameSession session) {
     cache.put(session.getGameId(), session);
@@ -50,6 +58,7 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Optional<GameSession> findById(UUID gameId) {
     if (cache.containsKey(gameId)) {
@@ -69,6 +78,7 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<GameSession> findAll() {
     try (var paths = Files.list(SAVE_DIR)) {
@@ -85,6 +95,7 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(UUID gameId) {
     cache.remove(gameId);

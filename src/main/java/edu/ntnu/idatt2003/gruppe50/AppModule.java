@@ -4,6 +4,7 @@ import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyCoinsUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.CancelOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
@@ -65,6 +66,7 @@ public final class AppModule {
   public final SoundManager soundManager = new SoundManager();
   public final BuyCoinsUseCase buyCoins = new BuyCoinsUseCase(sessions);
   public final PurchaseShopItemUseCase purchaseShopItem = new PurchaseShopItemUseCase(sessions);
+  public final CancelOrderUseCase cancelOrder = new CancelOrderUseCase(sessions);
   public final GetGoalProgressUseCase getGoalProgress = new GetGoalProgressUseCase(sessions);
   public final GetStatusProgressUseCase getStatusProgress = new GetStatusProgressUseCase(sessions);
   public final GetWeeklyMoversUseCase getWeeklyMovers = new GetWeeklyMoversUseCase(sessions);

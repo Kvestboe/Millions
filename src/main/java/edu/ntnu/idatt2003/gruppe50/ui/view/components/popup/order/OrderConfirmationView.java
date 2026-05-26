@@ -14,6 +14,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+/** Confirmation step shown before an order is placed. */
 public class OrderConfirmationView extends VBox {
 
   private final DraftOrder draftOrder;
@@ -21,6 +22,14 @@ public class OrderConfirmationView extends VBox {
   private final Runnable onBack;
   private final Consumer<DraftOrder> onConfirm;
 
+  /**
+   * Creates an order confirmation view.
+   *
+   * @param draftOrder draft order being confirmed
+   * @param preview calculated order preview
+   * @param onBack action run when the user goes back
+   * @param onConfirm callback receiving the confirmed draft order
+   */
   public OrderConfirmationView(DraftOrder draftOrder, PreviewOrderUseCase.Response preview, Runnable onBack, Consumer<DraftOrder> onConfirm) {
     this.draftOrder = draftOrder;
     this.preview = preview;

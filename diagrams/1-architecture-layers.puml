@@ -12,6 +12,15 @@ hide circle
 
 top to bottom direction
 
+' ── COMPOSITION ROOT ─────────────────────────────────────────
+class AppModule <<composition root>> #FFE0B2 {
+  Wires up:
+  Repository (Json / InMemory)
+  All 21 use cases
+  Controllers, Leaderboard
+  SoundManager
+}
+
 ' ── UI ───────────────────────────────────────────────────────
 package "ui" as UI #D6EAF8 {
   class "Pages & Components" as UIViews {
@@ -127,12 +136,22 @@ APP   -->  DOM                            : uses
 INFRA ..|> GameSessionRepository          : implements
 INFRA -->  DOM                            : maps
 
-' ── LAYOUT HINTS (force vertical stacking) ───────────────────
+' ── LAYOUT HINTS ─────────────────────────────────────────────
+' Place AppModule and SHARED in the top-right corner.
+UI        -[hidden]right- AppModule
+AppModule -[hidden]down-  SHARED
+
+' Vertical stacking inside the layered structure.
 UICtrl  -[hidden]down-  CMD
 CMD     -[hidden]down-  GameSession
 Model   -[hidden]down-  JsonFileGameSessionRepository
-UIModel -[hidden]right- SHARED
 JsonFileGameSessionRepository -[hidden]right- InMemoryGameSessionRepository
+
+note right of AppModule
+  Wires up the repository, use cases,
+  controllers, leaderboard and sound
+  manager at application startup.
+end note
 
 note bottom of GameSessionRepository
   Domain defines the interface.

@@ -12,16 +12,29 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import java.util.List;
 import java.util.UUID;
 
+/** Retrieves trading statistics and recent activity for a game session. */
 public final class GetTradingLogUseCase {
 
   private static final int RECENT_ACTIVITY_LIMIT = 5;
 
   private final GameSessionRepository repository;
 
+  /**
+   * Creates the use case with a game-session repository.
+   *
+   * @param repository repository used to load game sessions
+   */
   public GetTradingLogUseCase(GameSessionRepository repository) {
     this.repository = repository;
   }
 
+  /**
+   * Builds a trading log summary for the requested game session.
+   *
+   * @param gameId id of the game session
+   * @return trading log DTO with totals and recent transactions
+   * @throws GameSessionNotFoundException if the session does not exist
+   */
   public TradingLogDto execute(UUID gameId) {
     GameSession session =
         repository.findById(gameId).orElseThrow(GameSessionNotFoundException::new);

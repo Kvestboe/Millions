@@ -45,6 +45,19 @@ public class Exchange extends Observable {
 
   public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility,  NotificationLog notifications  ) {
     return new Exchange(name, stockMap, factory, week, pendingOrders, volatility, notifications);
+  /**
+   * Recreates an exchange from saved data.
+   *
+   * @param name the name of the exchange
+   * @param stockMap the saved stocks, mapped by symbol
+   * @param factory the transaction factory used by the exchange
+   * @param week the saved week number
+   * @param pendingOrders the saved pending orders
+   * @param volatility the volatility settings for the exchange
+   * @return the recreated exchange
+   */
+  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility) {
+    return new Exchange(name, stockMap, factory, week, pendingOrders, volatility);
   }
 
   private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility, NotificationLog notifications) {
@@ -59,11 +72,12 @@ public class Exchange extends Observable {
   }
 
   /**
-   * Creates a new {@code exchange} with a name and stocks represented by symbols.
+   * Creates a new exchange with a name and a list of stocks.
    *
-   * @param name The name of the exchange
-   * @param stocks The stocks in the exchange
-   * @param factory the transaction factory used
+   * @param name the name of the exchange
+   * @param stocks the stocks in the exchange
+   * @param factory the transaction factory used by the exchange
+   * @param volatility the volatility settings for the exchange
    * @throws IllegalArgumentException if any parameter is null or invalid
    */
   public Exchange(String name, List<Stock> stocks, TransactionFactory factory, VolatilityProfile volatility, NotificationLog notifications) {
@@ -149,14 +163,13 @@ public class Exchange extends Observable {
   }
 
   /**
-   * Buys a share from the exchange.
+   * Buys a quantity of a stock for the player.
    *
    * @param symbol the stock symbol
-   * @param quantity the number of stocks
-   * @param player the player
-   * @return a purchase
-   * @throws IllegalArgumentException if {@code symbol} is null or blank, {@code quantity} is null
-   *     or negative, or {@code player} is null
+   * @param quantity the quantity to buy
+   * @param player the player buying the stock
+   * @return the purchase transaction
+   * @throws IllegalArgumentException if the input is invalid
    * @throws NoSuchElementException if no stock with the given symbol exists
    */
   public Transaction buy(String symbol, BigDecimal quantity, Player player) {

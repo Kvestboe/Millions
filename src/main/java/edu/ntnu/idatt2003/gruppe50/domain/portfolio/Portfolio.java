@@ -18,6 +18,12 @@ public class Portfolio {
 
   private final Map<UUID, Share> shares;
 
+  /**
+   * Recreates a portfolio from saved shares.
+   *
+   * @param shares the saved shares
+   * @return the recreated portfolio
+   */
   public static Portfolio rehydrate(Map<UUID, Share> shares) {
     return new Portfolio(shares);
   }
@@ -80,6 +86,14 @@ public class Portfolio {
         .toList();
   }
 
+  /**
+   * Returns a share by its id.
+   *
+   * @param shareId the id of the share
+   * @return the share with the given id
+   * @throws IllegalArgumentException if {@code shareId} is null
+   * @throws NoSuchElementException if no share with the given id exists
+   */
   public Share getShare(UUID shareId) {
     Validate.notNull(shareId, "Share id");
     Share share = shares.get(shareId);
@@ -103,6 +117,13 @@ public class Portfolio {
         .anyMatch(share -> share.getShareId().equals(shareToCheck.getShareId()));
   }
 
+  /**
+   * Checks whether the portfolio contains a share with the given id.
+   *
+   * @param shareId the id of the share to check
+   * @return true if the portfolio contains the share, false otherwise
+   * @throws IllegalArgumentException if {@code shareId} is null
+   */
   public boolean contains(UUID shareId) {
     Validate.notNull(shareId, "Share id");
     return shares.get(shareId) != null;

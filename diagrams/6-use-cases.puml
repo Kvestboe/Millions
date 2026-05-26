@@ -1,0 +1,96 @@
+@startuml use-cases
+title Use Case Diagram  —  Millions
+
+left to right direction
+
+skinparam defaultFontSize 12
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FFFAF0
+  BorderColor #444444
+  ArrowColor #333333
+}
+skinparam actor {
+  BackgroundColor #E0F0FF
+  BorderColor #444444
+}
+skinparam packageBackgroundColor #FAFAFA
+skinparam packageBorderColor #888888
+
+actor "Player" as player
+
+rectangle "Millions" {
+
+  package "Game session" {
+    usecase "Start new game" as UC_NEW
+    usecase "Load saved game" as UC_LOAD
+    usecase "Save and quit" as UC_SAVE
+    usecase "Advance week" as UC_WEEK
+  }
+
+  package "Trading" {
+    usecase "Buy share" as UC_BUY
+    usecase "Sell share" as UC_SELL
+    usecase "Place buy limit order" as UC_LBUY
+    usecase "Place sell limit order" as UC_LSELL
+    usecase "Place stop-loss order" as UC_STOP
+    usecase "Preview order details" as UC_PREVIEW
+  }
+
+  package "Market information" {
+    usecase "View market" as UC_MARKET
+    usecase "View stock details" as UC_STOCK
+    usecase "Search and filter stocks" as UC_SEARCH
+  }
+
+  package "Player information" {
+    usecase "View portfolio" as UC_PORT
+    usecase "View transactions" as UC_TX
+    usecase "View pending orders" as UC_PEND
+    usecase "View trading log" as UC_LOG
+  }
+
+  package "Shop and ranking" {
+    usecase "Exchange money for coins" as UC_COINS
+    usecase "Buy visual theme" as UC_THEME
+    usecase "View leaderboard" as UC_LB
+  }
+}
+
+player --> UC_NEW
+player --> UC_LOAD
+player --> UC_SAVE
+player --> UC_WEEK
+
+player --> UC_BUY
+player --> UC_SELL
+player --> UC_LBUY
+player --> UC_LSELL
+player --> UC_STOP
+
+player --> UC_MARKET
+player --> UC_STOCK
+player --> UC_PORT
+player --> UC_TX
+player --> UC_PEND
+player --> UC_LOG
+
+player --> UC_COINS
+player --> UC_THEME
+player --> UC_LB
+
+UC_BUY   ..> UC_PREVIEW : <<include>>
+UC_SELL  ..> UC_PREVIEW : <<include>>
+UC_LBUY  ..> UC_PREVIEW : <<include>>
+UC_LSELL ..> UC_PREVIEW : <<include>>
+UC_STOP  ..> UC_PREVIEW : <<include>>
+
+UC_MARKET ..> UC_SEARCH : <<include>>
+
+note bottom of UC_NEW
+  Player chooses name, starting capital,
+  difficulty, and either a CSV file or
+  a predefined market.
+end note
+
+@enduml

@@ -15,6 +15,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+/**
+ * Settings page where the player can adjust display and sound options.
+ *
+ * <p>Includes a fullscreen toggle, master/music/sound effects toggles
+ * with a master volume slider, and a language selector. Sound state is
+ * delegated to the {@link SoundManager}.
+ */
 public class SettingsView extends VBox {
 
   private final Runnable onBack;
@@ -27,7 +34,20 @@ public class SettingsView extends VBox {
   private Button musicToggle;
   private Button sfxToggle;
 
-  public SettingsView(Runnable onBack, Consumer<Boolean> onFullscreen, boolean initialFullscreen, SoundManager soundManager) {
+  /**
+   * Constructs the settings view.
+   *
+   * @param onBack action triggered when the player clicks "Back"
+   * @param onFullscreen called with the new fullscreen state when toggled
+   * @param initialFullscreen the initial fullscreen state when the view is built
+   * @param soundManager the sound manager controlling master, music and SFX state
+   */
+  public SettingsView(
+      Runnable onBack,
+      Consumer<Boolean> onFullscreen,
+      boolean initialFullscreen,
+      SoundManager soundManager
+  ) {
     this.onBack = onBack;
     this.onFullscreen = onFullscreen;
     this.initialFullscreen = initialFullscreen;

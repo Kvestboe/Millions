@@ -23,6 +23,13 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Page where the player can browse and load existing save files.
+ *
+ * <p>Shows a table of available saves, a detail panel with stats for the
+ * selected save, and load/delete buttons. Finished games can be deleted
+ * but cannot be continued.
+ */
 public class LoadGameView extends StackPane {
 
   private static final DateTimeFormatter DATE_FORMAT =
@@ -31,6 +38,12 @@ public class LoadGameView extends StackPane {
   private final LoadGameController controller;
   private final Runnable onBack;
 
+  /**
+   * Constructs the load game view.
+   *
+   * @param controller the controller managing save selection, loading, and deletion
+   * @param onBack action triggered when the player clicks "Back"
+   */
   public LoadGameView(LoadGameController controller, Runnable onBack) {
     this.controller = controller;
     this.onBack = onBack;

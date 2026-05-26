@@ -21,6 +21,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+/**
+ * Page showing the player's portfolio.
+ *
+ * <p>Displays summary cards for net worth, portfolio value and cash,
+ * a net-worth-over-time chart with buy/sell markers, and a table of the
+ * player's current holdings. Clicking a holding navigates to the stock
+ * detail page.
+ */
 public class PortfolioView extends VBox implements Page {
 
   private final Label netWorthLabel = new Label();
@@ -29,6 +37,12 @@ public class PortfolioView extends VBox implements Page {
   private final TableView<ShareDto> holdingsTable;
   private final AreaChartView netWorthChart = new AreaChartView("Week", "Net Worth");
 
+  /**
+   * Constructs the portfolio view.
+   *
+   * @param queryController the controller providing portfolio and holdings data
+   * @param onShareSelected called with the selected share when a holdings row is clicked
+   */
   public PortfolioView(PortfolioQueryController queryController,
       Consumer<ShareDto> onShareSelected) {
     Label title = new Label("Portfolio");
@@ -56,6 +70,11 @@ public class PortfolioView extends VBox implements Page {
     this.getChildren().addAll(title, topSection, holdingsTitle, holdingsTable);
   }
 
+  /**
+   * Returns the portfolio view wrapped in a vertical scroll pane.
+   *
+   * @return the scroll pane containing this view
+   */
   @Override
   public Parent getView() {
     ScrollPane scroll = new ScrollPane(this);

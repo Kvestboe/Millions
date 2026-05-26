@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
+/** Handles loading and saving leaderboard entries from a JSON file. */
 public class LeaderboardFileHandler {
 
   private static final Path FILE = Path.of("leaderboard.json");
@@ -23,6 +24,12 @@ public class LeaderboardFileHandler {
       .enable(SerializationFeature.INDENT_OUTPUT)
       .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
+  /**
+   * Loads the leaderboard from disk, creating default entries if no file exists.
+   *
+   * @return loaded leaderboard
+   * @throws RuntimeException if the leaderboard file cannot be read
+   */
   public Leaderboard load() {
     Leaderboard board = new Leaderboard();
 
@@ -49,6 +56,12 @@ public class LeaderboardFileHandler {
     }
   }
 
+  /**
+   * Saves the given leaderboard to disk.
+   *
+   * @param leaderboard leaderboard to save
+   * @throws RuntimeException if the leaderboard file cannot be written
+   */
   public void save(Leaderboard leaderboard) {
     try {
       mapper.writeValue(FILE.toFile(), leaderboard.all());

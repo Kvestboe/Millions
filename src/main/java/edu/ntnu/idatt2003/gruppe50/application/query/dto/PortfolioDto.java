@@ -9,8 +9,9 @@ import java.util.Set;
  *
  * @param cash available player cash
  * @param portfolioValue current portfolio liquidation value
- * @param netWorth total net worth (cash + portfolio)
+ * @param netWorth total net worth including cash and portfolio value
  * @param shares current owned shares as DTOs
+ * @param netWorthHistory historical net worth values for chart display
  * @param buyWeeks weeks in which at least one purchase occurred
  * @param sellWeeks weeks in which at least one sale occurred
  */

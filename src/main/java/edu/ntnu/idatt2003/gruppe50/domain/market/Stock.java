@@ -17,19 +17,6 @@ public class Stock {
   private final String company;
   private final List<BigDecimal> prices;
 
-  private Stock(String symbol, String company, List<BigDecimal> prices) {
-    this.symbol = symbol;
-    this.company = company;
-    this.prices = new ArrayList<>(prices.size());
-    for (BigDecimal price : prices) {
-      this.prices.add(Money.round(price));
-    }
-  }
-
-  public static Stock rehydrate(String symbol, String company, List<BigDecimal> prices) {
-    return new Stock(symbol, company, prices);
-  }
-
   /**
    * Creates a new {@code Stock} with an initial sales price.
    *
@@ -47,6 +34,27 @@ public class Stock {
     this.company = company;
     this.prices = new ArrayList<>();
     this.prices.add(salesPrice);
+  }
+
+  private Stock(String symbol, String company, List<BigDecimal> prices) {
+    this.symbol = symbol;
+    this.company = company;
+    this.prices = new ArrayList<>(prices.size());
+    for (BigDecimal price : prices) {
+      this.prices.add(Money.round(price));
+    }
+  }
+
+  /**
+   * Recreates a stock from saved data.
+   *
+   * @param symbol the stock symbol
+   * @param company the company name
+   * @param prices the saved price history
+   * @return the recreated stock
+   */
+  public static Stock rehydrate(String symbol, String company, List<BigDecimal> prices) {
+    return new Stock(symbol, company, prices);
   }
 
   /**
@@ -97,7 +105,7 @@ public class Stock {
   }
 
   /**
-   * Calculates and returns the stocks highest recorded value.
+   * Calculates and returns the stock's highest recorded value.
    *
    * @return the highest value as a {@link BigDecimal}
    */
@@ -106,7 +114,7 @@ public class Stock {
   }
 
   /**
-   * Calculates and returns the stocks lowest recorded value.
+   * Calculates and returns the stock's lowest recorded value.
    *
    * @return the lowest value as a {@link BigDecimal}
    */

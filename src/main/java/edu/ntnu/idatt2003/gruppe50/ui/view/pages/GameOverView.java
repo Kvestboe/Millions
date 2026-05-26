@@ -29,6 +29,13 @@ public class GameOverView extends VBox implements Page {
     buildUI();
   }
 
+  /**
+   * Assembles the game over layout.
+   *
+   * <p>The base layout is always the same (icon, title, subtitle, net worth
+   * card, stats row). A difficulty-specific "lose reason" box is appended
+   * when the player lost and a leaderboard score-card is appended when they won.
+   */
   private void buildUI() {
     VBox inner = new VBox(20);
     inner.setAlignment(Pos.CENTER);
@@ -36,7 +43,6 @@ public class GameOverView extends VBox implements Page {
     inner.setMaxWidth(560);
 
     inner.getChildren().addAll(
-        buildIcon(),
         buildTitle(),
         buildSubtitle(),
         buildNetWorthCard(),
@@ -58,14 +64,8 @@ public class GameOverView extends VBox implements Page {
     getChildren().add(inner);
   }
 
-  private Label buildIcon() {
-    Label icon = new Label(result.won() ? "🚀" : "📉");
-    icon.getStyleClass().add("story-icon"); // 32px, samme som StoryStep
-    return icon;
-  }
-
   private Label buildTitle() {
-    Label title = new Label(result.won() ? "You reached the Moon." : "Mission failed.");
+    Label title = new Label(result.won() ? "You reached the Moon" : "Mission failed.");
     title.getStyleClass().add("game-title");
     if (!result.won()) {
       title.setStyle("-fx-text-fill: #F87171;"); // -loss farge
@@ -152,6 +152,12 @@ public class GameOverView extends VBox implements Page {
     return card;
   }
 
+  /**
+   * Builds the explanatory box shown after a loss, with a message tailored
+   * to the difficulty the player was on.
+   *
+   * @return a card-styled box with the difficulty-specific lose reason
+   */
   private VBox buildLoseReasonBox() {
     String text = switch (result.difficulty()) {
       case EASY   -> "You've lost too much to continue. The math is simple, "
@@ -171,6 +177,14 @@ public class GameOverView extends VBox implements Page {
     return box;
   }
 
+  /**
+   * Builds the bottom navigation bar.
+   *
+   * <p>On a win, shows three buttons (Main Menu, Leaderboard, Play Again).
+   * On a loss, shows only Main Menu and Try Again.
+   *
+   * @return the configured nav bar
+   */
   private HBox buildNavBar() {
     Button mainMenu = new Button("Main Menu");
     mainMenu.getStyleClass().add("btn-secondary");

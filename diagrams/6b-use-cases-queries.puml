@@ -1,0 +1,62 @@
+@startuml use-cases-queries
+title Use Case Diagram (Queries)  —  Millions
+
+left to right direction
+
+skinparam defaultFontSize 12
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #D4F4DD
+  BorderColor #444444
+  ArrowColor #333333
+}
+skinparam actor {
+  BackgroundColor #E0F0FF
+  BorderColor #444444
+}
+skinparam packageBackgroundColor #FAFAFA
+skinparam packageBorderColor #888888
+
+actor "Player" as player
+
+rectangle "Millions  —  Queries (read-only)" {
+
+  package "Market" {
+    usecase "View market" as UC_MARKET
+    usecase "View stock details" as UC_STOCK
+    usecase "Search and filter stocks" as UC_SEARCH
+  }
+
+  package "Portfolio and history" {
+    usecase "View portfolio" as UC_PORT
+    usecase "View transactions" as UC_TX
+    usecase "View trading log" as UC_LOG
+    usecase "View pending orders" as UC_PEND
+  }
+
+  package "Other" {
+    usecase "View leaderboard" as UC_LB
+    usecase "View saved games" as UC_SAVES
+  }
+
+  package "Trading aid" {
+    usecase "Preview order details" as UC_PREVIEW
+  }
+}
+
+player --> UC_MARKET
+player --> UC_STOCK
+
+player --> UC_PORT
+player --> UC_TX
+player --> UC_LOG
+player --> UC_PEND
+
+player --> UC_LB
+player --> UC_SAVES
+
+player --> UC_PREVIEW
+
+UC_MARKET ..> UC_SEARCH : <<include>>
+
+@enduml

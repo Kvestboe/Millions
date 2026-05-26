@@ -42,36 +42,7 @@ public class InsufficientCashPopup extends StackPane {
     explanation.setWrapText(true);
 
     Button close = new Button("Got it");
-
-    String baseStyle =
-        "-fx-background-color: #FFD166;"   // -accent-gold
-            + "-fx-text-fill: #061016;"          // -bg-primary
-            + "-fx-background-radius: 8;"
-            + "-fx-border-color: transparent;"
-            + "-fx-padding: 10 18 10 18;"
-            + "-fx-font-size: 14px;"
-            + "-fx-font-weight: bold;"
-            + "-fx-cursor: hand;";
-
-    close.setStyle(baseStyle);
-
-    close.setOnMouseEntered(e -> {
-      close.setStyle(baseStyle);
-      close.setScaleX(1.02);
-      close.setScaleY(1.02);
-    });
-    close.setOnMouseExited(e -> {
-      close.setScaleX(1.0);
-      close.setScaleY(1.0);
-    });
-    close.setOnMousePressed(e -> {
-      close.setScaleX(0.98);
-      close.setScaleY(0.98);
-    });
-    close.setOnMouseReleased(e -> {
-      close.setScaleX(1.02);
-      close.setScaleY(1.02);
-    });
+    close.getStyleClass().add("btn-accent");
 
     close.setOnAction(e -> onClose.run());
 
