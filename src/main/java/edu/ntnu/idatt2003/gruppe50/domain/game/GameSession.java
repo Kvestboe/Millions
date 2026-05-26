@@ -35,6 +35,8 @@ public final class GameSession {
   private LocalDateTime lastPlayed;
   private List<BigDecimal> netWorthHistory;
 
+  public static final BigDecimal WIN_THRESHOLD = new BigDecimal("1000000");
+
   private GameSession(
       UUID gameId,
       Player player,
@@ -283,7 +285,7 @@ public final class GameSession {
         .multiply(BigDecimal.valueOf(difficulty.getGameOverThreshold()))
         .setScale(2, RoundingMode.HALF_UP);
 
-    if (netWorth.compareTo(new BigDecimal("1000000")) >= 0) return GameOutcome.WON;
+    if (netWorth.compareTo(WIN_THRESHOLD) >= 0) return GameOutcome.WON;
     if (netWorth.compareTo(threshold) < 0) return GameOutcome.LOST;
     return GameOutcome.ONGOING;
   }
