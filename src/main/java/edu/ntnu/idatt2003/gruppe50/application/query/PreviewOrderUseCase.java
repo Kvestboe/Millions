@@ -12,14 +12,28 @@ import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.UUID;
 
+/** Calculates a preview of an order before it is placed or executed. */
 public final class PreviewOrderUseCase {
 
   private final GameSessionRepository repository;
 
+  /**
+   * Creates the use case with a game-session repository.
+   *
+   * @param repository repository used to load game sessions
+   */
   public PreviewOrderUseCase(GameSessionRepository repository) {
     this.repository = repository;
   }
 
+  /**
+   * Calculates estimated order values for a buy or sell order.
+   *
+   * @param request input with game id, symbol, quantity, side and optional target price
+   * @return response containing price, fees, tax, total and available cash
+   * @throws GameSessionNotFoundException if the session does not exist
+   * @throws IllegalStateException if a sell preview requests more shares than the player owns
+   */
   public Response execute(Request request) {
 
     GameSession session =
@@ -72,7 +86,15 @@ public final class PreviewOrderUseCase {
     return new Response(price, subTotal, commission, tax, total, week, session.getPlayer().getMoney());
   }
 
-
+  /**
+   * Input for previewing an order.
+   *
+   * @param gameId id of the game session
+   * @param symbol stock symbol for the order
+   * @param quantity order quantity
+   * @param side whether the order is a buy or sell order
+   * @param targetPrice optional target price, or null to use the current market price
+   */
   public record Request(
       UUID gameId,
       String symbol,
@@ -81,6 +103,17 @@ public final class PreviewOrderUseCase {
       BigDecimal targetPrice
   ) {}
 
+  /**
+   * Output from previewing an order.
+   *
+   * @param price price used in the preview
+   * @param subtotal price multiplied by quantity before fees and tax
+   * @param commission estimated commission
+   * @param tax estimated tax
+   * @param total estimated final order total
+   * @param week current market week
+   * @param availableCash player's available cash
+   */
   public record Response(
       BigDecimal price,
       BigDecimal subtotal,

@@ -63,7 +63,7 @@ public class NavBar extends HBox {
     /** Called when the user selects "Main Menu". */
     void onMainMenu();
 
-    /** Called when the user selects "Save & Quit". */
+    /** Called when the user selects "Save &amp; Quit". */
     void onSaveAndQuit();
   }
 

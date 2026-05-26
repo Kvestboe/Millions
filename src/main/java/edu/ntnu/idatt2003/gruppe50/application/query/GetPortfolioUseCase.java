@@ -74,6 +74,8 @@ public final class GetPortfolioUseCase {
 
   /**
    * Portfolio aggregate response for the UI layer.
+   *
+   * @param portfolio portfolio data for the requested game session
    */
   public record Response(PortfolioDto portfolio) {}
 }
