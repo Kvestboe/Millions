@@ -4,9 +4,10 @@ import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.market.StockDataSource;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
-import edu.ntnu.idatt2003.gruppe50.infrastructure.CSVFileHandler;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.csv.InvalidStockDataException;
 import edu.ntnu.idatt2003.gruppe50.shared.Parse;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.io.File;
@@ -22,9 +23,20 @@ import java.util.UUID;
 public final class NewGameController {
 
   private final StartGameSessionUseCase startGameSession;
+  private final StockDataSource stockDataSource;
 
-  public NewGameController(StartGameSessionUseCase startGameSession) {
+  /**
+   * Creates a new controller.
+   *
+   * @param startGameSession use case used to start the session
+   * @param stockDataSource source used to load stock data from file
+   */
+  public NewGameController(
+      StartGameSessionUseCase startGameSession,
+      StockDataSource stockDataSource
+  ) {
     this.startGameSession = startGameSession;
+    this.stockDataSource = stockDataSource;
   }
 
   /**
@@ -39,21 +51,24 @@ public final class NewGameController {
    * @param difficulty the chosen difficulty level
    * @return the UUID of the newly created game session
    * @throws IllegalArgumentException if any input is invalid
+   * @throws InvalidStockDataException if the stock file cannot be read or its
+   *     contents are malformed
    */
-  public UUID onStartGame(String playerName, String capital, File stockFile, Difficulty difficulty) {
+  public UUID onStartGame(
+      String playerName,
+      String capital,
+      File stockFile,
+      Difficulty difficulty
+  ) throws InvalidStockDataException {
     BigDecimal startingCapital = Parse.parseBigDecimal(capital);
     Validate.validateInput(playerName, startingCapital, stockFile);
 
-    List<Stock> stocks = loadStocks(stockFile);
+    List<Stock> stocks = stockDataSource.readStocks(stockFile.toPath());
     Player player = createPlayer(playerName, startingCapital);
     Exchange exchange = createExchange(stocks, difficulty);
 
     return startGameSession.execute(
         new StartGameSessionUseCase.Request(player, exchange, difficulty)).gameId();
-  }
-
-  private List<Stock> loadStocks(File stockFile) {
-    return CSVFileHandler.readLines(stockFile.toPath());
   }
 
   private Player createPlayer(String name, BigDecimal startingCapital) {

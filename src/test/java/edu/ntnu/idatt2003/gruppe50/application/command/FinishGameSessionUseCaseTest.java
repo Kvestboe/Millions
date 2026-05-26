@@ -1,10 +1,10 @@
-package edu.ntnu.idatt2003.gruppe50.application;
+package edu.ntnu.idatt2003.gruppe50.application.command;
 
 import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import edu.ntnu.idatt2003.gruppe50.application.command.FinishGameSessionUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
@@ -38,11 +38,19 @@ public class FinishGameSessionUseCaseTest {
   }
 
   @Test
-  void execute_invalidSession_throwsException() {
-    UUID unknownId = UUID.randomUUID();
+  void execute_alreadyFinishedSession_remainsFinished() {
+    session.finish();
+    repository.save(session);
 
-    assertThrows(
-        GameSessionNotFoundException.class,
-        () -> finishSession.execute(new FinishGameSessionUseCase.Request(unknownId)));
+    finishSession.execute(new FinishGameSessionUseCase.Request(session.getGameId()));
+
+    GameSession repositorySession = repository.findById(session.getGameId()).orElseThrow();
+    assertEquals(GameSessionState.FINISHED, repositorySession.getState());
+  }
+
+  @Test
+  void execute_nonExistentSession_throwsException() {
+    assertThrows(GameSessionNotFoundException.class,
+        () -> finishSession.execute(new FinishGameSessionUseCase.Request(UUID.randomUUID())));
   }
 }

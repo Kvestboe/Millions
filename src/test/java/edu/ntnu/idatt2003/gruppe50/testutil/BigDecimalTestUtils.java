@@ -11,6 +11,6 @@ public class BigDecimalTestUtils {
   }
 
   public static void assertBigDecimalEquals(BigDecimal expected, BigDecimal actual) {
-    assertEquals(expected.stripTrailingZeros(), actual.stripTrailingZeros());
+    assertEquals(0, expected.compareTo(actual));
   }
 }

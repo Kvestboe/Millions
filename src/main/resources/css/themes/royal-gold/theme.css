@@ -35,6 +35,9 @@
     -status-dreamer:   #4A3020;   /* Muted brun */
     -status-engineer:  #8B1A3A;   /* Burgunder */
     -status-astronaut: #D4AF37;   /* Kongeleg gull */
+
+    -nav-active-bg:     rgba(255, 215, 0, 0.12);
+    -nav-active-border: rgba(255, 215, 0, 0.25);
 }
 
 /* Chart-overrides for royal gold-tema */

@@ -1,0 +1,7 @@
+/* Layout */
+.dashboard-grid {
+    -fx-background-color: -bg-primary;
+    -fx-padding: 24;
+    -fx-hgap: 16;
+    -fx-vgap: 16;
+}

@@ -8,6 +8,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.ui.model.OrderReceipt;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
@@ -34,7 +35,6 @@ public class StockDetailView extends StackPane implements Page {
   private final Runnable onBack;
   private final Observer exchangeObserver = this::refresh;
 
-  // Header-felter (oppdateres i refresh)
   private final Label priceLabel = new Label();
   private final Label priceChangeLabel = new Label();
   private final Label percentChangeLabel = new Label();
@@ -77,7 +77,6 @@ public class StockDetailView extends StackPane implements Page {
 
     content.getChildren().addAll(backRow, splitRow);
     content.getStyleClass().add("stock-detail-view");
-    getStylesheets().add(getClass().getResource("/css/views/stockDetail.css").toExternalForm());
 
     getChildren().addAll(content);
 
@@ -240,15 +239,16 @@ public class StockDetailView extends StackPane implements Page {
     applySignClass(profitPercentLabel, percent);
   }
 
-  private void handleConfirmedOrder(DraftOrder draftOrder) {
+  private OrderReceipt handleConfirmedOrder(DraftOrder draftOrder) {
     try {
-      orderController.placeOrder(draftOrder);
+      OrderReceipt receipt = orderController.placeOrder(draftOrder);
       errorLabel.setVisible(false);
-      closePopup();
       refresh();
+      return receipt;
     } catch (RuntimeException ex) {
       errorLabel.setText(ex.getMessage());
       errorLabel.setVisible(true);
+      throw ex;
     }
   }
 }

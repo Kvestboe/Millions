@@ -13,23 +13,23 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
-// ui/view/pages/GameOverView.java
 public class GameOverView extends VBox implements Page {
 
   private final GameResult result;
   private final Runnable onPlayAgain;
   private final Runnable onMainMenu;
+  private final Runnable onLeaderboard;
 
-  public GameOverView(GameResult result, Runnable onPlayAgain, Runnable onMainMenu) {
+  public GameOverView(GameResult result, Runnable onPlayAgain, Runnable onMainMenu, Runnable onLeaderboard) {
     this.result = result;
     this.onPlayAgain = onPlayAgain;
     this.onMainMenu = onMainMenu;
+    this.onLeaderboard = onLeaderboard;
     getStyleClass().add("root-bg");
     buildUI();
   }
 
   private void buildUI() {
-    // Sentrert innhold-container, maks 560px bred
     VBox inner = new VBox(20);
     inner.setAlignment(Pos.CENTER);
     inner.setPadding(new Insets(40, 80, 40, 80));
@@ -39,11 +39,19 @@ public class GameOverView extends VBox implements Page {
         buildIcon(),
         buildTitle(),
         buildSubtitle(),
-        buildNetWorthCard(),   // 1. Full bredde, gull
-        buildStatsRow(),       // 2. Tre kort side om side
-        buildScoreCard(),      // 3. Full bredde, score til høyre
-        buildNavBar()
+        buildNetWorthCard(),
+        buildStatsRow()
     );
+
+    if (!result.won()) {
+      inner.getChildren().add(buildLoseReasonBox());
+    }
+
+    if (result.won()) {
+      inner.getChildren().add(buildScoreCard());
+    }
+
+    inner.getChildren().add(buildNavBar());
 
     setAlignment(Pos.CENTER);
     VBox.setVgrow(inner, Priority.ALWAYS);
@@ -68,7 +76,7 @@ public class GameOverView extends VBox implements Page {
   private Label buildSubtitle() {
     String text = result.won()
         ? "Rocket launched. Mission complete.\nYou earned your place among the stars."
-        : "Grounded. The market won this round —\nyour portfolio couldn't keep up with the costs.";
+        : "Grounded. The market won this round\nyour portfolio couldn't keep up with the costs.";
 
     Label subtitle = new Label(text);
     subtitle.getStyleClass().add("label-muted");
@@ -123,8 +131,7 @@ public class GameOverView extends VBox implements Page {
     Label overline = new Label("🏆 LEADERBOARD SCORE");
     overline.getStyleClass().add("label-overline");
 
-    Label hint = new Label("Rank #3 on " + result.difficulty().name());
-    hint.getStyleClass().add("label-muted");
+    Label hint = new Label("Saved to the " + result.difficulty().name() + " leaderboard");
 
     VBox left = new VBox(4, overline, hint);
 
@@ -147,11 +154,11 @@ public class GameOverView extends VBox implements Page {
 
   private VBox buildLoseReasonBox() {
     String text = switch (result.difficulty()) {
-      case EASY   -> "You've lost too much to continue. The math is simple: "
+      case EASY   -> "You've lost too much to continue. The math is simple, "
           + "not enough capital left to keep the rocket ready.";
       case MEDIUM -> "Below this point, the costs outweigh the options. "
           + "There's nothing left to work with.";
-      case HARD   -> "The margin for error on Hard is razor thin — "
+      case HARD   -> "The margin for error on Hard is razor thin, "
           + "and you used it all up.";
     };
 
@@ -165,30 +172,36 @@ public class GameOverView extends VBox implements Page {
   }
 
   private HBox buildNavBar() {
-    Button mainMenu = new Button("← Main Menu");
+    Button mainMenu = new Button("Main Menu");
     mainMenu.getStyleClass().add("btn-secondary");
-    mainMenu.setPrefWidth(150);
+    mainMenu.setPrefWidth(170);
     mainMenu.setOnAction(_ -> onMainMenu.run());
 
-    Button playAgain = new Button(result.won() ? "Play Again →" : "Try Again →");
+    Button playAgain = new Button(result.won() ? "Play Again" : "Try Again");
     playAgain.getStyleClass().add("btn-primary");
-    playAgain.setPrefWidth(150);
+    playAgain.setPrefWidth(170);
     playAgain.setOnAction(_ -> onPlayAgain.run());
 
-    HBox bar = new HBox(15, mainMenu);
+    HBox bar = new HBox(15);
+    bar.setAlignment(Pos.CENTER);
+    bar.setPadding(new Insets(16, 0, 24, 0));
+    bar.setMaxWidth(Double.MAX_VALUE);
+    bar.getStyleClass().add("game-over-actions");
 
     if (result.won()) {
-      Button leaderboard = new Button("🏆 Leaderboard");
+      Button leaderboard = new Button("Leaderboard");
       leaderboard.getStyleClass().add("btn-accent");
-      leaderboard.setPrefWidth(150);
-      leaderboard.setOnAction(_ -> { /* TODO: koble til leaderboard */ });
-      bar.getChildren().add(leaderboard);
+      leaderboard.setPrefWidth(170);
+      leaderboard.setOnAction(_ -> onLeaderboard.run());
+
+      bar.getChildren().addAll(mainMenu, leaderboard, playAgain);
+    } else {
+      Region spacer = new Region();
+      HBox.setHgrow(spacer, Priority.ALWAYS);
+
+      bar.getChildren().addAll(mainMenu, spacer, playAgain);
     }
 
-    bar.getChildren().add(playAgain);
-    bar.setAlignment(Pos.CENTER);
-    bar.setPadding(new Insets(16, 48, 24, 48));
-    bar.getStyleClass().add("navbar");
     return bar;
   }
 

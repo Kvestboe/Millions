@@ -1,9 +1,9 @@
-package edu.ntnu.idatt2003.gruppe50.application;
+package edu.ntnu.idatt2003.gruppe50.application.command;
 
 import static edu.ntnu.idatt2003.gruppe50.testutil.TestDataFactory.createDefaultGameSession;
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionFinishedException;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;

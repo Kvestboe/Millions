@@ -1,9 +1,11 @@
+/* Container */
 .stock-detail-view {
     -fx-background-color: -bg-primary;
     -fx-padding: 24;
     -fx-spacing: 16;
 }
 
+/* Header */
 .stock-symbol {
     -fx-text-fill: -text-secondary;
     -fx-font-size: 16px;
@@ -17,11 +19,12 @@
     -fx-font-weight: 600;
 }
 
+/* Stat overrides */
 .stock-detail-view .stat-value {
     -fx-font-size: 18px;
 }
 
-/* Buy marker dots (series 1 = blue) */
+/* Chart — buy markers (series 1) */
 .stock-detail-view .chart-series-area-line.default-color1,
 .stock-detail-view .chart-series-area-fill.default-color1 {
     -fx-stroke: transparent; -fx-fill: transparent;
@@ -33,7 +36,7 @@
     -fx-padding: 5px;
 }
 
-/* Sell marker dots (series 2 = red) */
+/* Chart — sell markers (series 2) */
 .stock-detail-view .chart-series-area-line.default-color2,
 .stock-detail-view .chart-series-area-fill.default-color2 {
     -fx-stroke: transparent; -fx-fill: transparent;

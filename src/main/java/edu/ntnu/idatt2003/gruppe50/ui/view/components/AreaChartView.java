@@ -54,8 +54,14 @@ public class AreaChartView {
     }
     series.getData().setAll(points);
     NumberAxis xaxis = (NumberAxis) chart.getXAxis();
+
+    int weeks = history.size();
+    xaxis.setAutoRanging(false);
     xaxis.setLowerBound(1);
-    xaxis.setUpperBound(Math.max(history.size(), 2));
+    xaxis.setUpperBound(Math.max(weeks, 2));
+    xaxis.setTickUnit(calculateWeekTickUnit(weeks));
+    xaxis.setMinorTickVisible(false);
+    xaxis.setForceZeroInRange(false);
   }
 
   public void setMarkers(Set<Integer> buyWeeks, Set<Integer> sellWeeks, List<BigDecimal> history) {
@@ -80,5 +86,18 @@ public class AreaChartView {
 
   public AreaChart<Number, Number> getChart() {
     return chart;
+  }
+
+  private int calculateWeekTickUnit(int weeks) {
+    if (weeks <= 10) {
+      return 1;
+    }
+    if (weeks <= 25) {
+      return 5;
+    }
+    if (weeks <= 50) {
+      return 10;
+    }
+    return 25;
   }
 }

@@ -38,4 +38,7 @@
 
     /* --- Font --- */
     -font-mono: "Courier New", monospace;
+
+    -nav-active-bg:     rgba(214, 183, 90, 0.12);
+    -nav-active-border: rgba(214, 183, 90, 0.25);
 }

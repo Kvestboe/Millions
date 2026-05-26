@@ -1,23 +1,30 @@
-/* ===== MAIN MENU CONTAINER ===== */
+/* Container */
 .main-menu {
     -fx-background-color: -bg-primary;
 }
 
-/* ===== HEADER ===== */
-.header-title {
-    -fx-font-size: 52px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -accent-gold;
+/* Header */
+.menu-top-label {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-secondary;
+    -fx-opacity: 0.76;
 }
 
-/* ===== BUTTON SUBTITLE ===== */
-.button-subtitle {
+.menu-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: -text-secondary;
+    -fx-opacity: 0.75;
+}
+
+/* Primary buttons */
+.main-menu-button-subtitle {
     -fx-text-fill: -text-secondary;
     -fx-font-size: 12px;
     -fx-opacity: 0.7;
 }
 
-/* ===== SECONDARY BUTTON INNHOLD ===== */
+/* Secondary buttons */
 .secondary-button-icon {
     -fx-font-size: 17px;
     -fx-text-fill: -text-primary;
@@ -30,52 +37,7 @@
     -fx-opacity: 0.8;
 }
 
-/* ===== SEPARATOR ===== */
-.menu-separator {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-border-color: transparent;
-    -fx-opacity: 0.4;
-}
-
-/* ===== SYSTEM BUTTON DANGER ===== */
-.system-button-danger {
-    -fx-background-color: transparent;
-    -fx-border-color: -border;
-    -fx-border-width: 0.5;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
-    -fx-text-fill: -error;
-    -fx-font-size: 13px;
-    -fx-cursor: hand;
-    -fx-padding: 10 14 10 14;
-}
-
-.system-button-danger:hover {
-    -fx-background-color: -bg-elevated;
-}
-
-/* ===== VERSION LABEL ===== */
-.menu-top-label {
-    -fx-font-family: "Courier New";
-    -fx-font-size: 14px;
-    -fx-text-fill: -text-secondary;
-    -fx-opacity: 0.76;
-}
-
-
-.menu-subtitle {
-    -fx-font-size: 16px;
-    -fx-text-fill: -text-secondary;
-    -fx-opacity: 0.75;
-}
-
-.version-label {
-    -fx-font-family: "Courier New";
-    -fx-font-size: 14px;
-    -fx-text-fill: -text-secondary;
-    -fx-opacity: 0.4;
-}
-/* ===== SYSTEM BUTTON ===== */
+/* System buttons */
 .system-button {
     -fx-background-color: transparent;
     -fx-border-color: -border;
@@ -92,10 +54,33 @@
     -fx-background-color: -bg-elevated;
 }
 
-.btn-secondary-accent {
-    -fx-background-color: rgba(79, 70, 229, 0.12);
-    -fx-border-color: rgba(79, 70, 229, 0.3);
+.system-button-danger {
+    -fx-background-color: transparent;
+    -fx-border-color: -border;
     -fx-border-width: 0.5;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
+    -fx-text-fill: -error;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-padding: 10 14 10 14;
+}
+
+.system-button-danger:hover {
+    -fx-background-color: -bg-elevated;
+}
+
+/* Separator */
+.menu-separator {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: transparent;
+    -fx-opacity: 0.4;
+}
+
+/* Footer */
+.version-label {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-secondary;
+    -fx-opacity: 0.4;
 }

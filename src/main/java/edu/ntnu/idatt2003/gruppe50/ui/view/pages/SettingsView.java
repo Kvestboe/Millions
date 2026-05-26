@@ -36,9 +36,6 @@ public class SettingsView extends VBox {
   }
 
   private void build() {
-    getStylesheets().add(
-        getClass().getResource("/css/views/settings.css").toExternalForm()
-    );
     getStyleClass().add("settings-view");
     setSpacing(8);
     setPadding(new Insets(40));

@@ -2,12 +2,11 @@ package edu.ntnu.idatt2003.gruppe50;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
-import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.GameSaveDto;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.csv.InvalidStockDataException;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
-import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.LeaderboardView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
@@ -22,16 +21,21 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.LaunchStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.MarketStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.NameStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.StoryStep;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public final class AppRouter {
+
+  private static final Logger LOG = Logger.getLogger(AppRouter.class.getName());
 
   private final Stage stage;
   private final AppModule module;
@@ -50,8 +54,17 @@ public final class AppRouter {
   }
 
   public void showMainMenu() {
+    SaveSummaryDto latestSave = module.getAllSaves.execute().stream()
+        .filter(s -> !s.isFinished())
+        .findFirst()
+        .orElse(null);
+
     MainMenuView menu = new MainMenuView(
-        this::showNewGame, () -> showSettings(this::showMainMenu), Platform::exit);
+        latestSave,
+        this::showNewGame,
+        () -> showSettings(this::showMainMenu),
+        Platform::exit
+    );
     menu.setOnLeaderboard(() -> showLeaderboard(this::showMainMenu));
     menu.setOnLoadGame(this::showLoadGame);
     menu.setOnContinueGame(this::showContinueGame);
@@ -82,18 +95,33 @@ public final class AppRouter {
   }
 
   private void startGameFromOnboarding(OnboardingData data) {
-    UUID gameId = new NewGameController(module.startGameSession).onStartGame(
-        data.playerName(),
-        data.startingCapital().toString(),
-        data.stockFile(),
-        data.difficulty()
-    );
-    switchToGame(gameId);
+    try {
+      UUID gameId = new NewGameController(module.startGameSession, module.stockDataSource)
+          .onStartGame(
+              data.playerName(),
+              data.startingCapital().toString(),
+              data.stockFile(),
+              data.difficulty()
+          );
+      switchToGame(gameId);
+    } catch (InvalidStockDataException e) {
+      showStockFileError(e);
+    }
+  }
+
+  private void showStockFileError(InvalidStockDataException cause) {
+    LOG.log(Level.WARNING, "Could not load stock file", cause);
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Could not load stock file");
+    alert.setHeaderText("The selected stock file could not be loaded.");
+    alert.setContentText(cause.getMessage());
+    alert.showAndWait();
   }
 
   private void showContinueGame() {
     module.getAllSaves.execute().stream()
-        .max(Comparator.comparing(SaveSummaryDto::lastPlayed))
+        .filter(s -> !s.isFinished())
+        .findFirst()
         .ifPresent(s -> switchToGame(s.gameId()));
   }
 

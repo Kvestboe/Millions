@@ -23,8 +23,10 @@ import edu.ntnu.idatt2003.gruppe50.application.query.GetTransactionsUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
+import edu.ntnu.idatt2003.gruppe50.domain.market.StockDataSource;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.csv.CsvStockDataSource;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.JsonFileGameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.LeaderboardFileHandler;
 import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
@@ -33,6 +35,7 @@ import java.util.UUID;
 public final class AppModule {
   private final TransactionFactory transactionFactory = new TransactionFactory();
   private final GameSessionRepository sessions = new JsonFileGameSessionRepository(transactionFactory);
+  public final StockDataSource stockDataSource = new CsvStockDataSource();
 
   // Use cases
   public final StartGameSessionUseCase startGameSession = new StartGameSessionUseCase(sessions);

@@ -4,81 +4,116 @@
 
   <groupId>edu.ntnu.idatt2003.gruppe50</groupId>
   <artifactId>Millions</artifactId>
-  <version>v0.1.0</version>
+  <version>v1.2.0</version>
   <packaging>jar</packaging>
 
   <name>Millions</name>
   <url>http://maven.apache.org</url>
 
+  <!--
+    Version numbers are kept here so they can be updated in one place.
+    Plugins and dependencies below refer to these via ${property}.
+  -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>25</java.version>
+    <javafx.version>25.0.1</javafx.version>
+    <junit.version>6.0.1</junit.version>
+    <jackson.version>2.19.2</jackson.version>
+
+    <!-- Maven plugin versions -->
+    <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+    <javafx-maven-plugin.version>0.0.8</javafx-maven-plugin.version>
+    <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
   </properties>
 
   <build>
     <plugins>
+      <!-- Compiles Java sources against the configured Java release. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.14.1</version>
+        <version>${maven-compiler-plugin.version}</version>
         <configuration>
-          <release>25</release>
+          <release>${java.version}</release>
         </configuration>
       </plugin>
 
+      <!-- Runs JUnit Jupiter tests during the "test" phase. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.4</version>
+        <version>${maven-surefire-plugin.version}</version>
       </plugin>
 
+      <!-- Lets us launch the JavaFX application with "mvn javafx:run". -->
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
-        <version>0.0.8</version>
+        <version>${javafx-maven-plugin.version}</version>
         <configuration>
           <mainClass>edu.ntnu.idatt2003.gruppe50.App</mainClass>
         </configuration>
       </plugin>
 
+      <!-- Generates JavaDoc. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.12.0</version>
+        <version>${maven-javadoc-plugin.version}</version>
+        <configuration>
+          <doclint>none</doclint>
+          <source>${java.version}</source>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
-
     </plugins>
   </build>
+
   <dependencies>
+    <!-- JUnit 6 (Jupiter) for unit testing. -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>6.0.1</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
 
+    <!-- JavaFX core controls. -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>25.0.1</version>
+      <version>${javafx.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.19.2</version>
-    </dependency>
-
+    <!-- JavaFX media support, used by SoundManager. -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-media</artifactId>
-      <version>25.0.1</version>
+      <version>${javafx.version}</version>
     </dependency>
 
+    <!-- Jackson is used to serialize game sessions to and from JSON. -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+    <!-- Jackson support for java.time types. -->
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.19.2</version>
+      <version>${jackson.version}</version>
     </dependency>
-
   </dependencies>
 </project>
