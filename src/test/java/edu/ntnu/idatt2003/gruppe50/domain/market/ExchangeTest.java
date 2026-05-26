@@ -232,16 +232,25 @@ public class ExchangeTest {
       kog.addNewSalesPrice(bd(180));
       eqnr.addNewSalesPrice(bd(65));
 
-      assertEquals(List.of(aapl, eqnr, kog), exchange.getGainers(3));
+      assertEquals(List.of(eqnr, aapl, kog), exchange.getGainers(3));
     }
 
     @Test
-    void getLosers_returnsSortedByLatestPriceChange_ascending() {
+    void getGainers_returnsSortedByLatestPercentChange_descending() {
       aapl.addNewSalesPrice(bd(120));
       kog.addNewSalesPrice(bd(180));
       eqnr.addNewSalesPrice(bd(65));
 
-      assertEquals(List.of(kog, eqnr, aapl), exchange.getLosers(3));
+      assertEquals(List.of(eqnr, aapl, kog), exchange.getGainers(3));
+    }
+
+    @Test
+    void getLosers_returnsSortedByLatestPercentChange_ascending() {
+      aapl.addNewSalesPrice(bd(120));
+      kog.addNewSalesPrice(bd(180));
+      eqnr.addNewSalesPrice(bd(65));
+
+      assertEquals(List.of(kog, aapl, eqnr), exchange.getLosers(3));
     }
 
     @Test
@@ -250,7 +259,7 @@ public class ExchangeTest {
       kog.addNewSalesPrice(bd(180));
       eqnr.addNewSalesPrice(bd(65));
 
-      assertEquals(List.of(aapl, eqnr), exchange.getGainers(2));
+      assertEquals(List.of(eqnr, aapl), exchange.getGainers(2));
     }
 
     @Test
@@ -259,7 +268,7 @@ public class ExchangeTest {
       kog.addNewSalesPrice(bd(180));
       eqnr.addNewSalesPrice(bd(65));
 
-      assertEquals(List.of(kog, eqnr), exchange.getLosers(2));
+      assertEquals(List.of(kog, aapl), exchange.getLosers(2));
     }
   }
 

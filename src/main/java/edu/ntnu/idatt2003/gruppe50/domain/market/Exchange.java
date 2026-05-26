@@ -329,32 +329,33 @@ public class Exchange extends Observable {
   }
 
   /**
-   * Returns a list of the stocks with the most profit.
+   * Returns the stocks with the highest percentage price change.
    *
    * @param limit how many stocks do you want in the list
-   * @return list of stocks with the most profitable stocks
+   * @return list of stocks sorted by latest percent change descending
    * @throws IllegalArgumentException if {@code limit <= 0}
    */
   public List<Stock> getGainers(int limit) {
     Validate.positiveInt(limit, "Limit");
     return stockMap.values().stream()
-        .sorted((a, b) -> b.getLatestPriceChange().compareTo(a.getLatestPriceChange()))
+        .sorted((a, b) -> b.getLatestPriceChangePercent().compareTo(a.getLatestPriceChangePercent()))
         .limit(limit)
         .toList();
   }
 
   /**
-   * Returns a list of the stocks with the biggest loss.
+   * Returns the stocks with the lowest percentage price change.
    *
    * @param limit how many stocks do you want in the list
-   * @return list of stocks with the least profitable stocks
+   * @return list of stocks sorted by latest percent change ascending
    * @throws IllegalArgumentException if {@code limit <= 0}
    */
   public List<Stock> getLosers(int limit) {
     Validate.positiveInt(limit, "Limit");
     return stockMap.values().stream()
-        .sorted(Comparator.comparing(Stock::getLatestPriceChange))
-        .limit(limit).toList();
+        .sorted(Comparator.comparing(Stock::getLatestPriceChangePercent))
+        .limit(limit)
+        .toList();
   }
 
   /**
