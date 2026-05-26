@@ -2,8 +2,10 @@ package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetGoalProgressUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetStatusProgressUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetWeeklyMoversUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.GoalProgressDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StatusProgressDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.WeeklyMoversDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import java.util.UUID;
@@ -24,6 +26,8 @@ public class DashboardQueryController implements Observer {
   private final ObjectProperty<GoalProgressDto> goalProgress = new SimpleObjectProperty<>();
   private final GetStatusProgressUseCase getStatusProgress;
   private final ObjectProperty<StatusProgressDto> statusProgress = new SimpleObjectProperty<>();
+  private final GetWeeklyMoversUseCase getWeeklyMovers;
+  private final ObjectProperty<WeeklyMoversDto> weeklyMovers = new SimpleObjectProperty<>();
 
   /**
    * Creates a new dashboard query controller and registers it as an observer
@@ -36,11 +40,14 @@ public class DashboardQueryController implements Observer {
   public DashboardQueryController(
       UUID gameId,
       GetGoalProgressUseCase getGoalProgress,
-      Exchange exchange, GetStatusProgressUseCase getStatusProgress
+      GetStatusProgressUseCase getStatusProgress,
+      GetWeeklyMoversUseCase getWeeklyMovers,
+      Exchange exchange
   ) {
     this.gameId = gameId;
     this.getGoalProgress = getGoalProgress;
     this.getStatusProgress = getStatusProgress;
+    this.getWeeklyMovers = getWeeklyMovers;
     exchange.addObserver(this);
     refresh();
   }
@@ -61,6 +68,10 @@ public class DashboardQueryController implements Observer {
     return statusProgress;
   }
 
+  public ReadOnlyObjectProperty<WeeklyMoversDto> weeklyMoversProperty() {
+    return weeklyMovers;
+  }
+
   /**
    * Called by the exchange whenever its state changes.
    */
@@ -75,5 +86,6 @@ public class DashboardQueryController implements Observer {
   public void refresh() {
     goalProgress.set(getGoalProgress.execute(gameId));
     statusProgress.set(getStatusProgress.execute(gameId));
+    weeklyMovers.set(getWeeklyMovers.execute(gameId));
   }
 }

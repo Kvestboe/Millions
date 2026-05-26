@@ -123,3 +123,12 @@
     -fx-background-insets: 0;
     -fx-background-radius: 4px;
 }
+
+.mover-row {
+    -fx-padding: 6 4 6 4;
+    -fx-background-radius: 6;
+}
+
+.mover-row:hover {
+    -fx-background-color: -bg-elevated;
+}

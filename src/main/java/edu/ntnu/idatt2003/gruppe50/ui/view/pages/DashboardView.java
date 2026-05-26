@@ -4,11 +4,14 @@ import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory
 
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.GoalProgressDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StatusProgressDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.WeeklyMoversDto;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -27,13 +30,16 @@ import javafx.scene.layout.VBox;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class DashboardView extends BorderPane implements Page {
 
   private final DashboardQueryController controller;
+  private final Consumer<StockDto> onMoverSelected;
 
-  public DashboardView(DashboardQueryController controller) {
+  public DashboardView(DashboardQueryController controller, Consumer<StockDto> onMoverSelected) {
     this.controller = controller;
+    this.onMoverSelected = onMoverSelected;
 
     GridPane grid = createGrid();
 
@@ -66,12 +72,15 @@ public class DashboardView extends BorderPane implements Page {
       grid.getColumnConstraints().add(col);
     }
 
-    double[] rowHeights = {20, 55, 25};
-    for (double h : rowHeights) {
-      RowConstraints row = new RowConstraints();
-      row.setPercentHeight(h);
-      grid.getRowConstraints().add(row);
-    }
+    RowConstraints goalRow = new RowConstraints();
+    goalRow.setMinHeight(140);
+
+    RowConstraints moversRow = new RowConstraints();
+
+    RowConstraints notifRow = new RowConstraints();
+    notifRow.setMinHeight(160);
+
+    grid.getRowConstraints().addAll(goalRow, moversRow, notifRow);
 
     return grid;
   }
@@ -186,27 +195,84 @@ public class DashboardView extends BorderPane implements Page {
   }
 
   private VBox buildWatchlistCard() {
-    return createCard("Watchlist");
+    VBox card = createCard("Watchlist");
+
+    VBox content = new VBox(6);
+    // (her vil watchlist-radene plasseres når vi kobler på data senere)
+
+    ScrollPane scroll = new ScrollPane(content);
+    scroll.setFitToWidth(true);
+    scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scroll.getStyleClass().add("app-scroll");
+
+    // Nøkkelen: ScrollPane skal *ikke* dra opp rad-høyden basert på innhold
+    scroll.setPrefViewportHeight(0);
+    VBox.setVgrow(scroll, Priority.ALWAYS);
+
+    card.getChildren().add(scroll);
+    return card;
   }
 
   private VBox buildMoversCard() {
     VBox card = createCard("This week's movers");
     card.setSpacing(12);
 
-    card.getChildren().addAll(
-        buildMoversSection("TOP GAINERS", List.of(
-            new MoverRow("GME", "GameStop", 14.2, true),
-            new MoverRow("PLTR", "Palantir", 9.7, true),
-            new MoverRow("META", "Meta Platforms", 6.3, true)
-        )),
-        buildMoversSection("TOP LOSERS", List.of(
-            new MoverRow("INTC", "Intel", 8.1, false),
-            new MoverRow("BA", "Boeing", 6.3, false),
-            new MoverRow("F", "Ford Motor", 4.8, false)
-        ))
-    );
+    VBox gainersSection = new VBox(6);
+    Label gainersHeader = new Label("TOP GAINERS");
+    gainersHeader.getStyleClass().add("movers-section-header");
+    gainersSection.getChildren().add(gainersHeader);
+
+    VBox losersSection = new VBox(6);
+    Label losersHeader = new Label("TOP LOSERS");
+    losersHeader.getStyleClass().add("movers-section-header");
+    losersSection.getChildren().add(losersHeader);
+
+    card.getChildren().addAll(gainersSection, losersSection);
+
+    Runnable apply = () -> {
+      WeeklyMoversDto dto = controller.weeklyMoversProperty().get();
+      if (dto == null) return;
+      rebuildMoverSection(gainersSection, gainersHeader, dto.topGainers(), true);
+      rebuildMoverSection(losersSection, losersHeader, dto.topLosers(), false);
+    };
+    apply.run();
+    controller.weeklyMoversProperty().addListener((obs, old, dto) -> apply.run());
 
     return card;
+  }
+
+  private void rebuildMoverSection(VBox section, Label header, List<StockDto> stocks, boolean gainer) {
+    section.getChildren().setAll(header);
+    for (StockDto stock : stocks) {
+      section.getChildren().add(buildMoverRow(stock, gainer));
+    }
+  }
+
+  private HBox buildMoverRow(StockDto stock, boolean gainer) {
+    Label symbol = new Label(stock.symbol());
+    symbol.getStyleClass().add("mover-symbol");
+
+    Label name = new Label(stock.company());
+    name.getStyleClass().add("mover-name");
+
+    VBox left = new VBox(2, symbol, name);
+
+    double pct = stock.percentChange().doubleValue();
+    String arrow = pct >= 0 ? "▲" : "▼";
+    Label change = new Label(arrow + " " + String.format("%.1f%%", Math.abs(pct)));
+    change.getStyleClass().add(gainer ? "mover-gain" : "mover-loss");
+
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+    HBox row = new HBox(left, spacer, change);
+    row.setAlignment(Pos.CENTER_LEFT);
+    row.getStyleClass().add("mover-row");
+    row.setCursor(Cursor.HAND);
+    row.setOnMouseClicked(e -> onMoverSelected.accept(stock));
+
+    return row;
   }
 
   private record MoverRow(String symbol, String name, double pct, boolean gainer) {}
