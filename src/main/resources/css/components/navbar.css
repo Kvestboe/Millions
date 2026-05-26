@@ -116,6 +116,7 @@
 }
 .level-tooltip {
     -fx-font-size: 14px;
+    -fx-font-weight: normal;
     -fx-background-color: -bg-overlay;
     -fx-text-fill: -text-primary;
     -fx-padding: 8 12 8 12;
@@ -156,19 +157,19 @@
 }
 
 .level-progress .bar {
-    -fx-background-color: -accent-indigo;
+    -fx-background-color: linear-gradient(to right, -accent-purple, -accent-orange);
     -fx-background-insets: 0;
     -fx-background-radius: 3;
 }
 
 .level-progress-investor .bar {
-    -fx-background-color: -accent-gold;
+    -fx-background-color: linear-gradient(to right, -accent-gold, -accent-orange);
     -fx-background-insets: 0;
     -fx-background-radius: 3;
 }
 
 .level-progress-speculator .bar {
-    -fx-background-color: -accent-teal;
+    -fx-background-color: linear-gradient(to right, -accent-teal, -accent-indigo);
     -fx-background-insets: 0;
     -fx-background-radius: 3;
 }

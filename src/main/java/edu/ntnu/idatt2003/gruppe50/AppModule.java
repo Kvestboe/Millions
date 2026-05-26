@@ -13,6 +13,7 @@ import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.DeleteSaveUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetAllSavesUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetGoalProgressUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPendingOrdersUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetPortfolioUseCase;
@@ -61,6 +62,7 @@ public final class AppModule {
   public final SoundManager soundManager = new SoundManager();
   public final BuyCoinsUseCase buyCoins = new BuyCoinsUseCase(sessions);
   public final PurchaseShopItemUseCase purchaseShopItem = new PurchaseShopItemUseCase(sessions);
+  public final GetGoalProgressUseCase getGoalProgress = new GetGoalProgressUseCase(sessions);
 
   public GameSessionControllerBundle gameBundle(UUID gameId) {
     GameSession session = sessions.findById(gameId).orElseThrow(GameSessionNotFoundException::new);

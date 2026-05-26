@@ -155,7 +155,7 @@ public class GameViewCoordinator {
   private Map<PageId, Page> buildPages() {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
-    pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
+    pages.put(PageId.DASHBOARD, new DashboardView(bundle.dashboard()));
     pages.put(PageId.MARKET, new MarketView(
         bundle.market(),
         stock -> navigateToStockDetail(stock, PageId.MARKET)

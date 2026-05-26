@@ -5,3 +5,68 @@
     -fx-hgap: 16;
     -fx-vgap: 16;
 }
+
+/* Goal progress card */
+.goal-progress-percent {
+    -fx-text-fill: #f5a623;          /* oransje */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.goal-progress-current {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.goal-progress-goal {
+    -fx-text-fill: #8892a0;          /* dempet grå */
+    -fx-font-size: 13px;
+}
+
+
+.goal-progress-bar {
+    -fx-pref-height: 8px;
+    -fx-background-radius: 4px;
+}
+
+.goal-progress-bar > .track {
+    -fx-background-color: #1e2733;
+    -fx-background-radius: 4px;
+}
+
+.goal-progress-bar > .bar {
+    -fx-background-color: linear-gradient(to right, -accent-purple, -accent-orange);
+    -fx-background-radius: 4px;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.movers-section-header {
+    -fx-text-fill: -accent-orange;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 0 2 0;
+}
+
+.mover-symbol {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.mover-name {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 11px;
+}
+
+.mover-gain {
+    -fx-text-fill: -gain;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.mover-loss {
+    -fx-text-fill: -loss;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
