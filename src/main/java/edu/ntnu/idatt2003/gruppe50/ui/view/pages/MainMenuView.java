@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -16,6 +17,7 @@ import javafx.scene.paint.Color;
 
 public class MainMenuView extends StackPane{
 
+  private final SaveSummaryDto latestSave;
   private final Runnable onNewGame;
   private final Runnable onQuit;
   private final Runnable onSettings;
@@ -23,7 +25,8 @@ public class MainMenuView extends StackPane{
   private Runnable onLeaderboard;
   private Runnable onContinueGame;
 
-  public MainMenuView(Runnable onNewGame, Runnable onSettings, Runnable onQuit) {
+  public MainMenuView(SaveSummaryDto latestSave, Runnable onNewGame, Runnable onSettings, Runnable onQuit) {
+    this.latestSave = latestSave;
     this.onNewGame = onNewGame;
     this.onSettings = onSettings;
     this.onQuit = onQuit;
@@ -123,7 +126,11 @@ public class MainMenuView extends StackPane{
 
     Label text = new Label("Continue game");
 
-    Label subtitle = new Label("Week 12");
+    Label subtitle = new Label(
+        latestSave == null
+            ? "No saved game"
+            : latestSave.playerName() + " - Week " + latestSave.week()
+    );
     subtitle.getStyleClass().add("main-menu-button-subtitle");
 
     Region spacer = new Region();
@@ -139,6 +146,7 @@ public class MainMenuView extends StackPane{
     });
     continueBtn.setGraphic(content);
     continueBtn.setMaxWidth(340);
+    continueBtn.setDisable(latestSave == null);
 
     return continueBtn;
   }
