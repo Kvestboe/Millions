@@ -16,7 +16,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/** Controller for handling transactionview and transactiondata. */
+/** Keeps transaction history and trading log data synchronized with the exchange state. */
 public final class TransactionQueryController implements Observer {
 
   private final UUID gameId;
@@ -25,6 +25,14 @@ public final class TransactionQueryController implements Observer {
   private final ObservableList<TransactionData> transactions = FXCollections.observableArrayList();
   private final SimpleObjectProperty<TradingLogData> tradingLog = new SimpleObjectProperty<>();
 
+  /**
+   * Creates a transaction query controller.
+   *
+   * @param gameId id of the game session
+   * @param getTransactions use case used to retrieve transactions
+   * @param getTradingLog use case used to retrieve trading log statistics
+   * @param exchange observed exchange that triggers transaction refreshes
+   */
   public TransactionQueryController(
       UUID gameId,
       GetTransactionsUseCase getTransactions,
@@ -38,13 +46,31 @@ public final class TransactionQueryController implements Observer {
     refresh();
   }
 
+  /**
+   * Returns the observable transaction list.
+   *
+   * @return observable transaction data list
+   */
   public ObservableList<TransactionData> getTransactions() {
     return transactions;
   }
 
+  /**
+   * Returns the observable trading log summary.
+   *
+   * @return trading log data property
+   */
   public SimpleObjectProperty<TradingLogData> getTradingLog() {
     return tradingLog;
   }
+
+  /**
+   * Filters transactions by query text and optional transaction type.
+   *
+   * @param query search text matched against symbol, stock name and transaction type
+   * @param type transaction type filter, or null to include all types
+   * @return filtered transactions
+   */
 
   public List<TransactionData> onSearch(String query, TransactionType type) {
     String term = query.toLowerCase(Locale.ROOT);
@@ -58,11 +84,13 @@ public final class TransactionQueryController implements Observer {
         .toList();
   }
 
+  /** Refreshes transaction data when the observed exchange changes. */
   @Override
   public void update() {
     refresh();
   }
 
+  /** Reloads transaction history and trading log data from the application layer. */
   public void refresh() {
     GetTransactionsUseCase.Response response =
         getTransactions.execute(new GetTransactionsUseCase.Request(gameId));

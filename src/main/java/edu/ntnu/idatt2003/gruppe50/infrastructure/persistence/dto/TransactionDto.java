@@ -22,5 +22,4 @@ public record TransactionDto(
     int purchaseWeek,
     String batchId
 ) {
-
 }
