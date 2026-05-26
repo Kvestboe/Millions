@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2003.gruppe50.domain.market;
 
+import edu.ntnu.idatt2003.gruppe50.domain.notification.Notification;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationLog;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationType;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
@@ -37,15 +40,17 @@ public class Exchange extends Observable {
   private int week;
   private final List<LimitOrder> pendingOrders;
   private final VolatilityProfile volatility;
+  private final NotificationLog notifications;
 
-  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility) {
-    return new Exchange(name, stockMap, factory, week, pendingOrders, volatility);
+  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility,  NotificationLog notifications  ) {
+    return new Exchange(name, stockMap, factory, week, pendingOrders, volatility, notifications);
   }
 
-  private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility) {
+  private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility, NotificationLog notifications) {
     this.name = name;
     this.stockMap = new HashMap<>(stockMap);
     this.volatility = volatility;
+    this.notifications = notifications;
     this.random = new Random();
     this.factory = factory;
     this.week = week;
@@ -60,19 +65,18 @@ public class Exchange extends Observable {
    * @param factory the transaction factory used
    * @throws IllegalArgumentException if any parameter is null or invalid
    */
-  public Exchange(String name, List<Stock> stocks, TransactionFactory factory, VolatilityProfile volatility) {
+  public Exchange(String name, List<Stock> stocks, TransactionFactory factory, VolatilityProfile volatility, NotificationLog notifications) {
     Validate.notBlank(name, "Name");
     Validate.notEmpty(stocks, "Stocks");
-
     Validate.notNull(factory, "Factory");
 
     this.name = name;
     stockMap = stocks.stream().collect(Collectors.toMap(Stock::getSymbol, v -> v));
-
     week = 1;
     random = new Random();
     this.factory = factory;
     this.volatility = volatility;
+    this.notifications = notifications;
     pendingOrders = new ArrayList<>();
   }
 
@@ -240,13 +244,11 @@ public class Exchange extends Observable {
       BigDecimal lotQty = lot.getQuantity();
 
       if (lotQty.compareTo(remaining) <= 0) {
-        // Sell the entire lot
         Transaction sale = factory.createSale(lot, this.week, batchId);
         sale.commit(player);
         sales.add(sale);
         remaining = remaining.subtract(lotQty);
       } else {
-        // Split the lot: sell `remaining`, return (lotQty - remaining) to portfolio
         player.getPortfolio().removeShare(lot.getShareId());
 
         Share consumed = new Share(stock, remaining, lot.getPurchasePrice(), lot.getPurchaseWeek());
@@ -305,26 +307,38 @@ public class Exchange extends Observable {
 
     for (LimitOrder order : pendingOrders) {
       if (order.isExpired(this.week)) {
-        // TODO: notify player in GUI that order expired (via Observer or event listener)
+        notifications.add(new Notification(
+            NotificationType.ORDER_EXPIRED,
+            order.label() + " expired — " + describeOrder(order),
+            this.week
+        ));
         LOG.log(Level.INFO, "Order expired for {0} on {1}",
             new Object[]{order.getPlayer().getName(), order.getStock().getSymbol()});
         toRemove.add(order);
-        continue;
-      }
-
-      BigDecimal currentPrice = order.getStock().getSalesPrice();
-      if (order.shouldTrigger(currentPrice)) {
-        try {
-          order.execute(this);
-        } catch (RuntimeException e) {
-          // TODO: notify player in GUI that order triggered but could not be executed
-          LOG.log(Level.WARNING, "Order triggered but failed for "
-              + order.getPlayer().getName() + " on " + order.getStock().getSymbol(), e);
+      } else {
+        BigDecimal currentPrice = order.getStock().getSalesPrice();
+        if (order.shouldTrigger(currentPrice)) {
+          try {
+            order.execute(this);
+            notifications.add(new Notification(
+                NotificationType.ORDER_FILLED,
+                order.label() + " filled — " + describeOrder(order),
+                this.week
+            ));
+            toRemove.add(order);
+          } catch (RuntimeException e) {
+            notifications.add(new Notification(
+                NotificationType.ORDER_FAILED,
+                order.label() + " failed — " + describeOrder(order),
+                this.week
+            ));
+            LOG.log(Level.WARNING, "Order triggered but failed for "
+                + order.getPlayer().getName() + " on " + order.getStock().getSymbol(), e);
+            toRemove.add(order);
+          }
         }
-        toRemove.add(order);
       }
     }
-
     pendingOrders.removeAll(toRemove);
   }
 
@@ -403,5 +417,19 @@ public class Exchange extends Observable {
    */
   public List<LimitOrder> getPendingOrders() {
     return Collections.unmodifiableList(pendingOrders);
+  }
+
+  /**
+   * Returns the notification log for this exchange.
+   *
+   * @return the notification log
+   */
+  public NotificationLog getNotifications() {
+    return notifications;
+  }
+
+  private String describeOrder(LimitOrder order) {
+    return order.getQuantity() + "× " + order.getStock().getSymbol()
+        + " at " + order.getTargetPrice() + " kr";
   }
 }
