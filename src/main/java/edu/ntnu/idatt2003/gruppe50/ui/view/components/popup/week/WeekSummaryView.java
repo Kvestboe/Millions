@@ -19,8 +19,6 @@ import java.math.RoundingMode;
 public class WeekSummaryView extends VBox {
 
   private final WeekSummary summary;
-  private final Runnable onShowNews;
-  private final Runnable onShowNotifications;
   private final Runnable onClose;
 
   /**
@@ -34,13 +32,9 @@ public class WeekSummaryView extends VBox {
 
   public WeekSummaryView(
       WeekSummary summary,
-      Runnable onShowNews,
-      Runnable onShowNotifications,
       Runnable onClose
   ) {
     this.summary = summary;
-    this.onShowNews = onShowNews;
-    this.onShowNotifications = onShowNotifications;
     this.onClose = onClose;
 
     setSpacing(15);
@@ -48,7 +42,6 @@ public class WeekSummaryView extends VBox {
         buildHero(),
         buildStatRow(),
         buildWeeklyBreakdown(),
-        buildSectionButtons(),
         buildHoldingsBlock(),
         buildActions()
     );
@@ -116,24 +109,8 @@ public class WeekSummaryView extends VBox {
     return block;
   }
 
-  private HBox buildSectionButtons() {
-    Button news = sectionButton("📰  News", summary.news().size(), onShowNews);
-    Button notif = sectionButton("🔔  Notifications", summary.notifications().size(), onShowNotifications);
-    HBox.setHgrow(news, Priority.ALWAYS);
-    HBox.setHgrow(notif, Priority.ALWAYS);
-    news.setMaxWidth(Double.MAX_VALUE);
-    notif.setMaxWidth(Double.MAX_VALUE);
-    return new HBox(12, news, notif);
-  }
-
-  private Button sectionButton(String label, int count, Runnable onClick) {
-    Button btn = ButtonFactory.styled(label + "  (" + count + ")", "section-button", onClick);
-    btn.setDisable(count == 0);
-    return btn;
-  }
-
   private VBox buildHoldingsBlock() {
-    Label header = new Label("💼  Your holdings this week");
+    Label header = new Label("Your holdings this week");
     header.getStyleClass().add("popup-title");
 
     VBox rows = new VBox(6);

@@ -4,6 +4,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.CoinExchange;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.Shop;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.ShopItemFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
@@ -16,6 +17,7 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.TransactionQueryController;
 public record GameSessionControllerBundle(
     GameSession session,
     GameController game,
+    DashboardQueryController dashboard,
     MarketQueryController market,
     PortfolioQueryController portfolio,
     TransactionQueryController transactions,
@@ -28,6 +30,13 @@ public record GameSessionControllerBundle(
     this(
         session,
         new GameController(session.getGameId(), m.buyShare, m.sellShare, m.advanceWeek),
+        new DashboardQueryController(
+            session.getGameId(),
+            m.getGoalProgress,
+            m.getStatusProgress,
+            m.getWeeklyMovers,
+            session.getExchange(),
+            m.getNotifications),
         new MarketQueryController(session.getGameId(), m.getMarket, session.getExchange()),
         new PortfolioQueryController(session.getGameId(), m.getPortfolio, session.getExchange()),
         new TransactionQueryController(session.getGameId(), m.getTransactions, m.getTradingLog, session.getExchange()),

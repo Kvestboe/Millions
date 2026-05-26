@@ -5,6 +5,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.market.StockDataSource;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationLog;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.csv.InvalidStockDataException;
@@ -76,6 +77,6 @@ public final class NewGameController {
   }
 
   private Exchange createExchange(List<Stock> stocks, Difficulty difficulty) {
-    return new Exchange("Stock exchange", stocks, new TransactionFactory(), difficulty.toVolatilityProfile());
+    return new Exchange("Stock exchange", stocks, new TransactionFactory(), difficulty.toVolatilityProfile(), new NotificationLog());
   }
 }

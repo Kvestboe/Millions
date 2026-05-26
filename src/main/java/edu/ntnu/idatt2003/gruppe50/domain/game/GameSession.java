@@ -2,7 +2,10 @@ package edu.ntnu.idatt2003.gruppe50.domain.game;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.Notification;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationType;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.InsufficientFundsException;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
@@ -34,6 +37,8 @@ public final class GameSession {
   private GameSessionState state;
   private LocalDateTime lastPlayed;
   private List<BigDecimal> netWorthHistory;
+
+  public static final BigDecimal WIN_THRESHOLD = new BigDecimal("1000000");
 
   private GameSession(
       UUID gameId,
@@ -179,7 +184,6 @@ public final class GameSession {
         currentWeek,
         expiryWeek
     );
-
     exchange.placeOrder(order);
     return order;
   }
@@ -290,8 +294,19 @@ public final class GameSession {
           "Not enough cash to pay hangar rent of " + hangarCost);
     }
 
+    Status statusBefore = player.getStatus();
     player.withdrawMoney(hangarCost);
     exchange.advance();
+    Status statusAfter = player.getStatus();
+
+    if (statusAfter.ordinal() > statusBefore.ordinal()) {
+      exchange.getNotifications().add(new Notification(
+          NotificationType.LEVEL_UP,
+          "You reached " + statusAfter.displayName() + " level",
+          exchange.getWeek()
+      ));
+    }
+
     netWorthHistory.add(player.getNetWorth());
     exchange.notifyObservers();
     if (evaluateOutcome() != GameOutcome.ONGOING) {
@@ -317,7 +332,7 @@ public final class GameSession {
         .multiply(BigDecimal.valueOf(difficulty.getGameOverThreshold()))
         .setScale(2, RoundingMode.HALF_UP);
 
-    if (netWorth.compareTo(new BigDecimal("1000000")) >= 0) {
+    if (netWorth.compareTo(WIN_THRESHOLD) >= 0) {
       return GameOutcome.WON;
     }
     if (netWorth.compareTo(threshold) < 0) {

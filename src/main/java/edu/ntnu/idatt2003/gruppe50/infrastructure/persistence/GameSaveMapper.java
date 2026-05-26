@@ -5,6 +5,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationLog;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
@@ -150,7 +151,8 @@ public class GameSaveMapper {
         factory,
         dto.exchange().week(),
         orders,
-        difficulty.toVolatilityProfile()
+        difficulty.toVolatilityProfile(),
+        new NotificationLog()
     );
 
     return GameSession.rehydrate(

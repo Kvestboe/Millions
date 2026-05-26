@@ -151,7 +151,7 @@ public class Stock {
     }
     BigDecimal previousPrice = prices.get(prices.size() - 2);
     BigDecimal change = getLatestPriceChange();
-    BigDecimal percent = change.divide(previousPrice, 2, RoundingMode.HALF_UP);
-    return percent.multiply(new BigDecimal("100"));
+    return change.multiply(new BigDecimal("100"))
+        .divide(previousPrice, 2, RoundingMode.HALF_UP);
   }
 }

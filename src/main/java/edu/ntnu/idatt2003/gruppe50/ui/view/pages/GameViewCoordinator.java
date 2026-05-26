@@ -196,7 +196,10 @@ public class GameViewCoordinator {
   private Map<PageId, Page> buildPages() {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
-    pages.put(PageId.DASHBOARD, new DashboardView(bundle.game()));
+    pages.put(PageId.DASHBOARD, new DashboardView(
+        bundle.dashboard(),
+        stock -> navigateToStockDetail(stock, PageId.DASHBOARD)
+    ));
     pages.put(PageId.MARKET, new MarketView(
         bundle.market(),
         stock -> navigateToStockDetail(stock, PageId.MARKET)
@@ -389,17 +392,7 @@ public class GameViewCoordinator {
    */
   private void refreshNavBar() {
     Player player = bundle.session().getPlayer();
-    Status status = player.getStatus();
-
-    navBar.updatePlayerInfo(player.getName(), status);
-    if (status == Status.SPECULATOR) {
-      navBar.setProgressVisible(false);
-    } else {
-      navBar.setProgressVisible(true);
-      navBar.setProgress(player.getProgressToNextLevel());
-      player.getGapToNextLevel().ifPresent(gap ->
-          navBar.setProgressTooltip(formatGap(status.next(), gap)));
-    }
+    navBar.updatePlayerInfo(player.getName(), player.getStatus());
   }
 
   /**

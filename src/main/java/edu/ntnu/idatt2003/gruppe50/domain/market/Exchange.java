@@ -1,9 +1,13 @@
 package edu.ntnu.idatt2003.gruppe50.domain.market;
 
+import edu.ntnu.idatt2003.gruppe50.domain.notification.Notification;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationLog;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationType;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observable;
@@ -37,6 +41,7 @@ public class Exchange extends Observable {
   private int week;
   private final List<LimitOrder> pendingOrders;
   private final VolatilityProfile volatility;
+  private final NotificationLog notifications;
 
   /**
    * Recreates an exchange from saved data.
@@ -47,16 +52,18 @@ public class Exchange extends Observable {
    * @param week the saved week number
    * @param pendingOrders the saved pending orders
    * @param volatility the volatility settings for the exchange
+   * @param notifications the notification log for the exchange
    * @return the recreated exchange
    */
-  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility) {
-    return new Exchange(name, stockMap, factory, week, pendingOrders, volatility);
+  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility, NotificationLog notifications) {
+    return new Exchange(name, stockMap, factory, week, pendingOrders, volatility, notifications);
   }
 
-  private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility) {
+  private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility, NotificationLog notifications) {
     this.name = name;
     this.stockMap = new HashMap<>(stockMap);
     this.volatility = volatility;
+    this.notifications = notifications;
     this.random = new Random();
     this.factory = factory;
     this.week = week;
@@ -72,19 +79,18 @@ public class Exchange extends Observable {
    * @param volatility the volatility settings for the exchange
    * @throws IllegalArgumentException if any parameter is null or invalid
    */
-  public Exchange(String name, List<Stock> stocks, TransactionFactory factory, VolatilityProfile volatility) {
+  public Exchange(String name, List<Stock> stocks, TransactionFactory factory, VolatilityProfile volatility, NotificationLog notifications) {
     Validate.notBlank(name, "Name");
     Validate.notEmpty(stocks, "Stocks");
-
     Validate.notNull(factory, "Factory");
 
     this.name = name;
     stockMap = stocks.stream().collect(Collectors.toMap(Stock::getSymbol, v -> v));
-
     week = 1;
     random = new Random();
     this.factory = factory;
     this.volatility = volatility;
+    this.notifications = notifications;
     pendingOrders = new ArrayList<>();
   }
 
@@ -292,9 +298,10 @@ public class Exchange extends Observable {
   }
 
   private double computeMultiplier(Stock stock) {
-    double bias = 1 - volatility.upChance();
-    double raw = Math.exp((random.nextDouble() - bias) * 0.4);
-    return Math.clamp(raw, 1 - volatility.maxLoss(), 1 + volatility.maxGain());
+    boolean goesUp = random.nextDouble() < volatility.upChance();
+    double maxMove = goesUp ? volatility.maxGain() : volatility.maxLoss();
+    double magnitude = Math.pow(random.nextDouble(), 1.7) * maxMove;
+    return goesUp ? 1 + magnitude : 1 - magnitude;
   }
 
   /**
@@ -314,56 +321,69 @@ public class Exchange extends Observable {
 
     for (LimitOrder order : pendingOrders) {
       if (order.isExpired(this.week)) {
-        // TODO: notify player in GUI that order expired (via Observer or event listener)
+        notifications.add(new Notification(
+            NotificationType.ORDER_EXPIRED,
+            describeExpiredOrder(order),
+            this.week
+        ));
         LOG.log(Level.INFO, "Order expired for {0} on {1}",
             new Object[]{order.getPlayer().getName(), order.getStock().getSymbol()});
         toRemove.add(order);
-        continue;
-      }
-
-      BigDecimal currentPrice = order.getStock().getSalesPrice();
-      if (order.shouldTrigger(currentPrice)) {
-        try {
-          order.execute(this);
-        } catch (RuntimeException e) {
-          // TODO: notify player in GUI that order triggered but could not be executed
-          LOG.log(Level.WARNING, "Order triggered but failed for "
-              + order.getPlayer().getName() + " on " + order.getStock().getSymbol(), e);
+      } else {
+        BigDecimal currentPrice = order.getStock().getSalesPrice();
+        if (order.shouldTrigger(currentPrice)) {
+          try {
+            order.execute(this);
+            notifications.add(new Notification(
+                NotificationType.ORDER_FILLED,
+                describeFilledOrder(order),
+                this.week
+            ));
+            toRemove.add(order);
+          } catch (RuntimeException e) {
+            notifications.add(new Notification(
+                NotificationType.ORDER_FAILED,
+                describeFailedOrder(order),
+                this.week
+            ));
+            LOG.log(Level.WARNING, "Order triggered but failed for "
+                + order.getPlayer().getName() + " on " + order.getStock().getSymbol(), e);
+            toRemove.add(order);
+          }
         }
-        toRemove.add(order);
       }
     }
-
     pendingOrders.removeAll(toRemove);
   }
 
   /**
-   * Returns the stocks with the biggest price increase.
+   * Returns the stocks with the highest percentage price change.
    *
-   * @param limit the maximum number of stocks to return
-   * @return the stocks with the biggest gain
+   * @param limit how many stocks do you want in the list
+   * @return list of stocks sorted by latest percent change descending
    * @throws IllegalArgumentException if {@code limit <= 0}
    */
   public List<Stock> getGainers(int limit) {
     Validate.positiveInt(limit, "Limit");
     return stockMap.values().stream()
-        .sorted((a, b) -> b.getLatestPriceChange().compareTo(a.getLatestPriceChange()))
+        .sorted((a, b) -> b.getLatestPriceChangePercent().compareTo(a.getLatestPriceChangePercent()))
         .limit(limit)
         .toList();
   }
 
   /**
-   * Returns the stocks with the biggest price decrease.
+   * Returns the stocks with the lowest percentage price change.
    *
-   * @param limit the maximum number of stocks to return
-   * @return the stocks with the biggest loss
+   * @param limit how many stocks do you want in the list
+   * @return list of stocks sorted by latest percent change ascending
    * @throws IllegalArgumentException if {@code limit <= 0}
    */
   public List<Stock> getLosers(int limit) {
     Validate.positiveInt(limit, "Limit");
     return stockMap.values().stream()
-        .sorted(Comparator.comparing(Stock::getLatestPriceChange))
-        .limit(limit).toList();
+        .sorted(Comparator.comparing(Stock::getLatestPriceChangePercent))
+        .limit(limit)
+        .toList();
   }
 
   /**
@@ -411,5 +431,36 @@ public class Exchange extends Observable {
    */
   public List<LimitOrder> getPendingOrders() {
     return Collections.unmodifiableList(pendingOrders);
+  }
+
+  /**
+   * Returns the notification log for this exchange.
+   *
+   * @return the notification log
+   */
+  public NotificationLog getNotifications() {
+    return notifications;
+  }
+
+  private String describeFilledOrder(LimitOrder order) {
+    String verb = isBuy(order) ? "bought" : "sold";
+    return order.getQuantity() + "× " + order.getStock().getSymbol()
+        + " " + verb + " at " + order.getTargetPrice() + " kr";
+  }
+
+  private String describeExpiredOrder(LimitOrder order) {
+    String kind = isBuy(order) ? "buy order" : "sell order";
+    return order.getQuantity() + "× " + order.getStock().getSymbol()
+        + " " + kind + " at " + order.getTargetPrice() + " kr";
+  }
+
+  private String describeFailedOrder(LimitOrder order) {
+    String kind = isBuy(order) ? "buy" : "sell";
+    return order.getQuantity() + "× " + order.getStock().getSymbol()
+        + " " + kind + " failed at " + order.getTargetPrice() + " kr";
+  }
+
+  private boolean isBuy(LimitOrder order) {
+    return order instanceof LimitBuyOrder;
   }
 }
