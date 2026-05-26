@@ -317,17 +317,7 @@ public class GameViewCoordinator {
 
   private void refreshNavBar() {
     Player player = bundle.session().getPlayer();
-    Status status = player.getStatus();
-
-    navBar.updatePlayerInfo(player.getName(), status);
-    if (status == Status.SPECULATOR) {
-      navBar.setProgressVisible(false);
-    } else {
-      navBar.setProgressVisible(true);
-      navBar.setProgress(player.getProgressToNextLevel());
-      player.getGapToNextLevel().ifPresent(gap ->
-          navBar.setProgressTooltip(formatGap(status.next(), gap)));
-    }
+    navBar.updatePlayerInfo(player.getName(), player.getStatus());
   }
 
   /**

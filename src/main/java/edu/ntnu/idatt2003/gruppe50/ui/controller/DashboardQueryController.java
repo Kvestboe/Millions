@@ -1,7 +1,9 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.GetGoalProgressUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.query.GetStatusProgressUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.GoalProgressDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StatusProgressDto;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
 import java.util.UUID;
@@ -20,6 +22,8 @@ public class DashboardQueryController implements Observer {
   private final UUID gameId;
   private final GetGoalProgressUseCase getGoalProgress;
   private final ObjectProperty<GoalProgressDto> goalProgress = new SimpleObjectProperty<>();
+  private final GetStatusProgressUseCase getStatusProgress;
+  private final ObjectProperty<StatusProgressDto> statusProgress = new SimpleObjectProperty<>();
 
   /**
    * Creates a new dashboard query controller and registers it as an observer
@@ -32,10 +36,11 @@ public class DashboardQueryController implements Observer {
   public DashboardQueryController(
       UUID gameId,
       GetGoalProgressUseCase getGoalProgress,
-      Exchange exchange
+      Exchange exchange, GetStatusProgressUseCase getStatusProgress
   ) {
     this.gameId = gameId;
     this.getGoalProgress = getGoalProgress;
+    this.getStatusProgress = getStatusProgress;
     exchange.addObserver(this);
     refresh();
   }
@@ -52,6 +57,10 @@ public class DashboardQueryController implements Observer {
     return goalProgress;
   }
 
+  public ReadOnlyObjectProperty<StatusProgressDto> statusProgressProperty() {
+    return statusProgress;
+  }
+
   /**
    * Called by the exchange whenever its state changes.
    */
@@ -65,5 +74,6 @@ public class DashboardQueryController implements Observer {
    */
   public void refresh() {
     goalProgress.set(getGoalProgress.execute(gameId));
+    statusProgress.set(getStatusProgress.execute(gameId));
   }
 }

@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.CardFactory.createCard;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.GoalProgressDto;
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.StatusProgressDto;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
@@ -14,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -78,20 +80,24 @@ public class DashboardView extends BorderPane implements Page {
     VBox card = createCard("Goal progress");
     card.setSpacing(10);
 
-    // Prosent-label (oransje, øverst til høyre)
+    card.getChildren().addAll(
+        buildGoalSection(),
+        buildDivider(),
+        buildStatusSection()
+    );
+
+    return card;
+  }
+
+  private VBox buildGoalSection() {
     Label percentLabel = new Label();
     percentLabel.getStyleClass().add("goal-progress-percent");
     HBox header = new HBox(percentLabel);
     header.setAlignment(Pos.CENTER_RIGHT);
 
-    // Selve baren
     ProgressBar bar = new ProgressBar(0);
     bar.getStyleClass().add("goal-progress-bar");
-    bar.setMaxWidth(Double.MAX_VALUE);
-    bar.setMinHeight(10);
-    bar.setPrefHeight(10);
 
-    // Nåværende beløp + målbeløp
     Label currentLabel = new Label();
     currentLabel.getStyleClass().add("goal-progress-current");
 
@@ -102,7 +108,6 @@ public class DashboardView extends BorderPane implements Page {
     HBox.setHgrow(spacer, Priority.ALWAYS);
     HBox footer = new HBox(currentLabel, spacer, goalLabel);
 
-    // Hjelpemetode for å oppdatere alle elementene fra én DTO
     Runnable apply = () -> {
       GoalProgressDto dto = controller.goalProgressProperty().get();
       if (dto == null) return;
@@ -111,13 +116,73 @@ public class DashboardView extends BorderPane implements Page {
       currentLabel.setText(MoneyFormat.formatCurrency(dto.currentNetWorth()));
       goalLabel.setText("Goal: " + MoneyFormat.formatCurrency(dto.goal()));
     };
-
-    // Sett initialverdier + lytt på endringer
     apply.run();
     controller.goalProgressProperty().addListener((obs, old, dto) -> apply.run());
 
-    card.getChildren().addAll(header, bar, footer);
-    return card;
+    return new VBox(8, header, bar, footer);
+  }
+
+  private Separator buildDivider() {
+    Separator sep = new Separator();
+    sep.getStyleClass().add("goal-progress-divider");
+    return sep;
+  }
+
+  private VBox buildStatusSection() {
+    Label transitionLabel = new Label();
+    transitionLabel.getStyleClass().add("status-progress-transition");
+
+    Label percentLabel = new Label();
+    percentLabel.getStyleClass().add("status-progress-percent");
+
+    Region headerSpacer = new Region();
+    HBox.setHgrow(headerSpacer, Priority.ALWAYS);
+    HBox header = new HBox(transitionLabel, headerSpacer, percentLabel);
+    header.setAlignment(Pos.CENTER_LEFT);
+
+    ProgressBar bar = new ProgressBar(0);
+    bar.getStyleClass().add("level-progress");
+
+    Label gapLabel = new Label();
+    gapLabel.getStyleClass().add("status-progress-gap");
+
+    VBox section = new VBox(8, header, bar, gapLabel);
+
+    Runnable apply = () -> {
+      StatusProgressDto dto = controller.statusProgressProperty().get();
+      if (dto == null) return;
+
+      if (dto.atMaxLevel()) {
+        transitionLabel.setText("✦ Max status reached: " + dto.currentStatus() + " ✦");
+        percentLabel.setText("");
+        bar.setVisible(false);
+        bar.setManaged(false);
+        gapLabel.setVisible(false);
+        gapLabel.setManaged(false);
+      } else {
+        transitionLabel.setText(dto.currentStatus() + " → " + dto.nextStatus());
+        percentLabel.setText(String.format("%.1f%%", dto.progress() * 100));
+        bar.setVisible(true);
+        bar.setManaged(true);
+        bar.setProgress(dto.progress());
+
+        bar.getStyleClass().removeIf(c ->
+            c.equals("level-progress-investor") || c.equals("level-progress-speculator"));
+        String variant = "level-progress-" + dto.currentStatus().toLowerCase();
+        if (variant.equals("level-progress-investor") || variant.equals("level-progress-speculator")) {
+          bar.getStyleClass().add(variant);
+        }
+
+        gapLabel.setText(dto.weeksRemaining() + " weeks of trading left  | "
+            + MoneyFormat.formatCurrency(dto.moneyRemaining()) + " left");
+        gapLabel.setVisible(true);
+        gapLabel.setManaged(true);
+      }
+    };
+    apply.run();
+    controller.statusProgressProperty().addListener((obs, old, dto) -> apply.run());
+
+    return section;
   }
 
   private VBox buildWatchlistCard() {

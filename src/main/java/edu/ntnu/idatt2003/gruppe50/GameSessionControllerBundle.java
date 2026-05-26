@@ -30,7 +30,7 @@ public record GameSessionControllerBundle(
     this(
         session,
         new GameController(session.getGameId(), m.buyShare, m.sellShare, m.advanceWeek),
-        new DashboardQueryController(session.getGameId(), m.getGoalProgress, session.getExchange()),
+        new DashboardQueryController(session.getGameId(), m.getGoalProgress, session.getExchange(), m.getStatusProgress),
         new MarketQueryController(session.getGameId(), m.getMarket, session.getExchange()),
         new PortfolioQueryController(session.getGameId(), m.getPortfolio, session.getExchange()),
         new TransactionQueryController(session.getGameId(), m.getTransactions, m.getTradingLog, session.getExchange()),
