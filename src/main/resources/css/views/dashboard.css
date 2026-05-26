@@ -186,3 +186,9 @@
     -fx-background-color: rgba(74, 222, 128, 0.20);
     -fx-text-fill: -gain;
 }
+
+.notification-empty {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 15px;
+    -fx-padding: 8 0 8 0;
+}

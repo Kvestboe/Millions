@@ -18,9 +18,9 @@ import javafx.util.Duration;
 /**
  * Settings page where the player can adjust display and sound options.
  *
- * <p>Includes a fullscreen toggle, master/music/sound effects toggles
- * with a master volume slider, and a language selector. Sound state is
- * delegated to the {@link SoundManager}.
+ * <p>Includes a fullscreen toggle and master/music/sound effects toggles
+ * with a master volume slider. Sound state is delegated to the
+ * {@link SoundManager}.
  */
 public class SettingsView extends VBox {
 
@@ -72,9 +72,7 @@ public class SettingsView extends VBox {
         buildSectionLabel("SOUND"),
         masterRow,
         musicRow,
-        sfxRow,
-        buildSectionLabel("LANGUAGE"),
-        buildLanguageRow()
+        sfxRow
     );
   }
 
@@ -251,44 +249,6 @@ public class SettingsView extends VBox {
     });
 
     HBox row = new HBox(text, spacer, toggle);
-    row.setAlignment(Pos.CENTER_LEFT);
-    row.getStyleClass().add("settings-row");
-    return row;
-  }
-
-  private HBox buildLanguageRow() {
-    Label title = new Label("Language");
-    title.getStyleClass().add("settings-row-title");
-
-    Label subtitle = new Label("Select your preferred language");
-    subtitle.getStyleClass().add("settings-row-subtitle");
-
-    VBox text = new VBox(2, title, subtitle);
-
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-
-    // TODO: Implement language system
-    Button enBtn = new Button("EN");
-    enBtn.getStyleClass().add("lang-btn-active");
-
-    Button noBtn = new Button("NO");
-    noBtn.getStyleClass().add("lang-btn");
-
-    enBtn.setOnAction(e -> {
-      enBtn.getStyleClass().setAll("lang-btn-active");
-      noBtn.getStyleClass().setAll("lang-btn");
-    });
-
-    noBtn.setOnAction(e -> {
-      noBtn.getStyleClass().setAll("lang-btn-active");
-      enBtn.getStyleClass().setAll("lang-btn");
-    });
-
-    HBox langBtns = new HBox(6, enBtn, noBtn);
-    langBtns.setAlignment(Pos.CENTER_RIGHT);
-
-    HBox row = new HBox(text, spacer, langBtns);
     row.setAlignment(Pos.CENTER_LEFT);
     row.getStyleClass().add("settings-row");
     return row;

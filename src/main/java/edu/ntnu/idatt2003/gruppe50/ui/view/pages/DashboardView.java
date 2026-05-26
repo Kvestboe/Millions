@@ -10,14 +10,11 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.WeeklyMoversDto;
 import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationType;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.GameController;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
@@ -31,7 +28,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -47,9 +43,8 @@ public class DashboardView extends BorderPane implements Page {
     GridPane grid = createGrid();
 
     addToGrid(grid, buildGoalProgressCard(),  0, 0, 2, 1);
-    addToGrid(grid, buildWatchlistCard(),     0, 1, 1, 1);
+    addToGrid(grid, buildNotificationsCard(), 0, 1, 1, 1);
     addToGrid(grid, buildMoversCard(),        1, 1, 1, 1);
-    addToGrid(grid, buildNotificationsCard(), 0, 2, 2, 1);
 
     ScrollPane scrollPane = new ScrollPane(grid);
     scrollPane.setFitToWidth(true);
@@ -78,12 +73,9 @@ public class DashboardView extends BorderPane implements Page {
     RowConstraints goalRow = new RowConstraints();
     goalRow.setMinHeight(140);
 
-    RowConstraints moversRow = new RowConstraints();
+    RowConstraints contentRow = new RowConstraints();
 
-    RowConstraints notifRow = new RowConstraints();
-    notifRow.setMinHeight(160);
-
-    grid.getRowConstraints().addAll(goalRow, moversRow, notifRow);
+    grid.getRowConstraints().addAll(goalRow, contentRow);
 
     return grid;
   }
@@ -197,26 +189,6 @@ public class DashboardView extends BorderPane implements Page {
     return section;
   }
 
-  private VBox buildWatchlistCard() {
-    VBox card = createCard("Watchlist");
-
-    VBox content = new VBox(6);
-    // (her vil watchlist-radene plasseres når vi kobler på data senere)
-
-    ScrollPane scroll = new ScrollPane(content);
-    scroll.setFitToWidth(true);
-    scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-    scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-    scroll.getStyleClass().add("app-scroll");
-
-    // Nøkkelen: ScrollPane skal *ikke* dra opp rad-høyden basert på innhold
-    scroll.setPrefViewportHeight(0);
-    VBox.setVgrow(scroll, Priority.ALWAYS);
-
-    card.getChildren().add(scroll);
-    return card;
-  }
-
   private VBox buildMoversCard() {
     VBox card = createCard("This week's movers");
     card.setSpacing(12);
@@ -278,51 +250,24 @@ public class DashboardView extends BorderPane implements Page {
     return row;
   }
 
-  private record MoverRow(String symbol, String name, double pct, boolean gainer) {}
-
-  private VBox buildMoversSection(String title, List<MoverRow> rows) {
-    Label header = new Label(title);
-    header.getStyleClass().add("movers-section-header");
-
-    VBox section = new VBox(6, header);
-    for (MoverRow r : rows) {
-      section.getChildren().add(buildMoverRow(r));
-    }
-    return section;
-  }
-
-  private HBox buildMoverRow(MoverRow r) {
-    Label symbol = new Label(r.symbol());
-    symbol.getStyleClass().add("mover-symbol");
-
-    Label name = new Label(r.name());
-    name.getStyleClass().add("mover-name");
-
-    VBox left = new VBox(2, symbol, name);
-
-    Label change = new Label(
-        (r.gainer() ? "▲ " : "▼ ") + String.format("%.1f%%", r.pct())
-    );
-    change.getStyleClass().add(r.gainer() ? "mover-gain" : "mover-loss");
-
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-
-    HBox row = new HBox(left, spacer, change);
-    row.setAlignment(Pos.CENTER_LEFT);
-    return row;
-  }
-
   private VBox buildNotificationsCard() {
     VBox card = createCard("Notifications");
     card.setSpacing(10);
 
-    // Container for notifikasjons-radene (rebuildes når listen endrer seg)
+    Label emptyLabel = new Label("No notifications yet");
+    emptyLabel.getStyleClass().add("notification-empty");
+
     VBox rowsContainer = new VBox(8);
     card.getChildren().add(rowsContainer);
 
     Runnable apply = () -> {
       rowsContainer.getChildren().clear();
+
+      if (controller.getNotifications().isEmpty()) {
+        rowsContainer.getChildren().add(emptyLabel);
+        return;
+      }
+
       for (NotificationDto dto : controller.getNotifications()) {
         rowsContainer.getChildren().add(buildNotificationRow(dto));
       }

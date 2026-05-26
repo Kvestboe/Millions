@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 public final class GetNotificationsUseCase {
 
-  private static final int DEFAULT_LIMIT = 4;
+  private static final int DEFAULT_LIMIT = 7;
 
   private final GameSessionRepository repository;
 

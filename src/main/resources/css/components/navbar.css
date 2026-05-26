@@ -104,15 +104,27 @@
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
-.avatar-circle {
-    -fx-min-width: 34;  -fx-min-height: 34;
-    -fx-pref-width: 34; -fx-pref-height: 34;
-    -fx-max-width: 34;  -fx-max-height: 34;
-    -fx-background-color: -accent-gold;
-    -fx-background-radius: 17;
+.menu-icon {
+    -fx-min-width: 28;  -fx-min-height: 24;
+    -fx-pref-width: 28; -fx-pref-height: 24;
+    -fx-max-width: 28;  -fx-max-height: 24;
     -fx-alignment: center;
-    -fx-text-fill: -bg-primary;
-    -fx-font-size: 16px;
+}
+
+.menu-icon-line {
+    -fx-min-width: 26;
+    -fx-pref-width: 26;
+    -fx-max-width: 26;
+    -fx-min-height: 3;
+    -fx-pref-height: 3;
+    -fx-max-height: 3;
+    -fx-background-color: -text-secondary;
+    -fx-background-radius: 2;
+}
+
+.nav-menu-button:hover .menu-icon-line,
+.nav-menu-button:showing .menu-icon-line {
+    -fx-background-color: -text-primary;
 }
 .nav-dropdown-no-arrow > .arrow-button {
     -fx-padding: 0;

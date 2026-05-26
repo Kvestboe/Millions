@@ -43,8 +43,6 @@ public class Exchange extends Observable {
   private final VolatilityProfile volatility;
   private final NotificationLog notifications;
 
-  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility,  NotificationLog notifications  ) {
-    return new Exchange(name, stockMap, factory, week, pendingOrders, volatility, notifications);
   /**
    * Recreates an exchange from saved data.
    *
@@ -54,10 +52,11 @@ public class Exchange extends Observable {
    * @param week the saved week number
    * @param pendingOrders the saved pending orders
    * @param volatility the volatility settings for the exchange
+   * @param notifications the notification log for the exchange
    * @return the recreated exchange
    */
-  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility) {
-    return new Exchange(name, stockMap, factory, week, pendingOrders, volatility);
+  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility, NotificationLog notifications) {
+    return new Exchange(name, stockMap, factory, week, pendingOrders, volatility, notifications);
   }
 
   private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility, NotificationLog notifications) {
@@ -299,9 +298,10 @@ public class Exchange extends Observable {
   }
 
   private double computeMultiplier(Stock stock) {
-    double bias = 1 - volatility.upChance();
-    double raw = Math.exp((random.nextDouble() - bias) * 0.4);
-    return Math.clamp(raw, 1 - volatility.maxLoss(), 1 + volatility.maxGain());
+    boolean goesUp = random.nextDouble() < volatility.upChance();
+    double maxMove = goesUp ? volatility.maxGain() : volatility.maxLoss();
+    double magnitude = Math.pow(random.nextDouble(), 1.7) * maxMove;
+    return goesUp ? 1 + magnitude : 1 - magnitude;
   }
 
   /**

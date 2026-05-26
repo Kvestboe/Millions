@@ -11,14 +11,14 @@ public enum PageId {
   /** Portfolio page. */
   PORTFOLIO("Portfolio"),
 
-  /** Shop page. */
-  SHOP("Shop"),
-
   /** Transaction history page. */
   TRANSACTIONS("Transactions"),
 
   /** Pending orders page. */
-  ORDERS("Orders");
+  ORDERS("Orders"),
+
+  /** Shop page. */
+  SHOP("Shop");
 
   private final String label;
 

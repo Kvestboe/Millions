@@ -67,30 +67,6 @@
 .toggle-on .toggle-thumb  { -fx-translate-x: 10px; }
 .toggle-off .toggle-thumb { -fx-translate-x: -10px; }
 
-/* Language buttons */
-.lang-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-text-fill: rgba(255, 255, 255, 0.5);
-    -fx-font-size: 12px;
-    -fx-background-radius: 6;
-    -fx-border-color: -border;
-    -fx-border-width: 0.5;
-    -fx-border-radius: 6;
-    -fx-padding: 7 14 7 14;
-    -fx-cursor: hand;
-}
-
-.lang-btn-active {
-    -fx-background-color: -accent-indigo;
-    -fx-text-fill: white;
-    -fx-font-size: 12px;
-    -fx-font-weight: 500;
-    -fx-background-radius: 6;
-    -fx-border-color: transparent;
-    -fx-padding: 7 14 7 14;
-    -fx-cursor: hand;
-}
-
 /* Volume slider */
 .volume-slider .track {
     -fx-background-color: rgba(255, 255, 255, 0.1);

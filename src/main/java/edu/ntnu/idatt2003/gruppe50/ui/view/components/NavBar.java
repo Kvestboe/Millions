@@ -10,20 +10,17 @@ import javafx.beans.binding.NumberBinding;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 
 /**
  * Top navigation bar for the application.
  *
  * <p>Contains the logo, navigation buttons for each {@link PageId}, and a
- * player identity section showing the player's name, status, and progress
- * toward the next status level.
+ * player identity section showing the player's name and status.
  */
 public class NavBar extends HBox {
 
@@ -76,7 +73,6 @@ public class NavBar extends HBox {
     navLinks.setMaxWidth(Region.USE_PREF_SIZE);
     navLinks.setAlignment(Pos.CENTER);
     navLinks.setMinWidth(Region.USE_PREF_SIZE);
-    navLinks.setMaxWidth(Region.USE_PREF_SIZE);   // den du har fra før
 
     for (PageId id : PageId.values()) {
       Button btn = createNavButton(id, listener);
@@ -94,16 +90,23 @@ public class NavBar extends HBox {
     VBox playerInfo = new VBox(2, nameLabel, statusLabel);
     playerInfo.setAlignment(Pos.CENTER_RIGHT);
 
-    Label avatarIcon = new Label("");
-    avatarIcon.getStyleClass().add("avatar-circle");
+    VBox menuIcon = new VBox(4);
+    menuIcon.getStyleClass().add("menu-icon");
+    menuIcon.setAlignment(Pos.CENTER);
+    for (int i = 0; i < 3; i++) {
+      Region line = new Region();
+      line.getStyleClass().add("menu-icon-line");
+      menuIcon.getChildren().add(line);
+    }
 
-    HBox playerSection = new HBox(10, playerInfo, avatarIcon);
+    HBox playerSection = new HBox(12, playerInfo, menuIcon);
     playerSection.setAlignment(Pos.CENTER_RIGHT);
 
     NavDropdown account = new NavDropdown(playerSection);
     account.hideArrow();
+    account.setTooltip(new Tooltip("Open menu"));
+    account.setAccessibleText("Open menu");
     account.addItem("Settings",     accountListener::onSettings);
-    account.addDisabledItem("Achievements");        // TODO: koble når feature finnes
     account.addItem("Leaderboard",  accountListener::onLeaderboard);
     account.addSeparator();
     account.addItem("Save & Main Menu",    accountListener::onMainMenu);

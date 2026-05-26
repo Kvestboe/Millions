@@ -47,31 +47,9 @@ public class WeekSummaryPopup extends StackPane {
   private void showSummary() {
     WeekSummaryView view = new WeekSummaryView(
         summary,
-        this::showNews,
-        this::showNotifications,
         onClose
     );
     card.getChildren().setAll(scrollable(view));
-  }
-
-  private void showNews() {
-    WeekDetailListView view = new WeekDetailListView(
-        "📰  News",
-        summary.news(),
-        this::showSummary,
-        onClose
-    );
-    card.getChildren().setAll(view);
-  }
-
-  private void showNotifications() {
-    WeekDetailListView view = new WeekDetailListView(
-        "🔔  Notifications",
-        summary.notifications(),
-        this::showSummary,
-        onClose
-    );
-    card.getChildren().setAll(view);
   }
 
   private ScrollPane scrollable(VBox content) {
