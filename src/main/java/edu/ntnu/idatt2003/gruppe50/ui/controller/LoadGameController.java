@@ -46,11 +46,13 @@ public class LoadGameController {
   }
 
   public void load() {
-    if (selected.get() != null) {
-      UUID gameId = selected.get().gameId();
-      loadGameSession.execute(new LoadGameSessionUseCase.Request(gameId));
-      onGameLoaded.accept(gameId);
+    SaveSummaryDto save = selected.get();
+
+    if (save == null || save.isFinished()) {
+      return;
     }
+
+    onGameLoaded.accept(save.gameId());
   }
 
   public void delete() {
