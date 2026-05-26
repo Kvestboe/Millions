@@ -144,7 +144,7 @@ public class GameViewCoordinator {
 
       root.setTop(null);
       root.setBottom(null);
-      navManager.show(new GameOverView(result, onPlayAgain, onMainMenu));
+      navManager.show(new GameOverView(result, onPlayAgain, onMainMenu, onLeaderboard));
     });
 
     popupHost = new StackPane(root);
