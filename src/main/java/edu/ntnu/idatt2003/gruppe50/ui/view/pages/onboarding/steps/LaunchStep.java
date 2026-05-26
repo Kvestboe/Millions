@@ -22,6 +22,12 @@ public class LaunchStep implements OnboardingStep {
 
   private OnboardingFlowData flowData;
 
+  /**
+   * Updates the flow data, called by OnboardingFlow before showing this
+   * step so the summary can reflect all collected choices.
+   *
+   * @param flowData the shared mutable onboarding data object
+   */
   public void setFlowData(OnboardingFlowData flowData) {
     this.flowData = flowData;
   }

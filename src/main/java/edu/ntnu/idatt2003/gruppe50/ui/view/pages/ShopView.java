@@ -268,6 +268,11 @@ public class ShopView extends ScrollPane implements Page {
     refresh();
   }
 
+  /**
+   * Refreshes the coin balance, cash balance, current coin rate, the coin
+   * price chart and the theme cards. Should be called after any change
+   * that affects the player's money or coin holdings.
+   */
   public void refresh() {
     coinsLabel.setText(controller.getPlayerCoins() + " coins");
     moneyLabel.setText("Current balance: " + MoneyFormat.formatCurrency(controller.getPlayerMoney()));

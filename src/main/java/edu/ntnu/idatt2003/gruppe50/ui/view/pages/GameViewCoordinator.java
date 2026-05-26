@@ -48,6 +48,17 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Coordinates the in-game view, including navigation, the bottom
+ * status bar, popups, and the end-of-game transition.
+ *
+ * <p>Owns the {@link NavigationManager}, the top {@link NavBar} and the
+ * bottom stat bar. Builds and registers each in-game {@link Page}, wires
+ * navigation between pages, and observes the exchange to refresh the
+ * bottom bar as the market updates. When the game finishes, replaces the
+ * normal layout with a {@link GameOverView} and writes a leaderboard
+ * entry on wins.
+ */
 public class GameViewCoordinator {
 
   private final GameSessionControllerBundle bundle;
@@ -74,6 +85,18 @@ public class GameViewCoordinator {
   private BigDecimal lastWeeklyDelta = BigDecimal.ZERO;
   private static final BigDecimal DANGER_ZONE_MULTIPLIER = new BigDecimal("1.15");
 
+  /**
+   * Constructs the in-game view coordinator.
+   *
+   * @param bundle the controller bundle for the active game session
+   * @param onMainMenu action triggered when the player chooses "Main menu"
+   * @param onPlayAgain action triggered when the player chooses "Play again" on game over
+   * @param onSettings action triggered when the player opens settings
+   * @param onLeaderboard action triggered when the player opens the leaderboard
+   * @param onThemeChanged called with the new theme id when the active theme changes
+   * @param leaderboard the leaderboard updated when the player wins
+   * @param leaderboardFile the file handler used to persist the leaderboard on win
+   */
   public GameViewCoordinator(
       GameSessionControllerBundle bundle,
       Runnable onMainMenu,
@@ -93,6 +116,12 @@ public class GameViewCoordinator {
     this.leaderboardFile = leaderboardFile;
   }
 
+  /**
+   * Builds and returns the in-game scene, wiring up navigation, the
+   * bottom bar, popups and the end-of-game transition.
+   *
+   * @return the configured JavaFX scene
+   */
   public Scene getScene() {
     navManager = new NavigationManager(buildPages());
     navBar = new NavBar(navManager::navigateTo, new NavBar.AccountMenuListener() {
@@ -152,6 +181,18 @@ public class GameViewCoordinator {
     return scene;
   }
 
+  /**
+   * Builds the pages and puts them in an enum Map consisting
+   * of their {@link PageId} and their corresponding {@code View}.
+   *
+   * <p>Pages that need to navigate to the stock detail screen (Market,
+   * Portfolio, Transactions) are given a callback that delegates to
+   * {@link #navigateToStockDetail}, capturing which page to return to on
+   * back. The Shop view is kept as a field so it can be refreshed when
+   * the coin price changes on advance week.
+   *
+   * @return a map of page id to page instance
+   */
   private Map<PageId, Page> buildPages() {
     Map<PageId, Page> pages = new EnumMap<>(PageId.class);
 
@@ -181,6 +222,12 @@ public class GameViewCoordinator {
     return pages;
   }
 
+  /**
+   * Opens the stock detail page for the given stock.
+   *
+   * @param stock the stock to display
+   * @param backTo the page to return to when the user clicks Back
+   */
   private void navigateToStockDetail(StockDto stock, PageId backTo) {
     StockDetailView view = new StockDetailView(
         stock,
@@ -211,6 +258,12 @@ public class GameViewCoordinator {
     return bar;
   }
 
+  /**
+   * Handles a click on the "Advance week" button.
+   *
+   * <p>If the player can't afford the upcoming hangar cost, an
+   * insufficient-cash popup is shown and the week does not advance.
+   */
   private void onAdvanceWeek() {
     GameSession session = bundle.session();
     BigDecimal hangarCost = session.getUpcomingHangarCost();
@@ -247,6 +300,18 @@ public class GameViewCoordinator {
     showPopup(popup);
   }
 
+  /**
+   * Builds the data shown in the week summary popup.
+   *
+   * <p>Groups the player's shares by stock symbol, sums the quantities,
+   * and computes per-stock weekly delta (latest price change * quantity)
+   * and percent change.
+   *
+   * @param prevWeek the week number before advancing
+   * @param before net worth before advancing
+   * @param after net worth after advancing
+   * @return the week summary for the popup
+   */
   private WeekSummary buildWeekSummary(int prevWeek, BigDecimal before, BigDecimal after) {
     Player player = bundle.session().getPlayer();
 
@@ -282,6 +347,10 @@ public class GameViewCoordinator {
     );
   }
 
+  /**
+   * Updates every value on the bottom bar and applies danger styling
+   * when the player is close to the game-over threshold.
+   */
   private void refreshBottomBar() {
     Player player         = bundle.session().getPlayer();
     Exchange exchange     = bundle.session().getExchange();
@@ -315,6 +384,9 @@ public class GameViewCoordinator {
     refreshNavBar();
   }
 
+  /**
+   * Updates the player's name, status, and progress bar on the nav bar.
+   */
   private void refreshNavBar() {
     Player player = bundle.session().getPlayer();
     Status status = player.getStatus();
