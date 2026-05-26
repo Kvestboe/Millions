@@ -168,8 +168,45 @@ Both positive (happy path) and negative (error/edge case) tests are included. Te
 
 ## Project Structure
 
-```
+The codebase follows a layered architecture with one package per concern:
 
+```
+src/
+├── main/
+│   ├── java/edu/ntnu/idatt2003/gruppe50/
+│   │   ├── App.java                  ← JavaFX entry point
+│   │   ├── AppModule.java            ← manual dependency injection root
+│   │   ├── AppRouter.java            ← screen navigation
+│   │   ├── domain/                   ← core business logic, framework-free
+│   │   │   ├── game/                 ← GameSession, Difficulty, outcomes
+│   │   │   ├── leaderboard/          ← Leaderboard, entries
+│   │   │   ├── market/               ← Exchange, Stock, VolatilityProfile
+│   │   │   ├── portfolio/            ← Player, Portfolio, Share, Status
+│   │   │   ├── repository/           ← ports (e.g. GameSessionRepository)
+│   │   │   ├── shop/                 ← Shop, ShopItem, CoinExchange
+│   │   │   └── trade/                ← Transaction, Purchase, Sale, orders
+│   │   ├── application/              ← use cases (CQRS)
+│   │   │   ├── command/              ← BuyShareUseCase, AdvanceWeekUseCase, ...
+│   │   │   └── query/                ← GetMarketUseCase, GetPortfolioUseCase, ...
+│   │   ├── infrastructure/           ← adapters: file I/O, persistence
+│   │   │   ├── persistence/          ← JSON DTOs and GameSaveMapper
+│   │   │   └── repository/           ← JsonFileGameSessionRepository, ...
+│   │   ├── shared/                   ← cross-cutting utilities
+│   │   │   ├── observer/             ← Observable, Observer
+│   │   │   ├── Money.java, MoneyFormat.java
+│   │   │   ├── Parse.java, Validate.java
+│   │   ├── ui/                       ← JavaFX presentation layer
+│   │   │   ├── controller/           ← MVC controllers
+│   │   │   ├── mapper/               ← domain DTO → UI model mappers
+│   │   │   ├── model/                ← UI-only models (TableView rows, etc.)
+│   │   │   └── view/                 ← views, pages, components, navigation
+│   │   └── module-info.java
+│   └── resources/
+│       ├── css/                      ← JavaFX stylesheets, per view
+│       ├── data/sp500.csv            ← sample stock data
+│       └── icons/, sounds/, ...
+└── test/java/edu/ntnu/idatt2003/gruppe50/
+    └── (mirrors the main package layout)
 ```
 
 ---

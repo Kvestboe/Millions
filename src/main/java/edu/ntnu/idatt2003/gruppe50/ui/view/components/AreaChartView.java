@@ -71,7 +71,7 @@ public class AreaChartView {
     int weeks = history.size();
     xaxis.setAutoRanging(false);
     xaxis.setLowerBound(1);
-    xaxis.setUpperBound(Math.max(weeks, 1));
+    xaxis.setUpperBound(Math.max(weeks, 2));
     xaxis.setTickUnit(calculateWeekTickUnit(weeks));
     xaxis.setMinorTickVisible(false);
     xaxis.setForceZeroInRange(false);

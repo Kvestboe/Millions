@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
  * <p>The exchange updates every week with new prices so the player can buy and sell unique stocks.
  */
 public class Exchange extends Observable {
+
+  private static final Logger LOG = Logger.getLogger(Exchange.class.getName());
 
   private final String name;
   private final Map<String, Stock> stockMap;
@@ -310,9 +314,9 @@ public class Exchange extends Observable {
 
     for (LimitOrder order : pendingOrders) {
       if (order.isExpired(this.week)) {
-        // TODO: notify player that order expired
-        System.err.println("Order expired for " + order.getPlayer().getName()
-            + " on " + order.getStock().getSymbol());
+        // TODO: notify player in GUI that order expired (via Observer or event listener)
+        LOG.log(Level.INFO, "Order expired for {0} on {1}",
+            new Object[]{order.getPlayer().getName(), order.getStock().getSymbol()});
         toRemove.add(order);
         continue;
       }
@@ -322,9 +326,9 @@ public class Exchange extends Observable {
         try {
           order.execute(this);
         } catch (RuntimeException e) {
-          System.err.println("Order triggered but failed for "
-              + order.getPlayer().getName() + " on " + order.getStock().getSymbol()
-              + ": " + e.getMessage());
+          // TODO: notify player in GUI that order triggered but could not be executed
+          LOG.log(Level.WARNING, "Order triggered but failed for "
+              + order.getPlayer().getName() + " on " + order.getStock().getSymbol(), e);
         }
         toRemove.add(order);
       }
