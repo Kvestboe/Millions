@@ -187,3 +187,8 @@
     -fx-font-weight: bold;
     -fx-text-fill: -accent-gold;
 }
+
+.game-over-actions {
+    -fx-background-color: transparent;
+    -fx-padding: 16 48 24 48;
+}

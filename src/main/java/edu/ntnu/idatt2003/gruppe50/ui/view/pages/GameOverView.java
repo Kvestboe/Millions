@@ -13,23 +13,23 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
-// ui/view/pages/GameOverView.java
 public class GameOverView extends VBox implements Page {
 
   private final GameResult result;
   private final Runnable onPlayAgain;
   private final Runnable onMainMenu;
+  private final Runnable onLeaderboard;
 
-  public GameOverView(GameResult result, Runnable onPlayAgain, Runnable onMainMenu) {
+  public GameOverView(GameResult result, Runnable onPlayAgain, Runnable onMainMenu, Runnable onLeaderboard) {
     this.result = result;
     this.onPlayAgain = onPlayAgain;
     this.onMainMenu = onMainMenu;
+    this.onLeaderboard = onLeaderboard;
     getStyleClass().add("root-bg");
     buildUI();
   }
 
   private void buildUI() {
-    // Sentrert innhold-container, maks 560px bred
     VBox inner = new VBox(20);
     inner.setAlignment(Pos.CENTER);
     inner.setPadding(new Insets(40, 80, 40, 80));
@@ -123,8 +123,11 @@ public class GameOverView extends VBox implements Page {
     Label overline = new Label("🏆 LEADERBOARD SCORE");
     overline.getStyleClass().add("label-overline");
 
-    Label hint = new Label("Rank #3 on " + result.difficulty().name());
-    hint.getStyleClass().add("label-muted");
+    Label hint = new Label(
+        result.won()
+            ? "Saved to the " + result.difficulty().name() + " leaderboard"
+            : "Only completed missions are ranked"
+    );
 
     VBox left = new VBox(4, overline, hint);
 
@@ -181,14 +184,14 @@ public class GameOverView extends VBox implements Page {
       Button leaderboard = new Button("🏆 Leaderboard");
       leaderboard.getStyleClass().add("btn-accent");
       leaderboard.setPrefWidth(150);
-      leaderboard.setOnAction(_ -> { /* TODO: koble til leaderboard */ });
+      leaderboard.setOnAction(e -> onLeaderboard.run());
       bar.getChildren().add(leaderboard);
     }
 
     bar.getChildren().add(playAgain);
     bar.setAlignment(Pos.CENTER);
     bar.setPadding(new Insets(16, 48, 24, 48));
-    bar.getStyleClass().add("navbar");
+    bar.getStyleClass().add("game-over-actions");
     return bar;
   }
 
