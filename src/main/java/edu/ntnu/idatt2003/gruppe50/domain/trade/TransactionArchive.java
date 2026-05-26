@@ -36,8 +36,6 @@ public class TransactionArchive {
     if (transaction == null) {
       throw new IllegalArgumentException("Transaction cannot be null");
     }
-
-    // This method doesn't care for the same content in a share, but rather the same object.
     if (transactions.contains(transaction)) {
       return false;
     }
@@ -54,6 +52,11 @@ public class TransactionArchive {
     return transactions.isEmpty();
   }
 
+  /**
+   * Returns all transactions in the archive.
+   *
+   * @return an unmodifiable list of all transactions
+   */
   public List<Transaction> getTransactions() {
     return List.copyOf(transactions);
   }
@@ -124,24 +127,49 @@ public class TransactionArchive {
         .count();
   }
 
+  /**
+   * Returns the number of transactions in the archive.
+   *
+   * @return the number of transactions
+   */
   public int size() {
     return transactions.size();
   }
 
+  /**
+   * Counts all purchase transactions in the archive.
+   *
+   * @return the number of purchase transactions
+   */
   public long countPurchases() {
     return transactions.stream().filter(t -> t instanceof Purchase).count();
   }
 
+  /**
+   * Counts all sale transactions in the archive.
+   *
+   * @return the number of sale transactions
+   */
   public long countSales() {
     return transactions.stream().filter(t -> t instanceof Sale).count();
   }
 
+  /**
+   * Calculates the total commission from all transactions.
+   *
+   * @return the total commission
+   */
   public BigDecimal totalCommission() {
     return transactions.stream()
         .map(t -> t.getCalculator().calculateCommission())
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
+  /**
+   * Calculates the total tax from all transactions.
+   *
+   * @return the total tax
+   */
   public BigDecimal totalTax() {
     return transactions.stream()
         .map(t -> t.getCalculator().calculateTax())
@@ -149,8 +177,11 @@ public class TransactionArchive {
   }
 
   /**
-   * Realized profit/loss across all committed sales: for each sale,
-   * (net proceeds after fees/taxes) − (purchase-price cost basis).
+   * Calculates realized profit or loss across all sale transactions.
+   *
+   * <p>The result is based on net sale proceeds minus the original purchase cost.
+   *
+   * @return realized profit or loss
    */
   public BigDecimal realizedProfitLoss() {
     return transactions.stream()
@@ -160,7 +191,13 @@ public class TransactionArchive {
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
-  /** Most recent {@code limit} transactions, newest first. */
+  /**
+   * Returns the most recent transactions, newest first.
+   *
+   * @param limit the maximum number of transactions to return
+   * @return the most recent transactions
+   * @throws IllegalArgumentException if {@code limit} is negative
+   */
   public List<Transaction> recent(int limit) {
     if (limit < 0) {
       throw new IllegalArgumentException("Limit cannot be negative");

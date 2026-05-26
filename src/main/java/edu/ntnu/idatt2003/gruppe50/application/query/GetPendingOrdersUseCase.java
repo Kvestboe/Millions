@@ -6,14 +6,27 @@ import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.List;
 import java.util.UUID;
 
+/** Retrieves pending orders for a game session. */
 public final class GetPendingOrdersUseCase {
 
   private final GameSessionRepository repository;
 
+  /**
+   * Creates the use case with a game-session repository.
+   *
+   * @param repository repository used to load game sessions
+   */
   public GetPendingOrdersUseCase(GameSessionRepository repository) {
     this.repository = repository;
   }
 
+  /**
+   * Returns all currently pending orders for the given game session.
+   *
+   * @param gameId id of the game session
+   * @return pending order DTOs
+   * @throws GameSessionNotFoundException if the session does not exist
+   */
   public List<PendingOrderDto> execute(UUID gameId) {
     return repository.findById(gameId)
         .orElseThrow(GameSessionNotFoundException::new)

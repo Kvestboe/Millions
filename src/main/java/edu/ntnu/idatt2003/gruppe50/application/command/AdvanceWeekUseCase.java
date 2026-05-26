@@ -20,12 +20,18 @@ public final class AdvanceWeekUseCase {
     this.repository = repository;
   }
 
+  /**
+   * Output from advancing the game by one week.
+   *
+   * @param outcome current game outcome after the week has advanced
+   */
   public record Result(GameOutcome outcome) {}
 
   /**
    * Executes the use case for a given game id.
    *
    * @param request input request containing game id
+   * @return result containing the evaluated game outcome after advancing the week
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public Result execute(Request request) {

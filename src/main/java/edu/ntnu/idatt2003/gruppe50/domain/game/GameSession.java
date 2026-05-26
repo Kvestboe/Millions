@@ -76,6 +76,7 @@ public final class GameSession {
    *
    * @param player player participating in the session
    * @param exchange exchange used for trading in the session
+   * @param difficulty difficulty used for the session
    * @return newly created active session
    * @throws IllegalArgumentException if {@code player} or {@code exchange} is null
    */
@@ -100,9 +101,11 @@ public final class GameSession {
    * @param gameId saved session id
    * @param player saved player state
    * @param exchange saved exchange state
+   * @param difficulty saved difficulty
    * @param state saved session state
    * @param runStartedAt date the run started
    * @param lastPlayed date the session was last opened
+   * @param netWorthHistory saved net worth history
    * @return rehydrated session
    * @throws IllegalArgumentException if any argument is null
    */
@@ -145,6 +148,14 @@ public final class GameSession {
     return exchange.buy(symbol, quantity, player);
   }
 
+  /**
+   * Places a buy limit order for this session's player.
+   *
+   * @param symbol stock symbol to buy
+   * @param quantity quantity to buy
+   * @param targetPrice highest price the player is willing to pay
+   * @param duration number of weeks the order should stay active
+   */
   public LimitBuyOrder  placeBuyLimitOrder(
       String symbol,
       BigDecimal quantity,
@@ -168,14 +179,16 @@ public final class GameSession {
         currentWeek,
         expiryWeek
     );
+
     exchange.placeOrder(order);
     return order;
   }
 
   /**
-   * Sells one owned share through the exchange for this session's player.
+   * Sells a quantity of a stock through the exchange for this session's player.
    *
-   * @param shareId identifier of owned share to sell
+   * @param symbol stock symbol to sell
+   * @param quantity quantity to sell
    * @throws GameSessionFinishedException if the session is finished
    */
   public List<Transaction> sell(String symbol, BigDecimal quantity) {
@@ -191,6 +204,14 @@ public final class GameSession {
     return exchange.sellQuantity(stock, quantity, player);
   }
 
+  /**
+   * Places a sell limit order for this session's player.
+   *
+   * @param symbol stock symbol to sell
+   * @param quantity quantity to sell
+   * @param targetPrice lowest price the player is willing to sell for
+   * @param duration number of weeks the order should stay active
+   */
   public LimitSellOrder  placeSellLimitOrder(
       String symbol,
       BigDecimal quantity,
@@ -219,6 +240,14 @@ public final class GameSession {
     return order;
   }
 
+  /**
+   * Places a stop loss order for this session's player.
+   *
+   * @param symbol stock symbol to sell
+   * @param quantity quantity to sell
+   * @param targetPrice price that triggers the sale
+   * @param duration number of weeks the order should stay active
+   */
   public StopLossOrder  placeStopLossOrder(
       String symbol,
       BigDecimal quantity,
@@ -277,14 +306,23 @@ public final class GameSession {
     state = GameSessionState.FINISHED;
   }
 
+  /**
+   * Evaluates whether the game is ongoing, won, or lost.
+   *
+   * @return the current game outcome
+   */
   public GameOutcome evaluateOutcome() {
     BigDecimal netWorth = player.getNetWorth();
     BigDecimal threshold = player.getStartingMoney()
         .multiply(BigDecimal.valueOf(difficulty.getGameOverThreshold()))
         .setScale(2, RoundingMode.HALF_UP);
 
-    if (netWorth.compareTo(new BigDecimal("1000000")) >= 0) return GameOutcome.WON;
-    if (netWorth.compareTo(threshold) < 0) return GameOutcome.LOST;
+    if (netWorth.compareTo(new BigDecimal("1000000")) >= 0) {
+      return GameOutcome.WON;
+    }
+    if (netWorth.compareTo(threshold) < 0) {
+      return GameOutcome.LOST;
+    }
     return GameOutcome.ONGOING;
   }
 
@@ -342,6 +380,11 @@ public final class GameSession {
     return lastPlayed;
   }
 
+  /**
+   * Returns the saved net worth history for the session.
+   *
+   * @return an unmodifiable copy of the net worth history
+   */
   public List<BigDecimal> getNetWorthHistory() {
     return List.copyOf(netWorthHistory);
   }
@@ -352,10 +395,20 @@ public final class GameSession {
     }
   }
 
+  /**
+   * Returns the pending orders in the session.
+   *
+   * @return pending limit orders
+   */
   public List<LimitOrder> getPendingOrders() {
     return exchange.getPendingOrders();
   }
 
+  /**
+   * Returns the difficulty used in the session.
+   *
+   * @return session difficulty
+   */
   public Difficulty getDifficulty() {
     return difficulty;
   }

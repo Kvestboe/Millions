@@ -11,22 +11,25 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+/** In-memory implementation of {@link GameSessionRepository} for tests and temporary sessions. */
 public final class InMemoryGameSessionRepository implements GameSessionRepository {
-
   private final Map<UUID, GameSession> sessions = new HashMap<>();
 
+  /** {@inheritDoc} */
   @Override
   public Optional<GameSession> findById(UUID gameId) {
     Validate.notNull(gameId, "Game id");
     return Optional.ofNullable(sessions.get(gameId));
   }
 
+  /** {@inheritDoc} */
   @Override
   public void save(GameSession session) {
     Validate.notNull(session, "Game session");
     sessions.put(session.getGameId(), session);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<GameSession> findAll() {
     return sessions.values().stream()
@@ -34,6 +37,7 @@ public final class InMemoryGameSessionRepository implements GameSessionRepositor
         .toList();
   }
 
+  /** {@inheritDoc} */
   @Override
   public void delete(UUID gameId) {
     sessions.remove(gameId);

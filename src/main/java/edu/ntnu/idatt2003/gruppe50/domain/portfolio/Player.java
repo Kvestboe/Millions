@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2003.gruppe50.domain.portfolio;
 
-import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.InsufficientCoinsException;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import edu.ntnu.idatt2003.gruppe50.shared.Money;
@@ -31,6 +30,19 @@ public class Player {
   private String activeTheme = DEFAULT_THEME;
   private final Set<String> ownedThemes = new HashSet<>();
 
+  /**
+   * Recreates a player from saved data.
+   *
+   * @param name the player's name
+   * @param startingMoney the amount of money the player started with
+   * @param money the player's current money
+   * @param coins the player's current coins
+   * @param activeTheme the active theme id
+   * @param ownedThemes the themes owned by the player
+   * @param portfolio the player's saved portfolio
+   * @param transactions the player's saved transactions
+   * @return the recreated player
+   */
   public static Player rehydrate(
       String name,
       BigDecimal startingMoney,
@@ -174,19 +186,21 @@ public class Player {
   }
 
   /**
-   * Returns the players status.
+   * Returns the player's current status.
    *
-   * <p>Calculates the players status based on their net worth
-   * and for how many weeks they have played.
+   * <p>The status is based on net worth and the number of weeks with trades.
    *
-   * @return the players status title as a string
-   * @throws IllegalArgumentException if {@code exchange} is null
+   * @return the player's current status
    */
   public Status getStatus() {
     int weeks = transactionArchive.countDistinctWeeks();
     BigDecimal netWorth = getNetWorth();
-    if (meets(Status.SPECULATOR, weeks, netWorth)) return Status.SPECULATOR;
-    if (meets(Status.INVESTOR,  weeks, netWorth)) return Status.INVESTOR;
+    if (meets(Status.SPECULATOR, weeks, netWorth)) {
+      return Status.SPECULATOR;
+    }
+    if (meets(Status.INVESTOR,  weeks, netWorth)) {
+      return Status.INVESTOR;
+    }
     return Status.NOVICE;
   }
 
@@ -196,8 +210,9 @@ public class Player {
   }
 
   /**
-   * Progress toward the next status level, in [0.0, 1.0].
-   * Returns 1.0 when the player is already at the highest level.
+   * Returns the player's progress toward the next status level.
+   *
+   * @return progress from 0.0 to 1.0
    */
   public double getProgressToNextLevel() {
     Status current = getStatus();
@@ -267,6 +282,13 @@ public class Player {
     coins += amount;
   }
 
+  /**
+   * Spends coins from the player's coin balance.
+   *
+   * @param amount the number of coins to spend
+   * @throws IllegalArgumentException if {@code amount} is not positive
+   * @throws InsufficientCoinsException if the player does not have enough coins
+   */
   public void spendCoins(int amount) throws InsufficientCoinsException {
     Validate.positiveInt(amount, "Amount");
     if (coins < amount) {
@@ -328,7 +350,11 @@ public class Player {
     return Set.copyOf(ownedThemes);
   }
 
-  /** What the player still needs for the next level; empty at top status. */
+  /**
+   * Returns what the player still needs to reach the next status level.
+   *
+   * @return the missing weeks and money, or empty if the player has the highest status
+   */
   public Optional<LevelGap> getGapToNextLevel() {
     Status next = getStatus().next();
     if (next == null) {

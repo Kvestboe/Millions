@@ -10,9 +10,11 @@ import java.util.UUID;
  * @param symbol stock symbol
  * @param stock company name
  * @param quantity owned quantity
- * @param purchasePrice original unit purchase price
+ * @param purchasePrice original or weighted average unit purchase price
  * @param currentPrice current unit market price
  * @param currentShareValue current gross value of this share position
+ * @param gain unrealized gain or loss for this share position
+ * @param percentageGain unrealized percentage gain or loss
  */
 public record ShareDto(
     UUID shareId,

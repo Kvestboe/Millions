@@ -25,7 +25,8 @@ public class Share {
    * @param stock the stock that is owned
    * @param quantity the number of units owned
    * @param purchasePrice the purchase price per unit
-   * @throws IllegalArgumentException if any argument is null, zero or negative.
+   * @param purchaseWeek the week the share was purchased
+   * @throws IllegalArgumentException if any argument is null, zero or negative
    */
   public Share(Stock stock, BigDecimal quantity, BigDecimal purchasePrice, int purchaseWeek) {
     shareId = UUID.randomUUID();

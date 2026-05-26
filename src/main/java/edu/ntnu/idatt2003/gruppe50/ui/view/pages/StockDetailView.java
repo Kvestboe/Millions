@@ -25,6 +25,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Detail page for a single stock.
+ *
+ * <p>Shows the current price, change, percentage change, a price history
+ * chart with buy/sell markers, and the player's holding (if any).
+ * Provides buy/sell buttons that open the order form popup. Refreshes
+ * automatically when the exchange ticks.
+ */
 public class StockDetailView extends StackPane implements Page {
 
   private static final double STOCK_DATA_CARD_WIDTH = 380;
@@ -53,6 +61,14 @@ public class StockDetailView extends StackPane implements Page {
 
   private final Label errorLabel = new Label();
 
+  /**
+   * Constructs the stock detail view.
+   *
+   * @param stock the stock to display details for
+   * @param queryController the controller providing stock and holding data
+   * @param orderController the controller used to place buy/sell orders
+   * @param onBack action triggered when the player clicks "Back"
+   */
   public StockDetailView(StockDto stock, StockDetailQueryController queryController,
       OrderPlacementController orderController, Runnable onBack) {
     this.stock = stock;
@@ -93,6 +109,11 @@ public class StockDetailView extends StackPane implements Page {
     });
   }
 
+  /**
+   * Returns the root node of the stock detail page.
+   *
+   * @return this view
+   */
   @Override
   public Parent getView() {
     return this;

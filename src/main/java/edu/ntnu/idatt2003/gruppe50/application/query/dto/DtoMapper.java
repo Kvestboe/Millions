@@ -9,8 +9,15 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+/** Maps domain objects to application DTOs. */
 public final class DtoMapper {
 
+  /**
+   * Creates a share DTO from a single share lot.
+   *
+   * @param share share lot to map
+   * @return DTO containing share, stock and gain data
+   */
   public static ShareDto createShareDto(Share share) {
     return new ShareDto(
             share.getShareId(),
@@ -83,6 +90,13 @@ public final class DtoMapper {
     );
   }
 
+  /**
+   * Determines the DTO transaction type for a domain transaction.
+   *
+   * @param transaction transaction to classify
+   * @return matching DTO transaction type
+   * @throws IllegalStateException if the transaction is neither a purchase nor a sale
+   */
   public static TransactionType defineTransactionType(Transaction transaction) {
     if (transaction instanceof Purchase) {
       return TransactionType.PURCHASE;
@@ -93,6 +107,12 @@ public final class DtoMapper {
     throw new IllegalStateException("The transaction type is not of sale or purchase");
   }
 
+  /**
+   * Creates a summary stock DTO without historical prices.
+   *
+   * @param s stock to map
+   * @return stock DTO for market overview display
+   */
   public static StockDto createStockDto(Stock s) {
     return new StockDto(
         s.getSymbol(),
@@ -104,6 +124,12 @@ public final class DtoMapper {
     );
   }
 
+  /**
+   * Creates a detailed stock DTO with historical prices.
+   *
+   * @param s stock to map
+   * @return stock DTO for detailed stock display
+   */
   public static StockDto createStockDetail(Stock s) {
     return new StockDto(
         s.getSymbol(),

@@ -12,16 +12,25 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/** Main content view for the week summary popup. */
 public class WeekSummaryView extends VBox {
 
   private final WeekSummary summary;
   private final Runnable onShowNews;
   private final Runnable onShowNotifications;
   private final Runnable onClose;
+
+  /**
+   * Creates a week summary view.
+   *
+   * @param summary week summary data to display
+   * @param onShowNews action run when opening the news detail list
+   * @param onShowNotifications action run when opening the notifications detail list
+   * @param onClose action run when closing the summary
+   */
 
   public WeekSummaryView(
       WeekSummary summary,

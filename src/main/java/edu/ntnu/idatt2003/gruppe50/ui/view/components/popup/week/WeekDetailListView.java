@@ -10,8 +10,17 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
+/** Detail list view for week summary news or notifications. */
 public class WeekDetailListView extends VBox {
 
+  /**
+   * Creates a detail list view.
+   *
+   * @param title title shown above the list
+   * @param items text items to display
+   * @param onBack action run when navigating back to the summary
+   * @param onClose action run when closing the popup
+   */
   public WeekDetailListView(
       String title,
       List<String> items,

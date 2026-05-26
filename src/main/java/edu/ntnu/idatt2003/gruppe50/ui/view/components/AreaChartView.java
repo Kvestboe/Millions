@@ -8,6 +8,7 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
+/** Wrapper around a JavaFX area chart with optional buy and sell markers. */
 public class AreaChartView {
 
   private final AreaChart<Number, Number> chart;
@@ -15,6 +16,12 @@ public class AreaChartView {
   private final XYChart.Series<Number, Number> buySeries  = new XYChart.Series<>();
   private final XYChart.Series<Number, Number> sellSeries = new XYChart.Series<>();
 
+  /**
+   * Creates an area chart with labeled axes.
+   *
+   * @param xlabel label for the x-axis
+   * @param ylabel label for the y-axis
+   */
   public AreaChartView(String xlabel, String ylabel) {
     NumberAxis xaxis = new NumberAxis();
     xaxis.setAutoRanging(false);
@@ -43,6 +50,12 @@ public class AreaChartView {
     });
   }
 
+  /**
+   * Displays a full price or value history in the chart.
+   *
+   * @param title chart title and series name
+   * @param history values to display, one point per week
+   */
   public void display(String title, List<BigDecimal> history) {
     chart.setTitle(title);
     series.setName(title);
@@ -64,6 +77,13 @@ public class AreaChartView {
     xaxis.setForceZeroInRange(false);
   }
 
+  /**
+   * Displays buy and sell markers on the chart.
+   *
+   * @param buyWeeks weeks where buys occurred
+   * @param sellWeeks weeks where sells occurred
+   * @param history value history used to place markers vertically
+   */
   public void setMarkers(Set<Integer> buyWeeks, Set<Integer> sellWeeks, List<BigDecimal> history) {
     buySeries.getData().setAll(toPoints(buyWeeks, history));
     sellSeries.getData().setAll(toPoints(sellWeeks, history));
@@ -80,10 +100,11 @@ public class AreaChartView {
     return points;
   }
 
-  public void appendPoint(int index, BigDecimal value) {
-    series.getData().add(new XYChart.Data<>(index, value));
-  }
-
+  /**
+   * Returns the underlying JavaFX chart.
+   *
+   * @return area chart node
+   */
   public AreaChart<Number, Number> getChart() {
     return chart;
   }

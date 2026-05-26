@@ -63,19 +63,18 @@ public class NavBar extends HBox {
     /** Called when the user selects "Main Menu". */
     void onMainMenu();
 
-    /** Called when the user selects "Save & Quit". */
+    /** Called when the user selects "Save &amp; Quit". */
     void onSaveAndQuit();
   }
 
   /**
-   * Constructs the navigation bar and registers the given listener for navigation events.
+   * Constructs the navigation bar and registers listeners for navigation and account actions.
    *
-   * @param listener the listener to notify when a navigation button is clicked
+   * @param listener listener to notify when a navigation button is clicked
+   * @param accountListener listener to notify when an account menu item is selected
    */
   public NavBar(NavListener listener, NavBar.AccountMenuListener accountListener) {
     this.getStyleClass().add("navbar");
-
-    Logo logo = new Logo();
 
     HBox navLinks = new HBox(6);
     navLinks.getStyleClass().add("nav-links");
@@ -136,6 +135,8 @@ public class NavBar extends HBox {
     account.addItem("Save & Main Menu",    accountListener::onMainMenu);
     account.addItem("Save & Quit",  accountListener::onSaveAndQuit);
 
+    Logo logo = new Logo();
+
     HBox leftZone = new HBox(logo);
     leftZone.setAlignment(Pos.CENTER_LEFT);
 
@@ -157,6 +158,9 @@ public class NavBar extends HBox {
 
   /**
    * Updates the player's name and status display.
+   *
+   * @param name player name to display
+   * @param status current player status
    */
   public void updatePlayerInfo(String name, Status status) {
     nameLabel.setText(name);

@@ -17,6 +17,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+/** Card component showing trading statistics and recent activity. */
 public class TradingLogCard extends VBox {
 
   private final Label totalTradesLabel = new Label("0 total trades");
@@ -35,6 +36,11 @@ public class TradingLogCard extends VBox {
       "No trades yet, head to the Market to place your first order."
   );
 
+  /**
+   * Creates a trading log card bound to an observable data source.
+   *
+   * @param source observable trading log data
+   */
   public TradingLogCard(ObservableValue<TradingLogData> source) {
     getStyleClass().add("trading-log-card");
     setSpacing(14);
@@ -128,8 +134,7 @@ public class TradingLogCard extends VBox {
     HBox.setHgrow(counts, Priority.ALWAYS);
     titleRow.setAlignment(Pos.CENTER_LEFT);
 
-    VBox section = new VBox(6, titleRow, bar);
-    return section;
+    return new VBox(6, titleRow, bar);
   }
 
   private VBox buildActivitySection() {
@@ -156,8 +161,12 @@ public class TradingLogCard extends VBox {
 
     realizedPnLValue.getStyleClass().removeAll("gain", "loss");
     int sign = data.realizedPnL().signum();
-    if (sign > 0) realizedPnLValue.getStyleClass().add("gain");
-    if (sign < 0) realizedPnLValue.getStyleClass().add("loss");
+    if (sign > 0) {
+      realizedPnLValue.getStyleClass().add("gain");
+    }
+    if (sign < 0) {
+      realizedPnLValue.getStyleClass().add("loss");
+    }
 
     updateMix(data.purchases(), data.sales());
     updateActivity(data.recentActivity());

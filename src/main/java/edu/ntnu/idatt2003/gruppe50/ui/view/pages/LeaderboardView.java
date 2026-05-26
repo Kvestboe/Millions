@@ -16,6 +16,12 @@ import javafx.scene.layout.VBox;
 
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Leaderboard page showing the top players for each difficulty.
+ *
+ * <p>Provides difficulty tabs (Easy/Medium/Hard) and a table ranking
+ * winners by score, with medal styling for the top three ranks.
+ */
 public class LeaderboardView extends StackPane {
 
   private final Leaderboard leaderboard;
@@ -23,6 +29,12 @@ public class LeaderboardView extends StackPane {
   private final TableView<LeaderboardEntry> table = new TableView<>();
   private Difficulty active = Difficulty.EASY;
 
+  /**
+   * Constructs the leaderboard view.
+   *
+   * @param leaderboard the leaderboard providing top entries per difficulty
+   * @param onBack      action triggered when the player clicks "Back"
+   */
   public LeaderboardView(Leaderboard leaderboard, Runnable onBack) {
     this.leaderboard = leaderboard;
     this.onBack = onBack;

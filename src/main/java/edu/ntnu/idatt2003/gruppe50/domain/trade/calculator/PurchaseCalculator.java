@@ -5,16 +5,18 @@ import edu.ntnu.idatt2003.gruppe50.shared.Money;
 import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 
-/** Calculator for determining the price of purchasing shares. */
+/**
+ * Calculates the cost of purchasing shares.
+ */
 public class PurchaseCalculator implements TransactionCalculator {
 
   private final BigDecimal purchasePrice;
   private final BigDecimal quantity;
 
   /**
-   * Creates a calculator for determining the price of a share.
+   * Creates a calculator from a share being purchased.
    *
-   * @param share being purchased, the quantity and purchase price is used to determine the cost.
+   * @param share the share being purchased
    * @throws IllegalArgumentException if {@code share} is null
    */
   public PurchaseCalculator(Share share) {
@@ -24,6 +26,13 @@ public class PurchaseCalculator implements TransactionCalculator {
     quantity = share.getQuantity();
   }
 
+  /**
+   * Creates a calculator from a purchase price and quantity.
+   *
+   * @param purchasePrice the purchase price per share
+   * @param quantity the number of shares
+   * @throws IllegalArgumentException if an argument is null
+   */
   public PurchaseCalculator(BigDecimal purchasePrice, BigDecimal quantity) {
     Validate.notNull(purchasePrice, "Purchase price");
     Validate.notNull(quantity, "Quantity");
@@ -53,11 +62,9 @@ public class PurchaseCalculator implements TransactionCalculator {
   }
 
   /**
-   * Calculates the tax applied to the purchase.
+   * Returns zero because purchases are not taxed.
    *
-   * <p>There is no tax on purchasing shares, so it will return 0.
-   *
-   * @return the tax amount as a {@link BigDecimal}
+   * @return zero
    */
   @Override
   public BigDecimal calculateTax() {

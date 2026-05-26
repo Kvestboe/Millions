@@ -28,6 +28,7 @@ public final class PlaceBuyLimitOrderUseCase {
    * Executes a buy limit order placement for an existing game session.
    *
    * @param request input with game id, symbol, quantity, target price and duration
+   * @return response with order receipt data
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public Response execute(Request request) {
@@ -66,6 +67,15 @@ public final class PlaceBuyLimitOrderUseCase {
       int duration
   ) {}
 
+  /**
+   * Output from placing a buy limit order.
+   *
+   * @param symbol stock symbol for the order
+   * @param quantity order quantity
+   * @param targetPrice target buy price
+   * @param placedAtWeek week when the order was placed
+   * @param expiresAtWeek week when the order expires
+   */
   public record Response(
       String symbol,
       BigDecimal quantity,

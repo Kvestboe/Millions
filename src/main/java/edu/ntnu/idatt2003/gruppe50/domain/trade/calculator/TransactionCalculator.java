@@ -3,8 +3,7 @@ package edu.ntnu.idatt2003.gruppe50.domain.trade.calculator;
 import java.math.BigDecimal;
 
 /**
- * Represents a calculator which does the key calculations when
- * doing transactions like purchasing and selling shares.
+ * Defines calculations needed for a transaction.
  */
 public interface TransactionCalculator {
 

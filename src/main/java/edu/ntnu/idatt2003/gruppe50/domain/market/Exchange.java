@@ -38,6 +38,17 @@ public class Exchange extends Observable {
   private final List<LimitOrder> pendingOrders;
   private final VolatilityProfile volatility;
 
+  /**
+   * Recreates an exchange from saved data.
+   *
+   * @param name the name of the exchange
+   * @param stockMap the saved stocks, mapped by symbol
+   * @param factory the transaction factory used by the exchange
+   * @param week the saved week number
+   * @param pendingOrders the saved pending orders
+   * @param volatility the volatility settings for the exchange
+   * @return the recreated exchange
+   */
   public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility) {
     return new Exchange(name, stockMap, factory, week, pendingOrders, volatility);
   }
@@ -53,11 +64,12 @@ public class Exchange extends Observable {
   }
 
   /**
-   * Creates a new {@code exchange} with a name and stocks represented by symbols.
+   * Creates a new exchange with a name and a list of stocks.
    *
-   * @param name The name of the exchange
-   * @param stocks The stocks in the exchange
-   * @param factory the transaction factory used
+   * @param name the name of the exchange
+   * @param stocks the stocks in the exchange
+   * @param factory the transaction factory used by the exchange
+   * @param volatility the volatility settings for the exchange
    * @throws IllegalArgumentException if any parameter is null or invalid
    */
   public Exchange(String name, List<Stock> stocks, TransactionFactory factory, VolatilityProfile volatility) {
@@ -144,14 +156,13 @@ public class Exchange extends Observable {
   }
 
   /**
-   * Buys a share from the exchange.
+   * Buys a quantity of a stock for the player.
    *
    * @param symbol the stock symbol
-   * @param quantity the number of stocks
-   * @param player the player
-   * @return a purchase
-   * @throws IllegalArgumentException if {@code symbol} is null or blank, {@code quantity} is null
-   *     or negative, or {@code player} is null
+   * @param quantity the quantity to buy
+   * @param player the player buying the stock
+   * @return the purchase transaction
+   * @throws IllegalArgumentException if the input is invalid
    * @throws NoSuchElementException if no stock with the given symbol exists
    */
   public Transaction buy(String symbol, BigDecimal quantity, Player player) {
@@ -240,13 +251,11 @@ public class Exchange extends Observable {
       BigDecimal lotQty = lot.getQuantity();
 
       if (lotQty.compareTo(remaining) <= 0) {
-        // Sell the entire lot
         Transaction sale = factory.createSale(lot, this.week, batchId);
         sale.commit(player);
         sales.add(sale);
         remaining = remaining.subtract(lotQty);
       } else {
-        // Split the lot: sell `remaining`, return (lotQty - remaining) to portfolio
         player.getPortfolio().removeShare(lot.getShareId());
 
         Share consumed = new Share(stock, remaining, lot.getPurchasePrice(), lot.getPurchaseWeek());
@@ -329,10 +338,10 @@ public class Exchange extends Observable {
   }
 
   /**
-   * Returns a list of the stocks with the most profit.
+   * Returns the stocks with the biggest price increase.
    *
-   * @param limit how many stocks do you want in the list
-   * @return list of stocks with the most profitable stocks
+   * @param limit the maximum number of stocks to return
+   * @return the stocks with the biggest gain
    * @throws IllegalArgumentException if {@code limit <= 0}
    */
   public List<Stock> getGainers(int limit) {
@@ -344,10 +353,10 @@ public class Exchange extends Observable {
   }
 
   /**
-   * Returns a list of the stocks with the biggest loss.
+   * Returns the stocks with the biggest price decrease.
    *
-   * @param limit how many stocks do you want in the list
-   * @return list of stocks with the least profitable stocks
+   * @param limit the maximum number of stocks to return
+   * @return the stocks with the biggest loss
    * @throws IllegalArgumentException if {@code limit <= 0}
    */
   public List<Stock> getLosers(int limit) {

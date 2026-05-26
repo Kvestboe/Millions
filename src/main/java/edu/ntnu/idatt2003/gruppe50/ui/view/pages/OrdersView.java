@@ -16,11 +16,22 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 
+/**
+ * Page showing the player's pending limit orders.
+ *
+ * <p>Displays a table of pending {@link PendingOrderDto}
+ * entries sorted by creation week (newest first).
+ */
 public class OrdersView extends VBox implements Page {
 
   private final TableView<PendingOrderDto> table;
   private final OrdersController controller;
 
+  /**
+   * Constructs the orders view.
+   *
+   * @param controller the controller providing the list of pending orders
+   */
   public OrdersView(OrdersController controller) {
     this.controller = controller;
 
@@ -39,6 +50,11 @@ public class OrdersView extends VBox implements Page {
     getChildren().addAll(title, subtitle, table);
   }
 
+  /**
+   * Returns the root node of the orders page.
+   *
+   * @return this view
+   */
   @Override
   public Parent getView() {
     return this;
