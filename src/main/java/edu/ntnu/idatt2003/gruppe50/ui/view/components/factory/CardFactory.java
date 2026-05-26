@@ -10,6 +10,12 @@ import java.util.List;
 /** Factory for easy and customizable card creation for different UI views. */
 public class CardFactory {
 
+  /**
+   * Creates a card with the given content nodes.
+   *
+   * @param content nodes to place in the card
+   * @return styled card container
+   */
   public static VBox createCard(Node... content) {
     VBox card = new VBox();
     card.getStyleClass().add("card");
