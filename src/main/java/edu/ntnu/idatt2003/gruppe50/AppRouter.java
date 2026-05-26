@@ -51,7 +51,8 @@ public final class AppRouter {
 
   public void showMainMenu() {
     SaveSummaryDto latestSave = module.getAllSaves.execute().stream()
-        .max(Comparator.comparing(SaveSummaryDto::lastPlayed))
+        .filter(s -> !s.isFinished())
+        .findFirst()
         .orElse(null);
 
     MainMenuView menu = new MainMenuView(
@@ -101,7 +102,8 @@ public final class AppRouter {
 
   private void showContinueGame() {
     module.getAllSaves.execute().stream()
-        .max(Comparator.comparing(SaveSummaryDto::lastPlayed))
+        .filter(s -> !s.isFinished())
+        .findFirst()
         .ifPresent(s -> switchToGame(s.gameId()));
   }
 

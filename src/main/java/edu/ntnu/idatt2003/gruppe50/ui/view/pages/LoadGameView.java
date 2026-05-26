@@ -10,6 +10,8 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
 import java.math.RoundingMode;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -73,8 +75,6 @@ public class LoadGameView extends StackPane {
     VBox titleBox = new VBox(2, title, subtitle);
     titleBox.setAlignment(Pos.CENTER);
 
-    // StackPane lets the title be truly centred while the back button
-    // sits independently on the left edge
     StackPane header = new StackPane(titleBox, backBtn);
     StackPane.setAlignment(titleBox, Pos.CENTER);
     StackPane.setAlignment(backBtn, Pos.CENTER_LEFT);
@@ -85,6 +85,7 @@ public class LoadGameView extends StackPane {
     TableView<SaveSummaryDto> table = createTable(List.of(
         ColumnPresets.text("Player", SaveSummaryDto::playerName),
         ColumnPresets.text("Status", SaveSummaryDto::status),
+        ColumnPresets.text("State", s -> s.isFinished() ? "Finished" : "Active"),
         ColumnPresets.text("Week", s -> "Week " + s.week()),
         ColumnPresets.currency("Net worth", SaveSummaryDto::netWorth),
         ColumnPresets.text("Last played", s -> s.lastPlayed().format(DATE_FORMAT))
@@ -100,38 +101,56 @@ public class LoadGameView extends StackPane {
     return table;
   }
 
-  private HBox createDetailPanel() {
+  private VBox createDetailPanel() {
     SimpleObjectProperty<SaveSummaryDto> selected = controller.getSelected();
 
     Label nameVal = new Label("-");
     Label statusVal = new Label("-");
+    Label stateVal = new Label("-");
     Label weekVal = new Label("-");
     Label netWorthVal = new Label("-");
     Label lastPlayedVal = new Label("-");
+    Label hint = new Label("");
+    hint.getStyleClass().add("load-game-hint");
+    hint.setMaxWidth(Double.MAX_VALUE);
+    hint.setAlignment(Pos.CENTER);
 
     selected.addListener((_, _, s) -> {
       if (s == null) {
         nameVal.setText("-");
         statusVal.setText("-");
+        stateVal.setText("-");
         weekVal.setText("-");
         netWorthVal.setText("-");
         lastPlayedVal.setText("-");
+        hint.setText("");
       } else {
         nameVal.setText(s.playerName());
         statusVal.setText(s.status());
+        stateVal.setText(s.isFinished() ? "Finished" : "Active");
         weekVal.setText("Week " + s.week());
         netWorthVal.setText(s.netWorth().setScale(0, RoundingMode.HALF_UP).toString() + " kr");
         lastPlayedVal.setText(s.lastPlayed().format(DATE_FORMAT));
+
+        if (s.isFinished()) {
+          hint.setText("This game is finished. You can delete it, but it cannot be continued.");
+        } else {
+          hint.setText("");
+        }
       }
     });
 
-    HBox panel = new HBox(12,
+    HBox stats = new HBox(12,
         statCard("PLAYER", nameVal),
         statCard("STATUS", statusVal),
+        statCard("STATE", stateVal),
         statCard("WEEK", weekVal),
         statCard("NET WORTH", netWorthVal),
         statCard("LAST PLAYED", lastPlayedVal)
     );
+    stats.setAlignment(Pos.CENTER_LEFT);
+
+    VBox panel = new VBox(8, stats, hint);
     panel.setAlignment(Pos.CENTER_LEFT);
     return panel;
   }
@@ -145,7 +164,11 @@ public class LoadGameView extends StackPane {
   private HBox createButtons() {
     Button load = ButtonFactory.styled("Load game", "btn-accent", controller::load);
     load.setMaxWidth(Double.MAX_VALUE);
-    load.disableProperty().bind(controller.getSelected().isNull());
+    load.disableProperty().bind(Bindings.createBooleanBinding(
+        () -> controller.getSelected().get() == null
+            || controller.getSelected().get().isFinished(),
+        controller.getSelected()
+    ));
 
     Button delete = ButtonFactory.styled("Delete save", "system-button-danger", controller::delete);
     delete.setMaxWidth(Double.MAX_VALUE);
