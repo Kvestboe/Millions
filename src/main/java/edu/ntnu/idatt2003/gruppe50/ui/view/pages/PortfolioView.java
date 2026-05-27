@@ -46,13 +46,13 @@ public class PortfolioView extends VBox implements Page {
    */
   public PortfolioView(PortfolioQueryController queryController,
                        Consumer<ShareDto> onShareSelected) {
-    Label title = new Label("Portfolio");
-    Label holdingsTitle = new Label("My holdings");
+    final Label title = new Label("Portfolio");
+    final Label holdingsTitle = new Label("My holdings");
 
     SimpleObjectProperty<PortfolioDto> p = queryController.getPortfolio();
 
-    VBox cardContainer = createCardContainer(p);
-    AreaChart<Number, Number> chart = createNetWorthChart(p.get());
+    final VBox cardContainer = createCardContainer(p);
+    final AreaChart<Number, Number> chart = createNetWorthChart(p.get());
     holdingsTable = createHoldingsTable(onShareSelected);
 
     holdingsTable.setItems(queryController.getShares());
@@ -63,7 +63,7 @@ public class PortfolioView extends VBox implements Page {
           portfolio.netWorthHistory());
     });
 
-    HBox topSection = new HBox(16, cardContainer, chart);
+    final HBox topSection = new HBox(16, cardContainer, chart);
     HBox.setHgrow(chart, Priority.ALWAYS);
 
     title.getStyleClass().add("page-title");

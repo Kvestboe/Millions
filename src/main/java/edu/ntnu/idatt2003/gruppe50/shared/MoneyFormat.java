@@ -18,7 +18,7 @@ public final class MoneyFormat {
    * <p>If the given value is {@code null}, an empty string is returned.</p>
    *
    * @param value the value to format
-   * @return the formatted value with two decimal places, or an empty string if the value is {@code null}
+   * @return the formatted value with two decimal places, or an empty string if {@code null}
    */
   public static String format(BigDecimal value) {
     if (value == null) {

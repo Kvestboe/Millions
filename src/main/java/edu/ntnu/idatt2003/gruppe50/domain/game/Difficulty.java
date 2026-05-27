@@ -109,7 +109,8 @@ public enum Difficulty {
   /**
    * Returns the volatility profile derived from this difficulty's market parameters.
    *
-   * @return a {@link VolatilityProfile} for use in {@link edu.ntnu.idatt2003.gruppe50.domain.market.Exchange}
+   * @return a {@link VolatilityProfile} for use in
+   *     {@link edu.ntnu.idatt2003.gruppe50.domain.market.Exchange}
    */
   public VolatilityProfile toVolatilityProfile() {
     return new VolatilityProfile(upChance, maxGain, maxLoss);

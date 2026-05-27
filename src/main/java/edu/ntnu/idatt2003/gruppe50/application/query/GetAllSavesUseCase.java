@@ -3,7 +3,6 @@ package edu.ntnu.idatt2003.gruppe50.application.query;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-
 import java.util.Comparator;
 import java.util.List;
 

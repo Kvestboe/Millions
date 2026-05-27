@@ -72,7 +72,6 @@ public class MarketView extends VBox implements Page {
     return box;
   }
 
-
   /**
    * Creates and configures the market table with columns for symbol, company,
    * price, absolute change and percentage change. Populates the table with

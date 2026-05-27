@@ -76,7 +76,7 @@ public class LoadGameView extends StackPane {
   }
 
   private StackPane buildHeader() {
-    Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
+    final Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
 
     Label title = new Label("LOAD GAME");
     title.getStyleClass().add("load-game-title");
@@ -116,14 +116,14 @@ public class LoadGameView extends StackPane {
   }
 
   private VBox createDetailPanel() {
-    SimpleObjectProperty<SaveSummaryDto> selected = controller.getSelected();
+    final SimpleObjectProperty<SaveSummaryDto> selected = controller.getSelected();
 
-    Label nameVal = new Label("-");
-    Label statusVal = new Label("-");
-    Label stateVal = new Label("-");
-    Label weekVal = new Label("-");
-    Label netWorthVal = new Label("-");
-    Label lastPlayedVal = new Label("-");
+    final Label nameVal = new Label("-");
+    final Label statusVal = new Label("-");
+    final Label stateVal = new Label("-");
+    final Label weekVal = new Label("-");
+    final Label netWorthVal = new Label("-");
+    final Label lastPlayedVal = new Label("-");
     Label hint = new Label("");
     hint.getStyleClass().add("load-game-hint");
     hint.setMaxWidth(Double.MAX_VALUE);

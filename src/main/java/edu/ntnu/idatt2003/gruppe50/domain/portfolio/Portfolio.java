@@ -44,7 +44,7 @@ public class Portfolio {
    *
    * @param share The new share
    * @return {@code true} if the share was added successfully,
-   * {@code false} if the share could not be added
+   *     {@code false} if the share could not be added
    */
   public boolean addShare(Share share) {
     Validate.notNull(share, "Share");
@@ -56,7 +56,7 @@ public class Portfolio {
    *
    * @param shareId The share to remove
    * @return {@code true} if the share was removed successfully, {@code false} if the share could
-   * not be removed
+   *     not be removed
    */
   public boolean removeShare(UUID shareId) {
     Validate.notNull(shareId, "Share id");
@@ -109,7 +109,7 @@ public class Portfolio {
    *
    * @param shareToCheck the share whose stock is used for the check
    * @return {@code true} if the portfolio contains at least one share
-   * with the same stock as {@code shareToCheck}, {@code false} otherwise
+   *     with the same stock as {@code shareToCheck}, {@code false} otherwise
    */
   public boolean contains(Share shareToCheck) {
     Validate.notNull(shareToCheck, "Share to check");

@@ -42,7 +42,7 @@ public class Share {
   }
 
   /**
-   * Returns the Share ID associated with this share
+   * Returns the Share ID associated with this share.
    *
    * @return the share ID
    */

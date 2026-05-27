@@ -171,7 +171,6 @@ public final class AppRouter {
     show(gameScene[0]);
   }
 
-
   private void showSettings(Runnable onBack) {
     SettingsView settings = new SettingsView(
         onBack,

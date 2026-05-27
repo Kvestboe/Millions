@@ -76,9 +76,6 @@ public class StockDetailView extends StackPane implements Page {
     this.orderController = orderController;
     this.onBack = onBack;
 
-    Button backBtn = ButtonFactory.secondary("Back", onBack);
-    HBox backRow = new HBox(backBtn);
-
     VBox stockDataCard = createHeader();
     stockDataCard.setMinWidth(STOCK_DATA_CARD_WIDTH);
     stockDataCard.setPrefWidth(STOCK_DATA_CARD_WIDTH);
@@ -90,6 +87,9 @@ public class StockDetailView extends StackPane implements Page {
     HBox splitRow = new HBox(16, stockDataCard, rightColumn);
     HBox.setHgrow(rightColumn, Priority.ALWAYS);
     VBox.setVgrow(splitRow, Priority.ALWAYS);
+
+    Button backBtn = ButtonFactory.secondary("Back", onBack);
+    HBox backRow = new HBox(backBtn);
 
     content.getChildren().addAll(backRow, splitRow);
     content.getStyleClass().add("stock-detail-view");

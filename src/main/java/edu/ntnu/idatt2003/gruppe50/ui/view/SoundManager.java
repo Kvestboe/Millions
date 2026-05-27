@@ -103,22 +103,38 @@ public class SoundManager {
     applyVolumes();
   }
 
-  /** @return current master volume in {@code [0.0, 1.0]} */
+  /**
+   * Returns the current master volume.
+   *
+   * @return current master volume in {@code [0.0, 1.0]}
+   */
   public double getMasterVolume() {
     return masterVolume;
   }
 
-  /** @return {@code true} if music is currently enabled */
+  /**
+   * Indicates whether background music is currently enabled.
+   *
+   * @return {@code true} if music is currently enabled
+   */
   public boolean isMusicEnabled() {
     return musicEnabled;
   }
 
-  /** @return {@code true} if sound effects are currently enabled */
+  /**
+   * Indicates whether sound effects are currently enabled.
+   *
+   * @return {@code true} if sound effects are currently enabled
+   */
   public boolean isSfxEnabled() {
     return sfxEnabled;
   }
 
-  /** @return {@code true} if master sound is currently enabled */
+  /**
+   * Indicates whether master sound is currently enabled.
+   *
+   * @return {@code true} if master sound is currently enabled
+   */
   public boolean isMasterEnabled() {
     return masterEnabled;
   }

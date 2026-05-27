@@ -74,7 +74,7 @@ public class LeaderboardView extends StackPane {
   }
 
   private StackPane buildHeader() {
-    Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
+    final Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
 
     Label title = new Label("🏆 LEADERBOARD");
     title.getStyleClass().add("load-game-title");
@@ -181,7 +181,7 @@ public class LeaderboardView extends StackPane {
   }
 
   private HBox buildScoreHeader() {
-    Label label = new Label("Score");
+    final Label label = new Label("Score");
     Label q = new Label("?");
     q.getStyleClass().add("info-icon");
     Tooltip tooltip = new Tooltip(

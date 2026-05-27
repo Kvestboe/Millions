@@ -26,12 +26,9 @@ public class WeekSummaryView extends VBox {
   /**
    * Creates a week summary view.
    *
-   * @param summary             week summary data to display
-   * @param onShowNews          action run when opening the news detail list
-   * @param onShowNotifications action run when opening the notifications detail list
-   * @param onClose             action run when closing the summary
+   * @param summary week summary data to display
+   * @param onClose action run when closing the summary
    */
-
   public WeekSummaryView(
       WeekSummary summary,
       Runnable onClose

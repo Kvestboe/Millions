@@ -42,7 +42,7 @@ public class GameOverView extends VBox implements Page {
     this.onMainMenu = onMainMenu;
     this.onLeaderboard = onLeaderboard;
     getStyleClass().add("root-bg");
-    buildUI();
+    buildUi();
   }
 
   /**
@@ -52,7 +52,7 @@ public class GameOverView extends VBox implements Page {
    * card, stats row). A difficulty-specific "lose reason" box is appended
    * when the player lost and a leaderboard score-card is appended when they won.
    */
-  private void buildUI() {
+  private void buildUi() {
     VBox inner = new VBox(20);
     inner.setAlignment(Pos.CENTER);
     inner.setPadding(new Insets(40, 80, 40, 80));
@@ -125,7 +125,7 @@ public class GameOverView extends VBox implements Page {
         ? buildStatCard("🏁 Starting capital", MoneyFormat.format(result.startingCapital()))
         : buildStatCard("🎯 Target", "1 000 000 kr");
 
-    HBox row = new HBox(12, weeks, diff, third);
+    final HBox row = new HBox(12, weeks, diff, third);
     HBox.setHgrow(weeks, Priority.ALWAYS);
     HBox.setHgrow(diff, Priority.ALWAYS);
     HBox.setHgrow(third, Priority.ALWAYS);
@@ -151,7 +151,7 @@ public class GameOverView extends VBox implements Page {
 
     Label hint = new Label("Saved to the " + result.difficulty().name() + " leaderboard");
 
-    VBox left = new VBox(4, overline, hint);
+    final VBox left = new VBox(4, overline, hint);
 
     Label score = new Label(String.valueOf(result.calculateScore()));
     score.getStyleClass().add("net-worth-value");

@@ -103,7 +103,7 @@ public class SettingsView extends VBox {
     Label subtitle = new Label("Run the game in fullscreen mode");
     subtitle.getStyleClass().add("settings-row-subtitle");
 
-    VBox text = new VBox(2, title, subtitle);
+    final VBox text = new VBox(2, title, subtitle);
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -132,7 +132,7 @@ public class SettingsView extends VBox {
     Label subtitle = new Label("Overall sound level");
     subtitle.getStyleClass().add("settings-row-subtitle");
 
-    VBox text = new VBox(2, title, subtitle);
+    final VBox text = new VBox(2, title, subtitle);
 
     int initialPercent = (int) Math.round(soundManager.getMasterVolume() * 100);
 
@@ -156,7 +156,7 @@ public class SettingsView extends VBox {
     VBox content = new VBox(10, text, sliderRow);
     HBox.setHgrow(content, Priority.ALWAYS);
 
-    Region spacer = new Region();
+    final Region spacer = new Region();
 
     // Master toggle
     masterToggle = createToggle(soundManager.isMasterEnabled());
@@ -225,7 +225,7 @@ public class SettingsView extends VBox {
     Label subtitle = new Label(subtitleText);
     subtitle.getStyleClass().add("settings-row-subtitle");
 
-    VBox text = new VBox(2, title, subtitle);
+    final VBox text = new VBox(2, title, subtitle);
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);

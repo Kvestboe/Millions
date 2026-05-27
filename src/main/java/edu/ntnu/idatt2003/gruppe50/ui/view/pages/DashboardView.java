@@ -191,8 +191,8 @@ public class DashboardView extends BorderPane implements Page {
         bar.getStyleClass().removeIf(c ->
             c.equals("level-progress-investor") || c.equals("level-progress-speculator"));
         String variant = "level-progress-" + dto.currentStatus().toLowerCase();
-        if (variant.equals("level-progress-investor") ||
-            variant.equals("level-progress-speculator")) {
+        if (variant.equals("level-progress-investor")
+            || variant.equals("level-progress-speculator")) {
           bar.getStyleClass().add(variant);
         }
 

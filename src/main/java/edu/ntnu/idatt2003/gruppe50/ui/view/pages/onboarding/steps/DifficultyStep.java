@@ -81,10 +81,10 @@ public class DifficultyStep implements OnboardingStep {
     tagLabel.getStyleClass().add("diff-tag");
 
     Label statsLabel = new Label(
-        "Up chance: " + (int) (difficulty.getUpChance() * 100) + "%\n" +
-            "Max gain: ±" + (int) (difficulty.getMaxGain() * 100) + "%\n" +
-            "Max loss: ±" + (int) (difficulty.getMaxLoss() * 100) + "%\n" +
-            "Hangar cost: " + (difficulty.getHangarCostRate() * 100) + "%/week"
+        "Up chance: " + (int) (difficulty.getUpChance() * 100) + "%\n"
+            + "Max gain: ±" + (int) (difficulty.getMaxGain() * 100) + "%\n"
+            + "Max loss: ±" + (int) (difficulty.getMaxLoss() * 100) + "%\n"
+            + "Hangar cost: " + (difficulty.getHangarCostRate() * 100) + "%/week"
     );
     statsLabel.getStyleClass().add("diff-stats");
 

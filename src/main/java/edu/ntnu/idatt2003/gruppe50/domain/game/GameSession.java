@@ -361,7 +361,7 @@ public final class GameSession {
           "Not enough cash to pay hangar rent of " + hangarCost);
     }
 
-    Status statusBefore = player.getStatus();
+    final Status statusBefore = player.getStatus();
     player.withdrawMoney(hangarCost);
     exchange.advance();
     coinExchange.advanceShop();

@@ -132,7 +132,7 @@ public class OrderConfirmationView extends VBox {
    * Builds a validation label for order confirmation problems.
    *
    * @return a visible error label when the order cannot be confirmed,
-   * otherwise a hidden unmanaged label
+   *     otherwise a hidden unmanaged label
    */
   private Label buildValidationMessage() {
     Label label = new Label();

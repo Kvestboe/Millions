@@ -35,7 +35,6 @@ public class DashboardQueryController implements Observer {
   private final GetNotificationsUseCase getNotifications;
   private final ObservableList<NotificationDto> notifications = FXCollections.observableArrayList();
 
-
   /**
    * Creates a new dashboard query controller and registers it as an observer
    * of the given exchange.

@@ -37,8 +37,8 @@ public class InsufficientCashPopup extends StackPane {
         "Every week your hangar costs " + MoneyFormat.formatCurrency(hangarCost) + ". "
             + "You only have " + MoneyFormat.formatCurrency(playerCash) + " in cash, "
             + "because the rest is tied up in shares. "
-            + "Sell shares for at least " + MoneyFormat.formatCurrency(missing) +
-            " to continue to the next week.");
+            + "Sell shares for at least " + MoneyFormat.formatCurrency(missing)
+            + " to continue to the next week.");
     explanation.setWrapText(true);
 
     Button close = new Button("Got it");

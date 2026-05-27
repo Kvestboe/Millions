@@ -34,7 +34,7 @@ public final class PreviewOrderUseCase {
    * @param request input with game id, symbol, quantity, side and optional target price
    * @return response containing price, fees, tax, total and available cash
    * @throws GameSessionNotFoundException if the session does not exist
-   * @throws IllegalStateException        if a sell preview requests more shares than the player owns
+   * @throws IllegalStateException if a sell preview requests more shares than the player owns
    */
   public Response execute(Request request) {
 

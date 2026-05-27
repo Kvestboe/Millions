@@ -23,7 +23,7 @@ import javafx.scene.layout.VBox;
 public class TradingLogCard extends VBox {
 
   private final Label totalTradesLabel = new Label("0 total trades");
-  private final Label realizedPnLValue = new Label("0,00 kr");
+  private final Label realizedPnlValue = new Label("0,00 kr");
   private final Label tradesValue = new Label("0");
   private final Label feesValue = new Label("0,00 kr");
   private final Label taxesValue = new Label("0,00 kr");
@@ -77,9 +77,9 @@ public class TradingLogCard extends VBox {
   }
 
   private GridPane buildStatsGrid() {
-    realizedPnLValue.getStyleClass().add("pnl-value");
+    realizedPnlValue.getStyleClass().add("pnl-value");
 
-    VBox pnl = StatCardFactory.tile("REALIZED P/L", realizedPnLValue);
+    VBox pnl = StatCardFactory.tile("REALIZED P/L", realizedPnlValue);
     VBox trades = StatCardFactory.tile("TRADES", tradesValue);
     VBox fees = StatCardFactory.tile("FEES PAID", feesValue);
     VBox taxes = StatCardFactory.tile("TAXES PAID", taxesValue);
@@ -157,17 +157,17 @@ public class TradingLogCard extends VBox {
 
     totalTradesLabel.setText(data.totalTrades() + " total trades");
     tradesValue.setText(String.valueOf(data.totalTrades()));
-    realizedPnLValue.setText(MoneyFormat.formatSignedCurrency(data.realizedPnL()));
+    realizedPnlValue.setText(MoneyFormat.formatSignedCurrency(data.realizedPnL()));
     feesValue.setText(MoneyFormat.formatCurrency(data.totalFees()));
     taxesValue.setText(MoneyFormat.formatCurrency(data.totalTaxes()));
 
-    realizedPnLValue.getStyleClass().removeAll("gain", "loss");
+    realizedPnlValue.getStyleClass().removeAll("gain", "loss");
     int sign = data.realizedPnL().signum();
     if (sign > 0) {
-      realizedPnLValue.getStyleClass().add("gain");
+      realizedPnlValue.getStyleClass().add("gain");
     }
     if (sign < 0) {
-      realizedPnLValue.getStyleClass().add("loss");
+      realizedPnlValue.getStyleClass().add("loss");
     }
 
     updateMix(data.purchases(), data.sales());

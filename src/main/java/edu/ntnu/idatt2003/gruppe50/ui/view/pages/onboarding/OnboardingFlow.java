@@ -77,8 +77,6 @@ public class OnboardingFlow {
    * @return the root layout node
    */
   private Parent buildLayout() {
-    HBox progressBar = buildProgressBar();
-
     backBtn = ButtonFactory.secondary("← Back", this::goBack);
     backBtn.setPrefWidth(160);
 
@@ -100,6 +98,8 @@ public class OnboardingFlow {
     scrollableCenter.setFitToHeight(true);
     scrollableCenter.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     scrollableCenter.getStyleClass().add("onboarding-scroll");
+
+    HBox progressBar = buildProgressBar();
 
     BorderPane root = new BorderPane();
     root.getStyleClass().add("root-bg");

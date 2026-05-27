@@ -123,7 +123,7 @@ public class Exchange extends Observable {
    *
    * @param symbol the stock symbol
    * @return {@code true} if the exchange contains a stock
-   * with the given symbol, {@code false} otherwise
+   *     with the given symbol, {@code false} otherwise
    * @throws IllegalArgumentException if {@code symbol} is null or blank
    */
   public boolean hasStock(String symbol) {

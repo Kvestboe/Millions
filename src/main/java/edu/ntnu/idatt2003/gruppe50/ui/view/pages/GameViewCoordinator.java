@@ -289,8 +289,8 @@ public class GameViewCoordinator {
       return;
     }
 
-    int prevWeek = session.getExchange().getWeek();
-    BigDecimal before = session.getPlayer().getNetWorth();
+    final int prevWeek = session.getExchange().getWeek();
+    final BigDecimal before = session.getPlayer().getNetWorth();
     bundle.game().advanceWeek();
 
     if (session.getState() == GameSessionState.FINISHED) {
@@ -375,7 +375,7 @@ public class GameViewCoordinator {
     BigDecimal threshold = player.getStartingMoney()
         .multiply(BigDecimal.valueOf(difficulty.getGameOverThreshold()));
     BigDecimal warningBand = threshold.multiply(DANGER_ZONE_MULTIPLIER);
-    boolean danger = netWorth.compareTo(warningBand) < 0;
+    final boolean danger = netWorth.compareTo(warningBand) < 0;
 
     weekValue.setText("Week " + exchange.getWeek());
     netWorthValue.setText(MoneyFormat.formatCurrency(netWorth));
