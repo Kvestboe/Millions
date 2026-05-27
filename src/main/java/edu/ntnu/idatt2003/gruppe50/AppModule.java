@@ -12,7 +12,7 @@ import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase
 import edu.ntnu.idatt2003.gruppe50.application.command.PurchaseShopItemUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.DeleteSaveUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.DeleteSaveUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetAllSavesUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetGoalProgressUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase;

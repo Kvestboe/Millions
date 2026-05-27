@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.notification.Notification;
 import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationType;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status;
+import edu.ntnu.idatt2003.gruppe50.domain.shop.CoinExchange;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.InsufficientFundsException;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
@@ -34,6 +35,7 @@ public final class GameSession {
   private final Exchange exchange;
   private final LocalDateTime runStartedAt;
   private final Difficulty difficulty;
+  private CoinExchange coinExchange;
   private GameSessionState state;
   private LocalDateTime lastPlayed;
   private List<BigDecimal> netWorthHistory;
@@ -57,6 +59,7 @@ public final class GameSession {
     this.runStartedAt = runStartedAt;
     this.lastPlayed = lastPlayed;
     this.netWorthHistory = new ArrayList<>(List.of(player.getNetWorth()));
+    this.coinExchange = new CoinExchange(player.getStartingMoney());
   }
 
   private GameSession(
@@ -73,6 +76,23 @@ public final class GameSession {
     this.netWorthHistory = new ArrayList<>(netWorthHistory.size());
     for (BigDecimal value : netWorthHistory) {
       this.netWorthHistory.add(Money.round(value));
+    }
+  }
+
+  private GameSession(
+      UUID gameId,
+      Player player,
+      Exchange exchange,
+      GameSessionState state,
+      LocalDateTime runStartedAt,
+      LocalDateTime lastPlayed,
+      Difficulty difficulty,
+      List<BigDecimal> netWorthHistory,
+      CoinExchange coinExchange
+  ) {
+    this(gameId, player, exchange, state, runStartedAt, lastPlayed, difficulty, netWorthHistory);
+    if (coinExchange != null) {
+      this.coinExchange = coinExchange;
     }
   }
 
@@ -132,6 +152,52 @@ public final class GameSession {
     Validate.notNull(lastPlayed, "Last played date");
     Validate.notNull(netWorthHistory, "Net worth history");
     return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed, difficulty, netWorthHistory);
+  }
+
+  /**
+   * Recreates a game session from already saved data, including the coin
+   * exchange price history.
+   *
+   * <p>Used by the persistence layer to restore a session in the exact same
+   * state it had when it was saved. If {@code coinExchange} is {@code null},
+   * a fresh coin exchange is created from the player's starting capital — this
+   * preserves backward compatibility with legacy save files that pre-date
+   * persistent coin pricing.
+   *
+   * @param gameId saved session id
+   * @param player saved player state
+   * @param exchange saved exchange state
+   * @param difficulty saved difficulty
+   * @param state saved session state
+   * @param runStartedAt date the run started
+   * @param lastPlayed date the session was last opened
+   * @param netWorthHistory saved net worth history
+   * @param coinExchange saved coin exchange, or {@code null} to create a fresh one
+   * @return rehydrated session
+   * @throws IllegalArgumentException if any non-nullable argument is null
+   */
+  public static GameSession rehydrate(
+      UUID gameId,
+      Player player,
+      Exchange exchange,
+      Difficulty difficulty,
+      GameSessionState state,
+      LocalDateTime runStartedAt,
+      LocalDateTime lastPlayed,
+      List<BigDecimal> netWorthHistory,
+      CoinExchange coinExchange
+  ) {
+    Validate.notNull(gameId, "Game id");
+    Validate.notNull(player, "Player");
+    Validate.notNull(exchange, "Exchange");
+    Validate.notNull(state, "Game state");
+    Validate.notNull(runStartedAt, "Run started at date");
+    Validate.notNull(lastPlayed, "Last played date");
+    Validate.notNull(netWorthHistory, "Net worth history");
+    return new GameSession(
+        gameId, player, exchange, state, runStartedAt, lastPlayed,
+        difficulty, netWorthHistory, coinExchange
+    );
   }
 
   /**
@@ -297,6 +363,7 @@ public final class GameSession {
     Status statusBefore = player.getStatus();
     player.withdrawMoney(hangarCost);
     exchange.advance();
+    coinExchange.advanceShop();
     Status statusAfter = player.getStatus();
 
     if (statusAfter.ordinal() > statusBefore.ordinal()) {
@@ -437,5 +504,14 @@ public final class GameSession {
     return player.getStartingMoney()
         .multiply(BigDecimal.valueOf(difficulty.getHangarCostRate()))
         .setScale(2, RoundingMode.HALF_UP);
+  }
+
+  /**
+   * Returns the coin exchange used in the session.
+   *
+   * @return session coin exchange
+   */
+  public CoinExchange getCoinExchange() {
+    return coinExchange;
   }
 }

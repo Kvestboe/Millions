@@ -161,9 +161,4 @@ public class ShopController {
   public List<BigDecimal> getCoinPriceHistory() {
     return shop.getCoinExchange().getPriceHistory();
   }
-
-  /** Advances the coin exchange price by one week. */
-  public void advanceCoinExchange() {
-    shop.getCoinExchange().advanceShop();
-  }
 }

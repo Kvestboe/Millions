@@ -54,7 +54,7 @@ public record GameSessionControllerBundle(
         new ShopController(
             session.getGameId(),
             new Shop(
-                new CoinExchange(session.getPlayer().getStartingMoney()),
+                session.getCoinExchange(),
                 ShopItemFactory.createDefaultItems()
             ),
             session.getPlayer(),

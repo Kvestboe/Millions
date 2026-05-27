@@ -32,7 +32,7 @@ public final class BuyCoinsUseCase {
         repository.findById(request.gameId()).orElseThrow(GameSessionNotFoundException::new);
 
     Shop shop = new Shop(
-        new CoinExchange(session.getPlayer().getStartingMoney()),
+        session.getCoinExchange(),
         ShopItemFactory.createDefaultItems()
     );
 

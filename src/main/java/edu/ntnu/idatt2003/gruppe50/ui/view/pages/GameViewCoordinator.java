@@ -288,7 +288,6 @@ public class GameViewCoordinator {
     BigDecimal after = session.getPlayer().getNetWorth();
     lastWeeklyDelta = after.subtract(before);
 
-    bundle.shop().advanceCoinExchange();
     if (shopView != null) {
       shopView.refresh();
     }
