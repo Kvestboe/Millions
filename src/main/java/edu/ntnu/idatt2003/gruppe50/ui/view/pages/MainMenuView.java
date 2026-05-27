@@ -113,24 +113,30 @@ public class MainMenuView extends StackPane {
   private void drawChart(GraphicsContext gc, double width) {
     gc.clearRect(0, 0, width, 100);
 
-    double[] xPoints =
-        {0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100, 1200, 1350, 1500,
-            1650, 1800, width};
-    double[] yPoints =
-        {110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18, 8, 12, 5};
+    double[] xpoints = {
+        0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100,
+        1200, 1350, 1500, 1650, 1800, width
+    };
+    double[] ypoints = {
+        110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18,
+        8, 12, 5
+    };
 
-    double[] xFill =
-        {0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100, 1200, 1350, 1500,
-            1650, 1800, width, width, 0};
-    double[] yFill =
-        {110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18, 8, 12, 5, 100, 100};
+    double[] xfill = {
+        0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100,
+        1200, 1350, 1500, 1650, 1800, width, width, 0
+    };
+    double[] yfill = {
+        110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18,
+        8, 12, 5, 100, 100
+    };
 
     gc.setFill(Color.web("#FFD166", 0.08));
-    gc.fillPolygon(xFill, yFill, xFill.length);
+    gc.fillPolygon(xfill, yfill, xfill.length);
 
     gc.setStroke(Color.web("#FFD166", 0.3));
     gc.setLineWidth(1.5);
-    gc.strokePolyline(xPoints, yPoints, xPoints.length);
+    gc.strokePolyline(xpoints, ypoints, xpoints.length);
   }
 
   private VBox buildContent() {
@@ -138,7 +144,7 @@ public class MainMenuView extends StackPane {
     separator.getStyleClass().add("menu-separator");
     separator.setMaxWidth(340);
 
-    Label versionLabel = new Label("v1.2.0");
+    Label versionLabel = new Label("v2.0.0");
     versionLabel.getStyleClass().add("version-label");
 
     VBox content = new VBox(14);
