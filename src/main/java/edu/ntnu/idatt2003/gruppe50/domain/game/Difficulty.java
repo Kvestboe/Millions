@@ -18,7 +18,7 @@ public enum Difficulty {
    * and asymmetric price swings (gains larger than losses).
    * No capital restriction and low hangar cost.
    */
-  EASY(0.54, 0.12, 0.12, 0.006, Optional.empty(), 0.40),
+  EASY(0.58, 0.12, 0.08, 0.006, Optional.empty(), 0.40),
 
   /**
    * Medium difficulty. Balanced 50/50 market with moderate hangar cost.
