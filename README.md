@@ -1,9 +1,9 @@
 # Millions – Stock Market Simulator
 
-**STUDENT NAMES:** Marius Klepp , Kristian Vestbø
+**STUDENT NAMES:** Marius Stavrum Klepp, Kristian Vestbø
 **GROUP:** 50
 
-This project was developed as part of the course IDATT2003 (Programming 2), which is part of the Bachelor's program in Computer Science at NTNU. Millions is a Java-based stock market simulator where players can buy and sell shares, track their portfolio, and compete to grow their net worth over time.
+Millions is a local Java/JavaFX stock market simulator developed as part of **IDATT2003 Programming 2** at NTNU. The player starts with a chosen amount of capital and must reach a net worth of **1 000 000 kr** by trading in a simulated stock market — buying and selling shares, placing conditional orders, and surviving weekly hangar costs across multiple difficulty levels.
 
 ---
 
@@ -12,7 +12,9 @@ This project was developed as part of the course IDATT2003 (Programming 2), whic
 - [About the Game](#about-the-game)
 - [Installation](#installation)
 - [Build and Run](#build-and-run)
-- [Usage](#usage)
+- [Gameplay](#gameplay)
+- [Stock Data File Format](#stock-data-file-format)
+- [Save Files](#save-files)
 - [Testing](#testing)
 - [Project Structure](#project-structure)
 - [License](#license)
@@ -21,36 +23,47 @@ This project was developed as part of the course IDATT2003 (Programming 2), whic
 
 ## About the Game
 
-Millions simulates a stock exchange where the player starts with a chosen amount of capital and a set of stocks loaded from a CSV file. Each week, stock prices change randomly, and the player must make smart decisions about when to buy and sell to maximize their net worth. 
+Millions simulates a stock exchange where weekly price changes are driven by a per-stock volatility profile. Each turn the player can trade, place conditional orders, and then advance to the next week, where prices update and pending orders are evaluated. The goal is to reach **1 000 000 kr** in net worth before the player's portfolio drops below the difficulty-specific loss threshold.
 
-Key features include:
+**Core features**
 
-- Start a new game with a custom name, starting capital, and stock data from any CSV file
-- Browse the stock market — search, filter, and view price history and statistics
-- Buy and sell shares with real commission and tax calculations
-- View all completed transactions with full details and receipts
-- Advance to the next trading week, which triggers price updates across all stocks
-- Track your net worth and player status (Novice, Investor, Speculator) in real time
-- Sell your entire portfolio and exit the game at any time
+- Start a new game with a custom name, starting capital, difficulty, and stock data
+- Browse the market: search, filter, and view per-stock price history and statistics
+- Buy and sell shares with commission and capital gains tax
+- Transaction history with full details and filtering
+- Weekly progression with top gainers/losers and net worth tracking
+- Real-time status progression (Novice -> Investor -> Speculator)
+
+**Extensions beyond the mandatory requirements**
+
+- **Difficulty levels**: (Easy, Medium, Hard) affect market behavior, hangar cost, starting capital cap, and loss threshold
+- **Conditional orders**: limit buy, limit sell, and stop-loss orders that trigger automatically during weekly advance
+- **Predefined markets**: bundled stock data (S&P 500, Oslo Børs, and a funny exchange) so the player can start without uploading a CSV
+- **Save and load**: with support for multiple saves and deletion of saves
+- **Shop system**: convert money to coins and buy visual themes
+- **Leaderboard**: ranking completed games by result and difficulty
+- **Onboarding flow**: introducing core mechanics to new players
+- **Visual themes**: unlocked through the shop
 
 ---
 
 ## Installation
 
-**Prerequisites:**
-- Java 25
-- Maven 
+**Prerequisites**
 
-**Clone the repository:**
+- **JDK 25**
+- **Maven 3.9+**
 
-```bash
+**Clone the repository**
+
+```
 git clone git@github.com:mappe-2026/Millions.git
-cd millions
+cd Millions
 ```
 
-**Build the project:**
+**Build the project**
 
-```bash
+```
 mvn clean install
 ```
 
@@ -58,69 +71,83 @@ mvn clean install
 
 ## Build and Run
 
-**Build:**
-
-```bash
-mvn clean package
-```
-
-**Run the application:**
-
-```bash
-mvn javafx:run
-```
-
-**Run tests only:**
-
-```bash
-mvn test
-```
+| Command | Purpose |
+|---|---|
+| `mvn clean package` | Build a packaged jar |
+| `mvn javafx:run` | Launch the JavaFX application |
+| `mvn test` | Run the unit test suite |
 
 ---
 
-## Usage
+## Gameplay
 
-### Starting a New Game
+### Starting a new game
 
-When the application launches, you are taken to the **New Game** screen. Here you must:
+From the main menu, choose **New Game**. You'll be asked to:
 
-1. Enter your player name
-2. Enter your starting capital
-3. Select a stock data file (CSV format) from your file system
+1. Pick a player name
+2. Select a difficulty
+3. Set a starting capital (subject to the difficulty's cap)
+4. Choose a stock market; a predefined one or your own CSV file
 
-The application will load all stocks from the file and bring you to the main exchange view.
+### Difficulty levels
 
-### The Market View
+| Difficulty | Market bias | Hangar cost | Max starting capital | Loss threshold |
+|---|---|---|---|---|
+| **Easy** | 54% up-chance, +-12% swings | 0.6% of starting capital | unlimited | 40% of starting capital |
+| **Medium** | 50% up-chance, +-14% swings | 1.5% of starting capital | 25 000 kr | 50% of starting capital |
+| **Hard** | 46% up-chance, +-16% swings | 2.0% of starting capital | 5 000 kr | 60% of starting capital |
 
-The main screen shows all available stocks on the exchange. You can:
+If your net worth drops below the loss threshold, the game ends in a loss. Reaching 1 000 000 kr ends the game in a win.
+
+### The market view
+
+The market screen lists every stock on the exchange. You can:
 
 - Search by ticker symbol or company name
-- Click a stock to view its price history, highest/lowest price, and weekly change
+- Open a stock to see price history, highest/lowest price, weekly change, and your current holding
 - See the week's top gainers and losers
 
-### Buying and Selling
+### Trading
 
-To **buy**, select a stock and enter the quantity you wish to purchase. A summary will show you the gross value, commission (0.5%), and total cost before you confirm.
+- **Buying:** select a stock, enter quantity Review the preview gross value, commission, and total before confirming.
+- **Selling:** open your portfolio (or a stock detail page), pick a share, and confirm. The receipt shows gross value, commission, capital gains tax (on profit only), and net payout.
 
-To **sell**, open your portfolio, select a share, and confirm the sale. A receipt showing gross value, commission (1%), capital gains tax (30% on profit), and total payout will be displayed.
+### Conditional orders
 
-### Advancing to the Next Week
+In addition to immediate trades, three conditional order types can be placed:
 
-Once you are done trading, click **Advance to next week**. All stock prices update randomly. Your portfolio values and net worth update automatically.
+- **Limit Buy**: buy automatically when the price drops to a target
+- **Limit Sell**: sell automatically when the price rises to a target
+- **Stop-Loss**: sell automatically when the price falls below a threshold
 
-### Player Status
+Orders are evaluated at the start of every weekly advance and either trigger, expire, or remain pending.
 
-Your current status is always visible in the interface:
+### Advancing the week
+
+When you click **Advance to next week**:
+
+1. The hangar cost is withdrawn from your cash balance
+2. All stock prices update using the volatility profile
+3. Pending conditional orders are evaluated
+4. Net worth is recorded and observers (UI) are notified
+5. The game checks win/loss conditions
+
+### Player status
 
 | Status | Requirement |
 |---|---|
-| **Novice** | Starting level — no conditions |
-| **Investor** | Traded ≥ 10 weeks and net worth increased by ≥ 20% |
-| **Speculator** | Traded ≥ 20 weeks and net worth at least doubled |
+| **Novice** | Starting level |
+| **Investor** | Traded >= 10 weeks and net worth has grown by >= 20% |
+| **Speculator** | Traded >= 20 weeks and net worth has at least doubled |
 
-### Ending the Game
+### Shop and themes
 
-To finish, use the **⋯** menu and select **Sell all & quit**. This sells your entire portfolio and takes you to the end screen, where you can see your final result before closing the application.
+Cash can be exchanged for coins at a (rising) rate inside the shop. Coins are used to purchase visual themes that change the look of the application.
+
+### Leaderboard
+
+Completed games (won or lost) are saved to a local leaderboard, ranked by a score that combines final result, weeks played, starting capital, and difficulty.
 
 ---
 
@@ -141,34 +168,33 @@ MSFT,Microsoft,404.68
 - Each stock line follows the format: `symbol,name,price`
 - Decimal separator is `.` (period)
 
-A sample stock file is included in `src/main/resources/`.
+Bundled sample files are available in `src/main/resources/data/` (`sp500.csv`, `osloBørs.csv`, `fun.csv`, and smaller test files).
+
+---
+
+## Save Files
+
+Game sessions are persisted as JSON files via Jackson under the local `saves/` directory. Saves are automatic after key actions, and multiple parallel saves are supported. Saves can be loaded, continued, or deleted from the main menu.
 
 ---
 
 ## Testing
 
-Run all unit tests with Maven:
+The project ships with around **450 unit tests** in JUnit Jupiter 6. `mvn test` runs the full suite.
 
-```bash
-mvn test
-```
+Coverage includes:
 
-Unit tests cover the core business logic of the application, including:
+- All 26 use cases (commands and queries)
+- Domain entities and value objects: `Player`, `Portfolio`, `Exchange`, `Stock`, `Share`, `Transaction`, `TransactionArchive`, `LimitOrder` hierarchy, `Shop`, `Leaderboard`, `GameSession`
+- Calculators: gross, commission, and tax for both `PurchaseCalculator` and `SaleCalculator`
+- File and JSON handling via the `Parse` and DTO/mapping layer (kept I/O-free)
+- In-memory repository implementations for fast, isolated tests
 
-- `Stock` and `Share` construction and getters
-- `PurchaseCalculator` and `SaleCalculator` (gross, commission, tax, total)
-- `Portfolio` — adding, removing, and querying shares
-- `TransactionArchive` — storing and retrieving transactions
-- `Player` — balance management and net worth calculation
-- `Exchange` — buying, selling, stock lookup, and price advancement
-
-Both positive (happy path) and negative (error/edge case) tests are included. Tests follow the **Arrange–Act–Assert** pattern and use JUnit 6.
+Tests use `@BeforeEach` for isolated state, `@Nested` to structure larger files, and `assertThrows` for negative paths. `BigDecimal` values are compared with `compareTo()` to avoid scale issues. The GUI layer is verified through manual user testing rather than unit tests.
 
 ---
 
 ## Project Structure
-
-The codebase follows a layered architecture with one package per concern:
 
 ```
 src/
@@ -208,18 +234,8 @@ src/
 └── test/java/edu/ntnu/idatt2003/gruppe50/
     └── (mirrors the main package layout)
 ```
-
----
-
-## Design Patterns Used
-
-- **MVC (Model–View–Controller):** The GUI is structured strictly according to MVC. Views display data, controllers handle user input, and the model contains all business logic.
-- **Observer:** The model is observable. Views register as observers and update automatically when the model changes state (e.g., after a trade or week advance).
-- **Factory:** A `TransactionFactory` is used to create `Purchase` and `Sale` instances, decoupling transaction creation from the rest of the code.
-- **Strategy / Interface-based calculators:** `TransactionCalculator` is an interface implemented separately by `PurchaseCalculator` and `SaleCalculator`, making it easy to swap or extend calculation logic.
-
 ---
 
 ## License
 
-This project is developed for educational purposes as part of IDATT2003 at NTNU.
+This project was developed for educational purposes as part of **IDATT2003** at NTNU.
