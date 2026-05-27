@@ -67,9 +67,9 @@ public class MarketStep implements OnboardingStep {
     selectedLabel = new Label("S&P 500 (default)");
     selectedLabel.getStyleClass().add("label-muted");
 
-    VBox sp500  = createMarketOption("US", "S&P 500",
+    VBox sp500 = createMarketOption("US", "S&P 500",
         "Top 500 US stocks by market cap", "/data/sp500.csv");
-    VBox oslo   = createMarketOption("NO", "Oslo Børs",
+    VBox oslo = createMarketOption("NO", "Oslo Børs",
         "Norwegian stock exchange", "/data/osloBørs.csv");
     VBox funMkt = createMarketOption("🎲", "???",
         "A very serious market. Definitely not a joke.", "/data/fun.csv");
@@ -98,7 +98,6 @@ public class MarketStep implements OnboardingStep {
    * @param name         display name
    * @param description  short description
    * @param resourcePath path to the bundled CSV resource
-   *
    * @return a styled, clickable VBox card
    */
   private VBox createMarketOption(
@@ -229,6 +228,7 @@ public class MarketStep implements OnboardingStep {
     clearError();
     return true;
   }
+
   /**
    * Sets the chosen stock file and market display name on the shared onboarding data.
    *
@@ -252,7 +252,9 @@ public class MarketStep implements OnboardingStep {
     return false;
   }
 
-  /** Clears the validation message when a market file is selected. */
+  /**
+   * Clears the validation message when a market file is selected.
+   */
   private void clearError() {
     errorLabel.setText("");
     errorLabel.setVisible(false);

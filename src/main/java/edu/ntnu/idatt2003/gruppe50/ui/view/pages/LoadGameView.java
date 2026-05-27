@@ -10,7 +10,6 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
 import java.math.RoundingMode;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
@@ -42,7 +41,7 @@ public class LoadGameView extends StackPane {
    * Constructs the load game view.
    *
    * @param controller the controller managing save selection, loading, and deletion
-   * @param onBack action triggered when the player clicks "Back"
+   * @param onBack     action triggered when the player clicks "Back"
    */
   public LoadGameView(LoadGameController controller, Runnable onBack) {
     this.controller = controller;
@@ -107,7 +106,9 @@ public class LoadGameView extends StackPane {
     table.setRowFactory(_ -> {
       TableRow<SaveSummaryDto> row = new TableRow<>();
       row.setOnMousePressed(_ -> {
-        if (!row.isEmpty()) controller.select(row.getItem());
+        if (!row.isEmpty()) {
+          controller.select(row.getItem());
+        }
       });
       return row;
     });

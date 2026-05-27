@@ -15,12 +15,12 @@ public class StopLossOrder extends LimitOrder {
   /**
    * Creates a new stop-loss order with an explicit expiry week.
    *
-   * @param stock the stock to sell
-   * @param player the player placing the order
+   * @param stock       the stock to sell
+   * @param player      the player placing the order
    * @param targetPrice the price that triggers the sale
-   * @param quantity the number of shares to sell
+   * @param quantity    the number of shares to sell
    * @param currentWeek the week the order was created
-   * @param expiryWeek the week the order expires
+   * @param expiryWeek  the week the order expires
    */
   public StopLossOrder(
       Stock stock,

@@ -33,14 +33,14 @@ public class Player {
   /**
    * Recreates a player from saved data.
    *
-   * @param name the player's name
+   * @param name          the player's name
    * @param startingMoney the amount of money the player started with
-   * @param money the player's current money
-   * @param coins the player's current coins
-   * @param activeTheme the active theme id
-   * @param ownedThemes the themes owned by the player
-   * @param portfolio the player's saved portfolio
-   * @param transactions the player's saved transactions
+   * @param money         the player's current money
+   * @param coins         the player's current coins
+   * @param activeTheme   the active theme id
+   * @param ownedThemes   the themes owned by the player
+   * @param portfolio     the player's saved portfolio
+   * @param transactions  the player's saved transactions
    * @return the recreated player
    */
   public static Player rehydrate(
@@ -99,7 +99,7 @@ public class Player {
   /**
    * Creates a new {@code Player} with the given name and starting money of given amount.
    *
-   * @param name The player's name
+   * @param name          The player's name
    * @param startingMoney The amount of money the player starts with
    * @throws IllegalArgumentException If any argument is null or invalid
    */
@@ -198,7 +198,7 @@ public class Player {
     if (meets(Status.SPECULATOR, weeks, netWorth)) {
       return Status.SPECULATOR;
     }
-    if (meets(Status.INVESTOR,  weeks, netWorth)) {
+    if (meets(Status.INVESTOR, weeks, netWorth)) {
       return Status.INVESTOR;
     }
     return Status.NOVICE;
@@ -233,7 +233,7 @@ public class Player {
 
   private double gainProgress(Status current, Status next) {
     BigDecimal currentTarget = targetNetWorth(current);
-    BigDecimal nextTarget    = targetNetWorth(next);
+    BigDecimal nextTarget = targetNetWorth(next);
     BigDecimal span = nextTarget.subtract(currentTarget);
     if (span.signum() <= 0) {
       return 1.0;                       // vakt mot divisjon på null
@@ -244,7 +244,9 @@ public class Player {
     return clamp(p);
   }
 
-  /** Net worth required to hold the given status. */
+  /**
+   * Net worth required to hold the given status.
+   */
   private BigDecimal targetNetWorth(Status status) {
     return startingMoney.add(startingMoney.multiply(status.getRequiredGain()));
   }
@@ -286,7 +288,7 @@ public class Player {
    * Spends coins from the player's coin balance.
    *
    * @param amount the number of coins to spend
-   * @throws IllegalArgumentException if {@code amount} is not positive
+   * @throws IllegalArgumentException   if {@code amount} is not positive
    * @throws InsufficientCoinsException if the player does not have enough coins
    */
   public void spendCoins(int amount) throws InsufficientCoinsException {

@@ -18,12 +18,12 @@ public class Purchase extends Transaction {
   /**
    * Creates a new {@code Purchase} transaction.
    *
-   * @param share the share being purchased
-   * @param week the week the purchase takes place
+   * @param share   the share being purchased
+   * @param week    the week the purchase takes place
    * @param batchId the id grouping this transaction with others
-   *     from the same user action
+   *                from the same user action
    * @throws IllegalArgumentException if {@code share} or {@code batchId} is
-   *     {@code null}, or if {@code week} is not positive
+   *                                  {@code null}, or if {@code week} is not positive
    */
   public Purchase(Share share, int week, UUID batchId) {
     super(share, week, new PurchaseCalculator(share), batchId);

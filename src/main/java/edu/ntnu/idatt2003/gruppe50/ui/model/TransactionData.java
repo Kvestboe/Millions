@@ -6,13 +6,13 @@ import java.math.BigDecimal;
 /**
  * UI model for a transaction row.
  *
- * @param share share involved in the transaction
- * @param week week when the transaction occurred
- * @param type transaction type
- * @param committed whether the transaction has been committed
- * @param taxFee tax amount
+ * @param share         share involved in the transaction
+ * @param week          week when the transaction occurred
+ * @param type          transaction type
+ * @param committed     whether the transaction has been committed
+ * @param taxFee        tax amount
  * @param commissionFee commission amount
- * @param total total transaction amount
+ * @param total         total transaction amount
  */
 public record TransactionData(
     ShareData share,
@@ -22,4 +22,5 @@ public record TransactionData(
     BigDecimal taxFee,
     BigDecimal commissionFee,
     BigDecimal total
-) {}
+) {
+}

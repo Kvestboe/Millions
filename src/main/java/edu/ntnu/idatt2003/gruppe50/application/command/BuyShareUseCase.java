@@ -5,11 +5,12 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 
-/** Buys shares inside a game session and saves the updated state. */
+/**
+ * Buys shares inside a game session and saves the updated state.
+ */
 public final class BuyShareUseCase {
 
   private final GameSessionRepository repository;
@@ -54,20 +55,21 @@ public final class BuyShareUseCase {
   /**
    * Input for buying shares in a session.
    *
-   * @param gameId id of the game session
-   * @param symbol stock symbol to buy
+   * @param gameId   id of the game session
+   * @param symbol   stock symbol to buy
    * @param quantity quantity to buy
    */
-  public record Request(UUID gameId, String symbol, BigDecimal quantity) {}
+  public record Request(UUID gameId, String symbol, BigDecimal quantity) {
+  }
 
   /**
    * Output from a completed buy operation.
    *
-   * @param symbol stock symbol that was bought
-   * @param quantity quantity that was bought
-   * @param totalAmount total amount paid including fees
+   * @param symbol             stock symbol that was bought
+   * @param quantity           quantity that was bought
+   * @param totalAmount        total amount paid including fees
    * @param newHoldingQuantity updated owned quantity of the stock
-   * @param week week when the purchase was completed
+   * @param week               week when the purchase was completed
    */
   public record Response(
       String symbol,
@@ -75,5 +77,6 @@ public final class BuyShareUseCase {
       BigDecimal totalAmount,
       BigDecimal newHoldingQuantity,
       int week
-  ) {}
+  ) {
+  }
 }

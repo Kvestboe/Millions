@@ -19,7 +19,7 @@ public interface StockDataSource {
    * @param source the location to read from
    * @return the list of stocks read from the source
    * @throws InvalidStockDataException if the source cannot be read
-   *     or its contents are malformed
+   *                                   or its contents are malformed
    */
   List<Stock> readStocks(Path source) throws InvalidStockDataException;
 
@@ -27,7 +27,7 @@ public interface StockDataSource {
    * Writes the given stocks to the given location.
    *
    * @param destination the location to write to
-   * @param stocks the stocks to write
+   * @param stocks      the stocks to write
    * @throws InvalidStockDataException if the destination cannot be written
    */
   void writeStocks(Path destination, List<Stock> stocks) throws InvalidStockDataException;

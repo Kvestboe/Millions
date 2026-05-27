@@ -3,11 +3,12 @@ package edu.ntnu.idatt2003.gruppe50.application.command;
 import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
-import edu.ntnu.idatt2003.gruppe50.domain.shop.CoinExchange;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.Shop;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.ShopItemFactory;
 
-/** Buys shop coins inside a game session and saves the updated state. */
+/**
+ * Buys shop coins inside a game session and saves the updated state.
+ */
 public final class BuyCoinsUseCase {
 
   private final GameSessionRepository repository;
@@ -44,7 +45,8 @@ public final class BuyCoinsUseCase {
    * Input for buying shop coins in a session.
    *
    * @param gameId id of the game session
-   * @param coins number of coins to buy
+   * @param coins  number of coins to buy
    */
-  public record Request(java.util.UUID gameId, int coins) {}
+  public record Request(java.util.UUID gameId, int coins) {
+  }
 }

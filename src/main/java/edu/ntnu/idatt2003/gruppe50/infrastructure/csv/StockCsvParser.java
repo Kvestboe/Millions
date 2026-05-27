@@ -28,9 +28,9 @@ public class StockCsvParser {
    *
    * @param line the line to parse
    * @return the parsed stock, or {@link Optional#empty()} if the line is
-   *     blank or a comment
+   * blank or a comment
    * @throws InvalidStockDataException if the line is non-empty but malformed
-   *     (wrong number of fields, blank symbol/name, or invalid price)
+   *                                   (wrong number of fields, blank symbol/name, or invalid price)
    */
   public Optional<Stock> parseLine(String line) throws InvalidStockDataException {
     if (line == null || line.isBlank() || line.startsWith(COMMENT_PREFIX)) {

@@ -12,7 +12,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import java.util.List;
 import java.util.UUID;
 
-/** Retrieves trading statistics and recent activity for a game session. */
+/**
+ * Retrieves trading statistics and recent activity for a game session.
+ */
 public final class GetTradingLogUseCase {
 
   private static final int RECENT_ACTIVITY_LIMIT = 5;

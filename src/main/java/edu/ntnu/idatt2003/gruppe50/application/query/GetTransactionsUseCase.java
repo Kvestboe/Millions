@@ -11,7 +11,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
 import java.util.List;
 import java.util.UUID;
 
-/** Retrieves the full transaction history for a game session. */
+/**
+ * Retrieves the full transaction history for a game session.
+ */
 public final class GetTransactionsUseCase {
 
   private final GameSessionRepository repository;
@@ -57,12 +59,14 @@ public final class GetTransactionsUseCase {
    *
    * @param gameId id of the game session
    */
-  public record Request(UUID gameId) {}
+  public record Request(UUID gameId) {
+  }
 
   /**
    * Output containing the transaction history.
    *
    * @param transactionDtoArchive all transactions as DTOs
    */
-  public record Response(List<TransactionDto> transactionDtoArchive) {}
+  public record Response(List<TransactionDto> transactionDtoArchive) {
+  }
 }

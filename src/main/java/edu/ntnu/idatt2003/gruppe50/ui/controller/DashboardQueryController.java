@@ -72,10 +72,20 @@ public class DashboardQueryController implements Observer {
     return goalProgress;
   }
 
+  /**
+   * Returns the observable status progress property.
+   *
+   * @return the read-only status progress property
+   */
   public ReadOnlyObjectProperty<StatusProgressDto> statusProgressProperty() {
     return statusProgress;
   }
 
+  /**
+   * Returns the observable weekly movers property.
+   *
+   * @return the read-only weekly movers property
+   */
   public ReadOnlyObjectProperty<WeeklyMoversDto> weeklyMoversProperty() {
     return weeklyMovers;
   }

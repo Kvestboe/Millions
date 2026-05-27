@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
-import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.DeleteSaveUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetAllSavesUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
 import java.util.UUID;
@@ -10,7 +10,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/** Controls loading, selecting and deleting saved game sessions. */
+/**
+ * Controls loading, selecting and deleting saved game sessions.
+ */
 public class LoadGameController {
 
   private final GetAllSavesUseCase getAllSaves;
@@ -24,10 +26,10 @@ public class LoadGameController {
   /**
    * Creates a controller for the load-game screen.
    *
-   * @param getAllSaves use case used to retrieve saved games
+   * @param getAllSaves     use case used to retrieve saved games
    * @param loadGameSession use case used to load a selected game
-   * @param deleteSave use case used to delete selected saves
-   * @param onGameLoaded callback invoked with the loaded game id
+   * @param deleteSave      use case used to delete selected saves
+   * @param onGameLoaded    callback invoked with the loaded game id
    */
   public LoadGameController(
       GetAllSavesUseCase getAllSaves,

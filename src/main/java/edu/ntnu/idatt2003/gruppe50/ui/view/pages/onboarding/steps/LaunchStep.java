@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps;
 
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingFlowData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingStep;
+import java.math.BigDecimal;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -10,8 +11,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-
-import java.math.BigDecimal;
 
 /**
  * The final step in the onboarding flow.
@@ -95,11 +94,11 @@ public class LaunchStep implements OnboardingStep {
     }
 
     card.getChildren().addAll(
-        summaryRow("Trader",       flowData.playerName != null ? flowData.playerName : "—"),
-        summaryRow("Mission",         difficultyLabel),
+        summaryRow("Trader", flowData.playerName != null ? flowData.playerName : "—"),
+        summaryRow("Mission", difficultyLabel),
         summaryRow("Starting capital", capitalLabel),
-        summaryRow("Target",          "1 000 000 kr"),
-        summaryRow("Market",          fileLabel),
+        summaryRow("Target", "1 000 000 kr"),
+        summaryRow("Market", fileLabel),
         summaryRow("Hangar cost", hangarLabel),
         summaryRow("Game over below", gameOverLabel)
     );
@@ -146,5 +145,6 @@ public class LaunchStep implements OnboardingStep {
    * @param data the shared mutable onboarding data object
    */
   @Override
-  public void contribute(OnboardingFlowData data) {}
+  public void contribute(OnboardingFlowData data) {
+  }
 }

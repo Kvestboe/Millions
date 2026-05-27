@@ -19,6 +19,11 @@ public final class GetWeeklyMoversUseCase {
 
   private final GameSessionRepository repository;
 
+  /**
+   * Creates the use case with a game-session repository.
+   *
+   * @param repository repository used to load game sessions
+   */
   public GetWeeklyMoversUseCase(GameSessionRepository repository) {
     this.repository = repository;
   }
@@ -27,7 +32,7 @@ public final class GetWeeklyMoversUseCase {
    * Returns the top {@code limit} gainers and losers for the given game session.
    *
    * @param gameId the id of the game session
-   * @param limit how many stocks per category
+   * @param limit  how many stocks per category
    * @return the weekly movers
    * @throws GameSessionNotFoundException if the game session does not exist
    */

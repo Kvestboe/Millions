@@ -16,7 +16,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/** Keeps transaction history and trading log data synchronized with the exchange state. */
+/**
+ * Keeps transaction history and trading log data synchronized with the exchange state.
+ */
 public final class TransactionQueryController implements Observer {
 
   private final UUID gameId;
@@ -28,10 +30,10 @@ public final class TransactionQueryController implements Observer {
   /**
    * Creates a transaction query controller.
    *
-   * @param gameId id of the game session
+   * @param gameId          id of the game session
    * @param getTransactions use case used to retrieve transactions
-   * @param getTradingLog use case used to retrieve trading log statistics
-   * @param exchange observed exchange that triggers transaction refreshes
+   * @param getTradingLog   use case used to retrieve trading log statistics
+   * @param exchange        observed exchange that triggers transaction refreshes
    */
   public TransactionQueryController(
       UUID gameId,
@@ -68,7 +70,7 @@ public final class TransactionQueryController implements Observer {
    * Filters transactions by query text and optional transaction type.
    *
    * @param query search text matched against symbol, stock name and transaction type
-   * @param type transaction type filter, or null to include all types
+   * @param type  transaction type filter, or null to include all types
    * @return filtered transactions
    */
 
@@ -84,13 +86,17 @@ public final class TransactionQueryController implements Observer {
         .toList();
   }
 
-  /** Refreshes transaction data when the observed exchange changes. */
+  /**
+   * Refreshes transaction data when the observed exchange changes.
+   */
   @Override
   public void update() {
     refresh();
   }
 
-  /** Reloads transaction history and trading log data from the application layer. */
+  /**
+   * Reloads transaction history and trading log data from the application layer.
+   */
   public void refresh() {
     GetTransactionsUseCase.Response response =
         getTransactions.execute(new GetTransactionsUseCase.Request(gameId));

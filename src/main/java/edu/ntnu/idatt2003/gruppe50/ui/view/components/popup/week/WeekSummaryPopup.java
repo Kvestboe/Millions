@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week;
 
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekDetailListView;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekSummaryView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
@@ -10,7 +8,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-/** Modal popup that shows a week summary and related detail lists. */
+/**
+ * Modal popup that shows a week summary and related detail lists.
+ */
 public class WeekSummaryPopup extends StackPane {
 
   private final WeekSummary summary;

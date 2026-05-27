@@ -1,8 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import java.util.function.Consumer;
-
 import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
+import java.util.function.Consumer;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -37,10 +36,10 @@ public class SettingsView extends VBox {
   /**
    * Constructs the settings view.
    *
-   * @param onBack action triggered when the player clicks "Back"
-   * @param onFullscreen called with the new fullscreen state when toggled
+   * @param onBack            action triggered when the player clicks "Back"
+   * @param onFullscreen      called with the new fullscreen state when toggled
    * @param initialFullscreen the initial fullscreen state when the view is built
-   * @param soundManager the sound manager controlling master, music and SFX state
+   * @param soundManager      the sound manager controlling master, music and SFX state
    */
   public SettingsView(
       Runnable onBack,
@@ -233,7 +232,9 @@ public class SettingsView extends VBox {
 
     Button toggle = createToggle(initial);
     toggleRef.accept(toggle);
-    if (initial) ((Label) toggle.getGraphic()).setTranslateX(10);
+    if (initial) {
+      ((Label) toggle.getGraphic()).setTranslateX(10);
+    }
 
     toggle.setOnAction(e -> {
       boolean isOn = toggle.getStyleClass().contains("toggle-on");
@@ -256,7 +257,9 @@ public class SettingsView extends VBox {
 
   private void setToggleState(Button toggle, boolean on) {
     boolean currentlyOn = toggle.getStyleClass().contains("toggle-on");
-    if (currentlyOn == on) return;
+    if (currentlyOn == on) {
+      return;
+    }
 
     toggle.getStyleClass().remove(currentlyOn ? "toggle-on" : "toggle-off");
     toggle.getStyleClass().add(on ? "toggle-on" : "toggle-off");
@@ -268,7 +271,9 @@ public class SettingsView extends VBox {
   }
 
   private void ensureMasterOn() {
-    if (soundManager.isMasterEnabled()) return;
+    if (soundManager.isMasterEnabled()) {
+      return;
+    }
     setToggleState(masterToggle, true);
     soundManager.setMasterEnabled(true);
     masterSlider.setDisable(false);

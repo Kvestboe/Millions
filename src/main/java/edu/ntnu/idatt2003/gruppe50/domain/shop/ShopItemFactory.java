@@ -48,12 +48,12 @@ public class ShopItemFactory {
             new BigDecimal("50000")
         ),
         createThemeItem(
-          "theme-vintage-cream",
-          "Vintage Cream",
-          "A vintage cream theme.",
-          "vintage-cream",
-          50,
-          new BigDecimal("100000")
+            "theme-vintage-cream",
+            "Vintage Cream",
+            "A vintage cream theme.",
+            "vintage-cream",
+            50,
+            new BigDecimal("100000")
         ),
         createThemeItem(
             "theme-copper-shadow",

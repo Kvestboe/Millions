@@ -13,6 +13,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Page shown when a game session has finished.
+ *
+ * <p>Displays the final result (won or lost), the final net worth, weeks
+ * played, difficulty and (on win) the leaderboard score. Offers buttons to
+ * play again, open the leaderboard or return to the main menu.
+ */
 public class GameOverView extends VBox implements Page {
 
   private final GameResult result;
@@ -20,7 +27,16 @@ public class GameOverView extends VBox implements Page {
   private final Runnable onMainMenu;
   private final Runnable onLeaderboard;
 
-  public GameOverView(GameResult result, Runnable onPlayAgain, Runnable onMainMenu, Runnable onLeaderboard) {
+  /**
+   * Creates the game-over page.
+   *
+   * @param result the final result to display
+   * @param onPlayAgain action triggered when the player chooses to play again
+   * @param onMainMenu action triggered when the player returns to the main menu
+   * @param onLeaderboard action triggered when the player opens the leaderboard
+   */
+  public GameOverView(GameResult result, Runnable onPlayAgain, Runnable onMainMenu,
+                      Runnable onLeaderboard) {
     this.result = result;
     this.onPlayAgain = onPlayAgain;
     this.onMainMenu = onMainMenu;
@@ -96,7 +112,9 @@ public class GameOverView extends VBox implements Page {
 
     VBox card = new VBox(4, overline, value);
     card.getStyleClass().add(result.won() ? "info-card-accent" : "info-card");
-    if (!result.won()) card.setStyle("-fx-border-color: #F87171;");
+    if (!result.won()) {
+      card.setStyle("-fx-border-color: #F87171;");
+    }
     return card;
   }
 
@@ -160,11 +178,11 @@ public class GameOverView extends VBox implements Page {
    */
   private VBox buildLoseReasonBox() {
     String text = switch (result.difficulty()) {
-      case EASY   -> "You've lost too much to continue. The math is simple, "
+      case EASY -> "You've lost too much to continue. The math is simple, "
           + "not enough capital left to keep the rocket ready.";
       case MEDIUM -> "Below this point, the costs outweigh the options. "
           + "There's nothing left to work with.";
-      case HARD   -> "The margin for error on Hard is razor thin, "
+      case HARD -> "The margin for error on Hard is razor thin, "
           + "and you used it all up.";
     };
 

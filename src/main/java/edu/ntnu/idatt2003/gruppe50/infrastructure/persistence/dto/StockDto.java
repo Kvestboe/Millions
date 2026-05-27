@@ -6,9 +6,9 @@ import java.util.List;
 /**
  * Serializable stock state for a saved game.
  *
- * @param symbol stock symbol
+ * @param symbol  stock symbol
  * @param company company name
- * @param prices historical prices
+ * @param prices  historical prices
  */
 public record StockDto(
     String symbol,

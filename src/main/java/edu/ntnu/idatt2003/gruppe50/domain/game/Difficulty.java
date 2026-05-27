@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.domain.game;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.VolatilityProfile;
-
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -40,7 +39,8 @@ public enum Difficulty {
   private final Optional<BigDecimal> maxStartingCapital;
   private final double gameOverThreshold;
 
-  Difficulty(double upChance, double maxGain, double maxLoss, double hangarCostRate, Optional<BigDecimal> maxStartingCapital, double gameOverThreshold) {
+  Difficulty(double upChance, double maxGain, double maxLoss, double hangarCostRate,
+             Optional<BigDecimal> maxStartingCapital, double gameOverThreshold) {
     this.upChance = upChance;
     this.maxGain = maxGain;
     this.maxLoss = maxLoss;

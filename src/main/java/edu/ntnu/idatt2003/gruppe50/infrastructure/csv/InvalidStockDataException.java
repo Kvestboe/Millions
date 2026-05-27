@@ -18,7 +18,7 @@ public class InvalidStockDataException extends Exception {
    * Constructs a new exception with the specified detail message and cause.
    *
    * @param message the detail message
-   * @param cause the underlying cause
+   * @param cause   the underlying cause
    */
   public InvalidStockDataException(String message, Throwable cause) {
     super(message, cause);

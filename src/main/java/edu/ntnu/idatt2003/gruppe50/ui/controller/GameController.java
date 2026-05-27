@@ -7,7 +7,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameOutcome;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-/** Coordinates basic game actions from the UI layer. */
+/**
+ * Coordinates basic game actions from the UI layer.
+ */
 public final class GameController {
 
   private final UUID gameId;
@@ -19,9 +21,9 @@ public final class GameController {
   /**
    * Creates a controller for a specific game session.
    *
-   * @param gameId id of the game session
-   * @param buyShare use case for buying shares
-   * @param sellShare use case for selling shares
+   * @param gameId      id of the game session
+   * @param buyShare    use case for buying shares
+   * @param sellShare   use case for selling shares
    * @param advanceWeek use case for advancing the game week
    */
   public GameController(
@@ -39,7 +41,7 @@ public final class GameController {
   /**
    * Buys shares in the current game session.
    *
-   * @param symbol stock symbol to buy
+   * @param symbol   stock symbol to buy
    * @param quantity quantity to buy
    */
   public void buy(String symbol, BigDecimal quantity) {
@@ -49,7 +51,7 @@ public final class GameController {
   /**
    * Sells shares in the current game session.
    *
-   * @param symbol stock symbol to sell
+   * @param symbol   stock symbol to sell
    * @param quantity quantity to sell
    */
   public void sell(String symbol, BigDecimal quantity) {

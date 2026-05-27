@@ -6,7 +6,9 @@ import java.util.function.IntConsumer;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 
-/** Factory for segmented toggle button bars. */
+/**
+ * Factory for segmented toggle button bars.
+ */
 public final class ToggleBarFactory {
 
   /**
@@ -14,9 +16,9 @@ public final class ToggleBarFactory {
    *
    * <p>The selected button carries the {@code segmented-btn-active} class.
    *
-   * @param labels button labels in display order
+   * @param labels       button labels in display order
    * @param initialIndex index of the button that starts active
-   * @param onSelected callback fired with the newly selected index
+   * @param onSelected   callback fired with the newly selected index
    * @return segmented toggle button container
    */
   public static HBox of(List<String> labels, int initialIndex, IntConsumer onSelected) {

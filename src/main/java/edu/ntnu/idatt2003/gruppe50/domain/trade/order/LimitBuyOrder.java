@@ -3,7 +3,6 @@ package edu.ntnu.idatt2003.gruppe50.domain.trade.order;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
-
 import java.math.BigDecimal;
 
 /**
@@ -16,12 +15,12 @@ public class LimitBuyOrder extends LimitOrder {
   /**
    * Creates a new buy limit order with an explicit expiry week.
    *
-   * @param stock the stock to buy
-   * @param player the player placing the order
+   * @param stock       the stock to buy
+   * @param player      the player placing the order
    * @param targetPrice the highest price the player is willing to pay
-   * @param quantity the number of shares to buy
+   * @param quantity    the number of shares to buy
    * @param currentWeek the week the order was created
-   * @param expiryWeek the week the order expires
+   * @param expiryWeek  the week the order expires
    */
   public LimitBuyOrder(
       Stock stock,

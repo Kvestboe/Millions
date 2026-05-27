@@ -10,17 +10,17 @@ import java.math.BigDecimal;
  *
  * <p>The order triggers when the current stock price is at or above the target price.
  */
-public class LimitSellOrder extends LimitOrder{
+public class LimitSellOrder extends LimitOrder {
 
   /**
    * Creates a new buy limit order with an explicit expiry week.
    *
-   * @param stock the stock to buy
-   * @param player the player placing the order
+   * @param stock       the stock to buy
+   * @param player      the player placing the order
    * @param targetPrice the lowest price the player is willing to sell for
-   * @param quantity the number of shares to buy
+   * @param quantity    the number of shares to buy
    * @param currentWeek the week the order was created
-   * @param expiryWeek the week the order expires
+   * @param expiryWeek  the week the order expires
    */
   public LimitSellOrder(
       Stock stock,
@@ -38,7 +38,7 @@ public class LimitSellOrder extends LimitOrder{
    * {@link LimitOrder#DEFAULT_DURATION_WEEKS} weeks.
    */
   public LimitSellOrder(Stock stock, Player player, BigDecimal targetPrice,
-                       BigDecimal quantity, int currentWeek) {
+                        BigDecimal quantity, int currentWeek) {
     this(stock, player, targetPrice, quantity, currentWeek,
         currentWeek + DEFAULT_DURATION_WEEKS);
   }

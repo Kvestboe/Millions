@@ -5,12 +5,12 @@ import java.math.BigDecimal;
 /**
  * Serializable pending order state for a saved game.
  *
- * @param type order type label
+ * @param type        order type label
  * @param stockSymbol stock symbol for the order
  * @param targetPrice target or trigger price
- * @param quantity order quantity
+ * @param quantity    order quantity
  * @param createdWeek week when the order was created
- * @param expiryWeek week when the order expires
+ * @param expiryWeek  week when the order expires
  */
 public record LimitOrderDto(
     String type,

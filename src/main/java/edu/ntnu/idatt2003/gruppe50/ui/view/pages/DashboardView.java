@@ -10,6 +10,8 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.WeeklyMoversDto;
 import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationType;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.DashboardQueryController;
+import java.util.List;
+import java.util.function.Consumer;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -28,23 +30,35 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
-import java.util.function.Consumer;
-
+/**
+ * Top-level dashboard page shown when the player enters a game.
+ *
+ * <p>Composes goal progress, status progress, weekly movers and recent
+ * notifications into a grid of cards. All data is read from a
+ * {@link DashboardQueryController} which refreshes itself when the underlying
+ * exchange changes.
+ */
 public class DashboardView extends BorderPane implements Page {
 
   private final DashboardQueryController controller;
   private final Consumer<StockDto> onMoverSelected;
 
+  /**
+   * Creates the dashboard page.
+   *
+   * @param controller controller exposing observable dashboard data
+   * @param onMoverSelected callback invoked when the user clicks a stock in
+   *     the weekly movers card
+   */
   public DashboardView(DashboardQueryController controller, Consumer<StockDto> onMoverSelected) {
     this.controller = controller;
     this.onMoverSelected = onMoverSelected;
 
     GridPane grid = createGrid();
 
-    addToGrid(grid, buildGoalProgressCard(),  0, 0, 2, 1);
+    addToGrid(grid, buildGoalProgressCard(), 0, 0, 2, 1);
     addToGrid(grid, buildNotificationsCard(), 0, 1, 1, 1);
-    addToGrid(grid, buildMoversCard(),        1, 1, 1, 1);
+    addToGrid(grid, buildMoversCard(), 1, 1, 1, 1);
 
     ScrollPane scrollPane = new ScrollPane(grid);
     scrollPane.setFitToWidth(true);
@@ -114,7 +128,9 @@ public class DashboardView extends BorderPane implements Page {
 
     Runnable apply = () -> {
       GoalProgressDto dto = controller.goalProgressProperty().get();
-      if (dto == null) return;
+      if (dto == null) {
+        return;
+      }
       percentLabel.setText(String.format("%.1f%%", dto.progress() * 100));
       bar.setProgress(dto.progress());
       currentLabel.setText(MoneyFormat.formatCurrency(dto.currentNetWorth()));
@@ -154,7 +170,9 @@ public class DashboardView extends BorderPane implements Page {
 
     Runnable apply = () -> {
       StatusProgressDto dto = controller.statusProgressProperty().get();
-      if (dto == null) return;
+      if (dto == null) {
+        return;
+      }
 
       if (dto.atMaxLevel()) {
         transitionLabel.setText("✦ Max status reached: " + dto.currentStatus() + " ✦");
@@ -173,7 +191,8 @@ public class DashboardView extends BorderPane implements Page {
         bar.getStyleClass().removeIf(c ->
             c.equals("level-progress-investor") || c.equals("level-progress-speculator"));
         String variant = "level-progress-" + dto.currentStatus().toLowerCase();
-        if (variant.equals("level-progress-investor") || variant.equals("level-progress-speculator")) {
+        if (variant.equals("level-progress-investor") ||
+            variant.equals("level-progress-speculator")) {
           bar.getStyleClass().add(variant);
         }
 
@@ -207,7 +226,9 @@ public class DashboardView extends BorderPane implements Page {
 
     Runnable apply = () -> {
       WeeklyMoversDto dto = controller.weeklyMoversProperty().get();
-      if (dto == null) return;
+      if (dto == null) {
+        return;
+      }
       rebuildMoverSection(gainersSection, gainersHeader, dto.topGainers(), true);
       rebuildMoverSection(losersSection, losersHeader, dto.topLosers(), false);
     };
@@ -217,7 +238,8 @@ public class DashboardView extends BorderPane implements Page {
     return card;
   }
 
-  private void rebuildMoverSection(VBox section, Label header, List<StockDto> stocks, boolean gainer) {
+  private void rebuildMoverSection(VBox section, Label header, List<StockDto> stocks,
+                                   boolean gainer) {
     section.getChildren().setAll(header);
     for (StockDto stock : stocks) {
       section.getChildren().add(buildMoverRow(stock, gainer));
@@ -274,7 +296,8 @@ public class DashboardView extends BorderPane implements Page {
     };
 
     apply.run();
-    controller.getNotifications().addListener((ListChangeListener<NotificationDto>) c -> apply.run());
+    controller.getNotifications()
+        .addListener((ListChangeListener<NotificationDto>) c -> apply.run());
 
     return card;
   }
@@ -304,10 +327,10 @@ public class DashboardView extends BorderPane implements Page {
 
   private static String pillTextFor(NotificationType type) {
     return switch (type) {
-      case ORDER_FILLED  -> "FILLED";
+      case ORDER_FILLED -> "FILLED";
       case ORDER_EXPIRED -> "EXPIRED";
-      case ORDER_FAILED  -> "FAILED";
-      case LEVEL_UP      -> "LEVEL UP";
+      case ORDER_FAILED -> "FAILED";
+      case LEVEL_UP -> "LEVEL UP";
     };
   }
 

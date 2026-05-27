@@ -17,7 +17,9 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-/** Card component showing trading statistics and recent activity. */
+/**
+ * Card component showing trading statistics and recent activity.
+ */
 public class TradingLogCard extends VBox {
 
   private final Label totalTradesLabel = new Label("0 total trades");
@@ -77,10 +79,10 @@ public class TradingLogCard extends VBox {
   private GridPane buildStatsGrid() {
     realizedPnLValue.getStyleClass().add("pnl-value");
 
-    VBox pnl    = StatCardFactory.tile("REALIZED P/L", realizedPnLValue);
+    VBox pnl = StatCardFactory.tile("REALIZED P/L", realizedPnLValue);
     VBox trades = StatCardFactory.tile("TRADES", tradesValue);
-    VBox fees   = StatCardFactory.tile("FEES PAID", feesValue);
-    VBox taxes  = StatCardFactory.tile("TAXES PAID", taxesValue);
+    VBox fees = StatCardFactory.tile("FEES PAID", feesValue);
+    VBox taxes = StatCardFactory.tile("TAXES PAID", taxesValue);
 
     for (VBox tile : List.of(pnl, trades, fees, taxes)) {
       tile.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -102,10 +104,10 @@ public class TradingLogCard extends VBox {
     grid.getColumnConstraints().addAll(col, col);
     grid.getRowConstraints().addAll(row, row);
 
-    grid.add(pnl,    0, 0);
+    grid.add(pnl, 0, 0);
     grid.add(trades, 1, 0);
-    grid.add(fees,   0, 1);
-    grid.add(taxes,  1, 1);
+    grid.add(fees, 0, 1);
+    grid.add(taxes, 1, 1);
 
     return grid;
   }
@@ -174,7 +176,7 @@ public class TradingLogCard extends VBox {
 
   private void updateMix(long buys, long sells) {
     long total = buys + sells;
-    double buyPct  = total == 0 ? 0.5 : (double) buys  / total;
+    double buyPct = total == 0 ? 0.5 : (double) buys / total;
     double sellPct = total == 0 ? 0.5 : (double) sells / total;
 
     HBox bar = (HBox) buyFill.getParent();

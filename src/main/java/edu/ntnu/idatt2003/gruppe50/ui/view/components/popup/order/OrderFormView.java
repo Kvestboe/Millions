@@ -3,11 +3,11 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase.Request;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
-import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
+import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
+import edu.ntnu.idatt2003.gruppe50.ui.model.OrderReceipt;
 import java.util.UUID;
 import java.util.function.Function;
-import edu.ntnu.idatt2003.gruppe50.ui.model.OrderReceipt;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
@@ -16,7 +16,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-/** Modal flow for entering, previewing and submitting an order. */
+/**
+ * Modal flow for entering, previewing and submitting an order.
+ */
 public class OrderFormView extends StackPane {
 
   private static final Logger LOG = Logger.getLogger(OrderFormView.class.getName());
@@ -32,12 +34,12 @@ public class OrderFormView extends StackPane {
   /**
    * Creates an order form modal for a stock.
    *
-   * @param gameId id of the game session
-   * @param side whether the order buys or sells
-   * @param stock stock being ordered
-   * @param onClose action run when the modal closes
+   * @param gameId         id of the game session
+   * @param side           whether the order buys or sells
+   * @param stock          stock being ordered
+   * @param onClose        action run when the modal closes
    * @param onConfirmOrder function that places the order and returns a receipt
-   * @param previewOrder use case used to preview the order before confirmation
+   * @param previewOrder   use case used to preview the order before confirmation
    */
   public OrderFormView(
       UUID gameId,

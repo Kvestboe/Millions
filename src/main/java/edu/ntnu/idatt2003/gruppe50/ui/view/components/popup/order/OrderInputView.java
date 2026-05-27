@@ -1,11 +1,14 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order;
 
+import edu.ntnu.idatt2003.gruppe50.application.query.dto.OrderType;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
-import edu.ntnu.idatt2003.gruppe50.application.query.dto.OrderType;
+import java.math.BigDecimal;
+import java.util.function.Consumer;
+import java.util.stream.IntStream;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,12 +18,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
-import java.math.BigDecimal;
-import java.util.function.Consumer;
-import java.util.stream.IntStream;
 
-/** Input step for choosing order type, quantity, target price and duration. */
-public class OrderInputView extends VBox{
+/**
+ * Input step for choosing order type, quantity, target price and duration.
+ */
+public class OrderInputView extends VBox {
 
   private final OrderSide side;
   private final StockDto stock;
@@ -37,12 +39,13 @@ public class OrderInputView extends VBox{
   /**
    * Creates an order input view.
    *
-   * @param side whether the order buys or sells
-   * @param stock stock being ordered
-   * @param onNext callback receiving a valid draft order
+   * @param side     whether the order buys or sells
+   * @param stock    stock being ordered
+   * @param onNext   callback receiving a valid draft order
    * @param onCancel action run when the user cancels
    */
-  public OrderInputView(OrderSide side, StockDto stock, Consumer<DraftOrder> onNext, Runnable onCancel) {
+  public OrderInputView(OrderSide side, StockDto stock, Consumer<DraftOrder> onNext,
+                        Runnable onCancel) {
     this.side = side;
     this.stock = stock;
     this.onNext = onNext;

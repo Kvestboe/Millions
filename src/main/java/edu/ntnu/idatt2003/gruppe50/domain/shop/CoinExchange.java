@@ -102,10 +102,10 @@ public class CoinExchange {
    * otherwise have initialised with only the base price.
    *
    * @param startingCapital the player's starting capital
-   * @param priceHistory historical coin prices in chronological order
+   * @param priceHistory    historical coin prices in chronological order
    * @return a coin exchange whose state matches the saved values
    * @throws IllegalArgumentException if {@code startingCapital} is not positive,
-   *     or {@code priceHistory} is null or empty
+   *                                  or {@code priceHistory} is null or empty
    */
   public static CoinExchange rehydrate(BigDecimal startingCapital, List<BigDecimal> priceHistory) {
     Validate.notNull(priceHistory, "Price history");

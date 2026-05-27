@@ -14,7 +14,9 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
-/** Handles loading and saving leaderboard entries from a JSON file. */
+/**
+ * Handles loading and saving leaderboard entries from a JSON file.
+ */
 public class LeaderboardFileHandler {
 
   private static final Path FILE = Path.of("leaderboard.json");
@@ -42,7 +44,8 @@ public class LeaderboardFileHandler {
     try {
       List<LeaderboardEntry> entries = mapper.readValue(
           FILE.toFile(),
-          new TypeReference<List<LeaderboardEntry>>() {});
+          new TypeReference<List<LeaderboardEntry>>() {
+          });
       board.replaceAll(entries);
 
       if (board.all().isEmpty()) {

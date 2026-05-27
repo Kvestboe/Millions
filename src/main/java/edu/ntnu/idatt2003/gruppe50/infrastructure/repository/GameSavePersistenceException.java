@@ -12,7 +12,7 @@ public class GameSavePersistenceException extends RuntimeException {
    * Creates a new persistence exception with a message and underlying cause.
    *
    * @param message description of what failed
-   * @param cause underlying I/O or serialisation exception
+   * @param cause   underlying I/O or serialisation exception
    */
   public GameSavePersistenceException(String message, Throwable cause) {
     super(message, cause);

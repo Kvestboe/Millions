@@ -3,15 +3,18 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.components.factory;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-/** Factory for compact statistic card components. */
+/**
+ * Factory for compact statistic card components.
+ */
 public final class StatCardFactory {
 
-  private StatCardFactory() {}
+  private StatCardFactory() {
+  }
 
   /**
    * Creates a statistic tile.
    *
-   * @param label tile label
+   * @param label  tile label
    * @param values value labels shown in the tile
    * @return statistic tile container
    */
@@ -22,8 +25,8 @@ public final class StatCardFactory {
   /**
    * Creates a compact statistic display.
    *
-   * @param label statistic label
-   * @param value value label
+   * @param label      statistic label
+   * @param value      value label
    * @param valueClass CSS class applied to the value
    * @return compact statistic container
    */

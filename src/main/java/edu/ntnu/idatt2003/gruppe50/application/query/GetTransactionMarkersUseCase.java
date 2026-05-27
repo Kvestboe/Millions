@@ -10,7 +10,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/** Retrieves buy and sell week markers for a stock chart. */
+/**
+ * Retrieves buy and sell week markers for a stock chart.
+ */
 public class GetTransactionMarkersUseCase {
 
   private final GameSessionRepository repository;
@@ -39,8 +41,12 @@ public class GetTransactionMarkersUseCase {
         .filter(t -> t.getShare().getStock().getSymbol().equals(request.symbol()))
         .toList();
 
-    Set<Integer> buyWeeks  = all.stream().filter(t ->  t instanceof Purchase).map(Transaction::getWeek).collect(Collectors.toSet());
-    Set<Integer> sellWeeks = all.stream().filter(t -> !(t instanceof Purchase)).map(Transaction::getWeek).collect(Collectors.toSet());
+    Set<Integer> buyWeeks =
+        all.stream().filter(t -> t instanceof Purchase).map(Transaction::getWeek)
+            .collect(Collectors.toSet());
+    Set<Integer> sellWeeks =
+        all.stream().filter(t -> !(t instanceof Purchase)).map(Transaction::getWeek)
+            .collect(Collectors.toSet());
 
     return new Response(buyWeeks, sellWeeks);
   }
@@ -51,13 +57,15 @@ public class GetTransactionMarkersUseCase {
    * @param gameId id of the game session
    * @param symbol stock symbol to find markers for
    */
-  public record Request(UUID gameId, String symbol) {}
+  public record Request(UUID gameId, String symbol) {
+  }
 
   /**
    * Output containing transaction marker weeks.
    *
-   * @param buyWeeks weeks when purchases occurred
+   * @param buyWeeks  weeks when purchases occurred
    * @param sellWeeks weeks when sales occurred
    */
-  public record Response(Set<Integer> buyWeeks, Set<Integer> sellWeeks) {}
+  public record Response(Set<Integer> buyWeeks, Set<Integer> sellWeeks) {
+  }
 }

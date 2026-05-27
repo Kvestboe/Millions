@@ -11,7 +11,9 @@ import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OrderReceipt;
 import java.util.UUID;
 
-/** Places market and pending orders from UI draft order data. */
+/**
+ * Places market and pending orders from UI draft order data.
+ */
 public class OrderPlacementController {
 
   private final UUID gameId;
@@ -24,12 +26,12 @@ public class OrderPlacementController {
   /**
    * Creates an order placement controller for a game session.
    *
-   * @param gameId id of the game session
-   * @param buyShare use case for immediate buy orders
-   * @param sellShare use case for immediate sell orders
-   * @param placeBuyLimitOrder use case for buy limit orders
+   * @param gameId              id of the game session
+   * @param buyShare            use case for immediate buy orders
+   * @param sellShare           use case for immediate sell orders
+   * @param placeBuyLimitOrder  use case for buy limit orders
    * @param placeSellLimitOrder use case for sell limit orders
-   * @param placeStopLossOrder use case for stop-loss orders
+   * @param placeStopLossOrder  use case for stop-loss orders
    */
   public OrderPlacementController(
       UUID gameId,

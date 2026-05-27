@@ -46,23 +46,31 @@ public class NavBar extends HBox {
    */
   public interface AccountMenuListener {
 
-    /** Called when the user selects "Settings". */
+    /**
+     * Called when the user selects "Settings".
+     */
     void onSettings();
 
-    /** Called when the user selects "Leaderboard". */
+    /**
+     * Called when the user selects "Leaderboard".
+     */
     void onLeaderboard();
 
-    /** Called when the user selects "Main Menu". */
+    /**
+     * Called when the user selects "Main Menu".
+     */
     void onMainMenu();
 
-    /** Called when the user selects "Save &amp; Quit". */
+    /**
+     * Called when the user selects "Save &amp; Quit".
+     */
     void onSaveAndQuit();
   }
 
   /**
    * Constructs the navigation bar and registers listeners for navigation and account actions.
    *
-   * @param listener listener to notify when a navigation button is clicked
+   * @param listener        listener to notify when a navigation button is clicked
    * @param accountListener listener to notify when an account menu item is selected
    */
   public NavBar(NavListener listener, NavBar.AccountMenuListener accountListener) {
@@ -106,11 +114,11 @@ public class NavBar extends HBox {
     account.hideArrow();
     account.setTooltip(new Tooltip("Open menu"));
     account.setAccessibleText("Open menu");
-    account.addItem("Settings",     accountListener::onSettings);
-    account.addItem("Leaderboard",  accountListener::onLeaderboard);
+    account.addItem("Settings", accountListener::onSettings);
+    account.addItem("Leaderboard", accountListener::onLeaderboard);
     account.addSeparator();
-    account.addItem("Save & Main Menu",    accountListener::onMainMenu);
-    account.addItem("Save & Quit",  accountListener::onSaveAndQuit);
+    account.addItem("Save & Main Menu", accountListener::onMainMenu);
+    account.addItem("Save & Quit", accountListener::onSaveAndQuit);
 
     Logo logo = new Logo();
 
@@ -136,7 +144,7 @@ public class NavBar extends HBox {
   /**
    * Updates the player's name and status display.
    *
-   * @param name player name to display
+   * @param name   player name to display
    * @param status current player status
    */
   public void updatePlayerInfo(String name, Status status) {

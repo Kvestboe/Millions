@@ -65,7 +65,8 @@ public final class CancelOrderUseCase {
    * Request for cancelling a pending order.
    *
    * @param gameId the id of the game session
-   * @param order the order to cancel
+   * @param order  the order to cancel
    */
-  public record Request(UUID gameId, PendingOrderDto order) {}
+  public record Request(UUID gameId, PendingOrderDto order) {
+  }
 }

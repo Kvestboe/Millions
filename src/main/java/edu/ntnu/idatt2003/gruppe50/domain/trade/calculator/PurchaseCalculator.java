@@ -30,7 +30,7 @@ public class PurchaseCalculator implements TransactionCalculator {
    * Creates a calculator from a purchase price and quantity.
    *
    * @param purchasePrice the purchase price per share
-   * @param quantity the number of shares
+   * @param quantity      the number of shares
    * @throws IllegalArgumentException if an argument is null
    */
   public PurchaseCalculator(BigDecimal purchasePrice, BigDecimal quantity) {

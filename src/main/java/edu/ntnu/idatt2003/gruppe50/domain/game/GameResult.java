@@ -5,11 +5,11 @@ import java.math.BigDecimal;
 /**
  * Represents the final result of a completed game.
  *
- * @param won whether the player won the game
- * @param finalNetWorth the player's final net worth
+ * @param won             whether the player won the game
+ * @param finalNetWorth   the player's final net worth
  * @param startingCapital the amount of money the player started with
- * @param weeksPlayed the number of weeks played
- * @param difficulty the difficulty used in the game
+ * @param weeksPlayed     the number of weeks played
+ * @param difficulty      the difficulty used in the game
  */
 public record GameResult(boolean won,
                          BigDecimal finalNetWorth,

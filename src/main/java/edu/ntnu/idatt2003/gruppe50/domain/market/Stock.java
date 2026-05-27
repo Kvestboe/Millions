@@ -20,8 +20,8 @@ public class Stock {
   /**
    * Creates a new {@code Stock} with an initial sales price.
    *
-   * @param symbol the stock symbol (e.g. AAPL)
-   * @param company the company name (e.g. Apple)
+   * @param symbol     the stock symbol (e.g. AAPL)
+   * @param company    the company name (e.g. Apple)
    * @param salesPrice the initial sales price
    * @throws IllegalArgumentException if any argument is invalid
    */
@@ -48,9 +48,9 @@ public class Stock {
   /**
    * Recreates a stock from saved data.
    *
-   * @param symbol the stock symbol
+   * @param symbol  the stock symbol
    * @param company the company name
-   * @param prices the saved price history
+   * @param prices  the saved price history
    * @return the recreated stock
    */
   public static Stock rehydrate(String symbol, String company, List<BigDecimal> prices) {

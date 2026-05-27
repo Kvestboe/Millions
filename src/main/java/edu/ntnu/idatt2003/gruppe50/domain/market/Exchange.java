@@ -46,20 +46,25 @@ public class Exchange extends Observable {
   /**
    * Recreates an exchange from saved data.
    *
-   * @param name the name of the exchange
-   * @param stockMap the saved stocks, mapped by symbol
-   * @param factory the transaction factory used by the exchange
-   * @param week the saved week number
+   * @param name          the name of the exchange
+   * @param stockMap      the saved stocks, mapped by symbol
+   * @param factory       the transaction factory used by the exchange
+   * @param week          the saved week number
    * @param pendingOrders the saved pending orders
-   * @param volatility the volatility settings for the exchange
+   * @param volatility    the volatility settings for the exchange
    * @param notifications the notification log for the exchange
    * @return the recreated exchange
    */
-  public static Exchange rehydrate(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility, NotificationLog notifications) {
+  public static Exchange rehydrate(String name, Map<String, Stock> stockMap,
+                                   TransactionFactory factory, int week,
+                                   List<LimitOrder> pendingOrders, VolatilityProfile volatility,
+                                   NotificationLog notifications) {
     return new Exchange(name, stockMap, factory, week, pendingOrders, volatility, notifications);
   }
 
-  private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week, List<LimitOrder> pendingOrders, VolatilityProfile volatility, NotificationLog notifications) {
+  private Exchange(String name, Map<String, Stock> stockMap, TransactionFactory factory, int week,
+                   List<LimitOrder> pendingOrders, VolatilityProfile volatility,
+                   NotificationLog notifications) {
     this.name = name;
     this.stockMap = new HashMap<>(stockMap);
     this.volatility = volatility;
@@ -73,13 +78,14 @@ public class Exchange extends Observable {
   /**
    * Creates a new exchange with a name and a list of stocks.
    *
-   * @param name the name of the exchange
-   * @param stocks the stocks in the exchange
-   * @param factory the transaction factory used by the exchange
+   * @param name       the name of the exchange
+   * @param stocks     the stocks in the exchange
+   * @param factory    the transaction factory used by the exchange
    * @param volatility the volatility settings for the exchange
    * @throws IllegalArgumentException if any parameter is null or invalid
    */
-  public Exchange(String name, List<Stock> stocks, TransactionFactory factory, VolatilityProfile volatility, NotificationLog notifications) {
+  public Exchange(String name, List<Stock> stocks, TransactionFactory factory,
+                  VolatilityProfile volatility, NotificationLog notifications) {
     Validate.notBlank(name, "Name");
     Validate.notEmpty(stocks, "Stocks");
     Validate.notNull(factory, "Factory");
@@ -117,7 +123,7 @@ public class Exchange extends Observable {
    *
    * @param symbol the stock symbol
    * @return {@code true} if the exchange contains a stock
-   *     with the given symbol, {@code false} otherwise
+   * with the given symbol, {@code false} otherwise
    * @throws IllegalArgumentException if {@code symbol} is null or blank
    */
   public boolean hasStock(String symbol) {
@@ -131,7 +137,7 @@ public class Exchange extends Observable {
    * @param symbol the stock symbol
    * @return stock from exchange
    * @throws IllegalArgumentException if {@code symbol} is null or blank
-   * @throws NoSuchElementException if no stock with the given symbol exists
+   * @throws NoSuchElementException   if no stock with the given symbol exists
    */
   public Stock getStock(String symbol) {
     Validate.notBlank(symbol, "Symbol");
@@ -164,12 +170,12 @@ public class Exchange extends Observable {
   /**
    * Buys a quantity of a stock for the player.
    *
-   * @param symbol the stock symbol
+   * @param symbol   the stock symbol
    * @param quantity the quantity to buy
-   * @param player the player buying the stock
+   * @param player   the player buying the stock
    * @return the purchase transaction
    * @throws IllegalArgumentException if the input is invalid
-   * @throws NoSuchElementException if no stock with the given symbol exists
+   * @throws NoSuchElementException   if no stock with the given symbol exists
    */
   public Transaction buy(String symbol, BigDecimal quantity, Player player) {
     Validate.positive(quantity, "Quantity");
@@ -190,7 +196,7 @@ public class Exchange extends Observable {
    * Sells a share the player holds.
    *
    * @param shareId the share to be sold
-   * @param player the player
+   * @param player  the player
    * @return a sale
    * @throws IllegalArgumentException if {@code share} or {@code player} is null
    */
@@ -217,14 +223,14 @@ public class Exchange extends Observable {
    * <p>All resulting sale transactions share the same {@code batchId} so that
    * they can be presented as a single user action in the UI.
    *
-   * @param stock the stock to sell
+   * @param stock    the stock to sell
    * @param quantity the total number of units to sell
-   * @param player the player selling
+   * @param player   the player selling
    * @return the list of sale transactions created, in FIFO order
    * @throws IllegalArgumentException if {@code stock} or {@code player} is null,
-   *     or {@code quantity} is not positive
-   * @throws IllegalStateException if the player does not own enough shares of
-   *     the given stock
+   *                                  or {@code quantity} is not positive
+   * @throws IllegalStateException    if the player does not own enough shares of
+   *                                  the given stock
    */
   public List<Transaction> sellQuantity(Stock stock, BigDecimal quantity, Player player) {
     Validate.notNull(stock, "Stock");
@@ -327,7 +333,7 @@ public class Exchange extends Observable {
             this.week
         ));
         LOG.log(Level.INFO, "Order expired for {0} on {1}",
-            new Object[]{order.getPlayer().getName(), order.getStock().getSymbol()});
+            new Object[] {order.getPlayer().getName(), order.getStock().getSymbol()});
         toRemove.add(order);
       } else {
         BigDecimal currentPrice = order.getStock().getSalesPrice();
@@ -366,7 +372,8 @@ public class Exchange extends Observable {
   public List<Stock> getGainers(int limit) {
     Validate.positiveInt(limit, "Limit");
     return stockMap.values().stream()
-        .sorted((a, b) -> b.getLatestPriceChangePercent().compareTo(a.getLatestPriceChangePercent()))
+        .sorted(
+            (a, b) -> b.getLatestPriceChangePercent().compareTo(a.getLatestPriceChangePercent()))
         .limit(limit)
         .toList();
   }

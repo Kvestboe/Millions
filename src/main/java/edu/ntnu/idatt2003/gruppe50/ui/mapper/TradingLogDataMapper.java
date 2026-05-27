@@ -3,10 +3,13 @@ package edu.ntnu.idatt2003.gruppe50.ui.mapper;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.TradingLogDto;
 import edu.ntnu.idatt2003.gruppe50.ui.model.TradingLogData;
 
-/** Maps application trading log DTOs to UI trading log models. */
+/**
+ * Maps application trading log DTOs to UI trading log models.
+ */
 public final class TradingLogDataMapper {
 
-  private TradingLogDataMapper() {}
+  private TradingLogDataMapper() {
+  }
 
   /**
    * Maps a trading log DTO to UI trading log data.

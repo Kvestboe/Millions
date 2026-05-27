@@ -16,7 +16,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/** Retrieves portfolio-related data for a game session. */
+/**
+ * Retrieves portfolio-related data for a game session.
+ */
 public final class GetPortfolioUseCase {
 
   private final GameSessionRepository repository;
@@ -59,10 +61,16 @@ public final class GetPortfolioUseCase {
     List<BigDecimal> netWorthHistory = session.getNetWorthHistory();
 
     var archive = player.getTransactionArchive().getTransactions();
-    Set<Integer> buyWeeks  = archive.stream().filter(t ->  t instanceof Purchase).map(t -> t.getWeek()).collect(Collectors.toSet());
-    Set<Integer> sellWeeks = archive.stream().filter(t -> !(t instanceof Purchase)).map(t -> t.getWeek()).collect(Collectors.toSet());
+    Set<Integer> buyWeeks =
+        archive.stream().filter(t -> t instanceof Purchase).map(t -> t.getWeek())
+            .collect(Collectors.toSet());
+    Set<Integer> sellWeeks =
+        archive.stream().filter(t -> !(t instanceof Purchase)).map(t -> t.getWeek())
+            .collect(Collectors.toSet());
 
-    return new Response(new PortfolioDto(cash, portfolioValue, netWorth, shares, netWorthHistory, buyWeeks, sellWeeks));
+    return new Response(
+        new PortfolioDto(cash, portfolioValue, netWorth, shares, netWorthHistory, buyWeeks,
+            sellWeeks));
   }
 
   /**
@@ -70,12 +78,14 @@ public final class GetPortfolioUseCase {
    *
    * @param gameId id of the game session
    */
-  public record Request(UUID gameId) {}
+  public record Request(UUID gameId) {
+  }
 
   /**
    * Portfolio aggregate response for the UI layer.
    *
    * @param portfolio portfolio data for the requested game session
    */
-  public record Response(PortfolioDto portfolio) {}
+  public record Response(PortfolioDto portfolio) {
+  }
 }

@@ -6,8 +6,8 @@ import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.TradingLogCard;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.SearchBarFactory;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ToggleBarFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ToggleBarFactory;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -45,7 +45,7 @@ public class TransactionsView extends VBox implements Page {
   /**
    * Constructs the transactions view.
    *
-   * @param queryController the controller providing transaction data and search
+   * @param queryController       the controller providing transaction data and search
    * @param onTransactionSelected called with the selected transaction when a row is clicked
    */
   public TransactionsView(

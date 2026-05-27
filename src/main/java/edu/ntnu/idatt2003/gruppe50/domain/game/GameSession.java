@@ -99,8 +99,8 @@ public final class GameSession {
   /**
    * Creates a new active game session with generated id and current dates.
    *
-   * @param player player participating in the session
-   * @param exchange exchange used for trading in the session
+   * @param player     player participating in the session
+   * @param exchange   exchange used for trading in the session
    * @param difficulty difficulty used for the session
    * @return newly created active session
    * @throws IllegalArgumentException if {@code player} or {@code exchange} is null
@@ -123,13 +123,13 @@ public final class GameSession {
   /**
    * Recreates a game session from already saved data.
    *
-   * @param gameId saved session id
-   * @param player saved player state
-   * @param exchange saved exchange state
-   * @param difficulty saved difficulty
-   * @param state saved session state
-   * @param runStartedAt date the run started
-   * @param lastPlayed date the session was last opened
+   * @param gameId          saved session id
+   * @param player          saved player state
+   * @param exchange        saved exchange state
+   * @param difficulty      saved difficulty
+   * @param state           saved session state
+   * @param runStartedAt    date the run started
+   * @param lastPlayed      date the session was last opened
    * @param netWorthHistory saved net worth history
    * @return rehydrated session
    * @throws IllegalArgumentException if any argument is null
@@ -151,7 +151,8 @@ public final class GameSession {
     Validate.notNull(runStartedAt, "Run started at date");
     Validate.notNull(lastPlayed, "Last played date");
     Validate.notNull(netWorthHistory, "Net worth history");
-    return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed, difficulty, netWorthHistory);
+    return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed, difficulty,
+        netWorthHistory);
   }
 
   /**
@@ -164,15 +165,15 @@ public final class GameSession {
    * preserves backward compatibility with legacy save files that pre-date
    * persistent coin pricing.
    *
-   * @param gameId saved session id
-   * @param player saved player state
-   * @param exchange saved exchange state
-   * @param difficulty saved difficulty
-   * @param state saved session state
-   * @param runStartedAt date the run started
-   * @param lastPlayed date the session was last opened
+   * @param gameId          saved session id
+   * @param player          saved player state
+   * @param exchange        saved exchange state
+   * @param difficulty      saved difficulty
+   * @param state           saved session state
+   * @param runStartedAt    date the run started
+   * @param lastPlayed      date the session was last opened
    * @param netWorthHistory saved net worth history
-   * @param coinExchange saved coin exchange, or {@code null} to create a fresh one
+   * @param coinExchange    saved coin exchange, or {@code null} to create a fresh one
    * @return rehydrated session
    * @throws IllegalArgumentException if any non-nullable argument is null
    */
@@ -210,7 +211,7 @@ public final class GameSession {
   /**
    * Buys shares through the exchange for this session's player.
    *
-   * @param symbol stock symbol to buy
+   * @param symbol   stock symbol to buy
    * @param quantity quantity to buy
    * @throws GameSessionFinishedException if the session is finished
    */
@@ -222,12 +223,12 @@ public final class GameSession {
   /**
    * Places a buy limit order for this session's player.
    *
-   * @param symbol stock symbol to buy
-   * @param quantity quantity to buy
+   * @param symbol      stock symbol to buy
+   * @param quantity    quantity to buy
    * @param targetPrice highest price the player is willing to pay
-   * @param duration number of weeks the order should stay active
+   * @param duration    number of weeks the order should stay active
    */
-  public LimitBuyOrder  placeBuyLimitOrder(
+  public LimitBuyOrder placeBuyLimitOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -257,7 +258,7 @@ public final class GameSession {
   /**
    * Sells a quantity of a stock through the exchange for this session's player.
    *
-   * @param symbol stock symbol to sell
+   * @param symbol   stock symbol to sell
    * @param quantity quantity to sell
    * @throws GameSessionFinishedException if the session is finished
    */
@@ -277,12 +278,12 @@ public final class GameSession {
   /**
    * Places a sell limit order for this session's player.
    *
-   * @param symbol stock symbol to sell
-   * @param quantity quantity to sell
+   * @param symbol      stock symbol to sell
+   * @param quantity    quantity to sell
    * @param targetPrice lowest price the player is willing to sell for
-   * @param duration number of weeks the order should stay active
+   * @param duration    number of weeks the order should stay active
    */
-  public LimitSellOrder  placeSellLimitOrder(
+  public LimitSellOrder placeSellLimitOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -313,12 +314,12 @@ public final class GameSession {
   /**
    * Places a stop loss order for this session's player.
    *
-   * @param symbol stock symbol to sell
-   * @param quantity quantity to sell
+   * @param symbol      stock symbol to sell
+   * @param quantity    quantity to sell
    * @param targetPrice price that triggers the sale
-   * @param duration number of weeks the order should stay active
+   * @param duration    number of weeks the order should stay active
    */
-  public StopLossOrder  placeStopLossOrder(
+  public StopLossOrder placeStopLossOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -349,7 +350,7 @@ public final class GameSession {
    * Advances the exchange one week.
    *
    * @throws GameSessionFinishedException if the session is finished
-   * @throws InsufficientFundsException if the player cannot afford the hangar cost
+   * @throws InsufficientFundsException   if the player cannot afford the hangar cost
    */
   public void advanceWeek() {
     ensureActive();

@@ -3,7 +3,9 @@ package edu.ntnu.idatt2003.gruppe50.ui.mapper;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.ui.model.ShareData;
 
-/** Maps application share DTOs to UI share models. */
+/**
+ * Maps application share DTOs to UI share models.
+ */
 public final class ShareDataMapper {
 
   /**

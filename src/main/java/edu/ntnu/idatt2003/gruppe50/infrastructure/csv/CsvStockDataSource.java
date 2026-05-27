@@ -56,7 +56,7 @@ public class CsvStockDataSource implements StockDataSource {
    * @param source the path to read from
    * @return the list of stocks read from the file
    * @throws InvalidStockDataException if the file cannot be read
-   * @throws IllegalArgumentException if {@code source} is null
+   * @throws IllegalArgumentException  if {@code source} is null
    */
   @Override
   public List<Stock> readStocks(Path source) throws InvalidStockDataException {
@@ -75,9 +75,9 @@ public class CsvStockDataSource implements StockDataSource {
    * Writes the given stocks to a CSV file at the given path.
    *
    * @param destination the path to write to
-   * @param stocks the stocks to write
+   * @param stocks      the stocks to write
    * @throws InvalidStockDataException if the file cannot be written
-   * @throws IllegalArgumentException if any argument is null
+   * @throws IllegalArgumentException  if any argument is null
    */
   @Override
   public void writeStocks(Path destination, List<Stock> stocks) throws InvalidStockDataException {

@@ -7,7 +7,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-/** Places a sell limit order inside a game session and saves the updated state. */
+/**
+ * Places a sell limit order inside a game session and saves the updated state.
+ */
 public final class PlaceSellLimitOrderUseCase {
 
   private final GameSessionRepository repository;
@@ -50,11 +52,11 @@ public final class PlaceSellLimitOrderUseCase {
   /**
    * Input for placing a sell limit order in a session.
    *
-   * @param gameId id of the game session
-   * @param symbol stock symbol to sell
-   * @param quantity quantity to sell
+   * @param gameId      id of the game session
+   * @param symbol      stock symbol to sell
+   * @param quantity    quantity to sell
    * @param targetPrice minimum price the player is willing to sell at
-   * @param duration number of weeks the order should stay active
+   * @param duration    number of weeks the order should stay active
    */
   public record Request(
       UUID gameId,
@@ -62,15 +64,16 @@ public final class PlaceSellLimitOrderUseCase {
       BigDecimal quantity,
       BigDecimal targetPrice,
       int duration
-  ) {}
+  ) {
+  }
 
   /**
    * Output from placing a sell limit order.
    *
-   * @param symbol stock symbol for the order
-   * @param quantity order quantity
-   * @param targetPrice target sell price
-   * @param placedAtWeek week when the order was placed
+   * @param symbol        stock symbol for the order
+   * @param quantity      order quantity
+   * @param targetPrice   target sell price
+   * @param placedAtWeek  week when the order was placed
    * @param expiresAtWeek week when the order expires
    */
   public record Response(
@@ -79,5 +82,6 @@ public final class PlaceSellLimitOrderUseCase {
       BigDecimal targetPrice,
       int placedAtWeek,
       int expiresAtWeek
-  ) {}
+  ) {
+  }
 }

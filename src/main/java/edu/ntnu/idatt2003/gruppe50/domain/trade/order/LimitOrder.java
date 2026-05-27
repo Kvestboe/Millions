@@ -37,13 +37,14 @@ public abstract class LimitOrder {
   /**
    * Recreates a limit order from saved data.
    *
-   * @param dto the saved order data
+   * @param dto      the saved order data
    * @param stockMap stocks mapped by symbol
-   * @param player the player who owns the order
+   * @param player   the player who owns the order
    * @return the recreated limit order
    * @throws IllegalArgumentException if the order type is unknown
    */
-  public static LimitOrder buildOrder(LimitOrderDto dto, Map<String, Stock> stockMap, Player player) {
+  public static LimitOrder buildOrder(LimitOrderDto dto, Map<String, Stock> stockMap,
+                                      Player player) {
     Stock stock = stockMap.get(dto.stockSymbol());
     return switch (dto.type()) {
       case "BUY" -> new LimitBuyOrder(
@@ -65,15 +66,16 @@ public abstract class LimitOrder {
   /**
    * Creates a new limit order.
    *
-   * @param stock the stock the order applies to
-   * @param player the player placing the order
+   * @param stock       the stock the order applies to
+   * @param player      the player placing the order
    * @param targetPrice the price that triggers the order
-   * @param quantity the number of shares
+   * @param quantity    the number of shares
    * @param currentWeek the week the order was created
-   * @param expiryWeek the week the order expires
+   * @param expiryWeek  the week the order expires
    * @throws IllegalArgumentException if an argument is invalid
    */
-  protected LimitOrder(Stock stock, Player player, BigDecimal targetPrice, BigDecimal quantity, int currentWeek, int expiryWeek) {
+  protected LimitOrder(Stock stock, Player player, BigDecimal targetPrice, BigDecimal quantity,
+                       int currentWeek, int expiryWeek) {
     Validate.notNull(stock, "stock");
     Validate.notNull(player, "player");
     Validate.notNull(targetPrice, "targetPrice");

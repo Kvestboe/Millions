@@ -27,13 +27,13 @@ public class ShopController {
   /**
    * Creates a new shop controller.
    *
-   * @param gameId the id of the game session this shop belongs to
-   * @param shop the shop used for item and coin metadata
-   * @param player the player using the shop
-   * @param difficulty the current game difficulty
-   * @param buyCoins use case for buying coins and saving the session
+   * @param gameId           the id of the game session this shop belongs to
+   * @param shop             the shop used for item and coin metadata
+   * @param player           the player using the shop
+   * @param difficulty       the current game difficulty
+   * @param buyCoins         use case for buying coins and saving the session
    * @param purchaseShopItem use case for purchasing or applying shop items
-   *     and saving the session
+   *                         and saving the session
    * @throws IllegalArgumentException if any argument is null
    */
   public ShopController(

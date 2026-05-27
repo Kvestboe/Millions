@@ -5,7 +5,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.UUID;
 
-/** Finishes an existing game session and saves state. */
+/**
+ * Finishes an existing game session and saves state.
+ */
 public final class FinishGameSessionUseCase {
 
   private final GameSessionRepository repository;
@@ -38,5 +40,6 @@ public final class FinishGameSessionUseCase {
    *
    * @param gameId id of the game session
    */
-  public record Request(UUID gameId) {}
+  public record Request(UUID gameId) {
+  }
 }

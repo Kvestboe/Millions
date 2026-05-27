@@ -33,7 +33,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/** Maps game sessions to and from persistence DTOs used for JSON saves. */
+/**
+ * Maps game sessions to and from persistence DTOs used for JSON saves.
+ */
 public class GameSaveMapper {
 
   /**
@@ -107,7 +109,7 @@ public class GameSaveMapper {
   /**
    * Reconstructs a game session from a saved DTO.
    *
-   * @param dto saved game-session data
+   * @param dto     saved game-session data
    * @param factory transaction factory used by the rehydrated exchange
    * @return reconstructed game session
    * @throws IllegalArgumentException if saved enum values or ids are invalid
@@ -118,7 +120,8 @@ public class GameSaveMapper {
         .collect(Collectors.toMap(Stock::getSymbol, s -> s));
 
     Map<UUID, Share> shareMap = dto.player().shares().stream()
-        .map(s -> new Share(stockMap.get(s.stockSymbol()), s.quantity(), s.purchasePrice(), s.purchaseWeek()))
+        .map(s -> new Share(stockMap.get(s.stockSymbol()), s.quantity(), s.purchasePrice(),
+            s.purchaseWeek()))
         .collect(Collectors.toMap(Share::getShareId, s -> s));
 
     TransactionArchive archive = new TransactionArchive();
@@ -192,12 +195,19 @@ public class GameSaveMapper {
     }
   }
 
-  private static LimitOrder buildOrder(LimitOrderDto o, Map<String, Stock> stockMap, Player player) {
+  private static LimitOrder buildOrder(LimitOrderDto o, Map<String, Stock> stockMap,
+                                       Player player) {
     Stock stock = stockMap.get(o.stockSymbol());
     return switch (o.type()) {
-      case "Buy at target price" -> new LimitBuyOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(), o.expiryWeek());
-      case "Sell at target price" -> new LimitSellOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(), o.expiryWeek());
-      case "Stop loss" -> new StopLossOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(), o.expiryWeek());
+      case "Buy at target price" ->
+          new LimitBuyOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(),
+              o.expiryWeek());
+      case "Sell at target price" ->
+          new LimitSellOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(),
+              o.expiryWeek());
+      case "Stop loss" ->
+          new StopLossOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(),
+              o.expiryWeek());
       default -> throw new IllegalArgumentException("Unknown order type: " + o.type());
     };
   }

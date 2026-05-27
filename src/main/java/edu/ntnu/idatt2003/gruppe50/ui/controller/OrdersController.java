@@ -9,7 +9,9 @@ import java.util.UUID;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/** Keeps pending order data synchronized with the exchange state. */
+/**
+ * Keeps pending order data synchronized with the exchange state.
+ */
 public class OrdersController implements Observer {
 
   private final UUID gameId;
@@ -20,9 +22,9 @@ public class OrdersController implements Observer {
   /**
    * Creates a controller for pending orders.
    *
-   * @param gameId id of the game session
+   * @param gameId           id of the game session
    * @param getPendingOrders use case used to retrieve pending orders
-   * @param exchange observed exchange that triggers order refreshes
+   * @param exchange         observed exchange that triggers order refreshes
    */
   public OrdersController(
       UUID gameId,
@@ -46,17 +48,26 @@ public class OrdersController implements Observer {
     return pendingOrders;
   }
 
-  /** Refreshes pending orders when the observed exchange changes. */
+  /**
+   * Refreshes pending orders when the observed exchange changes.
+   */
   @Override
   public void update() {
     refresh();
   }
 
-  /** Reloads pending orders from the application layer. */
+  /**
+   * Reloads pending orders from the application layer.
+   */
   public void refresh() {
     pendingOrders.setAll(getPendingOrders.execute(gameId));
   }
 
+  /**
+   * Cancels the given pending order through the use case layer.
+   *
+   * @param order the pending order to cancel
+   */
   public void cancel(PendingOrderDto order) {
     cancelOrder.execute(new CancelOrderUseCase.Request(gameId, order));
     refresh();

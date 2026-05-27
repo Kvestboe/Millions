@@ -37,6 +37,13 @@ import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.LeaderboardFileHand
 import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
 import java.util.UUID;
 
+/**
+ * Application-wide composition root.
+ *
+ * <p>Owns the single repository, transaction factory and all use cases used
+ * throughout the application. Per-session controllers are built on top of
+ * this module via {@link GameSessionControllerBundle}.
+ */
 public final class AppModule {
   private final TransactionFactory transactionFactory = new TransactionFactory();
   private final GameSessionRepository sessions = new JsonFileGameSessionRepository(transactionFactory);
@@ -72,6 +79,13 @@ public final class AppModule {
   public final GetWeeklyMoversUseCase getWeeklyMovers = new GetWeeklyMoversUseCase(sessions);
   public final GetNotificationsUseCase getNotifications = new GetNotificationsUseCase(sessions);
 
+  /**
+   * Loads the given game session and builds a controller bundle for it.
+   *
+   * @param gameId id of the session to load
+   * @return per-session controller bundle
+   * @throws GameSessionNotFoundException if no session with the given id exists
+   */
   public GameSessionControllerBundle gameBundle(UUID gameId) {
     GameSession session = sessions.findById(gameId).orElseThrow(GameSessionNotFoundException::new);
     return new GameSessionControllerBundle(this, session);

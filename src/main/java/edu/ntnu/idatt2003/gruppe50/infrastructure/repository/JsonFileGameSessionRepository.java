@@ -18,7 +18,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-/** File-based game session repository that stores saves as JSON files. */
+/**
+ * File-based game session repository that stores saves as JSON files.
+ */
 public final class JsonFileGameSessionRepository implements GameSessionRepository {
 
   private static final Path SAVE_DIR = Path.of("saves");
@@ -46,7 +48,9 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void save(GameSession session) {
     cache.put(session.getGameId(), session);
@@ -54,11 +58,14 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     try {
       mapper.writeValue(file.toFile(), GameSaveMapper.toDto(session));
     } catch (IOException e) {
-      throw new GameSavePersistenceException("Failed to save game session " + session.getGameId(), e);
+      throw new GameSavePersistenceException("Failed to save game session " + session.getGameId(),
+          e);
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Optional<GameSession> findById(UUID gameId) {
     if (cache.containsKey(gameId)) {
@@ -78,7 +85,9 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<GameSession> findAll() {
     try (var paths = Files.list(SAVE_DIR)) {
@@ -95,7 +104,9 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void delete(UUID gameId) {
     cache.remove(gameId);

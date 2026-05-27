@@ -17,6 +17,11 @@ public final class GetNotificationsUseCase {
 
   private final GameSessionRepository repository;
 
+  /**
+   * Creates the use case with a game-session repository.
+   *
+   * @param repository repository used to load game sessions
+   */
   public GetNotificationsUseCase(GameSessionRepository repository) {
     this.repository = repository;
   }
@@ -25,7 +30,7 @@ public final class GetNotificationsUseCase {
    * Returns the most recent notifications, newest first.
    *
    * @param gameId the id of the game session
-   * @param limit max number to return
+   * @param limit  max number to return
    * @return list of recent notifications
    * @throws GameSessionNotFoundException if the game session does not exist
    */

@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/** Provides stock detail, holding and chart marker data to stock detail views. */
+/**
+ * Provides stock detail, holding and chart marker data to stock detail views.
+ */
 public class StockDetailQueryController {
 
   private final UUID gameId;
@@ -25,12 +27,12 @@ public class StockDetailQueryController {
   /**
    * Creates a stock detail query controller.
    *
-   * @param gameId id of the game session
-   * @param getPortfolio use case used to retrieve holdings
-   * @param getStockDetail use case used to retrieve stock details
+   * @param gameId                id of the game session
+   * @param getPortfolio          use case used to retrieve holdings
+   * @param getStockDetail        use case used to retrieve stock details
    * @param getTransactionMarkers use case used to retrieve chart markers
-   * @param previewOrderUseCase use case used to preview orders
-   * @param exchange exchange used for observer subscriptions
+   * @param previewOrderUseCase   use case used to preview orders
+   * @param exchange              exchange used for observer subscriptions
    */
   public StockDetailQueryController(
       UUID gameId,

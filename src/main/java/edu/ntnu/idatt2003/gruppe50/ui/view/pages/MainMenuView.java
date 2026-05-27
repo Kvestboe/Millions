@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
  * opening the leaderboard, settings, or quitting. The background features
  * a decorative line chart.
  */
-public class MainMenuView extends StackPane{
+public class MainMenuView extends StackPane {
 
   private final SaveSummaryDto latestSave;
   private final Runnable onNewGame;
@@ -37,11 +37,12 @@ public class MainMenuView extends StackPane{
    * Constructs the main menu.
    *
    * @param latestSave the most recent save shown on the continue button, or null if none exists
-   * @param onNewGame action triggered when the player clicks "New game"
+   * @param onNewGame  action triggered when the player clicks "New game"
    * @param onSettings action triggered when the player clicks "Settings"
-   * @param onQuit action triggered when the player clicks "Quit"
+   * @param onQuit     action triggered when the player clicks "Quit"
    */
-  public MainMenuView(SaveSummaryDto latestSave, Runnable onNewGame, Runnable onSettings, Runnable onQuit) {
+  public MainMenuView(SaveSummaryDto latestSave, Runnable onNewGame, Runnable onSettings,
+                      Runnable onQuit) {
     this.latestSave = latestSave;
     this.onNewGame = onNewGame;
     this.onSettings = onSettings;
@@ -106,17 +107,23 @@ public class MainMenuView extends StackPane{
   /**
    * Draws the decorative line chart along the bottom of the menu.
    *
-   * @param gc the graphics context to draw on
+   * @param gc    the graphics context to draw on
    * @param width the current canvas width
    */
   private void drawChart(GraphicsContext gc, double width) {
     gc.clearRect(0, 0, width, 100);
 
-    double[] xPoints = {0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100, 1200, 1350, 1500, 1650, 1800, width};
-    double[] yPoints = {110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18, 8, 12, 5};
+    double[] xPoints =
+        {0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100, 1200, 1350, 1500,
+            1650, 1800, width};
+    double[] yPoints =
+        {110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18, 8, 12, 5};
 
-    double[] xFill = {0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100, 1200, 1350, 1500, 1650, 1800, width, width, 0};
-    double[] yFill = {110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18, 8, 12, 5, 100, 100};
+    double[] xFill =
+        {0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100, 1200, 1350, 1500,
+            1650, 1800, width, width, 0};
+    double[] yFill =
+        {110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18, 8, 12, 5, 100, 100};
 
     gc.setFill(Color.web("#FFD166", 0.08));
     gc.fillPolygon(xFill, yFill, xFill.length);
@@ -190,7 +197,7 @@ public class MainMenuView extends StackPane{
     HBox content = new HBox(8, icon, text, spacer, subtitle);
     content.setAlignment(Pos.CENTER_LEFT);
 
-    Button continueBtn = ButtonFactory.styled("", "btn-accent",() -> {
+    Button continueBtn = ButtonFactory.styled("", "btn-accent", () -> {
       if (onContinueGame != null) {
         onContinueGame.run();
       }
@@ -203,10 +210,22 @@ public class MainMenuView extends StackPane{
   }
 
   private HBox buildSecondaryButtons() {
-    Button newGameBtn    = ButtonFactory.iconButton("✚", "New Game",    onNewGame);
-    Button loadGameBtn   = ButtonFactory.iconButton("⬆", "Load Game",   () -> { if (onLoadGame != null) onLoadGame.run(); });
-    Button leaderboardBtn = ButtonFactory.iconButton("★", "Leaderboard",() -> { if (onLeaderboard != null) onLeaderboard.run(); });
-    leaderboardBtn.setOnAction(e -> { if (onLeaderboard != null) onLeaderboard.run();});
+    Button newGameBtn = ButtonFactory.iconButton("✚", "New Game", onNewGame);
+    Button loadGameBtn = ButtonFactory.iconButton("⬆", "Load Game", () -> {
+      if (onLoadGame != null) {
+        onLoadGame.run();
+      }
+    });
+    Button leaderboardBtn = ButtonFactory.iconButton("★", "Leaderboard", () -> {
+      if (onLeaderboard != null) {
+        onLeaderboard.run();
+      }
+    });
+    leaderboardBtn.setOnAction(e -> {
+      if (onLeaderboard != null) {
+        onLeaderboard.run();
+      }
+    });
 
     HBox.setHgrow(newGameBtn, Priority.ALWAYS);
     HBox.setHgrow(loadGameBtn, Priority.ALWAYS);

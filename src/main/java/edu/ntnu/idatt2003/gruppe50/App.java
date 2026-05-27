@@ -6,6 +6,13 @@ import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * JavaFX application entry point.
+ *
+ * <p>Builds the {@link AppModule} composition root, sets up the primary
+ * {@link Stage} (window icon and default size), and hands control over to
+ * {@link AppRouter} which shows the main menu.
+ */
 public final class App extends Application {
 
   private final AppModule module = new AppModule();
