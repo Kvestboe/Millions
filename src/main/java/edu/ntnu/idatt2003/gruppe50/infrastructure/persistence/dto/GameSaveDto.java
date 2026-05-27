@@ -14,6 +14,8 @@ import java.util.List;
  * @param netWorthHistory saved net-worth history
  * @param player saved player state
  * @param exchange saved exchange state
+ * @param coinExchange saved coin-exchange state (may be {@code null} for legacy
+ *     save files that pre-date persistent coin pricing)
  */
 public record GameSaveDto(
     String gameId,
@@ -23,7 +25,8 @@ public record GameSaveDto(
     String lastPlayed,
     List<BigDecimal> netWorthHistory,
     PlayerDto player,
-    ExchangeDto exchange
+    ExchangeDto exchange,
+    CoinExchangeDto coinExchange
 ) {
 
 }

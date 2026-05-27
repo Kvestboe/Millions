@@ -9,6 +9,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationLog;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import edu.ntnu.idatt2003.gruppe50.domain.shop.CoinExchange;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Sale;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
@@ -17,6 +18,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.StopLossOrder;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.CoinExchangeDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.ExchangeDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.GameSaveDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.LimitOrderDto;
@@ -97,7 +99,8 @@ public class GameSaveMapper {
             shares,
             transactions
         ),
-        new ExchangeDto(exchange.getName(), exchange.getWeek(), stocks, orders)
+        new ExchangeDto(exchange.getName(), exchange.getWeek(), stocks, orders),
+        new CoinExchangeDto(session.getCoinExchange().getPriceHistory())
     );
   }
 
@@ -155,6 +158,15 @@ public class GameSaveMapper {
         new NotificationLog()
     );
 
+    CoinExchange coinExchange = null;
+    if (dto.coinExchange() != null && dto.coinExchange().priceHistory() != null
+        && !dto.coinExchange().priceHistory().isEmpty()) {
+      coinExchange = CoinExchange.rehydrate(
+          player.getStartingMoney(),
+          dto.coinExchange().priceHistory()
+      );
+    }
+
     return GameSession.rehydrate(
         UUID.fromString(dto.gameId()),
         player,
@@ -163,7 +175,8 @@ public class GameSaveMapper {
         GameSessionState.valueOf(dto.state()),
         parseDateTime(dto.runStartedAt()),
         parseDateTime(dto.lastPlayed()),
-        dto.netWorthHistory()
+        dto.netWorthHistory(),
+        coinExchange
     );
   }
 
