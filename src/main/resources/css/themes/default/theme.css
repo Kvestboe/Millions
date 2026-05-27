@@ -34,4 +34,7 @@
 
     -nav-active-bg:     rgba(255, 209, 102, 0.12);
     -nav-active-border: rgba(255, 209, 102, 0.25);
+
+    -progress-start: #D6A93A;
+    -progress-end:   #FFD166;
 }

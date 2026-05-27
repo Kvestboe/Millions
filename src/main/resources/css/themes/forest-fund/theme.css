@@ -43,4 +43,7 @@
 
     -nav-active-bg:     rgba(214, 183, 90, 0.12);
     -nav-active-border: rgba(214, 183, 90, 0.25);
+
+    -progress-start: #BFA24A;
+    -progress-end:   #D6B75A;
 }

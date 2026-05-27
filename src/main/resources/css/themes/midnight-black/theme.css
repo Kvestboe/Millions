@@ -40,6 +40,9 @@
 
     -nav-active-bg:     rgba(214, 183, 90, 0.12);
     -nav-active-border: rgba(214, 183, 90, 0.25);
+
+    -progress-start: #B91C1C;
+    -progress-end:   #E53535;
 }
 /* Chart-overrides for midnight red-tema */
 .chart-series-area-line {

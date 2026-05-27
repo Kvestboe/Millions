@@ -33,8 +33,8 @@ public class ShopItemFactory {
         ),
         createThemeItem(
             "theme-midnight-black",
-            "Midnight Black",
-            "A dark market terminal theme.",
+            "Devil Red",
+            "A black and red theme with a sharp, infernal glow.",
             "midnight-black",
             15,
             new BigDecimal("0")
