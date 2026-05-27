@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.gruppe50.application.query;
+package edu.ntnu.idatt2003.gruppe50.application.command;
 
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.UUID;

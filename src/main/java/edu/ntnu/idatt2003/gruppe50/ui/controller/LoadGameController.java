@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.controller;
 
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.DeleteSaveUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.DeleteSaveUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetAllSavesUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
 import java.util.UUID;
