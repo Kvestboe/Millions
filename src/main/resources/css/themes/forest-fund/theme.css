@@ -15,6 +15,8 @@
     -accent-gold:   #D6B75A;   /* Primær aksent - coins, viktige tall */
     -accent-indigo: #4D7C5A;   /* Sekundær aksent - aktiv knapp */
     -accent-teal:   #34D399;   /* Chart-fill, linjer, highlight */
+    -accent-purple: #7C6FAE;   /* Dempet skogslilla */
+    -accent-orange: #D4944A;   /* Dempet gull-oransje */
 
     /* --- Tekst --- */
     -text-primary:   #EEF8F1;  /* Hovedtekst */
@@ -41,4 +43,7 @@
 
     -nav-active-bg:     rgba(214, 183, 90, 0.12);
     -nav-active-border: rgba(214, 183, 90, 0.25);
+
+    -progress-start: #BFA24A;
+    -progress-end:   #D6B75A;
 }

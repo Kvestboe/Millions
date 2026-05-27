@@ -18,6 +18,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * File-based game session repository that stores saves as JSON files.
+ */
 public final class JsonFileGameSessionRepository implements GameSessionRepository {
 
   private static final Path SAVE_DIR = Path.of("saves");
@@ -26,6 +29,12 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
   private final TransactionFactory factory;
   private final Map<UUID, GameSession> cache = new HashMap<>();
 
+  /**
+   * Creates a repository backed by JSON files in the saves directory.
+   *
+   * @param factory transaction factory used when saved sessions are rehydrated
+   * @throws GameSavePersistenceException if the save directory cannot be created
+   */
   public JsonFileGameSessionRepository(TransactionFactory factory) {
     this.factory = factory;
     this.mapper = new ObjectMapper()
@@ -35,10 +44,13 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     try {
       Files.createDirectories(SAVE_DIR);
     } catch (IOException e) {
-      throw new RuntimeException("Could not create save directory: " + SAVE_DIR, e);
+      throw new GameSavePersistenceException("Could not create save directory: " + SAVE_DIR, e);
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void save(GameSession session) {
     cache.put(session.getGameId(), session);
@@ -46,10 +58,14 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
     try {
       mapper.writeValue(file.toFile(), GameSaveMapper.toDto(session));
     } catch (IOException e) {
-      throw new RuntimeException("Failed to save game session " + session.getGameId(), e);
+      throw new GameSavePersistenceException("Failed to save game session " + session.getGameId(),
+          e);
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Optional<GameSession> findById(UUID gameId) {
     if (cache.containsKey(gameId)) {
@@ -65,10 +81,13 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
       cache.put(gameId, session);
       return Optional.of(session);
     } catch (IOException e) {
-      throw new RuntimeException("Failed to load game session " + gameId, e);
+      throw new GameSavePersistenceException("Failed to load game session " + gameId, e);
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<GameSession> findAll() {
     try (var paths = Files.list(SAVE_DIR)) {
@@ -81,17 +100,20 @@ public final class JsonFileGameSessionRepository implements GameSessionRepositor
           .sorted(Comparator.comparing(GameSession::getLastPlayed))
           .toList();
     } catch (IOException e) {
-      throw new RuntimeException("Failed to list saves", e);
+      throw new GameSavePersistenceException("Failed to list saves", e);
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void delete(UUID gameId) {
     cache.remove(gameId);
     try {
       Files.deleteIfExists(SAVE_DIR.resolve(gameId + ".json"));
     } catch (IOException e) {
-      throw new RuntimeException("Failed to delete save " + gameId, e);
+      throw new GameSavePersistenceException("Failed to delete save " + gameId, e);
     }
   }
 }

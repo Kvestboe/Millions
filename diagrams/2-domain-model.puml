@@ -202,7 +202,7 @@ package "market" #E1BEE7 {
     getGainers() / getLosers()
     findStocks(query) : List
   }
-  class Stock <<value object>> {
+  class Stock <<entity>> {
     String symbol
     String company
     List<BigDecimal> prices
@@ -223,6 +223,7 @@ package "market" #E1BEE7 {
   Exchange o-- "0..*" LimitOrder
   Exchange --> VolatilityProfile
   Exchange --> TransactionFactory : uses
+  Exchange *-- "1" NotificationLog
 }
 
 ' ══════════════════════════════════════════════════════
@@ -259,6 +260,32 @@ package "shop" #FFF9C4 {
   Shop --> "0..*" ShopItem
   ShopItem <|.. ThemeItem
   ShopItemFactory ..> ShopItem : creates
+}
+
+' ══════════════════════════════════════════════════════
+'  NOTIFICATION
+' ══════════════════════════════════════════════════════
+package "notification" #FFE0B2 {
+  class NotificationLog <<entity>> {
+    add(Notification)
+    recent(limit) : List
+    size() : int
+  }
+  class Notification <<value object>> {
+    NotificationType type
+    String message
+    int week
+    LocalDateTime createdAt
+  }
+  enum NotificationType {
+    ORDER_FILLED
+    ORDER_EXPIRED
+    ORDER_FAILED
+    LEVEL_UP
+  }
+
+  NotificationLog o-- "0..*" Notification
+  Notification --> NotificationType
 }
 
 ' ══════════════════════════════════════════════════════

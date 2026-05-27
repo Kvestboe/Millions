@@ -3,6 +3,19 @@ package edu.ntnu.idatt2003.gruppe50.ui.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * UI model for the summary shown after advancing a week.
+ *
+ * @param previousWeek   week before advancing
+ * @param newWeek        week after advancing
+ * @param netWorthBefore net worth before the week advanced
+ * @param netWorthAfter  net worth after the week advanced
+ * @param cash           player cash after the week advanced
+ * @param hangarCost     weekly hangar cost
+ * @param holdings       per-holding weekly movement
+ * @param news           market news messages
+ * @param notifications  gameplay notifications
+ */
 public record WeekSummary(
     int previousWeek,
     int newWeek,
@@ -14,6 +27,12 @@ public record WeekSummary(
     List<String> news,
     List<String> notifications
 ) {
+
+  /**
+   * Returns the net worth change for the week.
+   *
+   * @return net worth after minus net worth before
+   */
   public BigDecimal weeklyDelta() {
     return netWorthAfter.subtract(netWorthBefore);
   }

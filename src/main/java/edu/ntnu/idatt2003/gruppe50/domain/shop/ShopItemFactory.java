@@ -33,8 +33,8 @@ public class ShopItemFactory {
         ),
         createThemeItem(
             "theme-midnight-black",
-            "Midnight Black",
-            "A dark market terminal theme.",
+            "Devil Red",
+            "A black and red theme with a sharp, infernal glow.",
             "midnight-black",
             15,
             new BigDecimal("0")
@@ -48,12 +48,12 @@ public class ShopItemFactory {
             new BigDecimal("50000")
         ),
         createThemeItem(
-          "theme-vintage-cream",
-          "Vintage Cream",
-          "A vintage cream theme.",
-          "vintage-cream",
-          50,
-          new BigDecimal("100000")
+            "theme-vintage-cream",
+            "Vintage Cream",
+            "A vintage cream theme.",
+            "vintage-cream",
+            50,
+            new BigDecimal("100000")
         ),
         createThemeItem(
             "theme-copper-shadow",

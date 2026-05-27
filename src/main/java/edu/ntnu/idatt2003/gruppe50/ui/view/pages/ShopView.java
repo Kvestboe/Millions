@@ -4,12 +4,11 @@ import edu.ntnu.idatt2003.gruppe50.domain.shop.ShopItem;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.items.ThemeItem;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.ShopController;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.function.Consumer;
-
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -51,7 +50,8 @@ public class ShopView extends ScrollPane implements Page {
    *
    * @param controller the shop controller used by the view
    */
-  public ShopView(ShopController controller, Consumer<String> onThemeChanged, Runnable onPlayerBalanceChanged) {
+  public ShopView(ShopController controller, Consumer<String> onThemeChanged,
+                  Runnable onPlayerBalanceChanged) {
     this.controller = controller;
     this.onThemeChanged = onThemeChanged;
     this.onPlayerBalanceChanged = onPlayerBalanceChanged;
@@ -268,9 +268,15 @@ public class ShopView extends ScrollPane implements Page {
     refresh();
   }
 
+  /**
+   * Refreshes the coin balance, cash balance, current coin rate, the coin
+   * price chart and the theme cards. Should be called after any change
+   * that affects the player's money or coin holdings.
+   */
   public void refresh() {
     coinsLabel.setText(controller.getPlayerCoins() + " coins");
-    moneyLabel.setText("Current balance: " + MoneyFormat.formatCurrency(controller.getPlayerMoney()));
+    moneyLabel.setText(
+        "Current balance: " + MoneyFormat.formatCurrency(controller.getPlayerMoney()));
     rateLabel.setText(MoneyFormat.format(controller.getCurrentCoinPrice()) + " kr / coin");
     coinPriceChart.display("Coin price history", controller.getCoinPriceHistory());
     updateBuyPreview();

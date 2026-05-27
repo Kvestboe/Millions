@@ -27,6 +27,12 @@ public class OrderReceiptView extends VBox {
   private final OrderReceipt receipt;
   private final Runnable onClose;
 
+  /**
+   * Creates an order receipt view.
+   *
+   * @param receipt receipt to display
+   * @param onClose action run when the receipt is closed
+   */
   public OrderReceiptView(OrderReceipt receipt, Runnable onClose) {
     this.receipt = receipt;
     this.onClose = onClose;
@@ -103,7 +109,7 @@ public class OrderReceiptView extends VBox {
       );
     } else if (receipt instanceof PendingReceipt r) {
       details.getChildren().addAll(
-          row("Placed",  "Week " + r.placedAtWeek()),
+          row("Placed", "Week " + r.placedAtWeek()),
           row("Expires", "Week " + r.expiresAtWeek())
       );
     }

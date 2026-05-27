@@ -15,7 +15,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class MainMenuView extends StackPane{
+/**
+ * Main menu shown when the application starts.
+ *
+ * <p>Displays the game title, a "Continue game" shortcut when a previous
+ * save exists, and buttons for starting a new game, loading a game,
+ * opening the leaderboard, settings, or quitting. The background features
+ * a decorative line chart.
+ */
+public class MainMenuView extends StackPane {
 
   private final SaveSummaryDto latestSave;
   private final Runnable onNewGame;
@@ -25,7 +33,16 @@ public class MainMenuView extends StackPane{
   private Runnable onLeaderboard;
   private Runnable onContinueGame;
 
-  public MainMenuView(SaveSummaryDto latestSave, Runnable onNewGame, Runnable onSettings, Runnable onQuit) {
+  /**
+   * Constructs the main menu.
+   *
+   * @param latestSave the most recent save shown on the continue button, or null if none exists
+   * @param onNewGame  action triggered when the player clicks "New game"
+   * @param onSettings action triggered when the player clicks "Settings"
+   * @param onQuit     action triggered when the player clicks "Quit"
+   */
+  public MainMenuView(SaveSummaryDto latestSave, Runnable onNewGame, Runnable onSettings,
+                      Runnable onQuit) {
     this.latestSave = latestSave;
     this.onNewGame = onNewGame;
     this.onSettings = onSettings;
@@ -33,14 +50,29 @@ public class MainMenuView extends StackPane{
     build();
   }
 
+  /**
+   * Registers the action triggered when the player clicks "Load game".
+   *
+   * @param onLoadGame action to run when "Load game" is clicked
+   */
   public void setOnLoadGame(Runnable onLoadGame) {
     this.onLoadGame = onLoadGame;
   }
 
+  /**
+   * Registers the action triggered when the player clicks "Leaderboard".
+   *
+   * @param onLeaderboard action to run when "Leaderboard" is clicked
+   */
   public void setOnLeaderboard(Runnable onLeaderboard) {
     this.onLeaderboard = onLeaderboard;
   }
 
+  /**
+   * Registers the action triggered when the player clicks "Continue game".
+   *
+   * @param onContinueGame action to run when "Continue game" is clicked
+   */
   public void setOnContinueGame(Runnable onContinueGame) {
     this.onContinueGame = onContinueGame;
   }
@@ -55,6 +87,11 @@ public class MainMenuView extends StackPane{
     getChildren().addAll(chart, content);
   }
 
+  /**
+   * Creates the decorative chart canvas anchored to the bottom of the menu.
+   *
+   * @return a canvas that renders the background chart
+   */
   private Canvas buildChart() {
     Canvas canvas = new Canvas();
     canvas.setHeight(100);
@@ -67,21 +104,39 @@ public class MainMenuView extends StackPane{
     return canvas;
   }
 
+  /**
+   * Draws the decorative line chart along the bottom of the menu.
+   *
+   * @param gc    the graphics context to draw on
+   * @param width the current canvas width
+   */
   private void drawChart(GraphicsContext gc, double width) {
     gc.clearRect(0, 0, width, 100);
 
-    double[] xPoints = {0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100, 1200, 1350, 1500, 1650, 1800, width};
-    double[] yPoints = {110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18, 8, 12, 5};
+    double[] xpoints = {
+        0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100,
+        1200, 1350, 1500, 1650, 1800, width
+    };
+    double[] ypoints = {
+        110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18,
+        8, 12, 5
+    };
 
-    double[] xFill = {0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100, 1200, 1350, 1500, 1650, 1800, width, width, 0};
-    double[] yFill = {110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18, 8, 12, 5, 100, 100};
+    double[] xfill = {
+        0, 80, 160, 250, 340, 420, 500, 580, 640, 720, 800, 900, 1000, 1100,
+        1200, 1350, 1500, 1650, 1800, width, width, 0
+    };
+    double[] yfill = {
+        110, 88, 95, 65, 70, 42, 48, 22, 28, 18, 24, 12, 20, 8, 15, 5, 18,
+        8, 12, 5, 100, 100
+    };
 
     gc.setFill(Color.web("#FFD166", 0.08));
-    gc.fillPolygon(xFill, yFill, xFill.length);
+    gc.fillPolygon(xfill, yfill, xfill.length);
 
     gc.setStroke(Color.web("#FFD166", 0.3));
     gc.setLineWidth(1.5);
-    gc.strokePolyline(xPoints, yPoints, xPoints.length);
+    gc.strokePolyline(xpoints, ypoints, xpoints.length);
   }
 
   private VBox buildContent() {
@@ -89,7 +144,7 @@ public class MainMenuView extends StackPane{
     separator.getStyleClass().add("menu-separator");
     separator.setMaxWidth(340);
 
-    Label versionLabel = new Label("v1.0.0");
+    Label versionLabel = new Label("v2.0.0");
     versionLabel.getStyleClass().add("version-label");
 
     VBox content = new VBox(14);
@@ -121,6 +176,15 @@ public class MainMenuView extends StackPane{
     return header;
   }
 
+  /**
+   * Builds the prominent "Continue game" button at the top of the menu.
+   *
+   * <p>When a save exists, the subtitle shows the player name and current
+   * week. When no save exists, the subtitle reads "No saved game" and the
+   * button is disabled.
+   *
+   * @return the configured continue button
+   */
   private Button buildPrimaryButton() {
     Label icon = new Label("▶");
 
@@ -139,7 +203,7 @@ public class MainMenuView extends StackPane{
     HBox content = new HBox(8, icon, text, spacer, subtitle);
     content.setAlignment(Pos.CENTER_LEFT);
 
-    Button continueBtn = ButtonFactory.styled("", "btn-accent",() -> {
+    Button continueBtn = ButtonFactory.styled("", "btn-accent", () -> {
       if (onContinueGame != null) {
         onContinueGame.run();
       }
@@ -152,10 +216,22 @@ public class MainMenuView extends StackPane{
   }
 
   private HBox buildSecondaryButtons() {
-    Button newGameBtn    = ButtonFactory.iconButton("✚", "New Game",    onNewGame);
-    Button loadGameBtn   = ButtonFactory.iconButton("⬆", "Load Game",   () -> { if (onLoadGame != null) onLoadGame.run(); });
-    Button leaderboardBtn = ButtonFactory.iconButton("★", "Leaderboard",() -> { if (onLeaderboard != null) onLeaderboard.run(); });
-    leaderboardBtn.setOnAction(e -> { if (onLeaderboard != null) onLeaderboard.run();});
+    Button newGameBtn = ButtonFactory.iconButton("✚", "New Game", onNewGame);
+    Button loadGameBtn = ButtonFactory.iconButton("⬆", "Load Game", () -> {
+      if (onLoadGame != null) {
+        onLoadGame.run();
+      }
+    });
+    Button leaderboardBtn = ButtonFactory.iconButton("★", "Leaderboard", () -> {
+      if (onLeaderboard != null) {
+        onLeaderboard.run();
+      }
+    });
+    leaderboardBtn.setOnAction(e -> {
+      if (onLeaderboard != null) {
+        onLeaderboard.run();
+      }
+    });
 
     HBox.setHgrow(newGameBtn, Priority.ALWAYS);
     HBox.setHgrow(loadGameBtn, Priority.ALWAYS);
@@ -183,5 +259,4 @@ public class MainMenuView extends StackPane{
 
     return systemBox;
   }
-
 }

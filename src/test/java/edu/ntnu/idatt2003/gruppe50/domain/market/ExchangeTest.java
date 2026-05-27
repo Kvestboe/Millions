@@ -4,6 +4,7 @@ import static edu.ntnu.idatt2003.gruppe50.testutil.BigDecimalTestUtils.bd;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationLog;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
@@ -30,7 +31,7 @@ public class ExchangeTest {
     aapl = new Stock("AAPL", "Apple", bd(100));
     kog = new Stock("KOG", "Kongsberg", bd(200));
     eqnr = new Stock("EQNR", "Equinor", bd(50));
-    exchange = new Exchange("test", List.of(aapl, kog, eqnr), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile());
+    exchange = new Exchange("test", List.of(aapl, kog, eqnr), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile(), new NotificationLog());
     player = new Player("test", bd(1000));
   }
 
@@ -38,27 +39,27 @@ public class ExchangeTest {
   void constructor_nullName_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> new Exchange(null, List.of(aapl), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile()));
+        () -> new Exchange(null, List.of(aapl), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile(), new NotificationLog()));
   }
 
   @Test
   void constructor_blankName_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> new Exchange("", List.of(aapl), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile()));
+        () -> new Exchange("", List.of(aapl), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile(), new NotificationLog()));
   }
 
   @Test
   void constructor_nullStocks_throwsException() {
     assertThrows(
-        IllegalArgumentException.class, () -> new Exchange("Test", null, new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile()));
+        IllegalArgumentException.class, () -> new Exchange("Test", null, new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile(), new NotificationLog()));
   }
 
   @Test
   void constructor_emptyList_throwsException() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> new Exchange("Test", new ArrayList<>(), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile()));
+        () -> new Exchange("Test", new ArrayList<>(), new TransactionFactory(), Difficulty.MEDIUM.toVolatilityProfile(), new NotificationLog()));
   }
 
   @Test
@@ -232,16 +233,25 @@ public class ExchangeTest {
       kog.addNewSalesPrice(bd(180));
       eqnr.addNewSalesPrice(bd(65));
 
-      assertEquals(List.of(aapl, eqnr, kog), exchange.getGainers(3));
+      assertEquals(List.of(eqnr, aapl, kog), exchange.getGainers(3));
     }
 
     @Test
-    void getLosers_returnsSortedByLatestPriceChange_ascending() {
+    void getGainers_returnsSortedByLatestPercentChange_descending() {
       aapl.addNewSalesPrice(bd(120));
       kog.addNewSalesPrice(bd(180));
       eqnr.addNewSalesPrice(bd(65));
 
-      assertEquals(List.of(kog, eqnr, aapl), exchange.getLosers(3));
+      assertEquals(List.of(eqnr, aapl, kog), exchange.getGainers(3));
+    }
+
+    @Test
+    void getLosers_returnsSortedByLatestPercentChange_ascending() {
+      aapl.addNewSalesPrice(bd(120));
+      kog.addNewSalesPrice(bd(180));
+      eqnr.addNewSalesPrice(bd(65));
+
+      assertEquals(List.of(kog, aapl, eqnr), exchange.getLosers(3));
     }
 
     @Test
@@ -250,7 +260,7 @@ public class ExchangeTest {
       kog.addNewSalesPrice(bd(180));
       eqnr.addNewSalesPrice(bd(65));
 
-      assertEquals(List.of(aapl, eqnr), exchange.getGainers(2));
+      assertEquals(List.of(eqnr, aapl), exchange.getGainers(2));
     }
 
     @Test
@@ -259,7 +269,7 @@ public class ExchangeTest {
       kog.addNewSalesPrice(bd(180));
       eqnr.addNewSalesPrice(bd(65));
 
-      assertEquals(List.of(kog, eqnr), exchange.getLosers(2));
+      assertEquals(List.of(kog, aapl), exchange.getLosers(2));
     }
   }
 

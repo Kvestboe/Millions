@@ -13,7 +13,16 @@ import java.math.BigDecimal;
  */
 public interface OrderReceipt {
 
-  /** Receipt for a market order that has already been carried out. */
+  /**
+   * Receipt for a market order that has already been carried out.
+   *
+   * @param side               whether the order bought or sold shares
+   * @param symbol             stock symbol involved in the order
+   * @param quantity           executed quantity
+   * @param totalAmount        total amount paid or received
+   * @param newHoldingQuantity updated owned quantity after execution
+   * @param week               week when the order executed
+   */
   record ExecutedReceipt(
       OrderSide side,
       String symbol,
@@ -21,9 +30,20 @@ public interface OrderReceipt {
       BigDecimal totalAmount,
       BigDecimal newHoldingQuantity,
       int week
-  ) implements OrderReceipt {}
+  ) implements OrderReceipt {
+  }
 
-  /** Receipt for a limit or stop-loss order awaiting a price trigger. */
+  /**
+   * Receipt for a limit or stop-loss order awaiting a price trigger.
+   *
+   * @param side          whether the order buys or sells shares
+   * @param orderType     type of pending order
+   * @param symbol        stock symbol involved in the order
+   * @param quantity      pending order quantity
+   * @param targetPrice   target or trigger price
+   * @param placedAtWeek  week when the order was placed
+   * @param expiresAtWeek week when the order expires
+   */
   record PendingReceipt(
       OrderSide side,
       OrderType orderType,
@@ -32,5 +52,6 @@ public interface OrderReceipt {
       BigDecimal targetPrice,
       int placedAtWeek,
       int expiresAtWeek
-  ) implements OrderReceipt {}
+  ) implements OrderReceipt {
+  }
 }

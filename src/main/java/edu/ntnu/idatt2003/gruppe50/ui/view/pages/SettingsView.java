@@ -1,8 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
-import java.util.function.Consumer;
-
 import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
+import java.util.function.Consumer;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +14,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+/**
+ * Settings page where the player can adjust display and sound options.
+ *
+ * <p>Includes a fullscreen toggle and master/music/sound effects toggles
+ * with a master volume slider. Sound state is delegated to the
+ * {@link SoundManager}.
+ */
 public class SettingsView extends VBox {
 
   private final Runnable onBack;
@@ -27,7 +33,20 @@ public class SettingsView extends VBox {
   private Button musicToggle;
   private Button sfxToggle;
 
-  public SettingsView(Runnable onBack, Consumer<Boolean> onFullscreen, boolean initialFullscreen, SoundManager soundManager) {
+  /**
+   * Constructs the settings view.
+   *
+   * @param onBack            action triggered when the player clicks "Back"
+   * @param onFullscreen      called with the new fullscreen state when toggled
+   * @param initialFullscreen the initial fullscreen state when the view is built
+   * @param soundManager      the sound manager controlling master, music and SFX state
+   */
+  public SettingsView(
+      Runnable onBack,
+      Consumer<Boolean> onFullscreen,
+      boolean initialFullscreen,
+      SoundManager soundManager
+  ) {
     this.onBack = onBack;
     this.onFullscreen = onFullscreen;
     this.initialFullscreen = initialFullscreen;
@@ -52,9 +71,7 @@ public class SettingsView extends VBox {
         buildSectionLabel("SOUND"),
         masterRow,
         musicRow,
-        sfxRow,
-        buildSectionLabel("LANGUAGE"),
-        buildLanguageRow()
+        sfxRow
     );
   }
 
@@ -86,7 +103,7 @@ public class SettingsView extends VBox {
     Label subtitle = new Label("Run the game in fullscreen mode");
     subtitle.getStyleClass().add("settings-row-subtitle");
 
-    VBox text = new VBox(2, title, subtitle);
+    final VBox text = new VBox(2, title, subtitle);
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -115,7 +132,7 @@ public class SettingsView extends VBox {
     Label subtitle = new Label("Overall sound level");
     subtitle.getStyleClass().add("settings-row-subtitle");
 
-    VBox text = new VBox(2, title, subtitle);
+    final VBox text = new VBox(2, title, subtitle);
 
     int initialPercent = (int) Math.round(soundManager.getMasterVolume() * 100);
 
@@ -139,7 +156,7 @@ public class SettingsView extends VBox {
     VBox content = new VBox(10, text, sliderRow);
     HBox.setHgrow(content, Priority.ALWAYS);
 
-    Region spacer = new Region();
+    final Region spacer = new Region();
 
     // Master toggle
     masterToggle = createToggle(soundManager.isMasterEnabled());
@@ -208,14 +225,16 @@ public class SettingsView extends VBox {
     Label subtitle = new Label(subtitleText);
     subtitle.getStyleClass().add("settings-row-subtitle");
 
-    VBox text = new VBox(2, title, subtitle);
+    final VBox text = new VBox(2, title, subtitle);
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     Button toggle = createToggle(initial);
     toggleRef.accept(toggle);
-    if (initial) ((Label) toggle.getGraphic()).setTranslateX(10);
+    if (initial) {
+      ((Label) toggle.getGraphic()).setTranslateX(10);
+    }
 
     toggle.setOnAction(e -> {
       boolean isOn = toggle.getStyleClass().contains("toggle-on");
@@ -236,47 +255,11 @@ public class SettingsView extends VBox {
     return row;
   }
 
-  private HBox buildLanguageRow() {
-    Label title = new Label("Language");
-    title.getStyleClass().add("settings-row-title");
-
-    Label subtitle = new Label("Select your preferred language");
-    subtitle.getStyleClass().add("settings-row-subtitle");
-
-    VBox text = new VBox(2, title, subtitle);
-
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-
-    // TODO: Implement language system
-    Button enBtn = new Button("EN");
-    enBtn.getStyleClass().add("lang-btn-active");
-
-    Button noBtn = new Button("NO");
-    noBtn.getStyleClass().add("lang-btn");
-
-    enBtn.setOnAction(e -> {
-      enBtn.getStyleClass().setAll("lang-btn-active");
-      noBtn.getStyleClass().setAll("lang-btn");
-    });
-
-    noBtn.setOnAction(e -> {
-      noBtn.getStyleClass().setAll("lang-btn-active");
-      enBtn.getStyleClass().setAll("lang-btn");
-    });
-
-    HBox langBtns = new HBox(6, enBtn, noBtn);
-    langBtns.setAlignment(Pos.CENTER_RIGHT);
-
-    HBox row = new HBox(text, spacer, langBtns);
-    row.setAlignment(Pos.CENTER_LEFT);
-    row.getStyleClass().add("settings-row");
-    return row;
-  }
-
   private void setToggleState(Button toggle, boolean on) {
     boolean currentlyOn = toggle.getStyleClass().contains("toggle-on");
-    if (currentlyOn == on) return;
+    if (currentlyOn == on) {
+      return;
+    }
 
     toggle.getStyleClass().remove(currentlyOn ? "toggle-on" : "toggle-off");
     toggle.getStyleClass().add(on ? "toggle-on" : "toggle-off");
@@ -288,7 +271,9 @@ public class SettingsView extends VBox {
   }
 
   private void ensureMasterOn() {
-    if (soundManager.isMasterEnabled()) return;
+    if (soundManager.isMasterEnabled()) {
+      return;
+    }
     setToggleState(masterToggle, true);
     soundManager.setMasterEnabled(true);
     masterSlider.setDisable(false);

@@ -4,12 +4,17 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/** Factory for easy and customizable card creation for different UI views. */
+/**
+ * Factory for easy and customizable card creation for different UI views.
+ */
 public class CardFactory {
 
+  /**
+   * Creates a card with the given content nodes.
+   *
+   * @param content nodes to place in the card
+   * @return styled card container
+   */
   public static VBox createCard(Node... content) {
     VBox card = new VBox();
     card.getStyleClass().add("card");
@@ -38,7 +43,7 @@ public class CardFactory {
   /**
    * Creates a card with a title and a single content node.
    *
-   * @param title title of the card
+   * @param title   title of the card
    * @param content the node to place in the card
    * @return a styled {@link VBox} containing the title and content
    */
@@ -51,7 +56,7 @@ public class CardFactory {
   /**
    * Creates a card with a title and multiple content nodes.
    *
-   * @param title title of the card
+   * @param title   title of the card
    * @param content the nodes to place in the card
    * @return a styled {@link VBox} containing the title and all content nodes
    */

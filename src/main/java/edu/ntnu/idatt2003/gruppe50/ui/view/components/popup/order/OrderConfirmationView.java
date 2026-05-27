@@ -1,11 +1,11 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.order;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.PreviewOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
+import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
-import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import java.util.function.Consumer;
-import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,6 +14,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+/**
+ * Confirmation step shown before an order is placed.
+ */
 public class OrderConfirmationView extends VBox {
 
   private final DraftOrder draftOrder;
@@ -21,7 +24,16 @@ public class OrderConfirmationView extends VBox {
   private final Runnable onBack;
   private final Consumer<DraftOrder> onConfirm;
 
-  public OrderConfirmationView(DraftOrder draftOrder, PreviewOrderUseCase.Response preview, Runnable onBack, Consumer<DraftOrder> onConfirm) {
+  /**
+   * Creates an order confirmation view.
+   *
+   * @param draftOrder draft order being confirmed
+   * @param preview    calculated order preview
+   * @param onBack     action run when the user goes back
+   * @param onConfirm  callback receiving the confirmed draft order
+   */
+  public OrderConfirmationView(DraftOrder draftOrder, PreviewOrderUseCase.Response preview,
+                               Runnable onBack, Consumer<DraftOrder> onConfirm) {
     this.draftOrder = draftOrder;
     this.preview = preview;
     this.onBack = onBack;

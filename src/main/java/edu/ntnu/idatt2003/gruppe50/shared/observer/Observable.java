@@ -33,7 +33,9 @@ public abstract class Observable {
     observers.remove(o);
   }
 
-  /** Updates all the observers. */
+  /**
+   * Updates all the observers.
+   */
   public void notifyObservers() {
     for (Observer o : observers) {
       o.update();

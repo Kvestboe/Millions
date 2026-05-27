@@ -14,6 +14,8 @@
     -accent-gold: #FFD166; /* Primær aksent */
     -accent-indigo: #5B6EE1; /* Sekundær aksent */
     -accent-teal: #00BFA6; /* Chart-fill, linjer */
+    -accent-purple: #7b5cf5;     /* ← ny */
+    -accent-orange: #f5a623;
 
     /* --- Tekst --- */
     -text-primary: #F8FAFC; /* Hovedtekst */
@@ -32,4 +34,7 @@
 
     -nav-active-bg:     rgba(255, 209, 102, 0.12);
     -nav-active-border: rgba(255, 209, 102, 0.25);
+
+    -progress-start: #D6A93A;
+    -progress-end:   #FFD166;
 }

@@ -2,11 +2,11 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.shared.observer.Observer;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.OrderPlacementController;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.StockDetailQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OrderReceipt;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
@@ -25,6 +25,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Detail page for a single stock.
+ *
+ * <p>Shows the current price, change, percentage change, a price history
+ * chart with buy/sell markers, and the player's holding (if any).
+ * Provides buy/sell buttons that open the order form popup. Refreshes
+ * automatically when the exchange ticks.
+ */
 public class StockDetailView extends StackPane implements Page {
 
   private static final double STOCK_DATA_CARD_WIDTH = 380;
@@ -53,15 +61,20 @@ public class StockDetailView extends StackPane implements Page {
 
   private final Label errorLabel = new Label();
 
+  /**
+   * Constructs the stock detail view.
+   *
+   * @param stock           the stock to display details for
+   * @param queryController the controller providing stock and holding data
+   * @param orderController the controller used to place buy/sell orders
+   * @param onBack          action triggered when the player clicks "Back"
+   */
   public StockDetailView(StockDto stock, StockDetailQueryController queryController,
-      OrderPlacementController orderController, Runnable onBack) {
+                         OrderPlacementController orderController, Runnable onBack) {
     this.stock = stock;
     this.queryController = queryController;
     this.orderController = orderController;
     this.onBack = onBack;
-
-    Button backBtn = ButtonFactory.secondary("Back", onBack);
-    HBox backRow = new HBox(backBtn);
 
     VBox stockDataCard = createHeader();
     stockDataCard.setMinWidth(STOCK_DATA_CARD_WIDTH);
@@ -74,6 +87,9 @@ public class StockDetailView extends StackPane implements Page {
     HBox splitRow = new HBox(16, stockDataCard, rightColumn);
     HBox.setHgrow(rightColumn, Priority.ALWAYS);
     VBox.setVgrow(splitRow, Priority.ALWAYS);
+
+    Button backBtn = ButtonFactory.secondary("Back", onBack);
+    HBox backRow = new HBox(backBtn);
 
     content.getChildren().addAll(backRow, splitRow);
     content.getStyleClass().add("stock-detail-view");
@@ -93,6 +109,11 @@ public class StockDetailView extends StackPane implements Page {
     });
   }
 
+  /**
+   * Returns the root node of the stock detail page.
+   *
+   * @return this view
+   */
   @Override
   public Parent getView() {
     return this;
@@ -203,8 +224,12 @@ public class StockDetailView extends StackPane implements Page {
   private void applySignClass(Label label, BigDecimal value) {
     label.getStyleClass().removeAll("gain", "loss");
     int sign = value.signum();
-    if (sign > 0) label.getStyleClass().add("gain");
-    if (sign < 0) label.getStyleClass().add("loss");
+    if (sign > 0) {
+      label.getStyleClass().add("gain");
+    }
+    if (sign < 0) {
+      label.getStyleClass().add("loss");
+    }
   }
 
   private void refreshHolding() {

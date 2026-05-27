@@ -10,7 +10,6 @@ import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
 import java.math.RoundingMode;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
@@ -23,6 +22,13 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Page where the player can browse and load existing save files.
+ *
+ * <p>Shows a table of available saves, a detail panel with stats for the
+ * selected save, and load/delete buttons. Finished games can be deleted
+ * but cannot be continued.
+ */
 public class LoadGameView extends StackPane {
 
   private static final DateTimeFormatter DATE_FORMAT =
@@ -31,6 +37,12 @@ public class LoadGameView extends StackPane {
   private final LoadGameController controller;
   private final Runnable onBack;
 
+  /**
+   * Constructs the load game view.
+   *
+   * @param controller the controller managing save selection, loading, and deletion
+   * @param onBack     action triggered when the player clicks "Back"
+   */
   public LoadGameView(LoadGameController controller, Runnable onBack) {
     this.controller = controller;
     this.onBack = onBack;
@@ -64,7 +76,7 @@ public class LoadGameView extends StackPane {
   }
 
   private StackPane buildHeader() {
-    Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
+    final Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
 
     Label title = new Label("LOAD GAME");
     title.getStyleClass().add("load-game-title");
@@ -94,7 +106,9 @@ public class LoadGameView extends StackPane {
     table.setRowFactory(_ -> {
       TableRow<SaveSummaryDto> row = new TableRow<>();
       row.setOnMousePressed(_ -> {
-        if (!row.isEmpty()) controller.select(row.getItem());
+        if (!row.isEmpty()) {
+          controller.select(row.getItem());
+        }
       });
       return row;
     });
@@ -102,14 +116,14 @@ public class LoadGameView extends StackPane {
   }
 
   private VBox createDetailPanel() {
-    SimpleObjectProperty<SaveSummaryDto> selected = controller.getSelected();
+    final SimpleObjectProperty<SaveSummaryDto> selected = controller.getSelected();
 
-    Label nameVal = new Label("-");
-    Label statusVal = new Label("-");
-    Label stateVal = new Label("-");
-    Label weekVal = new Label("-");
-    Label netWorthVal = new Label("-");
-    Label lastPlayedVal = new Label("-");
+    final Label nameVal = new Label("-");
+    final Label statusVal = new Label("-");
+    final Label stateVal = new Label("-");
+    final Label weekVal = new Label("-");
+    final Label netWorthVal = new Label("-");
+    final Label lastPlayedVal = new Label("-");
     Label hint = new Label("");
     hint.getStyleClass().add("load-game-hint");
     hint.setMaxWidth(Double.MAX_VALUE);

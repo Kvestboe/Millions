@@ -18,27 +18,25 @@ public class Purchase extends Transaction {
   /**
    * Creates a new {@code Purchase} transaction.
    *
-   * @param share the share being purchased
-   * @param week the week the purchase takes place
+   * @param share   the share being purchased
+   * @param week    the week the purchase takes place
    * @param batchId the id grouping this transaction with others
-   *     from the same user action
+   *                from the same user action
    * @throws IllegalArgumentException if {@code share} or {@code batchId} is
-   *     {@code null}, or if {@code week} is not positive
+   *                                  {@code null}, or if {@code week} is not positive
    */
   public Purchase(Share share, int week, UUID batchId) {
     super(share, week, new PurchaseCalculator(share), batchId);
   }
+
   /**
-   * Commits this purchase transaction for the specified player.
+   * Commits this purchase for the given player.
    *
-   * <p>The player uses money for the purchase,
-   * the share is added to the player's portfolio,
-   * and the transaction is added to the player's transaction archive.
+   * <p>The purchase withdraws money, adds the share to the portfolio,
+   * and stores the transaction in the player's archive.
    *
-   * <p>If the transaction is already committed, this method does nothing.
-   *
-   * @param player the player for whom the transaction is committed
-   * @throws IllegalArgumentException if {@code player} is null or does not have enough money
+   * @param player the player making the purchase
+   * @throws IllegalArgumentException if {@code player} is null or has too little money
    */
   @Override
   public void commit(Player player) {

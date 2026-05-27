@@ -6,7 +6,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.UUID;
 
-/** Advances game session by one week and saves the change. */
+/**
+ * Advances game session by one week and saves the change.
+ */
 public final class AdvanceWeekUseCase {
 
   private final GameSessionRepository repository;
@@ -20,12 +22,19 @@ public final class AdvanceWeekUseCase {
     this.repository = repository;
   }
 
-  public record Result(GameOutcome outcome) {}
+  /**
+   * Output from advancing the game by one week.
+   *
+   * @param outcome current game outcome after the week has advanced
+   */
+  public record Result(GameOutcome outcome) {
+  }
 
   /**
    * Executes the use case for a given game id.
    *
    * @param request input request containing game id
+   * @return result containing the evaluated game outcome after advancing the week
    * @throws GameSessionNotFoundException if the session does not exist
    */
   public Result execute(Request request) {
@@ -42,5 +51,6 @@ public final class AdvanceWeekUseCase {
    *
    * @param gameId id of the game session
    */
-  public record Request(UUID gameId) {}
+  public record Request(UUID gameId) {
+  }
 }

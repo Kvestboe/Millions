@@ -23,11 +23,11 @@ public class ThemeItem implements ShopItem {
   /**
    * Creates a new theme item.
    *
-   * @param id the unique shop item id
-   * @param name the display name of the theme item
-   * @param description the description shown in the shop
-   * @param themeId the id of the theme this item activates
-   * @param prices the item prices by difficulty
+   * @param id               the unique shop item id
+   * @param name             the display name of the theme item
+   * @param description      the description shown in the shop
+   * @param themeId          the id of the theme this item activates
+   * @param prices           the item prices by difficulty
    * @param requiredNetWorth the minimum net worth required to buy this theme
    * @throws IllegalArgumentException if any required value is invalid
    */
@@ -95,7 +95,7 @@ public class ThemeItem implements ShopItem {
    * @param difficulty the game difficulty
    * @return the price in coins
    * @throws IllegalArgumentException if {@code difficulty} is {@code null}
-   * @throws IllegalStateException if no price exists for the difficulty
+   * @throws IllegalStateException    if no price exists for the difficulty
    */
   @Override
   public int getPrice(Difficulty difficulty) {

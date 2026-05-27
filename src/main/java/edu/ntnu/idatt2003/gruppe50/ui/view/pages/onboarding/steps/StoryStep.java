@@ -6,9 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 /**
  * The first step in the onboarding flow.
@@ -78,5 +76,6 @@ public class StoryStep implements OnboardingStep {
    * @param data the shared onboarding data object
    */
   @Override
-  public void contribute(OnboardingFlowData data) {}
+  public void contribute(OnboardingFlowData data) {
+  }
 }

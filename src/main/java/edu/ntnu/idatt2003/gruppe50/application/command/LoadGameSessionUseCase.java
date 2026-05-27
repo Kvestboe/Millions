@@ -6,7 +6,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.GameSessionState;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.UUID;
 
-/** Loads a game session, marks it as opened, and returns summary state. */
+/**
+ * Loads a game session, marks it as opened, and returns summary state.
+ */
 public final class LoadGameSessionUseCase {
 
   private final GameSessionRepository repository;
@@ -42,13 +44,15 @@ public final class LoadGameSessionUseCase {
    *
    * @param gameId id of the game session
    */
-  public record Request(UUID gameId) {}
+  public record Request(UUID gameId) {
+  }
 
   /**
    * Output from loading a game session.
    *
    * @param gameId id of the loaded game session
-   * @param state current state of the session
+   * @param state  current state of the session
    */
-  public record Response(UUID gameId, GameSessionState state) {}
+  public record Response(UUID gameId, GameSessionState state) {
+  }
 }

@@ -1,0 +1,76 @@
+@startuml package-structure-evolution
+title Pakkestruktur før og etter refaktorering
+
+skinparam defaultFontSize 12
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 40
+hide empty members
+hide circle
+
+top to bottom direction
+
+' ═══════════════════════════════════════════════════════════
+'  FØR — Del 1 + 2 (flat, type-basert struktur)
+' ═══════════════════════════════════════════════════════════
+package "DEL 1 + 2 — Flat struktur" as Before #FCE4EC {
+
+  rectangle "model" as M #F8BBD0 {
+    rectangle "Player, Stock, Share,\nPortfolio, Exchange,\nTransaction, Purchase, Sale,\nTransactionArchive,\nTransactionFactory" as MClasses
+  }
+  rectangle "view" as V #F8BBD0 {
+    rectangle "JavaFX views" as VClasses
+  }
+  rectangle "controller" as C #F8BBD0 {
+    rectangle "Controllers" as CClasses
+  }
+  rectangle "io" as IO #F8BBD0 {
+    rectangle "CSVFileHandler" as IOClasses
+  }
+
+  M <--> V
+  M <--> C
+  M <--> IO
+  V <--> C
+  V ..> IO
+  C ..> IO
+}
+
+note right of Before
+  Klasser grupperes etter **type**.
+  Avhengigheter krysser fritt
+  mellom alle pakkene → tett kobling.
+end note
+
+' ═══════════════════════════════════════════════════════════
+'  ETTER — Del 3 (Clean / Hexagonal Architecture)
+'  Skjematisk visning — se Figur 1 for full klasse-detalj.
+' ═══════════════════════════════════════════════════════════
+package "DEL 3 — Lagdelt arkitektur" as After #E0F2F1 {
+
+  rectangle "ui" as UI #B2DFDB
+  rectangle "application" as APP #B2DFDB
+  rectangle "domain" as DOM #B2DFDB
+  rectangle "infrastructure" as INF #B2DFDB
+  rectangle "shared" as SH #B2DFDB
+
+  UI --> APP
+  APP --> DOM
+  INF ..|> DOM : implements ports
+}
+
+note right of After
+  Klasser grupperes etter **lag**.
+  Alle avhengigheter peker innover
+  mot domenet (Clean Architecture).
+
+  **shared** brukes på tvers,
+  men har ingen avhengigheter selv.
+
+  Detaljert klasse-innhold vises i Figur 1.
+end note
+
+Before -[hidden]down- After
+
+@enduml

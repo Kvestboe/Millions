@@ -4,6 +4,8 @@ import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekHolding;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,25 +15,25 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
+/**
+ * Main content view for the week summary popup.
+ */
 public class WeekSummaryView extends VBox {
 
   private final WeekSummary summary;
-  private final Runnable onShowNews;
-  private final Runnable onShowNotifications;
   private final Runnable onClose;
 
+  /**
+   * Creates a week summary view.
+   *
+   * @param summary week summary data to display
+   * @param onClose action run when closing the summary
+   */
   public WeekSummaryView(
       WeekSummary summary,
-      Runnable onShowNews,
-      Runnable onShowNotifications,
       Runnable onClose
   ) {
     this.summary = summary;
-    this.onShowNews = onShowNews;
-    this.onShowNotifications = onShowNotifications;
     this.onClose = onClose;
 
     setSpacing(15);
@@ -39,7 +41,6 @@ public class WeekSummaryView extends VBox {
         buildHero(),
         buildStatRow(),
         buildWeeklyBreakdown(),
-        buildSectionButtons(),
         buildHoldingsBlock(),
         buildActions()
     );
@@ -62,7 +63,7 @@ public class WeekSummaryView extends VBox {
   private HBox buildStatRow() {
     HBox row = new HBox(12,
         statTile("Net worth", MoneyFormat.formatCurrency(summary.netWorthAfter())),
-        statTile("Cash",      MoneyFormat.formatCurrency(summary.cash())));
+        statTile("Cash", MoneyFormat.formatCurrency(summary.cash())));
     row.setAlignment(Pos.CENTER);
     return row;
   }
@@ -107,24 +108,8 @@ public class WeekSummaryView extends VBox {
     return block;
   }
 
-  private HBox buildSectionButtons() {
-    Button news = sectionButton("📰  News", summary.news().size(), onShowNews);
-    Button notif = sectionButton("🔔  Notifications", summary.notifications().size(), onShowNotifications);
-    HBox.setHgrow(news, Priority.ALWAYS);
-    HBox.setHgrow(notif, Priority.ALWAYS);
-    news.setMaxWidth(Double.MAX_VALUE);
-    notif.setMaxWidth(Double.MAX_VALUE);
-    return new HBox(12, news, notif);
-  }
-
-  private Button sectionButton(String label, int count, Runnable onClick) {
-    Button btn = ButtonFactory.styled(label + "  (" + count + ")", "section-button", onClick);
-    btn.setDisable(count == 0);
-    return btn;
-  }
-
   private VBox buildHoldingsBlock() {
-    Label header = new Label("💼  Your holdings this week");
+    Label header = new Label("Your holdings this week");
     header.getStyleClass().add("popup-title");
 
     VBox rows = new VBox(6);

@@ -2,7 +2,11 @@ package edu.ntnu.idatt2003.gruppe50.domain.game;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.Notification;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationType;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
+import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Status;
+import edu.ntnu.idatt2003.gruppe50.domain.shop.CoinExchange;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.InsufficientFundsException;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Transaction;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
@@ -31,9 +35,12 @@ public final class GameSession {
   private final Exchange exchange;
   private final LocalDateTime runStartedAt;
   private final Difficulty difficulty;
+  private CoinExchange coinExchange;
   private GameSessionState state;
   private LocalDateTime lastPlayed;
   private List<BigDecimal> netWorthHistory;
+
+  public static final BigDecimal WIN_THRESHOLD = new BigDecimal("1000000");
 
   private GameSession(
       UUID gameId,
@@ -52,6 +59,7 @@ public final class GameSession {
     this.runStartedAt = runStartedAt;
     this.lastPlayed = lastPlayed;
     this.netWorthHistory = new ArrayList<>(List.of(player.getNetWorth()));
+    this.coinExchange = new CoinExchange(player.getStartingMoney());
   }
 
   private GameSession(
@@ -71,11 +79,29 @@ public final class GameSession {
     }
   }
 
+  private GameSession(
+      UUID gameId,
+      Player player,
+      Exchange exchange,
+      GameSessionState state,
+      LocalDateTime runStartedAt,
+      LocalDateTime lastPlayed,
+      Difficulty difficulty,
+      List<BigDecimal> netWorthHistory,
+      CoinExchange coinExchange
+  ) {
+    this(gameId, player, exchange, state, runStartedAt, lastPlayed, difficulty, netWorthHistory);
+    if (coinExchange != null) {
+      this.coinExchange = coinExchange;
+    }
+  }
+
   /**
    * Creates a new active game session with generated id and current dates.
    *
-   * @param player player participating in the session
-   * @param exchange exchange used for trading in the session
+   * @param player     player participating in the session
+   * @param exchange   exchange used for trading in the session
+   * @param difficulty difficulty used for the session
    * @return newly created active session
    * @throws IllegalArgumentException if {@code player} or {@code exchange} is null
    */
@@ -97,12 +123,14 @@ public final class GameSession {
   /**
    * Recreates a game session from already saved data.
    *
-   * @param gameId saved session id
-   * @param player saved player state
-   * @param exchange saved exchange state
-   * @param state saved session state
-   * @param runStartedAt date the run started
-   * @param lastPlayed date the session was last opened
+   * @param gameId          saved session id
+   * @param player          saved player state
+   * @param exchange        saved exchange state
+   * @param difficulty      saved difficulty
+   * @param state           saved session state
+   * @param runStartedAt    date the run started
+   * @param lastPlayed      date the session was last opened
+   * @param netWorthHistory saved net worth history
    * @return rehydrated session
    * @throws IllegalArgumentException if any argument is null
    */
@@ -123,7 +151,54 @@ public final class GameSession {
     Validate.notNull(runStartedAt, "Run started at date");
     Validate.notNull(lastPlayed, "Last played date");
     Validate.notNull(netWorthHistory, "Net worth history");
-    return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed, difficulty, netWorthHistory);
+    return new GameSession(gameId, player, exchange, state, runStartedAt, lastPlayed, difficulty,
+        netWorthHistory);
+  }
+
+  /**
+   * Recreates a game session from already saved data, including the coin
+   * exchange price history.
+   *
+   * <p>Used by the persistence layer to restore a session in the exact same
+   * state it had when it was saved. If {@code coinExchange} is {@code null},
+   * a fresh coin exchange is created from the player's starting capital — this
+   * preserves backward compatibility with legacy save files that pre-date
+   * persistent coin pricing.
+   *
+   * @param gameId          saved session id
+   * @param player          saved player state
+   * @param exchange        saved exchange state
+   * @param difficulty      saved difficulty
+   * @param state           saved session state
+   * @param runStartedAt    date the run started
+   * @param lastPlayed      date the session was last opened
+   * @param netWorthHistory saved net worth history
+   * @param coinExchange    saved coin exchange, or {@code null} to create a fresh one
+   * @return rehydrated session
+   * @throws IllegalArgumentException if any non-nullable argument is null
+   */
+  public static GameSession rehydrate(
+      UUID gameId,
+      Player player,
+      Exchange exchange,
+      Difficulty difficulty,
+      GameSessionState state,
+      LocalDateTime runStartedAt,
+      LocalDateTime lastPlayed,
+      List<BigDecimal> netWorthHistory,
+      CoinExchange coinExchange
+  ) {
+    Validate.notNull(gameId, "Game id");
+    Validate.notNull(player, "Player");
+    Validate.notNull(exchange, "Exchange");
+    Validate.notNull(state, "Game state");
+    Validate.notNull(runStartedAt, "Run started at date");
+    Validate.notNull(lastPlayed, "Last played date");
+    Validate.notNull(netWorthHistory, "Net worth history");
+    return new GameSession(
+        gameId, player, exchange, state, runStartedAt, lastPlayed,
+        difficulty, netWorthHistory, coinExchange
+    );
   }
 
   /**
@@ -136,7 +211,7 @@ public final class GameSession {
   /**
    * Buys shares through the exchange for this session's player.
    *
-   * @param symbol stock symbol to buy
+   * @param symbol   stock symbol to buy
    * @param quantity quantity to buy
    * @throws GameSessionFinishedException if the session is finished
    */
@@ -145,7 +220,15 @@ public final class GameSession {
     return exchange.buy(symbol, quantity, player);
   }
 
-  public LimitBuyOrder  placeBuyLimitOrder(
+  /**
+   * Places a buy limit order for this session's player.
+   *
+   * @param symbol      stock symbol to buy
+   * @param quantity    quantity to buy
+   * @param targetPrice highest price the player is willing to pay
+   * @param duration    number of weeks the order should stay active
+   */
+  public LimitBuyOrder placeBuyLimitOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -173,9 +256,10 @@ public final class GameSession {
   }
 
   /**
-   * Sells one owned share through the exchange for this session's player.
+   * Sells a quantity of a stock through the exchange for this session's player.
    *
-   * @param shareId identifier of owned share to sell
+   * @param symbol   stock symbol to sell
+   * @param quantity quantity to sell
    * @throws GameSessionFinishedException if the session is finished
    */
   public List<Transaction> sell(String symbol, BigDecimal quantity) {
@@ -191,7 +275,15 @@ public final class GameSession {
     return exchange.sellQuantity(stock, quantity, player);
   }
 
-  public LimitSellOrder  placeSellLimitOrder(
+  /**
+   * Places a sell limit order for this session's player.
+   *
+   * @param symbol      stock symbol to sell
+   * @param quantity    quantity to sell
+   * @param targetPrice lowest price the player is willing to sell for
+   * @param duration    number of weeks the order should stay active
+   */
+  public LimitSellOrder placeSellLimitOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -219,7 +311,15 @@ public final class GameSession {
     return order;
   }
 
-  public StopLossOrder  placeStopLossOrder(
+  /**
+   * Places a stop loss order for this session's player.
+   *
+   * @param symbol      stock symbol to sell
+   * @param quantity    quantity to sell
+   * @param targetPrice price that triggers the sale
+   * @param duration    number of weeks the order should stay active
+   */
+  public StopLossOrder placeStopLossOrder(
       String symbol,
       BigDecimal quantity,
       BigDecimal targetPrice,
@@ -250,7 +350,7 @@ public final class GameSession {
    * Advances the exchange one week.
    *
    * @throws GameSessionFinishedException if the session is finished
-   * @throws InsufficientFundsException if the player cannot afford the hangar cost
+   * @throws InsufficientFundsException   if the player cannot afford the hangar cost
    */
   public void advanceWeek() {
     ensureActive();
@@ -261,8 +361,20 @@ public final class GameSession {
           "Not enough cash to pay hangar rent of " + hangarCost);
     }
 
+    final Status statusBefore = player.getStatus();
     player.withdrawMoney(hangarCost);
     exchange.advance();
+    coinExchange.advanceShop();
+    Status statusAfter = player.getStatus();
+
+    if (statusAfter.ordinal() > statusBefore.ordinal()) {
+      exchange.getNotifications().add(new Notification(
+          NotificationType.LEVEL_UP,
+          "You reached " + statusAfter.displayName() + " level",
+          exchange.getWeek()
+      ));
+    }
+
     netWorthHistory.add(player.getNetWorth());
     exchange.notifyObservers();
     if (evaluateOutcome() != GameOutcome.ONGOING) {
@@ -277,14 +389,23 @@ public final class GameSession {
     state = GameSessionState.FINISHED;
   }
 
+  /**
+   * Evaluates whether the game is ongoing, won, or lost.
+   *
+   * @return the current game outcome
+   */
   public GameOutcome evaluateOutcome() {
     BigDecimal netWorth = player.getNetWorth();
     BigDecimal threshold = player.getStartingMoney()
         .multiply(BigDecimal.valueOf(difficulty.getGameOverThreshold()))
         .setScale(2, RoundingMode.HALF_UP);
 
-    if (netWorth.compareTo(new BigDecimal("1000000")) >= 0) return GameOutcome.WON;
-    if (netWorth.compareTo(threshold) < 0) return GameOutcome.LOST;
+    if (netWorth.compareTo(WIN_THRESHOLD) >= 0) {
+      return GameOutcome.WON;
+    }
+    if (netWorth.compareTo(threshold) < 0) {
+      return GameOutcome.LOST;
+    }
     return GameOutcome.ONGOING;
   }
 
@@ -342,6 +463,11 @@ public final class GameSession {
     return lastPlayed;
   }
 
+  /**
+   * Returns the saved net worth history for the session.
+   *
+   * @return an unmodifiable copy of the net worth history
+   */
   public List<BigDecimal> getNetWorthHistory() {
     return List.copyOf(netWorthHistory);
   }
@@ -352,10 +478,20 @@ public final class GameSession {
     }
   }
 
+  /**
+   * Returns the pending orders in the session.
+   *
+   * @return pending limit orders
+   */
   public List<LimitOrder> getPendingOrders() {
     return exchange.getPendingOrders();
   }
 
+  /**
+   * Returns the difficulty used in the session.
+   *
+   * @return session difficulty
+   */
   public Difficulty getDifficulty() {
     return difficulty;
   }
@@ -369,5 +505,14 @@ public final class GameSession {
     return player.getStartingMoney()
         .multiply(BigDecimal.valueOf(difficulty.getHangarCostRate()))
         .setScale(2, RoundingMode.HALF_UP);
+  }
+
+  /**
+   * Returns the coin exchange used in the session.
+   *
+   * @return session coin exchange
+   */
+  public CoinExchange getCoinExchange() {
+    return coinExchange;
   }
 }

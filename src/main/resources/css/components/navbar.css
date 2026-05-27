@@ -104,22 +104,27 @@
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
-.avatar-circle {
-    -fx-min-width: 34;  -fx-min-height: 34;
-    -fx-pref-width: 34; -fx-pref-height: 34;
-    -fx-max-width: 34;  -fx-max-height: 34;
-    -fx-background-color: -accent-gold;
-    -fx-background-radius: 17;
+.menu-icon {
+    -fx-min-width: 28;  -fx-min-height: 24;
+    -fx-pref-width: 28; -fx-pref-height: 24;
+    -fx-max-width: 28;  -fx-max-height: 24;
     -fx-alignment: center;
-    -fx-text-fill: -bg-primary;
-    -fx-font-size: 16px;
 }
-.level-tooltip {
-    -fx-font-size: 14px;
-    -fx-background-color: -bg-overlay;
-    -fx-text-fill: -text-primary;
-    -fx-padding: 8 12 8 12;
-    -fx-background-radius: 6;
+
+.menu-icon-line {
+    -fx-min-width: 26;
+    -fx-pref-width: 26;
+    -fx-max-width: 26;
+    -fx-min-height: 3;
+    -fx-pref-height: 3;
+    -fx-max-height: 3;
+    -fx-background-color: -text-secondary;
+    -fx-background-radius: 2;
+}
+
+.nav-menu-button:hover .menu-icon-line,
+.nav-menu-button:showing .menu-icon-line {
+    -fx-background-color: -text-primary;
 }
 .nav-dropdown-no-arrow > .arrow-button {
     -fx-padding: 0;
@@ -127,48 +132,4 @@
 .nav-dropdown-no-arrow > .arrow-button > .arrow {
     -fx-background-color: transparent;
     -fx-padding: 0;
-}
-
-.progress-help {
-    -fx-text-fill: -text-secondary;
-    -fx-font-size: 9px;
-    -fx-font-weight: bold;
-    -fx-background-color: -bg-elevated;
-    -fx-background-radius: 100;
-    -fx-min-width: 14;
-    -fx-min-height: 14;
-    -fx-alignment: center;
-}
-.progress-help:hover {
-    -fx-text-fill: -text-primary;
-    -fx-background-color: -accent-gold;
-}
-
-.level-progress {
-    -fx-padding: 0;
-    -fx-background-color: transparent;
-}
-
-.level-progress .track {
-    -fx-background-color: -border;
-    -fx-background-radius: 3;
-    -fx-padding: 0;
-}
-
-.level-progress .bar {
-    -fx-background-color: -accent-indigo;
-    -fx-background-insets: 0;
-    -fx-background-radius: 3;
-}
-
-.level-progress-investor .bar {
-    -fx-background-color: -accent-gold;
-    -fx-background-insets: 0;
-    -fx-background-radius: 3;
-}
-
-.level-progress-speculator .bar {
-    -fx-background-color: -accent-teal;
-    -fx-background-insets: 0;
-    -fx-background-radius: 3;
 }

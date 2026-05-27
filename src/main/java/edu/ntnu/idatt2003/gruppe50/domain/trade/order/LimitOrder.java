@@ -24,10 +24,27 @@ public abstract class LimitOrder {
   private final int expiryWeek;
   private final int currentWeek;
 
+  /**
+   * Default number of weeks an order stays active.
+   */
   public static final int DEFAULT_DURATION_WEEKS = 6;
+
+  /**
+   * Maximum number of weeks an order can stay active.
+   */
   public static final int MAX_DURATION_WEEKS = 12;
 
-  public static LimitOrder buildOrder(LimitOrderDto dto, Map<String, Stock> stockMap, Player player) {
+  /**
+   * Recreates a limit order from saved data.
+   *
+   * @param dto      the saved order data
+   * @param stockMap stocks mapped by symbol
+   * @param player   the player who owns the order
+   * @return the recreated limit order
+   * @throws IllegalArgumentException if the order type is unknown
+   */
+  public static LimitOrder buildOrder(LimitOrderDto dto, Map<String, Stock> stockMap,
+                                      Player player) {
     Stock stock = stockMap.get(dto.stockSymbol());
     return switch (dto.type()) {
       case "BUY" -> new LimitBuyOrder(
@@ -51,13 +68,14 @@ public abstract class LimitOrder {
    *
    * @param stock       the stock the order applies to
    * @param player      the player placing the order
-   * @param targetPrice the price at which the order should trigger
+   * @param targetPrice the price that triggers the order
    * @param quantity    the number of shares
-   * @throws NullPointerException     if any reference argument is null
-   * @throws IllegalArgumentException if {@code targetPrice} or {@code quantity}
-   *                                  is not positive
+   * @param currentWeek the week the order was created
+   * @param expiryWeek  the week the order expires
+   * @throws IllegalArgumentException if an argument is invalid
    */
-  protected LimitOrder(Stock stock, Player player, BigDecimal targetPrice, BigDecimal quantity,int currentWeek, int expiryWeek) {
+  protected LimitOrder(Stock stock, Player player, BigDecimal targetPrice, BigDecimal quantity,
+                       int currentWeek, int expiryWeek) {
     Validate.notNull(stock, "stock");
     Validate.notNull(player, "player");
     Validate.notNull(targetPrice, "targetPrice");
@@ -85,30 +103,66 @@ public abstract class LimitOrder {
     this.currentWeek = currentWeek;
   }
 
+  /**
+   * Returns the stock this order applies to.
+   *
+   * @return the stock
+   */
   public Stock getStock() {
     return stock;
   }
 
+  /**
+   * Returns the player who placed the order.
+   *
+   * @return the player
+   */
   public Player getPlayer() {
     return player;
   }
 
+  /**
+   * Returns the target price for the order.
+   *
+   * @return the target price
+   */
   public BigDecimal getTargetPrice() {
     return targetPrice;
   }
 
+  /**
+   * Returns the number of shares in the order.
+   *
+   * @return the quantity
+   */
   public BigDecimal getQuantity() {
     return quantity;
   }
 
+  /**
+   * Returns the week the order was created.
+   *
+   * @return the created week
+   */
   public int getCreatedWeek() {
     return currentWeek;
   }
 
+  /**
+   * Returns the week the order expires.
+   *
+   * @return the expiry week
+   */
   public int getExpiryWeek() {
     return expiryWeek;
   }
 
+  /**
+   * Checks whether the order has expired.
+   *
+   * @param currentWeek the current week
+   * @return true if the order has expired, false otherwise
+   */
   public boolean isExpired(int currentWeek) {
     return currentWeek > expiryWeek;
   }
@@ -130,5 +184,10 @@ public abstract class LimitOrder {
    */
   public abstract void execute(Exchange exchange);
 
+  /**
+   * Returns a short display label for the order.
+   *
+   * @return the order label
+   */
   public abstract String label();
 }

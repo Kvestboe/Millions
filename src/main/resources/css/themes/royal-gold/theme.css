@@ -15,6 +15,8 @@
     -accent-gold:   #FFD700;   /* Klassisk pure gold */
     -accent-indigo: #8B1A3A;   /* Dyp burgunder — sekundær */
     -accent-teal:   #C9956B;   /* Kobber/bronse — chart */
+    -accent-purple: #6B2D5C;   /* Royal burgunder-lilla */
+    -accent-orange: #E0A030;   /* Gull-oransje */
 
     /* --- Tekst --- */
     -text-primary:   #F5ECD7;  /* Varm kremhvit */
@@ -38,6 +40,9 @@
 
     -nav-active-bg:     rgba(255, 215, 0, 0.12);
     -nav-active-border: rgba(255, 215, 0, 0.25);
+
+    -progress-start: #C99A2E;
+    -progress-end:   #FFD700;
 }
 
 /* Chart-overrides for royal gold-tema */

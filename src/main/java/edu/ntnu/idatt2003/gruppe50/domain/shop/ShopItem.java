@@ -2,7 +2,6 @@ package edu.ntnu.idatt2003.gruppe50.domain.shop;
 
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
-
 import java.math.BigDecimal;
 
 /**

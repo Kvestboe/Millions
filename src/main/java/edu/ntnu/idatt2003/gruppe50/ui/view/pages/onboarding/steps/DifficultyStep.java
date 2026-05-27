@@ -41,9 +41,12 @@ public class DifficultyStep implements OnboardingStep {
     Label subtitle = new Label("How much risk are you willing to take?");
     subtitle.getStyleClass().add("label-muted");
 
-    VBox easy   = createDifficultyCard("Easy",   "Training mission", Difficulty.EASY,   "difficulty-card-easy");
-    VBox medium = createDifficultyCard("Medium", "Real mission",     Difficulty.MEDIUM, "difficulty-card-medium");
-    VBox hard   = createDifficultyCard("Hard",   "Suicide mission",  Difficulty.HARD,   "difficulty-card-hard");
+    VBox easy =
+        createDifficultyCard("Easy", "Training mission", Difficulty.EASY, "difficulty-card-easy");
+    VBox medium =
+        createDifficultyCard("Medium", "Real mission", Difficulty.MEDIUM, "difficulty-card-medium");
+    VBox hard =
+        createDifficultyCard("Hard", "Suicide mission", Difficulty.HARD, "difficulty-card-hard");
 
     cards.addAll(List.of(easy, medium, hard));
 
@@ -78,10 +81,10 @@ public class DifficultyStep implements OnboardingStep {
     tagLabel.getStyleClass().add("diff-tag");
 
     Label statsLabel = new Label(
-        "Up chance: "  + (int)(difficulty.getUpChance()  * 100) + "%\n" +
-            "Max gain: ±"  + (int)(difficulty.getMaxGain()   * 100) + "%\n" +
-            "Max loss: ±"  + (int)(difficulty.getMaxLoss()   * 100) + "%\n" +
-            "Hangar cost: "     + (difficulty.getHangarCostRate() * 100) + "%/week"
+        "Up chance: " + (int) (difficulty.getUpChance() * 100) + "%\n"
+            + "Max gain: ±" + (int) (difficulty.getMaxGain() * 100) + "%\n"
+            + "Max loss: ±" + (int) (difficulty.getMaxLoss() * 100) + "%\n"
+            + "Hangar cost: " + (difficulty.getHangarCostRate() * 100) + "%/week"
     );
     statsLabel.getStyleClass().add("diff-stats");
 
@@ -159,7 +162,9 @@ public class DifficultyStep implements OnboardingStep {
     return false;
   }
 
-  /** Clears the validation message when a difficulty has been selected. */
+  /**
+   * Clears the validation message when a difficulty has been selected.
+   */
   private void clearError() {
     errorLabel.setText("");
     errorLabel.setVisible(false);

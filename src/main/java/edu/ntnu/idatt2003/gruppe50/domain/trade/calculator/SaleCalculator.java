@@ -6,8 +6,7 @@ import edu.ntnu.idatt2003.gruppe50.shared.Validate;
 import java.math.BigDecimal;
 
 /**
- * Represents a calculator for determining
- * the relevant fees when selling shares.
+ * Calculates income, commission and tax for selling shares.
  */
 public class SaleCalculator implements TransactionCalculator {
 
@@ -16,11 +15,9 @@ public class SaleCalculator implements TransactionCalculator {
   private final BigDecimal quantity;
 
   /**
-   * Creates a calculator for the sale of a specific
-   * share which can calculate the belonging fees.
+   * Creates a calculator from a share being sold.
    *
-   * @param share the share being sold, the purchase price and
-   *     quantity is used to determine profit.
+   * @param share the share being sold
    * @throws IllegalArgumentException if {@code share} is null
    */
   public SaleCalculator(Share share) {
@@ -31,6 +28,13 @@ public class SaleCalculator implements TransactionCalculator {
     this.salesPrice = share.getStock().getSalesPrice();
   }
 
+  /**
+   * Creates a calculator from explicit sale values.
+   *
+   * @param purchasePrice the original purchase price per share
+   * @param salesPrice    the current sales price per share
+   * @param quantity      the number of shares being sold
+   */
   public SaleCalculator(BigDecimal purchasePrice, BigDecimal salesPrice, BigDecimal quantity) {
     this.purchasePrice = purchasePrice;
     this.salesPrice = salesPrice;

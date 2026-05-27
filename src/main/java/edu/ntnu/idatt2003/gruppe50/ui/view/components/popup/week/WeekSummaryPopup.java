@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week;
 
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekDetailListView;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekSummaryView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
@@ -10,12 +8,21 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Modal popup that shows a week summary and related detail lists.
+ */
 public class WeekSummaryPopup extends StackPane {
 
   private final WeekSummary summary;
   private final Runnable onClose;
   private final VBox card;
 
+  /**
+   * Creates a week summary popup.
+   *
+   * @param summary week summary data to display
+   * @param onClose action run when the popup closes
+   */
   public WeekSummaryPopup(WeekSummary summary, Runnable onClose) {
     this.summary = summary;
     this.onClose = onClose;
@@ -40,31 +47,9 @@ public class WeekSummaryPopup extends StackPane {
   private void showSummary() {
     WeekSummaryView view = new WeekSummaryView(
         summary,
-        this::showNews,
-        this::showNotifications,
         onClose
     );
     card.getChildren().setAll(scrollable(view));
-  }
-
-  private void showNews() {
-    WeekDetailListView view = new WeekDetailListView(
-        "📰  News",
-        summary.news(),
-        this::showSummary,
-        onClose
-    );
-    card.getChildren().setAll(view);
-  }
-
-  private void showNotifications() {
-    WeekDetailListView view = new WeekDetailListView(
-        "🔔  Notifications",
-        summary.notifications(),
-        this::showSummary,
-        onClose
-    );
-    card.getChildren().setAll(view);
   }
 
   private ScrollPane scrollable(VBox content) {

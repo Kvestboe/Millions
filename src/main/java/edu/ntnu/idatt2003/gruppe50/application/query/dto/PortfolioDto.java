@@ -7,14 +7,15 @@ import java.util.Set;
 /**
  * Portfolio aggregate response for the UI layer.
  *
- * @param cash available player cash
- * @param portfolioValue current portfolio liquidation value
- * @param netWorth total net worth (cash + portfolio)
- * @param shares current owned shares as DTOs
- * @param buyWeeks weeks in which at least one purchase occurred
- * @param sellWeeks weeks in which at least one sale occurred
+ * @param cash            available player cash
+ * @param portfolioValue  current portfolio liquidation value
+ * @param netWorth        total net worth including cash and portfolio value
+ * @param shares          current owned shares as DTOs
+ * @param netWorthHistory historical net worth values for chart display
+ * @param buyWeeks        weeks in which at least one purchase occurred
+ * @param sellWeeks       weeks in which at least one sale occurred
  */
-public record PortfolioDto (
+public record PortfolioDto(
     BigDecimal cash,
     BigDecimal portfolioValue,
     BigDecimal netWorth,
@@ -22,4 +23,5 @@ public record PortfolioDto (
     List<BigDecimal> netWorthHistory,
     Set<Integer> buyWeeks,
     Set<Integer> sellWeeks
-) {}
+) {
+}

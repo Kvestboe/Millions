@@ -5,6 +5,7 @@
     -fx-border-radius: 10;
     -fx-border-width: 0.5;
     -fx-padding: 16;
+    -fx-max-height: infinity;
 }
 
 .info-card {

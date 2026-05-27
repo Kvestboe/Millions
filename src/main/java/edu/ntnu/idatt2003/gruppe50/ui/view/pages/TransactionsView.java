@@ -6,8 +6,8 @@ import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.TradingLogCard;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.SearchBarFactory;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ToggleBarFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ToggleBarFactory;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,6 +22,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+/**
+ * Page showing the player's transaction history.
+ *
+ * <p>Provides a search bar and a Purchase/Sell filter, a table of
+ * transactions sorted by week (newest first), and a side trading log
+ * card. Clicking a row navigates to the corresponding stock detail page.
+ */
 public class TransactionsView extends VBox implements Page {
 
   private static final List<TransactionType> FILTER_VALUES =
@@ -35,6 +42,12 @@ public class TransactionsView extends VBox implements Page {
 
   private TransactionType selectedType = null;
 
+  /**
+   * Constructs the transactions view.
+   *
+   * @param queryController       the controller providing transaction data and search
+   * @param onTransactionSelected called with the selected transaction when a row is clicked
+   */
   public TransactionsView(
       TransactionQueryController queryController,
       Consumer<TransactionData> onTransactionSelected
@@ -69,6 +82,11 @@ public class TransactionsView extends VBox implements Page {
     applyFilters();
   }
 
+  /**
+   * Returns the transactions page wrapped in a vertical scroll pane.
+   *
+   * @return the scroll pane containing this view
+   */
   @Override
   public Parent getView() {
     ScrollPane scroll = new ScrollPane(this);

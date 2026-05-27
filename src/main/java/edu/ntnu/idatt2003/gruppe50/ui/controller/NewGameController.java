@@ -5,6 +5,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Exchange;
 import edu.ntnu.idatt2003.gruppe50.domain.market.Stock;
 import edu.ntnu.idatt2003.gruppe50.domain.market.StockDataSource;
+import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationLog;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionFactory;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.csv.InvalidStockDataException;
@@ -29,7 +30,7 @@ public final class NewGameController {
    * Creates a new controller.
    *
    * @param startGameSession use case used to start the session
-   * @param stockDataSource source used to load stock data from file
+   * @param stockDataSource  source used to load stock data from file
    */
   public NewGameController(
       StartGameSessionUseCase startGameSession,
@@ -46,13 +47,13 @@ public final class NewGameController {
    * loads stocks from file, and creates the player and exchange.
    *
    * @param playerName the name of the player
-   * @param capital the starting capital as a string, e.g. "10000" or "10000kr"
-   * @param stockFile the CSV file containing stock data
+   * @param capital    the starting capital as a string, e.g. "10000" or "10000kr"
+   * @param stockFile  the CSV file containing stock data
    * @param difficulty the chosen difficulty level
    * @return the UUID of the newly created game session
-   * @throws IllegalArgumentException if any input is invalid
+   * @throws IllegalArgumentException  if any input is invalid
    * @throws InvalidStockDataException if the stock file cannot be read or its
-   *     contents are malformed
+   *                                   contents are malformed
    */
   public UUID onStartGame(
       String playerName,
@@ -76,6 +77,7 @@ public final class NewGameController {
   }
 
   private Exchange createExchange(List<Stock> stocks, Difficulty difficulty) {
-    return new Exchange("Stock exchange", stocks, new TransactionFactory(), difficulty.toVolatilityProfile());
+    return new Exchange("Stock exchange", stocks, new TransactionFactory(),
+        difficulty.toVolatilityProfile(), new NotificationLog());
   }
 }

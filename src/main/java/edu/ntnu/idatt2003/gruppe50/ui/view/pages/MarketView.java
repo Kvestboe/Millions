@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory.createTable;
+
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.StockDto;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.MarketQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
@@ -71,7 +72,6 @@ public class MarketView extends VBox implements Page {
     return box;
   }
 
-
   /**
    * Creates and configures the market table with columns for symbol, company,
    * price, absolute change and percentage change. Populates the table with
@@ -91,7 +91,9 @@ public class MarketView extends VBox implements Page {
     marketTable.setRowFactory(_ -> {
       TableRow<StockDto> row = new TableRow<>();
       row.setOnMousePressed(_ -> {
-        if (!row.isEmpty()) onStockSelected.accept(row.getItem());
+        if (!row.isEmpty()) {
+          onStockSelected.accept(row.getItem());
+        }
       });
       return row;
     });

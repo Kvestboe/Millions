@@ -12,6 +12,15 @@ hide circle
 
 top to bottom direction
 
+' ── COMPOSITION ROOT ─────────────────────────────────────────
+class AppModule <<composition root>> #FFE0B2 {
+  Wires up:
+  Repository (Json / InMemory)
+  All 26 use cases
+  Controllers, Leaderboard
+  SoundManager
+}
+
 ' ── UI ───────────────────────────────────────────────────────
 package "ui" as UI #D6EAF8 {
   class "Pages & Components" as UIViews {
@@ -24,6 +33,8 @@ package "ui" as UI #D6EAF8 {
   }
   class "Controllers" as UICtrl {
     GameController
+    NewGameController
+    LoadGameController
     DashboardQueryController
     MarketQueryController
     PortfolioQueryController
@@ -52,7 +63,9 @@ package "application" as APP #D5F5E3 {
     PlaceBuyLimitOrder
     PlaceSellLimitOrder
     PlaceStopLossOrder
+    CancelOrder
     BuyCoins, PurchaseShopItem
+    DeleteSave
   }
   class "Queries" as QRY {
     GetPortfolio, GetMarket
@@ -60,7 +73,9 @@ package "application" as APP #D5F5E3 {
     GetTransactions, GetTradingLog
     GetPendingOrders, PreviewOrder
     GetTransactionMarkers
-    GetAllSaves, DeleteSave
+    GetAllSaves
+    GetWeeklyMovers, GetNotifications
+    GetStatusProgress, GetGoalProgress
   }
   class "DTOs" as DTO {
     PortfolioDto, ShareDto
@@ -84,6 +99,8 @@ package "domain" as DOM #FFF9C4 {
     LimitOrder, LimitBuy, LimitSell
     StopLossOrder, Shop, CoinExchange
     Leaderboard, GameResult
+    Notification, NotificationLog
+    NotificationType
   }
   class "Enums & Factories" as Misc {
     Difficulty, GameSessionState
@@ -127,12 +144,22 @@ APP   -->  DOM                            : uses
 INFRA ..|> GameSessionRepository          : implements
 INFRA -->  DOM                            : maps
 
-' ── LAYOUT HINTS (force vertical stacking) ───────────────────
+' ── LAYOUT HINTS ─────────────────────────────────────────────
+' Place AppModule and SHARED in the top-right corner.
+UI        -[hidden]right- AppModule
+AppModule -[hidden]down-  SHARED
+
+' Vertical stacking inside the layered structure.
 UICtrl  -[hidden]down-  CMD
 CMD     -[hidden]down-  GameSession
 Model   -[hidden]down-  JsonFileGameSessionRepository
-UIModel -[hidden]right- SHARED
 JsonFileGameSessionRepository -[hidden]right- InMemoryGameSessionRepository
+
+note right of AppModule
+  Wires up the repository, use cases,
+  controllers, leaderboard and sound
+  manager at application startup.
+end note
 
 note bottom of GameSessionRepository
   Domain defines the interface.

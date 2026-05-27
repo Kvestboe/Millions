@@ -3,15 +3,15 @@ package edu.ntnu.idatt2003.gruppe50;
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.csv.InvalidStockDataException;
+import edu.ntnu.idatt2003.gruppe50.ui.controller.LoadGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.NewGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
 import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.ThemeManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.GameViewCoordinator;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.LeaderboardView;
-import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
-import edu.ntnu.idatt2003.gruppe50.ui.controller.LoadGameController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.LoadGameView;
+import edu.ntnu.idatt2003.gruppe50.ui.view.pages.MainMenuView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.SettingsView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingFlow;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.OnboardingStep;
@@ -33,6 +33,14 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/**
+ * Owns the JavaFX {@link Stage} and switches between the application's pages.
+ *
+ * <p>Acts as the single navigation entry point: each "show X" method builds the
+ * relevant view (and any controllers it needs from {@link AppModule}), wraps it
+ * in a {@link Scene} and shows it on the stage. Also coordinates global UI
+ * concerns such as fullscreen state, theme switching and background music.
+ */
 public final class AppRouter {
 
   private static final Logger LOG = Logger.getLogger(AppRouter.class.getName());
@@ -43,6 +51,13 @@ public final class AppRouter {
   private boolean isFullscreen = false;
   private final SoundManager soundManager;
 
+  /**
+   * Creates the router and starts background music.
+   *
+   * @param stage        the JavaFX primary stage to manage
+   * @param module       application-wide module providing use cases and managers
+   * @param themeManager manager used to apply visual themes to scenes
+   */
   public AppRouter(Stage stage, AppModule module, ThemeManager themeManager) {
     this.stage = stage;
     this.module = module;
@@ -53,6 +68,10 @@ public final class AppRouter {
     stage.fullScreenProperty().addListener((obs, oldVal, newVal) -> isFullscreen = newVal);
   }
 
+  /**
+   * Builds and shows the main menu, including a shortcut to the most recent
+   * unfinished save if one exists.
+   */
   public void showMainMenu() {
     SaveSummaryDto latestSave = module.getAllSaves.execute().stream()
         .filter(s -> !s.isFinished())
@@ -125,6 +144,11 @@ public final class AppRouter {
         .ifPresent(s -> switchToGame(s.gameId()));
   }
 
+  /**
+   * Loads the given game session and shows the in-game view for it.
+   *
+   * @param gameId id of the saved game session to open
+   */
   public void switchToGame(UUID gameId) {
     module.loadGameSession.execute(new LoadGameSessionUseCase.Request(gameId));
     GameSessionControllerBundle bundle = module.gameBundle(gameId);
@@ -147,11 +171,13 @@ public final class AppRouter {
     show(gameScene[0]);
   }
 
-
   private void showSettings(Runnable onBack) {
     SettingsView settings = new SettingsView(
         onBack,
-        fullscreen -> { isFullscreen = fullscreen; stage.setFullScreen(fullscreen); },
+        fullscreen -> {
+          isFullscreen = fullscreen;
+          stage.setFullScreen(fullscreen);
+        },
         stage.isFullScreen(),
         soundManager);
     show(new Scene(settings));
@@ -166,9 +192,9 @@ public final class AppRouter {
 
     scene.addEventFilter(ActionEvent.ACTION,
         e -> {
-      if (e.getTarget() instanceof Button) {
-        soundManager.playClick();
-      }
+          if (e.getTarget() instanceof Button) {
+            soundManager.playClick();
+          }
         });
 
     boolean wasFullscreen = isFullscreen;

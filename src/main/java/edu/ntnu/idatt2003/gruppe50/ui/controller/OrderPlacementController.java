@@ -9,9 +9,11 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.OrderType;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import edu.ntnu.idatt2003.gruppe50.ui.model.DraftOrder;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OrderReceipt;
-
 import java.util.UUID;
 
+/**
+ * Places market and pending orders from UI draft order data.
+ */
 public class OrderPlacementController {
 
   private final UUID gameId;
@@ -21,6 +23,16 @@ public class OrderPlacementController {
   private final PlaceSellLimitOrderUseCase placeSellLimitOrder;
   private final PlaceStopLossOrderUseCase placeStopLossOrder;
 
+  /**
+   * Creates an order placement controller for a game session.
+   *
+   * @param gameId              id of the game session
+   * @param buyShare            use case for immediate buy orders
+   * @param sellShare           use case for immediate sell orders
+   * @param placeBuyLimitOrder  use case for buy limit orders
+   * @param placeSellLimitOrder use case for sell limit orders
+   * @param placeStopLossOrder  use case for stop-loss orders
+   */
   public OrderPlacementController(
       UUID gameId,
       BuyShareUseCase buyShare,
@@ -37,6 +49,13 @@ public class OrderPlacementController {
     this.placeStopLossOrder = placeStopLossOrder;
   }
 
+  /**
+   * Places the given draft order as either a market order or a pending order.
+   *
+   * @param draftOrder draft order to place
+   * @return receipt describing the executed or pending order
+   * @throws IllegalArgumentException if the draft order type is unsupported
+   */
   public OrderReceipt placeOrder(DraftOrder draftOrder) {
     if (draftOrder.isLimit()) {
       return placeLimitOrder(draftOrder);
@@ -44,7 +63,6 @@ public class OrderPlacementController {
       return placeMarketOrder(draftOrder);
     }
   }
-
 
   private OrderReceipt placeMarketOrder(DraftOrder draftOrder) {
     if (draftOrder.side() == OrderSide.BUY) {

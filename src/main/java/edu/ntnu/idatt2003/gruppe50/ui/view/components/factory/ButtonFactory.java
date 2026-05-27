@@ -5,8 +5,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+/**
+ * Factory for consistently styled JavaFX buttons.
+ */
 public final class ButtonFactory {
 
+  /**
+   * Creates a primary button.
+   *
+   * @param text   button text
+   * @param action action to run when clicked
+   * @return styled primary button
+   */
   public static Button primary(String text, Runnable action) {
     Button btn = new Button(text);
     btn.getStyleClass().add("btn-primary");
@@ -14,6 +24,13 @@ public final class ButtonFactory {
     return btn;
   }
 
+  /**
+   * Creates a secondary button with an action.
+   *
+   * @param text   button text
+   * @param action action to run when clicked
+   * @return styled secondary button
+   */
   public static Button secondary(String text, Runnable action) {
     Button btn = new Button(text);
     btn.getStyleClass().add("btn-secondary");
@@ -21,12 +38,26 @@ public final class ButtonFactory {
     return btn;
   }
 
+  /**
+   * Creates a secondary button without an action.
+   *
+   * @param text button text
+   * @return styled secondary button
+   */
   public static Button secondary(String text) {
     Button btn = new Button(text);
     btn.getStyleClass().add("btn-secondary");
     return btn;
   }
 
+  /**
+   * Creates a secondary button with icon and text content.
+   *
+   * @param icon   icon text to display
+   * @param text   button text
+   * @param action action to run when clicked
+   * @return styled icon button
+   */
   public static Button iconButton(String icon, String text, Runnable action) {
     Label iconLabel = new Label(icon);
     iconLabel.getStyleClass().add("secondary-button-icon");
@@ -45,6 +76,13 @@ public final class ButtonFactory {
     return btn;
   }
 
+  /**
+   * Creates a danger button.
+   *
+   * @param text   button text
+   * @param action action to run when clicked
+   * @return styled danger button
+   */
   public static Button danger(String text, Runnable action) {
     Button btn = new Button(text);
     btn.getStyleClass().add("btn-danger");
@@ -52,6 +90,14 @@ public final class ButtonFactory {
     return btn;
   }
 
+  /**
+   * Creates a button with a custom CSS class and action.
+   *
+   * @param text     button text
+   * @param cssClass CSS class to add
+   * @param action   action to run when clicked
+   * @return styled button
+   */
   public static Button styled(String text, String cssClass, Runnable action) {
     Button btn = new Button(text);
     btn.getStyleClass().add(cssClass);
@@ -59,12 +105,25 @@ public final class ButtonFactory {
     return btn;
   }
 
+  /**
+   * Creates a button with a custom CSS class.
+   *
+   * @param text     button text
+   * @param cssClass CSS class to add
+   * @return styled button
+   */
   public static Button styled(String text, String cssClass) {
     Button btn = new Button(text);
     btn.getStyleClass().add(cssClass);
     return btn;
   }
 
+  /**
+   * Creates a toggle-style button.
+   *
+   * @param initialState true for on styling, false for off styling
+   * @return styled toggle button
+   */
   public static Button toggle(boolean initialState) {
     Label thumb = new Label();
     thumb.getStyleClass().add("toggle-thumb");

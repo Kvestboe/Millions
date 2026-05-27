@@ -5,3 +5,190 @@
     -fx-hgap: 16;
     -fx-vgap: 16;
 }
+
+.goal-progress-percent {
+    -fx-text-fill: -accent-orange;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+.goal-progress-current {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 14px;
+}
+.goal-progress-goal {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+
+}.goal-progress-bar {
+     -fx-pref-height: 10px;
+     -fx-min-height: 10px;
+     -fx-max-width: infinity;
+     -fx-background-radius: 4px;
+ }
+
+.goal-progress-bar > .track {
+    -fx-background-color: -border;
+    -fx-background-radius: 4px;
+}
+
+.goal-progress-bar > .bar {
+    -fx-background-color: linear-gradient(to right, -progress-start, -progress-end);
+    -fx-background-radius: 4px;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.movers-section-header {
+    -fx-text-fill: -accent-orange;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 0 2 0;
+}
+
+.mover-symbol {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.mover-name {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 11px;
+}
+
+.mover-gain {
+    -fx-text-fill: -gain;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.mover-loss {
+    -fx-text-fill: -loss;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Status progress (under goal) */
+.goal-progress-divider {
+    -fx-padding: 4 0 4 0;
+    -fx-opacity: 0.3;
+}
+
+.status-progress-transition {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.status-progress-percent {
+    -fx-text-fill: -accent-orange;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.status-progress-gap {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 11px;
+}
+
+.level-progress {
+    -fx-pref-height: 10px;
+    -fx-min-height: 10px;
+    -fx-max-width: infinity;
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 4px;
+}
+
+.level-progress > .track {
+    -fx-background-color: -border;
+    -fx-background-radius: 4px;
+    -fx-padding: 0;
+}
+
+.level-progress > .bar {
+    -fx-background-color: linear-gradient(to right, -progress-start, -progress-end);
+    -fx-background-insets: 0;
+    -fx-background-radius: 4px;
+}
+
+.level-progress-investor > .bar {
+    -fx-background-color: linear-gradient(to right, -accent-gold, -accent-orange);
+    -fx-background-insets: 0;
+    -fx-background-radius: 4px;
+}
+
+.level-progress-speculator > .bar {
+    -fx-background-color: linear-gradient(to right, -accent-teal, -accent-indigo);
+    -fx-background-insets: 0;
+    -fx-background-radius: 4px;
+}
+
+.mover-row {
+    -fx-padding: 6 4 6 4;
+    -fx-background-radius: 6;
+}
+
+.mover-row:hover {
+    -fx-background-color: -bg-elevated;
+}
+
+.notification-row {
+    -fx-padding: 2 0 2 0;
+}
+
+.notification-message {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+}
+
+.notification-row {
+    -fx-padding: 12 0 12 0;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.notification-message {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 14px;
+}
+
+.notification-week {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+}
+
+.notification-pill {
+    -fx-padding: 4 10 4 10;
+    -fx-background-radius: 12;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-min-width: 64;
+    -fx-alignment: center;
+}
+
+.notification-pill-order_filled {
+    -fx-background-color: rgba(123, 92, 245, 0.20);
+    -fx-text-fill: -accent-purple;
+}
+
+.notification-pill-order_expired {
+    -fx-background-color: rgba(125, 140, 163, 0.20);
+    -fx-text-fill: -text-secondary;
+}
+
+.notification-pill-order_failed {
+    -fx-background-color: rgba(248, 113, 113, 0.20);
+    -fx-text-fill: -loss;
+}
+
+.notification-pill-level_up {
+    -fx-background-color: rgba(74, 222, 128, 0.20);
+    -fx-text-fill: -gain;
+}
+
+.notification-empty {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 15px;
+    -fx-padding: 8 0 8 0;
+}
