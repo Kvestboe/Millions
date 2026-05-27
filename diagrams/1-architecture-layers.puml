@@ -16,7 +16,7 @@ top to bottom direction
 class AppModule <<composition root>> #FFE0B2 {
   Wires up:
   Repository (Json / InMemory)
-  All 21 use cases
+  All 26 use cases
   Controllers, Leaderboard
   SoundManager
 }
@@ -33,6 +33,8 @@ package "ui" as UI #D6EAF8 {
   }
   class "Controllers" as UICtrl {
     GameController
+    NewGameController
+    LoadGameController
     DashboardQueryController
     MarketQueryController
     PortfolioQueryController
@@ -61,7 +63,9 @@ package "application" as APP #D5F5E3 {
     PlaceBuyLimitOrder
     PlaceSellLimitOrder
     PlaceStopLossOrder
+    CancelOrder
     BuyCoins, PurchaseShopItem
+    DeleteSave
   }
   class "Queries" as QRY {
     GetPortfolio, GetMarket
@@ -69,7 +73,9 @@ package "application" as APP #D5F5E3 {
     GetTransactions, GetTradingLog
     GetPendingOrders, PreviewOrder
     GetTransactionMarkers
-    GetAllSaves, DeleteSave
+    GetAllSaves
+    GetWeeklyMovers, GetNotifications
+    GetStatusProgress, GetGoalProgress
   }
   class "DTOs" as DTO {
     PortfolioDto, ShareDto
@@ -93,6 +99,8 @@ package "domain" as DOM #FFF9C4 {
     LimitOrder, LimitBuy, LimitSell
     StopLossOrder, Shop, CoinExchange
     Leaderboard, GameResult
+    Notification, NotificationLog
+    NotificationType
   }
   class "Enums & Factories" as Misc {
     Difficulty, GameSessionState

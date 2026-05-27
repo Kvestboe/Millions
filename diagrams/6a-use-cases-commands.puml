@@ -24,7 +24,6 @@ rectangle "Millions  —  Commands (state-mutating)" {
   package "Game session" {
     usecase "Start new game" as UC_NEW
     usecase "Load saved game" as UC_LOAD
-    usecase "Save and quit" as UC_SAVE
     usecase "Delete saved game" as UC_DELETE
   }
 
@@ -34,6 +33,7 @@ rectangle "Millions  —  Commands (state-mutating)" {
     usecase "Place buy limit order" as UC_LBUY
     usecase "Place sell limit order" as UC_LSELL
     usecase "Place stop-loss order" as UC_STOP
+    usecase "Cancel pending order" as UC_CANCEL
     usecase "Preview order details\n(query — see fig 4)" as UC_PREVIEW #D4F4DD
   }
 
@@ -49,7 +49,6 @@ rectangle "Millions  —  Commands (state-mutating)" {
 
 player --> UC_NEW
 player --> UC_LOAD
-player --> UC_SAVE
 player --> UC_DELETE
 
 player --> UC_BUY
@@ -57,6 +56,7 @@ player --> UC_SELL
 player --> UC_LBUY
 player --> UC_LSELL
 player --> UC_STOP
+player --> UC_CANCEL
 
 player --> UC_WEEK
 
