@@ -39,8 +39,13 @@ public class ColumnPresets {
    * @param <T> row item type
    * @return text column definition
    */
-  public static <T> ColumnDefinition<T, Integer> integer(String title, Function<T, Integer> getter) {
-    return new ColumnDefinition<>(title, row -> new ReadOnlyIntegerWrapper(getter.apply(row)).asObject());
+  public static <T> ColumnDefinition<T, Integer> integer(
+      String title,
+      Function<T, Integer> getter
+  ) {
+    return new ColumnDefinition<>(
+        title,
+        row -> new ReadOnlyIntegerWrapper(getter.apply(row)).asObject());
   }
 
   /**
@@ -51,20 +56,30 @@ public class ColumnPresets {
    * @param <T> row item type
    * @return text column definition
    */
-  public static <T> ColumnDefinition<T, String> bigDecimal(String title, Function<T, BigDecimal> getter) {
-    return new ColumnDefinition<>(title, row -> new ReadOnlyStringWrapper(getter.apply(row).toString()));
+  public static <T> ColumnDefinition<T, String> bigDecimal(
+      String title,
+      Function<T, BigDecimal> getter
+  ) {
+    return new ColumnDefinition<>(
+        title,
+        row -> new ReadOnlyStringWrapper(getter.apply(row).toString()));
   }
 
   /**
-   * Creates a formatted currency column
+   * Creates a formatted currency column.
    *
    * @param title column title
    * @param getter function that extracts text from a row
    * @param <T> row item type
    * @return text column definition
    */
-  public static <T> ColumnDefinition<T, String> currency(String title, Function<T, BigDecimal> getter) {
-    return new ColumnDefinition<>(title, row -> new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(getter.apply(row))));
+  public static <T> ColumnDefinition<T, String> currency(
+      String title,
+      Function<T, BigDecimal> getter
+  ) {
+    return new ColumnDefinition<>(
+        title,
+        row -> new ReadOnlyStringWrapper(MoneyFormat.formatCurrency(getter.apply(row))));
   }
 
   /**
@@ -75,7 +90,10 @@ public class ColumnPresets {
    * @param <T> row item type
    * @return text column definition
    */
-  public static <T> ColumnDefinition<T, String> signedCurrency(String title, Function<T, BigDecimal> getter) {
+  public static <T> ColumnDefinition<T, String> signedCurrency(
+      String title,
+      Function<T, BigDecimal> getter
+  ) {
     return new ColumnDefinition<>(
         title,
         row -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedCurrency(getter.apply(row))),
@@ -91,7 +109,10 @@ public class ColumnPresets {
    * @param <T> row item type
    * @return text column definition
    */
-  public static <T> ColumnDefinition<T, String> signedPercent(String title, Function<T, BigDecimal> getter) {
+  public static <T> ColumnDefinition<T, String> signedPercent(
+      String title,
+      Function<T, BigDecimal> getter
+  ) {
     return new ColumnDefinition<>(
         title,
         row -> new ReadOnlyStringWrapper(MoneyFormat.formatSignedPercent(getter.apply(row))),

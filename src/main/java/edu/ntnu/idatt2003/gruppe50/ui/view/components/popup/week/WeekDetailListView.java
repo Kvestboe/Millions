@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week;
 
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,17 +9,17 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
-
-/** Detail list view for week summary news or notifications. */
+/**
+ * Detail list view for week summary news or notifications.
+ */
 public class WeekDetailListView extends VBox {
 
   /**
    * Creates a detail list view.
    *
-   * @param title title shown above the list
-   * @param items text items to display
-   * @param onBack action run when navigating back to the summary
+   * @param title   title shown above the list
+   * @param items   text items to display
+   * @param onBack  action run when navigating back to the summary
    * @param onClose action run when closing the popup
    */
   public WeekDetailListView(

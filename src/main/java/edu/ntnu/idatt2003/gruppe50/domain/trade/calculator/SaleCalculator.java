@@ -32,8 +32,8 @@ public class SaleCalculator implements TransactionCalculator {
    * Creates a calculator from explicit sale values.
    *
    * @param purchasePrice the original purchase price per share
-   * @param salesPrice the current sales price per share
-   * @param quantity the number of shares being sold
+   * @param salesPrice    the current sales price per share
+   * @param quantity      the number of shares being sold
    */
   public SaleCalculator(BigDecimal purchasePrice, BigDecimal salesPrice, BigDecimal quantity) {
     this.purchasePrice = purchasePrice;

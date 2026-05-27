@@ -12,7 +12,9 @@ import java.util.function.Consumer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/** Keeps market data for the UI synchronized with the current exchange state. */
+/**
+ * Keeps market data for the UI synchronized with the current exchange state.
+ */
 public final class MarketQueryController implements Observer {
 
   private final UUID gameId;
@@ -24,9 +26,9 @@ public final class MarketQueryController implements Observer {
   /**
    * Creates a market query controller.
    *
-   * @param gameId id of the game session
+   * @param gameId    id of the game session
    * @param getMarket use case used to retrieve market data
-   * @param exchange observed exchange that triggers market refreshes
+   * @param exchange  observed exchange that triggers market refreshes
    */
   public MarketQueryController(
       UUID gameId,
@@ -88,13 +90,17 @@ public final class MarketQueryController implements Observer {
     refresh();
   }
 
-  /** Refreshes market data when the observed exchange changes. */
+  /**
+   * Refreshes market data when the observed exchange changes.
+   */
   @Override
   public void update() {
     refresh();
   }
 
-  /** Reloads market data from the application layer. */
+  /**
+   * Reloads market data from the application layer.
+   */
   public void refresh() {
     Response response =
         getMarket.execute(new Request(gameId, query));

@@ -9,12 +9,12 @@ import java.math.BigDecimal;
 /**
  * UI model for an order before it is submitted.
  *
- * @param side whether the order buys or sells
- * @param orderType type of order to place
- * @param stock stock selected for the order
- * @param quantity order quantity
+ * @param side        whether the order buys or sells
+ * @param orderType   type of order to place
+ * @param stock       stock selected for the order
+ * @param quantity    order quantity
  * @param targetPrice target or trigger price, or null for market orders
- * @param duration number of weeks the order stays active, or null for market orders
+ * @param duration    number of weeks the order stays active, or null for market orders
  */
 public record DraftOrder(
     OrderSide side,

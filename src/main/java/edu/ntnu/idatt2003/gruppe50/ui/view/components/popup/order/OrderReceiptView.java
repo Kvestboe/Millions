@@ -109,7 +109,7 @@ public class OrderReceiptView extends VBox {
       );
     } else if (receipt instanceof PendingReceipt r) {
       details.getChildren().addAll(
-          row("Placed",  "Week " + r.placedAtWeek()),
+          row("Placed", "Week " + r.placedAtWeek()),
           row("Expires", "Week " + r.expiresAtWeek())
       );
     }

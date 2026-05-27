@@ -93,6 +93,32 @@ public class CoinExchange {
     priceHistory.add(Money.round(clamp(newPrice)));
   }
 
+  /**
+   * Recreates a coin exchange from a saved price history.
+   *
+   * <p>The starting capital is used to recompute the base price as well as the
+   * minimum and maximum prices, which are not persisted. The supplied
+   * {@code priceHistory} replaces the price history that the constructor would
+   * otherwise have initialised with only the base price.
+   *
+   * @param startingCapital the player's starting capital
+   * @param priceHistory    historical coin prices in chronological order
+   * @return a coin exchange whose state matches the saved values
+   * @throws IllegalArgumentException if {@code startingCapital} is not positive,
+   *                                  or {@code priceHistory} is null or empty
+   */
+  public static CoinExchange rehydrate(BigDecimal startingCapital, List<BigDecimal> priceHistory) {
+    Validate.notNull(priceHistory, "Price history");
+    Validate.notEmpty(priceHistory, "Price history");
+
+    CoinExchange exchange = new CoinExchange(startingCapital);
+    exchange.priceHistory.clear();
+    for (BigDecimal price : priceHistory) {
+      exchange.priceHistory.add(Money.round(price));
+    }
+    return exchange;
+  }
+
   private BigDecimal clamp(BigDecimal price) {
     if (price.compareTo(minPrice) < 0) {
       return minPrice;

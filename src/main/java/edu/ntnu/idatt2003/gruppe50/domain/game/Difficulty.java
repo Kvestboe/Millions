@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2003.gruppe50.domain.game;
 
 import edu.ntnu.idatt2003.gruppe50.domain.market.VolatilityProfile;
-
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ public enum Difficulty {
    * and asymmetric price swings (gains larger than losses).
    * No capital restriction and low hangar cost.
    */
-  EASY(0.54, 0.12, 0.12, 0.006, Optional.empty(), 0.40),
+  EASY(0.58, 0.12, 0.08, 0.006, Optional.empty(), 0.40),
 
   /**
    * Medium difficulty. Balanced 50/50 market with moderate hangar cost.
@@ -40,7 +39,8 @@ public enum Difficulty {
   private final Optional<BigDecimal> maxStartingCapital;
   private final double gameOverThreshold;
 
-  Difficulty(double upChance, double maxGain, double maxLoss, double hangarCostRate, Optional<BigDecimal> maxStartingCapital, double gameOverThreshold) {
+  Difficulty(double upChance, double maxGain, double maxLoss, double hangarCostRate,
+             Optional<BigDecimal> maxStartingCapital, double gameOverThreshold) {
     this.upChance = upChance;
     this.maxGain = maxGain;
     this.maxLoss = maxLoss;
@@ -109,7 +109,8 @@ public enum Difficulty {
   /**
    * Returns the volatility profile derived from this difficulty's market parameters.
    *
-   * @return a {@link VolatilityProfile} for use in {@link edu.ntnu.idatt2003.gruppe50.domain.market.Exchange}
+   * @return a {@link VolatilityProfile} for use in
+   *     {@link edu.ntnu.idatt2003.gruppe50.domain.market.Exchange}
    */
   public VolatilityProfile toVolatilityProfile() {
     return new VolatilityProfile(upChance, maxGain, maxLoss);

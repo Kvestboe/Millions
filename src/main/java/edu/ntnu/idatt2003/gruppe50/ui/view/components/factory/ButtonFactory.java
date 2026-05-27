@@ -5,13 +5,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-/** Factory for consistently styled JavaFX buttons. */
+/**
+ * Factory for consistently styled JavaFX buttons.
+ */
 public final class ButtonFactory {
 
   /**
    * Creates a primary button.
    *
-   * @param text button text
+   * @param text   button text
    * @param action action to run when clicked
    * @return styled primary button
    */
@@ -25,7 +27,7 @@ public final class ButtonFactory {
   /**
    * Creates a secondary button with an action.
    *
-   * @param text button text
+   * @param text   button text
    * @param action action to run when clicked
    * @return styled secondary button
    */
@@ -51,8 +53,8 @@ public final class ButtonFactory {
   /**
    * Creates a secondary button with icon and text content.
    *
-   * @param icon icon text to display
-   * @param text button text
+   * @param icon   icon text to display
+   * @param text   button text
    * @param action action to run when clicked
    * @return styled icon button
    */
@@ -77,7 +79,7 @@ public final class ButtonFactory {
   /**
    * Creates a danger button.
    *
-   * @param text button text
+   * @param text   button text
    * @param action action to run when clicked
    * @return styled danger button
    */
@@ -91,9 +93,9 @@ public final class ButtonFactory {
   /**
    * Creates a button with a custom CSS class and action.
    *
-   * @param text button text
+   * @param text     button text
    * @param cssClass CSS class to add
-   * @param action action to run when clicked
+   * @param action   action to run when clicked
    * @return styled button
    */
   public static Button styled(String text, String cssClass, Runnable action) {
@@ -106,7 +108,7 @@ public final class ButtonFactory {
   /**
    * Creates a button with a custom CSS class.
    *
-   * @param text button text
+   * @param text     button text
    * @param cssClass CSS class to add
    * @return styled button
    */

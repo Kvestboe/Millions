@@ -27,6 +27,13 @@ rectangle "Millions  —  Queries (read-only)" {
     usecase "Search and filter stocks" as UC_SEARCH
   }
 
+  package "Dashboard" {
+    usecase "View weekly movers" as UC_MOVERS
+    usecase "View notifications" as UC_NOTIF
+    usecase "View status progress" as UC_STATUS
+    usecase "View goal progress" as UC_GOAL
+  }
+
   package "Portfolio and history" {
     usecase "View portfolio" as UC_PORT
     usecase "View transactions" as UC_TX
@@ -46,6 +53,11 @@ rectangle "Millions  —  Queries (read-only)" {
 
 player --> UC_MARKET
 player --> UC_STOCK
+
+player --> UC_MOVERS
+player --> UC_NOTIF
+player --> UC_STATUS
+player --> UC_GOAL
 
 player --> UC_PORT
 player --> UC_TX

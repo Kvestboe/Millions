@@ -54,13 +54,14 @@ public class CapitalStep implements OnboardingStep {
     Label subtitle = new Label("How much are you bringing to the market?");
     subtitle.getStyleClass().add("label-muted");
 
-    HBox presets = buildPresets();
+    final HBox presets = buildPresets();
 
     Label maxLabel = new Label();
     maxLabel.getStyleClass().add("label-muted");
     if (difficulty != null) {
       difficulty.getMaxStartingCapital().ifPresentOrElse(
-          max -> maxLabel.setText("Maximum for " + difficulty.name() + ": " + max.toPlainString() + " kr"),
+          max -> maxLabel.setText(
+              "Maximum for " + difficulty.name() + ": " + max.toPlainString() + " kr"),
           () -> maxLabel.setText("No limit on " + difficulty.name())
       );
     }
@@ -99,13 +100,16 @@ public class CapitalStep implements OnboardingStep {
     HBox presets = new HBox(8);
     presets.setAlignment(Pos.CENTER);
 
-    List<String> amounts = difficulty == null
-        ? List.of("5 000", "10 000", "25 000", "50 000")
-        : switch (difficulty) {
-          case HARD -> List.of("1 000", "2 000", "3 000", "5 000");
-          case MEDIUM -> List.of("5 000", "10 000", "15 000", "25 000");
-          case EASY -> List.of("5 000", "10 000", "25 000", "50 000");
-        };
+    List<String> amounts;
+    if (difficulty == null) {
+      amounts = List.of("5 000", "10 000", "25 000", "50 000");
+    } else {
+      amounts = switch (difficulty) {
+        case HARD -> List.of("1 000", "2 000", "3 000", "5 000");
+        case MEDIUM -> List.of("5 000", "10 000", "15 000", "25 000");
+        case EASY -> List.of("5 000", "10 000", "25 000", "50 000");
+      };
+    }
 
     amounts.forEach(amount ->
         presets.getChildren().add(

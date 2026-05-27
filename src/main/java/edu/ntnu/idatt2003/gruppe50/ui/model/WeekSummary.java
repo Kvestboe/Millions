@@ -6,15 +6,15 @@ import java.util.List;
 /**
  * UI model for the summary shown after advancing a week.
  *
- * @param previousWeek week before advancing
- * @param newWeek week after advancing
+ * @param previousWeek   week before advancing
+ * @param newWeek        week after advancing
  * @param netWorthBefore net worth before the week advanced
- * @param netWorthAfter net worth after the week advanced
- * @param cash player cash after the week advanced
- * @param hangarCost weekly hangar cost
- * @param holdings per-holding weekly movement
- * @param news market news messages
- * @param notifications gameplay notifications
+ * @param netWorthAfter  net worth after the week advanced
+ * @param cash           player cash after the week advanced
+ * @param hangarCost     weekly hangar cost
+ * @param holdings       per-holding weekly movement
+ * @param news           market news messages
+ * @param notifications  gameplay notifications
  */
 public record WeekSummary(
     int previousWeek,

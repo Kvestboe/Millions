@@ -5,7 +5,9 @@ import java.util.EnumMap;
 import java.util.Map;
 import javafx.scene.layout.StackPane;
 
-/** Manages page navigation by swapping the visible content in a shared content area. */
+/**
+ * Manages page navigation by swapping the visible content in a shared content area.
+ */
 public final class NavigationManager {
 
   private final StackPane contentArea = new StackPane();

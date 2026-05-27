@@ -4,11 +4,12 @@ import edu.ntnu.idatt2003.gruppe50.application.GameSessionNotFoundException;
 import edu.ntnu.idatt2003.gruppe50.domain.game.GameSession;
 import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.StopLossOrder;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 
-/** Places a stop-loss order inside a game session and saves the updated state. */
+/**
+ * Places a stop-loss order inside a game session and saves the updated state.
+ */
 public final class PlaceStopLossOrderUseCase {
 
   private final GameSessionRepository repository;
@@ -51,11 +52,11 @@ public final class PlaceStopLossOrderUseCase {
   /**
    * Input for placing a stop-loss order in a session.
    *
-   * @param gameId id of the game session
-   * @param symbol stock symbol to sell if the stop-loss triggers
-   * @param quantity quantity to sell
+   * @param gameId      id of the game session
+   * @param symbol      stock symbol to sell if the stop-loss triggers
+   * @param quantity    quantity to sell
    * @param targetPrice trigger price for the stop-loss order
-   * @param duration number of weeks the order should stay active
+   * @param duration    number of weeks the order should stay active
    */
   public record Request(
       UUID gameId,
@@ -63,15 +64,16 @@ public final class PlaceStopLossOrderUseCase {
       BigDecimal quantity,
       BigDecimal targetPrice,
       int duration
-  ) {}
+  ) {
+  }
 
   /**
    * Output from placing a stop-loss order.
    *
-   * @param symbol stock symbol for the order
-   * @param quantity order quantity
-   * @param targetPrice stop-loss trigger price
-   * @param placedAtWeek week when the order was placed
+   * @param symbol        stock symbol for the order
+   * @param quantity      order quantity
+   * @param targetPrice   stop-loss trigger price
+   * @param placedAtWeek  week when the order was placed
    * @param expiresAtWeek week when the order expires
    */
   public record Response(
@@ -80,5 +82,6 @@ public final class PlaceStopLossOrderUseCase {
       BigDecimal targetPrice,
       int placedAtWeek,
       int expiresAtWeek
-  ) {}
+  ) {
+  }
 }

@@ -14,7 +14,9 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
-/** Handles loading and saving leaderboard entries from a JSON file. */
+/**
+ * Handles loading and saving leaderboard entries from a JSON file.
+ */
 public class LeaderboardFileHandler {
 
   private static final Path FILE = Path.of("leaderboard.json");
@@ -28,7 +30,7 @@ public class LeaderboardFileHandler {
    * Loads the leaderboard from disk, creating default entries if no file exists.
    *
    * @return loaded leaderboard
-   * @throws RuntimeException if the leaderboard file cannot be read
+   * @throws LeaderboardPersistenceException if the leaderboard file cannot be read
    */
   public Leaderboard load() {
     Leaderboard board = new Leaderboard();
@@ -42,7 +44,8 @@ public class LeaderboardFileHandler {
     try {
       List<LeaderboardEntry> entries = mapper.readValue(
           FILE.toFile(),
-          new TypeReference<List<LeaderboardEntry>>() {});
+          new TypeReference<List<LeaderboardEntry>>() {
+          });
       board.replaceAll(entries);
 
       if (board.all().isEmpty()) {
@@ -52,7 +55,7 @@ public class LeaderboardFileHandler {
 
       return board;
     } catch (IOException e) {
-      throw new RuntimeException("Failed to load leaderboard", e);
+      throw new LeaderboardPersistenceException("Failed to load leaderboard", e);
     }
   }
 
@@ -60,13 +63,13 @@ public class LeaderboardFileHandler {
    * Saves the given leaderboard to disk.
    *
    * @param leaderboard leaderboard to save
-   * @throws RuntimeException if the leaderboard file cannot be written
+   * @throws LeaderboardPersistenceException if the leaderboard file cannot be written
    */
   public void save(Leaderboard leaderboard) {
     try {
       mapper.writeValue(FILE.toFile(), leaderboard.all());
     } catch (IOException e) {
-      throw new RuntimeException("Failed to save leaderboard", e);
+      throw new LeaderboardPersistenceException("Failed to save leaderboard", e);
     }
   }
 

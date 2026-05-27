@@ -8,7 +8,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.shop.InsufficientCoinsException;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.Shop;
 import edu.ntnu.idatt2003.gruppe50.domain.shop.ShopItemFactory;
 
-/** Purchases or applies a shop item inside a game session and saves the updated state. */
+/**
+ * Purchases or applies a shop item inside a game session and saves the updated state.
+ */
 public final class PurchaseShopItemUseCase {
 
   private final GameSessionRepository repository;
@@ -27,8 +29,8 @@ public final class PurchaseShopItemUseCase {
    *
    * @param request input with game id and shop item id
    * @throws GameSessionNotFoundException if the session does not exist
-   * @throws InsufficientCoinsException if the player does not have enough coins
-   * @throws IllegalArgumentException if the item cannot be purchased or applied
+   * @throws InsufficientCoinsException   if the player does not have enough coins
+   * @throws IllegalArgumentException     if the item cannot be purchased or applied
    */
   public void execute(Request request) throws InsufficientCoinsException {
     GameSession session =
@@ -49,5 +51,6 @@ public final class PurchaseShopItemUseCase {
    * @param gameId id of the game session
    * @param itemId id of the shop item
    */
-  public record Request(java.util.UUID gameId, String itemId) {}
+  public record Request(java.util.UUID gameId, String itemId) {
+  }
 }

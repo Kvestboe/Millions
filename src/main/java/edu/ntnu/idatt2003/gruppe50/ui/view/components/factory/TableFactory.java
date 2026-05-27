@@ -5,16 +5,19 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-/** Factory for JavaFX tables built from column definitions. */
+/**
+ * Factory for JavaFX tables built from column definitions.
+ */
 public final class TableFactory {
 
-  private TableFactory() {}
+  private TableFactory() {
+  }
 
   /**
    * Creates a table from column definitions.
    *
    * @param definitionList column definitions to add to the table
-   * @param <T> row item type
+   * @param <T>            row item type
    * @return configured table view
    */
 
@@ -34,12 +37,12 @@ public final class TableFactory {
     column.setCellValueFactory(cell -> definition.getter().apply(cell.getValue()));
 
     if (definition.styler() != null) {
-      column.setCellFactory(col ->  new TableCell<>() {
+      column.setCellFactory(col -> new TableCell<>() {
         @Override
         protected void updateItem(V item, boolean empty) {
           super.updateItem(item, empty);
 
-          if (empty || item== null) {
+          if (empty || item == null) {
             setText(null);
             setStyle("");
             return;

@@ -8,7 +8,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-/** Retrieves detailed stock data for a game session. */
+/**
+ * Retrieves detailed stock data for a game session.
+ */
 public class GetStockDetailUseCase {
 
   private final GameSessionRepository repository;
@@ -45,5 +47,6 @@ public class GetStockDetailUseCase {
    * @param gameId id of the game session
    * @param symbol stock symbol to retrieve details for
    */
-  public record Request(UUID gameId, String symbol) {}
+  public record Request(UUID gameId, String symbol) {
+  }
 }

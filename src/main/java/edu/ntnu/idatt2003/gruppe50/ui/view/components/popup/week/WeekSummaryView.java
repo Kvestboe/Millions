@@ -4,6 +4,8 @@ import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekHolding;
 import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,10 +14,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
-/** Main content view for the week summary popup. */
+/**
+ * Main content view for the week summary popup.
+ */
 public class WeekSummaryView extends VBox {
 
   private final WeekSummary summary;
@@ -25,11 +27,8 @@ public class WeekSummaryView extends VBox {
    * Creates a week summary view.
    *
    * @param summary week summary data to display
-   * @param onShowNews action run when opening the news detail list
-   * @param onShowNotifications action run when opening the notifications detail list
    * @param onClose action run when closing the summary
    */
-
   public WeekSummaryView(
       WeekSummary summary,
       Runnable onClose
@@ -64,7 +63,7 @@ public class WeekSummaryView extends VBox {
   private HBox buildStatRow() {
     HBox row = new HBox(12,
         statTile("Net worth", MoneyFormat.formatCurrency(summary.netWorthAfter())),
-        statTile("Cash",      MoneyFormat.formatCurrency(summary.cash())));
+        statTile("Cash", MoneyFormat.formatCurrency(summary.cash())));
     row.setAlignment(Pos.CENTER);
     return row;
   }

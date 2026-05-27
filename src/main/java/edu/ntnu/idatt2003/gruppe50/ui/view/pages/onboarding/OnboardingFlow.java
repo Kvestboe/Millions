@@ -1,15 +1,12 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding;
 
 import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
-import edu.ntnu.idatt2003.gruppe50.ui.view.WindowConfig;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.CapitalStep;
 import edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding.steps.LaunchStep;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -18,10 +15,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 /**
  * Coordinates the onboarding flow for new game setup in Millions.
@@ -81,8 +77,6 @@ public class OnboardingFlow {
    * @return the root layout node
    */
   private Parent buildLayout() {
-    HBox progressBar = buildProgressBar();
-
     backBtn = ButtonFactory.secondary("← Back", this::goBack);
     backBtn.setPrefWidth(160);
 
@@ -104,6 +98,8 @@ public class OnboardingFlow {
     scrollableCenter.setFitToHeight(true);
     scrollableCenter.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     scrollableCenter.getStyleClass().add("onboarding-scroll");
+
+    HBox progressBar = buildProgressBar();
 
     BorderPane root = new BorderPane();
     root.getStyleClass().add("root-bg");

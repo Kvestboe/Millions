@@ -40,6 +40,9 @@
 
     -nav-active-bg:     rgba(198, 133, 91, 0.18);
     -nav-active-border: rgba(198, 133, 91, 0.32);
+
+    -progress-start: #B8744D;
+    -progress-end:   #C6855B;
 }
 
 /* Chart-overrides for vintage-tema */

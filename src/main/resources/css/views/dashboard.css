@@ -32,7 +32,7 @@
 }
 
 .goal-progress-bar > .bar {
-    -fx-background-color: linear-gradient(to right, -accent-purple, -accent-orange);
+    -fx-background-color: linear-gradient(to right, -progress-start, -progress-end);
     -fx-background-radius: 4px;
     -fx-background-insets: 0;
     -fx-padding: 0;
@@ -107,7 +107,7 @@
 }
 
 .level-progress > .bar {
-    -fx-background-color: linear-gradient(to right, -accent-purple, -accent-orange);
+    -fx-background-color: linear-gradient(to right, -progress-start, -progress-end);
     -fx-background-insets: 0;
     -fx-background-radius: 4px;
 }

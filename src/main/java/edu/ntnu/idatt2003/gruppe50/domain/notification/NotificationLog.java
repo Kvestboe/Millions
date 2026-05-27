@@ -16,6 +16,13 @@ public class NotificationLog {
 
   private final List<Notification> notifications = new ArrayList<>();
 
+  /**
+   * Adds a notification to the log. If the log already contains
+   * {@value #MAX_SIZE} entries, the oldest entry is discarded.
+   *
+   * @param notification the notification to add
+   * @throws IllegalArgumentException if {@code notification} is null
+   */
   public void add(Notification notification) {
     Validate.notNull(notification, "Notification");
     notifications.add(notification);
@@ -38,6 +45,11 @@ public class NotificationLog {
     return List.copyOf(recent);
   }
 
+  /**
+   * Returns the current number of notifications in the log.
+   *
+   * @return number of notifications, never greater than {@value #MAX_SIZE}
+   */
   public int size() {
     return notifications.size();
   }

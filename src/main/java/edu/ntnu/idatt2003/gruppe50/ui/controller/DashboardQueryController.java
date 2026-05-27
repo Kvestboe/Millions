@@ -35,7 +35,6 @@ public class DashboardQueryController implements Observer {
   private final GetNotificationsUseCase getNotifications;
   private final ObservableList<NotificationDto> notifications = FXCollections.observableArrayList();
 
-
   /**
    * Creates a new dashboard query controller and registers it as an observer
    * of the given exchange.
@@ -72,10 +71,20 @@ public class DashboardQueryController implements Observer {
     return goalProgress;
   }
 
+  /**
+   * Returns the observable status progress property.
+   *
+   * @return the read-only status progress property
+   */
   public ReadOnlyObjectProperty<StatusProgressDto> statusProgressProperty() {
     return statusProgress;
   }
 
+  /**
+   * Returns the observable weekly movers property.
+   *
+   * @return the read-only weekly movers property
+   */
   public ReadOnlyObjectProperty<WeeklyMoversDto> weeklyMoversProperty() {
     return weeklyMovers;
   }

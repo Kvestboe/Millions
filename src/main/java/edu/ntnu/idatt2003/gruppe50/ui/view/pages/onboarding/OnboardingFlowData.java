@@ -2,7 +2,6 @@ package edu.ntnu.idatt2003.gruppe50.ui.view.pages.onboarding;
 
 import edu.ntnu.idatt2003.gruppe50.domain.game.Difficulty;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OnboardingData;
-
 import java.io.File;
 import java.math.BigDecimal;
 

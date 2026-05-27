@@ -5,7 +5,9 @@ import static edu.ntnu.idatt2003.gruppe50.ui.mapper.ShareDataMapper.mapShare;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.TransactionDto;
 import edu.ntnu.idatt2003.gruppe50.ui.model.TransactionData;
 
-/** Maps application transaction DTOs to UI transaction models. */
+/**
+ * Maps application transaction DTOs to UI transaction models.
+ */
 public final class TransactionDataMapper {
 
   /**

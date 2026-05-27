@@ -22,8 +22,8 @@ import edu.ntnu.idatt2003.gruppe50.ui.model.WeekSummary;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.NavBar;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.StatCardFactory;
-import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekSummaryPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.InsufficientCashPopup;
+import edu.ntnu.idatt2003.gruppe50.ui.view.components.popup.week.WeekSummaryPopup;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.NavigationManager;
 import edu.ntnu.idatt2003.gruppe50.ui.view.navigation.PageId;
 import java.math.BigDecimal;
@@ -33,9 +33,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
 import java.util.stream.Collectors;
-
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -88,13 +86,13 @@ public class GameViewCoordinator {
   /**
    * Constructs the in-game view coordinator.
    *
-   * @param bundle the controller bundle for the active game session
-   * @param onMainMenu action triggered when the player chooses "Main menu"
-   * @param onPlayAgain action triggered when the player chooses "Play again" on game over
-   * @param onSettings action triggered when the player opens settings
-   * @param onLeaderboard action triggered when the player opens the leaderboard
-   * @param onThemeChanged called with the new theme id when the active theme changes
-   * @param leaderboard the leaderboard updated when the player wins
+   * @param bundle          the controller bundle for the active game session
+   * @param onMainMenu      action triggered when the player chooses "Main menu"
+   * @param onPlayAgain     action triggered when the player chooses "Play again" on game over
+   * @param onSettings      action triggered when the player opens settings
+   * @param onLeaderboard   action triggered when the player opens the leaderboard
+   * @param onThemeChanged  called with the new theme id when the active theme changes
+   * @param leaderboard     the leaderboard updated when the player wins
    * @param leaderboardFile the file handler used to persist the leaderboard on win
    */
   public GameViewCoordinator(
@@ -125,10 +123,25 @@ public class GameViewCoordinator {
   public Scene getScene() {
     navManager = new NavigationManager(buildPages());
     navBar = new NavBar(navManager::navigateTo, new NavBar.AccountMenuListener() {
-      @Override public void onSettings()    { onSettings.run(); }
-      @Override public void onLeaderboard() { onLeaderboard.run(); }
-      @Override public void onMainMenu()    { onMainMenu.run(); }
-      @Override public void onSaveAndQuit() { Platform.exit(); }
+      @Override
+      public void onSettings() {
+        onSettings.run();
+      }
+
+      @Override
+      public void onLeaderboard() {
+        onLeaderboard.run();
+      }
+
+      @Override
+      public void onMainMenu() {
+        onMainMenu.run();
+      }
+
+      @Override
+      public void onSaveAndQuit() {
+        Platform.exit();
+      }
     });
     refreshNavBar();
 
@@ -228,7 +241,7 @@ public class GameViewCoordinator {
   /**
    * Opens the stock detail page for the given stock.
    *
-   * @param stock the stock to display
+   * @param stock  the stock to display
    * @param backTo the page to return to when the user clicks Back
    */
   private void navigateToStockDetail(StockDto stock, PageId backTo) {
@@ -241,10 +254,10 @@ public class GameViewCoordinator {
   }
 
   private HBox buildBottomBar() {
-    weekValue     = new Label();
+    weekValue = new Label();
     netWorthValue = new Label();
-    deltaValue    = new Label();
-    cashValue     = new Label();
+    deltaValue = new Label();
+    cashValue = new Label();
 
     VBox week = StatCardFactory.compact("Week", weekValue, "bottom-bar-value");
     VBox netWorth = StatCardFactory.compact("Net worth", netWorthValue, "bottom-bar-value-gold");
@@ -276,8 +289,8 @@ public class GameViewCoordinator {
       return;
     }
 
-    int prevWeek = session.getExchange().getWeek();
-    BigDecimal before = session.getPlayer().getNetWorth();
+    final int prevWeek = session.getExchange().getWeek();
+    final BigDecimal before = session.getPlayer().getNetWorth();
     bundle.game().advanceWeek();
 
     if (session.getState() == GameSessionState.FINISHED) {
@@ -288,7 +301,6 @@ public class GameViewCoordinator {
     BigDecimal after = session.getPlayer().getNetWorth();
     lastWeeklyDelta = after.subtract(before);
 
-    bundle.shop().advanceCoinExchange();
     if (shopView != null) {
       shopView.refresh();
     }
@@ -311,8 +323,8 @@ public class GameViewCoordinator {
    * and percent change.
    *
    * @param prevWeek the week number before advancing
-   * @param before net worth before advancing
-   * @param after net worth after advancing
+   * @param before   net worth before advancing
+   * @param after    net worth after advancing
    * @return the week summary for the popup
    */
   private WeekSummary buildWeekSummary(int prevWeek, BigDecimal before, BigDecimal after) {
@@ -355,23 +367,27 @@ public class GameViewCoordinator {
    * when the player is close to the game-over threshold.
    */
   private void refreshBottomBar() {
-    Player player         = bundle.session().getPlayer();
-    Exchange exchange     = bundle.session().getExchange();
+    Player player = bundle.session().getPlayer();
+    Exchange exchange = bundle.session().getExchange();
     Difficulty difficulty = bundle.session().getDifficulty();
 
     BigDecimal netWorth = player.getNetWorth();
     BigDecimal threshold = player.getStartingMoney()
         .multiply(BigDecimal.valueOf(difficulty.getGameOverThreshold()));
     BigDecimal warningBand = threshold.multiply(DANGER_ZONE_MULTIPLIER);
-    boolean danger = netWorth.compareTo(warningBand) < 0;
+    final boolean danger = netWorth.compareTo(warningBand) < 0;
 
     weekValue.setText("Week " + exchange.getWeek());
     netWorthValue.setText(MoneyFormat.formatCurrency(netWorth));
 
     deltaValue.setText(MoneyFormat.formatSignedCurrency(lastWeeklyDelta));
     deltaValue.getStyleClass().removeAll("gain", "loss");
-    if (lastWeeklyDelta.signum() > 0) deltaValue.getStyleClass().add("gain");
-    if (lastWeeklyDelta.signum() < 0) deltaValue.getStyleClass().add("loss");
+    if (lastWeeklyDelta.signum() > 0) {
+      deltaValue.getStyleClass().add("gain");
+    }
+    if (lastWeeklyDelta.signum() < 0) {
+      deltaValue.getStyleClass().add("loss");
+    }
 
     if (danger) {
       cashValue.setText("Game over at " + MoneyFormat.formatCurrency(threshold));
@@ -382,7 +398,9 @@ public class GameViewCoordinator {
     advanceButton.setText("Advance to Week " + (exchange.getWeek() + 1) + " →");
 
     bottomBar.getStyleClass().remove("bottom-bar-danger");
-    if (danger) bottomBar.getStyleClass().add("bottom-bar-danger");
+    if (danger) {
+      bottomBar.getStyleClass().add("bottom-bar-danger");
+    }
 
     refreshNavBar();
   }

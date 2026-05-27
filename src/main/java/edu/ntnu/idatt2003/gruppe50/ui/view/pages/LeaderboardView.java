@@ -5,16 +5,22 @@ import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.Leaderboard;
 import edu.ntnu.idatt2003.gruppe50.domain.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ButtonFactory;
+import java.time.format.DateTimeFormatter;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-
-import java.time.format.DateTimeFormatter;
 
 /**
  * Leaderboard page showing the top players for each difficulty.
@@ -68,7 +74,7 @@ public class LeaderboardView extends StackPane {
   }
 
   private StackPane buildHeader() {
-    Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
+    final Button backBtn = ButtonFactory.styled("Back", "system-button", onBack);
 
     Label title = new Label("🏆 LEADERBOARD");
     title.getStyleClass().add("load-game-title");
@@ -97,7 +103,10 @@ public class LeaderboardView extends StackPane {
       btn.setSelected(d == active);
       btn.setMaxWidth(Double.MAX_VALUE);
       btn.setOnAction(e -> {
-        if (!btn.isSelected()) { btn.setSelected(true); return; }
+        if (!btn.isSelected()) {
+          btn.setSelected(true);
+          return;
+        }
         active = (Difficulty) btn.getUserData();
         refresh();
       });
@@ -112,7 +121,8 @@ public class LeaderboardView extends StackPane {
     rankCol.setCellValueFactory(c ->
         new SimpleObjectProperty<>("#" + (table.getItems().indexOf(c.getValue()) + 1)));
     rankCol.setCellFactory(col -> new TableCell<>() {
-      @Override protected void updateItem(String rankText, boolean empty) {
+      @Override
+      protected void updateItem(String rankText, boolean empty) {
         super.updateItem(rankText, empty);
         getStyleClass().removeAll(
             "leaderboard-rank-first",
@@ -130,7 +140,8 @@ public class LeaderboardView extends StackPane {
           case 1 -> getStyleClass().add("leaderboard-rank-first");
           case 2 -> getStyleClass().add("leaderboard-rank-second");
           case 3 -> getStyleClass().add("leaderboard-rank-third");
-          default -> { }
+          default -> {
+          }
         }
       }
     });
@@ -143,7 +154,8 @@ public class LeaderboardView extends StackPane {
     scoreCol.setGraphic(buildScoreHeader());
     scoreCol.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().score()));
     scoreCol.setCellFactory(col -> new TableCell<>() {
-      @Override protected void updateItem(Number v, boolean empty) {
+      @Override
+      protected void updateItem(Number v, boolean empty) {
         super.updateItem(v, empty);
         setText((empty || v == null) ? null : String.format("%,.1f", v.doubleValue()));
         setAlignment(Pos.CENTER);
@@ -169,7 +181,7 @@ public class LeaderboardView extends StackPane {
   }
 
   private HBox buildScoreHeader() {
-    Label label = new Label("Score");
+    final Label label = new Label("Score");
     Label q = new Label("?");
     q.getStyleClass().add("info-icon");
     Tooltip tooltip = new Tooltip(

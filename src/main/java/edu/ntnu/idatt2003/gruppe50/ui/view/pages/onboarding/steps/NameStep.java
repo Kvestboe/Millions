@@ -63,7 +63,9 @@ public class NameStep implements OnboardingStep {
     return false;
   }
 
-  /** Clears the validation message when the name input is valid. */
+  /**
+   * Clears the validation message when the name input is valid.
+   */
   private void clearError() {
     errorLabel.setText("");
     errorLabel.setVisible(false);

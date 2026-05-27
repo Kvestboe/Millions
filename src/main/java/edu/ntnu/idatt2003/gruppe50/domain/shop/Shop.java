@@ -20,7 +20,7 @@ public class Shop {
    * Creates a new shop with the given coin exchange and available items.
    *
    * @param coinExchange the exchange used to buy coins
-   * @param items the items available in the shop
+   * @param items        the items available in the shop
    * @throws IllegalArgumentException if {@code coinExchange} is null or {@code items} is empty
    */
   public Shop(CoinExchange coinExchange, List<ShopItem> items) {
@@ -53,9 +53,9 @@ public class Shop {
    * Buys coins for the player using the current coin exchange price.
    *
    * @param player the player buying coins
-   * @param coins the number of coins to buy
+   * @param coins  the number of coins to buy
    * @throws IllegalArgumentException if the player is null, coins is not positive,
-   *     or the player does not have enough money
+   *                                  or the player does not have enough money
    */
   public void buyCoins(Player player, int coins) {
     Validate.notNull(player, "Player");
@@ -73,12 +73,12 @@ public class Shop {
   /**
    * Purchases an item for the player and applies it after payment succeeds.
    *
-   * @param player the player buying the item
-   * @param itemId the id of the item to buy
+   * @param player     the player buying the item
+   * @param itemId     the id of the item to buy
    * @param difficulty the current game difficulty
    * @throws InsufficientCoinsException if the player does not have enough coins
-   * @throws IllegalArgumentException if any input is invalid, the item does not exist,
-   *     or the player does not meet the net worth requirement
+   * @throws IllegalArgumentException   if any input is invalid, the item does not exist,
+   *                                    or the player does not meet the net worth requirement
    */
   public void purchaseItem(Player player, String itemId, Difficulty difficulty)
       throws InsufficientCoinsException {

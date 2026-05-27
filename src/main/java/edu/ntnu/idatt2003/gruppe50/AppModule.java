@@ -5,6 +5,7 @@ import edu.ntnu.idatt2003.gruppe50.application.command.AdvanceWeekUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyCoinsUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.BuyShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.CancelOrderUseCase;
+import edu.ntnu.idatt2003.gruppe50.application.command.DeleteSaveUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.LoadGameSessionUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceBuyLimitOrderUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.PlaceSellLimitOrderUseCase;
@@ -12,7 +13,6 @@ import edu.ntnu.idatt2003.gruppe50.application.command.PlaceStopLossOrderUseCase
 import edu.ntnu.idatt2003.gruppe50.application.command.PurchaseShopItemUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.SellShareUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.command.StartGameSessionUseCase;
-import edu.ntnu.idatt2003.gruppe50.application.query.DeleteSaveUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetAllSavesUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetGoalProgressUseCase;
 import edu.ntnu.idatt2003.gruppe50.application.query.GetMarketUseCase;
@@ -37,9 +37,17 @@ import edu.ntnu.idatt2003.gruppe50.infrastructure.repository.LeaderboardFileHand
 import edu.ntnu.idatt2003.gruppe50.ui.view.SoundManager;
 import java.util.UUID;
 
+/**
+ * Application-wide composition root.
+ *
+ * <p>Owns the single repository, transaction factory and all use cases used
+ * throughout the application. Per-session controllers are built on top of
+ * this module via {@link GameSessionControllerBundle}.
+ */
 public final class AppModule {
   private final TransactionFactory transactionFactory = new TransactionFactory();
-  private final GameSessionRepository sessions = new JsonFileGameSessionRepository(transactionFactory);
+  private final GameSessionRepository sessions =
+      new JsonFileGameSessionRepository(transactionFactory);
   public final StockDataSource stockDataSource = new CsvStockDataSource();
 
   // Use cases
@@ -53,7 +61,8 @@ public final class AppModule {
   public final GetTradingLogUseCase getTradingLog = new GetTradingLogUseCase(sessions);
   public final GetMarketUseCase getMarket = new GetMarketUseCase(sessions);
   public final GetStockDetailUseCase getStockDetail = new GetStockDetailUseCase(sessions);
-  public final GetTransactionMarkersUseCase getTransactionMarkers = new GetTransactionMarkersUseCase(sessions);
+  public final GetTransactionMarkersUseCase getTransactionMarkers =
+      new GetTransactionMarkersUseCase(sessions);
   public final PlaceBuyLimitOrderUseCase buyLimitOrder = new PlaceBuyLimitOrderUseCase(sessions);
   public final PlaceSellLimitOrderUseCase sellLimitOrder = new PlaceSellLimitOrderUseCase(sessions);
   public final GetPendingOrdersUseCase getPendingOrders = new GetPendingOrdersUseCase(sessions);
@@ -72,6 +81,13 @@ public final class AppModule {
   public final GetWeeklyMoversUseCase getWeeklyMovers = new GetWeeklyMoversUseCase(sessions);
   public final GetNotificationsUseCase getNotifications = new GetNotificationsUseCase(sessions);
 
+  /**
+   * Loads the given game session and builds a controller bundle for it.
+   *
+   * @param gameId id of the session to load
+   * @return per-session controller bundle
+   * @throws GameSessionNotFoundException if no session with the given id exists
+   */
   public GameSessionControllerBundle gameBundle(UUID gameId) {
     GameSession session = sessions.findById(gameId).orElseThrow(GameSessionNotFoundException::new);
     return new GameSessionControllerBundle(this, session);

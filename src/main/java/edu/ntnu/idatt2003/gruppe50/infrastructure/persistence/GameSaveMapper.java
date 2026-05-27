@@ -9,6 +9,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.notification.NotificationLog;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Player;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Portfolio;
 import edu.ntnu.idatt2003.gruppe50.domain.portfolio.Share;
+import edu.ntnu.idatt2003.gruppe50.domain.shop.CoinExchange;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Purchase;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.Sale;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.TransactionArchive;
@@ -17,6 +18,7 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitBuyOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.LimitSellOrder;
 import edu.ntnu.idatt2003.gruppe50.domain.trade.order.StopLossOrder;
+import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.CoinExchangeDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.ExchangeDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.GameSaveDto;
 import edu.ntnu.idatt2003.gruppe50.infrastructure.persistence.dto.LimitOrderDto;
@@ -31,7 +33,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/** Maps game sessions to and from persistence DTOs used for JSON saves. */
+/**
+ * Maps game sessions to and from persistence DTOs used for JSON saves.
+ */
 public class GameSaveMapper {
 
   /**
@@ -97,14 +101,15 @@ public class GameSaveMapper {
             shares,
             transactions
         ),
-        new ExchangeDto(exchange.getName(), exchange.getWeek(), stocks, orders)
+        new ExchangeDto(exchange.getName(), exchange.getWeek(), stocks, orders),
+        new CoinExchangeDto(session.getCoinExchange().getPriceHistory())
     );
   }
 
   /**
    * Reconstructs a game session from a saved DTO.
    *
-   * @param dto saved game-session data
+   * @param dto     saved game-session data
    * @param factory transaction factory used by the rehydrated exchange
    * @return reconstructed game session
    * @throws IllegalArgumentException if saved enum values or ids are invalid
@@ -115,7 +120,8 @@ public class GameSaveMapper {
         .collect(Collectors.toMap(Stock::getSymbol, s -> s));
 
     Map<UUID, Share> shareMap = dto.player().shares().stream()
-        .map(s -> new Share(stockMap.get(s.stockSymbol()), s.quantity(), s.purchasePrice(), s.purchaseWeek()))
+        .map(s -> new Share(stockMap.get(s.stockSymbol()), s.quantity(), s.purchasePrice(),
+            s.purchaseWeek()))
         .collect(Collectors.toMap(Share::getShareId, s -> s));
 
     TransactionArchive archive = new TransactionArchive();
@@ -155,6 +161,15 @@ public class GameSaveMapper {
         new NotificationLog()
     );
 
+    CoinExchange coinExchange = null;
+    if (dto.coinExchange() != null && dto.coinExchange().priceHistory() != null
+        && !dto.coinExchange().priceHistory().isEmpty()) {
+      coinExchange = CoinExchange.rehydrate(
+          player.getStartingMoney(),
+          dto.coinExchange().priceHistory()
+      );
+    }
+
     return GameSession.rehydrate(
         UUID.fromString(dto.gameId()),
         player,
@@ -163,7 +178,8 @@ public class GameSaveMapper {
         GameSessionState.valueOf(dto.state()),
         parseDateTime(dto.runStartedAt()),
         parseDateTime(dto.lastPlayed()),
-        dto.netWorthHistory()
+        dto.netWorthHistory(),
+        coinExchange
     );
   }
 
@@ -179,12 +195,19 @@ public class GameSaveMapper {
     }
   }
 
-  private static LimitOrder buildOrder(LimitOrderDto o, Map<String, Stock> stockMap, Player player) {
+  private static LimitOrder buildOrder(LimitOrderDto o, Map<String, Stock> stockMap,
+                                       Player player) {
     Stock stock = stockMap.get(o.stockSymbol());
     return switch (o.type()) {
-      case "Buy at target price" -> new LimitBuyOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(), o.expiryWeek());
-      case "Sell at target price" -> new LimitSellOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(), o.expiryWeek());
-      case "Stop loss" -> new StopLossOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(), o.expiryWeek());
+      case "Buy at target price" ->
+          new LimitBuyOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(),
+              o.expiryWeek());
+      case "Sell at target price" ->
+          new LimitSellOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(),
+              o.expiryWeek());
+      case "Stop loss" ->
+          new StopLossOrder(stock, player, o.targetPrice(), o.quantity(), o.createdWeek(),
+              o.expiryWeek());
       default -> throw new IllegalArgumentException("Unknown order type: " + o.type());
     };
   }

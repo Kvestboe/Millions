@@ -2,7 +2,9 @@ package edu.ntnu.idatt2003.gruppe50.shared;
 
 import java.math.BigDecimal;
 
-/** Utility class for parsing user input into Java types. */
+/**
+ * Utility class for parsing user input into Java types.
+ */
 public class Parse {
 
   /**
@@ -16,7 +18,7 @@ public class Parse {
    * @param input the string to parse, must contain at least one digit and must not be negative
    * @return the parsed {@link BigDecimal} value
    * @throws IllegalArgumentException if the input is blank, contains no numeric characters,
-   *     or starts with a minus sign
+   *                                  or starts with a minus sign
    */
   public static BigDecimal parseBigDecimal(String input) {
     if (input == null || input.isBlank()) {

@@ -6,7 +6,9 @@ import edu.ntnu.idatt2003.gruppe50.domain.repository.GameSessionRepository;
 import java.util.List;
 import java.util.UUID;
 
-/** Retrieves pending orders for a game session. */
+/**
+ * Retrieves pending orders for a game session.
+ */
 public final class GetPendingOrdersUseCase {
 
   private final GameSessionRepository repository;

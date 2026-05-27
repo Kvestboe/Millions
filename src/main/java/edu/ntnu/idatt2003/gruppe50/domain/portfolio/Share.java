@@ -22,10 +22,10 @@ public class Share {
   /**
    * Creates a new {@code Share} with the given stock, quantity and purchase price.
    *
-   * @param stock the stock that is owned
-   * @param quantity the number of units owned
+   * @param stock         the stock that is owned
+   * @param quantity      the number of units owned
    * @param purchasePrice the purchase price per unit
-   * @param purchaseWeek the week the share was purchased
+   * @param purchaseWeek  the week the share was purchased
    * @throws IllegalArgumentException if any argument is null, zero or negative
    */
   public Share(Stock stock, BigDecimal quantity, BigDecimal purchasePrice, int purchaseWeek) {
@@ -42,7 +42,7 @@ public class Share {
   }
 
   /**
-   * Returns the Share ID associated with this share
+   * Returns the Share ID associated with this share.
    *
    * @return the share ID
    */

@@ -5,7 +5,9 @@ import edu.ntnu.idatt2003.gruppe50.application.query.dto.SaveSummaryDto;
 import java.util.Comparator;
 import java.util.List;
 
-/** Provides ranked save summaries for leaderboard display. */
+/**
+ * Provides ranked save summaries for leaderboard display.
+ */
 public class LeaderboardController {
 
   private final GetAllSavesUseCase getAllSaves;

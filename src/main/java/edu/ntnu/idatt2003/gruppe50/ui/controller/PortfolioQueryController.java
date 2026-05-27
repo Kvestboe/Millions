@@ -11,7 +11,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/** Keeps portfolio data synchronized with the exchange state. */
+/**
+ * Keeps portfolio data synchronized with the exchange state.
+ */
 public final class PortfolioQueryController implements Observer {
 
   private final UUID gameId;
@@ -22,9 +24,9 @@ public final class PortfolioQueryController implements Observer {
   /**
    * Creates a portfolio query controller.
    *
-   * @param gameId id of the game session
+   * @param gameId       id of the game session
    * @param getPortfolio use case used to retrieve portfolio data
-   * @param exchange observed exchange that triggers portfolio refreshes
+   * @param exchange     observed exchange that triggers portfolio refreshes
    */
   public PortfolioQueryController(
       UUID gameId,
@@ -55,7 +57,9 @@ public final class PortfolioQueryController implements Observer {
     return shares;
   }
 
-  /** Refreshes portfolio data when the observed exchange changes. */
+  /**
+   * Refreshes portfolio data when the observed exchange changes.
+   */
   @Override
   public void update() {
     refresh();

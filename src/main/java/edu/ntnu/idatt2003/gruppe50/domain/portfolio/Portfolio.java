@@ -92,7 +92,7 @@ public class Portfolio {
    * @param shareId the id of the share
    * @return the share with the given id
    * @throws IllegalArgumentException if {@code shareId} is null
-   * @throws NoSuchElementException if no share with the given id exists
+   * @throws NoSuchElementException   if no share with the given id exists
    */
   public Share getShare(UUID shareId) {
     Validate.notNull(shareId, "Share id");

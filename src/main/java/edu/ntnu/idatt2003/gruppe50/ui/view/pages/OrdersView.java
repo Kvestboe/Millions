@@ -5,7 +5,6 @@ import edu.ntnu.idatt2003.gruppe50.ui.controller.OrdersController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory;
 import java.util.List;
-
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;

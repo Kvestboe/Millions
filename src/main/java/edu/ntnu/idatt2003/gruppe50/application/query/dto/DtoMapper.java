@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-/** Maps domain objects to application DTOs. */
+/**
+ * Maps domain objects to application DTOs.
+ */
 public final class DtoMapper {
 
   /**
@@ -20,21 +22,21 @@ public final class DtoMapper {
    */
   public static ShareDto createShareDto(Share share) {
     return new ShareDto(
-            share.getShareId(),
-            share.getStock().getSymbol(),
-            share.getStock().getCompany(),
-            share.getQuantity(),
-            share.getPurchasePrice(),
-            share.getStock().getSalesPrice(),
-            share.getStock().getSalesPrice().multiply(share.getQuantity()),
-            share.getStock()
-                .getSalesPrice()
-                .subtract(share.getPurchasePrice())
-                .multiply(share.getQuantity()),
-            share.getStock()
-                .getSalesPrice().subtract(share.getPurchasePrice())
-                .divide(share.getPurchasePrice(), 2, RoundingMode.HALF_UP)
-                .multiply(BigDecimal.valueOf(100))
+        share.getShareId(),
+        share.getStock().getSymbol(),
+        share.getStock().getCompany(),
+        share.getQuantity(),
+        share.getPurchasePrice(),
+        share.getStock().getSalesPrice(),
+        share.getStock().getSalesPrice().multiply(share.getQuantity()),
+        share.getStock()
+            .getSalesPrice()
+            .subtract(share.getPurchasePrice())
+            .multiply(share.getQuantity()),
+        share.getStock()
+            .getSalesPrice().subtract(share.getPurchasePrice())
+            .divide(share.getPurchasePrice(), 2, RoundingMode.HALF_UP)
+            .multiply(BigDecimal.valueOf(100))
     );
   }
 

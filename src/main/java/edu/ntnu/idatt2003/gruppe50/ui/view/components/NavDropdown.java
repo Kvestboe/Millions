@@ -5,7 +5,9 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
-/** Dropdown menu styled for use in the navigation bar. */
+/**
+ * Dropdown menu styled for use in the navigation bar.
+ */
 public class NavDropdown extends MenuButton {
 
   /**
@@ -35,7 +37,7 @@ public class NavDropdown extends MenuButton {
   /**
    * Adds a clickable item to the dropdown.
    *
-   * @param label item label
+   * @param label  item label
    * @param action action to run when the item is selected
    */
   public void addItem(String label, Runnable action) {
@@ -44,12 +46,16 @@ public class NavDropdown extends MenuButton {
     getItems().add(item);
   }
 
-  /** Adds a separator line to the dropdown. */
+  /**
+   * Adds a separator line to the dropdown.
+   */
   public void addSeparator() {
     getItems().add(new SeparatorMenuItem());
   }
 
-  /** Hides the default dropdown arrow. */
+  /**
+   * Hides the default dropdown arrow.
+   */
   public void hideArrow() {
     getStyleClass().add("nav-dropdown-no-arrow");
   }

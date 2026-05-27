@@ -1,14 +1,15 @@
 package edu.ntnu.idatt2003.gruppe50.ui.view.pages;
 
 import static edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.TableFactory.createTable;
+
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.PortfolioDto;
 import edu.ntnu.idatt2003.gruppe50.application.query.dto.ShareDto;
 import edu.ntnu.idatt2003.gruppe50.shared.MoneyFormat;
-import java.util.function.Consumer;
 import edu.ntnu.idatt2003.gruppe50.ui.controller.PortfolioQueryController;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.AreaChartView;
 import edu.ntnu.idatt2003.gruppe50.ui.view.components.factory.ColumnPresets;
 import java.util.List;
+import java.util.function.Consumer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
@@ -44,24 +45,25 @@ public class PortfolioView extends VBox implements Page {
    * @param onShareSelected called with the selected share when a holdings row is clicked
    */
   public PortfolioView(PortfolioQueryController queryController,
-      Consumer<ShareDto> onShareSelected) {
-    Label title = new Label("Portfolio");
-    Label holdingsTitle = new Label("My holdings");
+                       Consumer<ShareDto> onShareSelected) {
+    final Label title = new Label("Portfolio");
+    final Label holdingsTitle = new Label("My holdings");
 
     SimpleObjectProperty<PortfolioDto> p = queryController.getPortfolio();
 
-    VBox cardContainer = createCardContainer(p);
-    AreaChart<Number, Number> chart = createNetWorthChart(p.get());
+    final VBox cardContainer = createCardContainer(p);
+    final AreaChart<Number, Number> chart = createNetWorthChart(p.get());
     holdingsTable = createHoldingsTable(onShareSelected);
 
     holdingsTable.setItems(queryController.getShares());
 
     p.addListener((_, _, portfolio) -> {
       netWorthChart.display("Net Worth", portfolio.netWorthHistory());
-      netWorthChart.setMarkers(portfolio.buyWeeks(), portfolio.sellWeeks(), portfolio.netWorthHistory());
+      netWorthChart.setMarkers(portfolio.buyWeeks(), portfolio.sellWeeks(),
+          portfolio.netWorthHistory());
     });
 
-    HBox topSection = new HBox(16, cardContainer, chart);
+    final HBox topSection = new HBox(16, cardContainer, chart);
     HBox.setHgrow(chart, Priority.ALWAYS);
 
     title.getStyleClass().add("page-title");
@@ -88,13 +90,14 @@ public class PortfolioView extends VBox implements Page {
     netWorthLabel.textProperty().bind(
         Bindings.createStringBinding(() -> MoneyFormat.formatCurrency(p.get().netWorth()), p));
     portfolioValueLabel.textProperty().bind(
-        Bindings.createStringBinding(() -> MoneyFormat.formatCurrency(p.get().portfolioValue()), p));
+        Bindings.createStringBinding(() -> MoneyFormat.formatCurrency(p.get().portfolioValue()),
+            p));
     playerCashLabel.textProperty().bind(
         Bindings.createStringBinding(() -> MoneyFormat.formatCurrency(p.get().cash()), p));
 
-    VBox netWorthCard       = new VBox(new Label("Net worth:"),       netWorthLabel);
+    VBox netWorthCard = new VBox(new Label("Net worth:"), netWorthLabel);
     VBox portfolioValueCard = new VBox(new Label("Portfolio value:"), portfolioValueLabel);
-    VBox cashBalanceCard    = new VBox(new Label("Cash balance:"),    playerCashLabel);
+    VBox cashBalanceCard = new VBox(new Label("Cash balance:"), playerCashLabel);
 
     VBox.setVgrow(portfolioValueCard, Priority.ALWAYS);
     VBox.setVgrow(cashBalanceCard, Priority.ALWAYS);
@@ -118,7 +121,8 @@ public class PortfolioView extends VBox implements Page {
 
   private AreaChart<Number, Number> createNetWorthChart(PortfolioDto portfolio) {
     netWorthChart.display("Net Worth Chart", portfolio.netWorthHistory());
-    netWorthChart.setMarkers(portfolio.buyWeeks(), portfolio.sellWeeks(), portfolio.netWorthHistory());
+    netWorthChart.setMarkers(portfolio.buyWeeks(), portfolio.sellWeeks(),
+        portfolio.netWorthHistory());
     netWorthChart.getChart().setLegendVisible(false);
     return netWorthChart.getChart();
   }
@@ -137,7 +141,9 @@ public class PortfolioView extends VBox implements Page {
     t.setRowFactory(_ -> {
       TableRow<ShareDto> row = new TableRow<>();
       row.setOnMousePressed(_ -> {
-        if (!row.isEmpty()) onShareSelected.accept(row.getItem());
+        if (!row.isEmpty()) {
+          onShareSelected.accept(row.getItem());
+        }
       });
       return row;
     });

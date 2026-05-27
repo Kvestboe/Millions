@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-/** Sells shares inside a game session and saves the updated state. */
+/**
+ * Sells shares inside a game session and saves the updated state.
+ */
 public final class SellShareUseCase {
 
   private final GameSessionRepository repository;
@@ -58,20 +60,21 @@ public final class SellShareUseCase {
   /**
    * Input for selling shares in a session.
    *
-   * @param gameId id of the game session
-   * @param symbol stock symbol to sell
+   * @param gameId   id of the game session
+   * @param symbol   stock symbol to sell
    * @param quantity quantity to sell
    */
-  public record Request(UUID gameId, String symbol, BigDecimal quantity) {}
+  public record Request(UUID gameId, String symbol, BigDecimal quantity) {
+  }
 
   /**
    * Output from a completed sell operation.
    *
-   * @param symbol stock symbol that was sold
-   * @param quantity quantity that was sold
-   * @param totalAmount total amount received after fees and taxes
+   * @param symbol             stock symbol that was sold
+   * @param quantity           quantity that was sold
+   * @param totalAmount        total amount received after fees and taxes
    * @param newHoldingQuantity remaining owned quantity of the stock
-   * @param week week when the sale was completed
+   * @param week               week when the sale was completed
    */
   public record Response(
       String symbol,
@@ -79,5 +82,6 @@ public final class SellShareUseCase {
       BigDecimal totalAmount,
       BigDecimal newHoldingQuantity,
       int week
-  ) {}
+  ) {
+  }
 }

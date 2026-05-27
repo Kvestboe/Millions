@@ -8,12 +8,14 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
-/** Wrapper around a JavaFX area chart with optional buy and sell markers. */
+/**
+ * Wrapper around a JavaFX area chart with optional buy and sell markers.
+ */
 public class AreaChartView {
 
   private final AreaChart<Number, Number> chart;
   private final XYChart.Series<Number, Number> series;
-  private final XYChart.Series<Number, Number> buySeries  = new XYChart.Series<>();
+  private final XYChart.Series<Number, Number> buySeries = new XYChart.Series<>();
   private final XYChart.Series<Number, Number> sellSeries = new XYChart.Series<>();
 
   /**
@@ -46,14 +48,16 @@ public class AreaChartView {
 
   private void hideSeriesLineAndFill(XYChart.Series<Number, Number> s) {
     s.nodeProperty().addListener((_, _, node) -> {
-      if (node != null) node.setStyle("-fx-stroke: transparent; -fx-fill: transparent;");
+      if (node != null) {
+        node.setStyle("-fx-stroke: transparent; -fx-fill: transparent;");
+      }
     });
   }
 
   /**
    * Displays a full price or value history in the chart.
    *
-   * @param title chart title and series name
+   * @param title   chart title and series name
    * @param history values to display, one point per week
    */
   public void display(String title, List<BigDecimal> history) {
@@ -80,16 +84,17 @@ public class AreaChartView {
   /**
    * Displays buy and sell markers on the chart.
    *
-   * @param buyWeeks weeks where buys occurred
+   * @param buyWeeks  weeks where buys occurred
    * @param sellWeeks weeks where sells occurred
-   * @param history value history used to place markers vertically
+   * @param history   value history used to place markers vertically
    */
   public void setMarkers(Set<Integer> buyWeeks, Set<Integer> sellWeeks, List<BigDecimal> history) {
     buySeries.getData().setAll(toPoints(buyWeeks, history));
     sellSeries.getData().setAll(toPoints(sellWeeks, history));
   }
 
-  private List<XYChart.Data<Number, Number>> toPoints(Set<Integer> weeks, List<BigDecimal> history) {
+  private List<XYChart.Data<Number, Number>> toPoints(Set<Integer> weeks,
+                                                      List<BigDecimal> history) {
     List<XYChart.Data<Number, Number>> points = new ArrayList<>(weeks.size());
     for (int week : weeks) {
       int idx = week - 1;

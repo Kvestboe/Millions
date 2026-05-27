@@ -12,10 +12,13 @@ import java.math.RoundingMode;
  */
 public final class Money {
 
-  /** Number of decimal places used for internal monetary calculations. */
+  /**
+   * Number of decimal places used for internal monetary calculations.
+   */
   public static final int SCALE = 4;
 
-  private Money() {}
+  private Money() {
+  }
 
   /**
    * Rounds a monetary value to the shared application scale.

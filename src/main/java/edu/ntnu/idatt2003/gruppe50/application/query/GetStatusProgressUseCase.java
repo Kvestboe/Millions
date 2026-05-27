@@ -18,10 +18,25 @@ public final class GetStatusProgressUseCase {
 
   private final GameSessionRepository repository;
 
+  /**
+   * Creates the use case with a game-session repository.
+   *
+   * @param repository repository used to load game sessions
+   */
   public GetStatusProgressUseCase(GameSessionRepository repository) {
     this.repository = repository;
   }
 
+  /**
+   * Returns the player's progress towards the next status level.
+   *
+   * <p>If the player is already at the highest status, the returned DTO is
+   * marked with {@code atTopStatus = true} and contains no next-level data.
+   *
+   * @param gameId the id of the game session
+   * @return status progress, including current and next status, percentage and gap
+   * @throws GameSessionNotFoundException if the game session does not exist
+   */
   public StatusProgressDto execute(UUID gameId) {
     GameSession session = repository.findById(gameId)
         .orElseThrow(GameSessionNotFoundException::new);

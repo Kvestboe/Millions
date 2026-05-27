@@ -8,4 +8,5 @@ import java.math.BigDecimal;
  * @param weeksRemaining the number of weeks still needed
  * @param moneyRemaining the amount of money still needed
  */
-public record LevelGap(int weeksRemaining, BigDecimal moneyRemaining) {}
+public record LevelGap(int weeksRemaining, BigDecimal moneyRemaining) {
+}
