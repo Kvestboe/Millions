@@ -8,6 +8,8 @@ import edu.ntnu.idatt2003.gruppe50.domain.trade.OrderSide;
 import java.util.UUID;
 import java.util.function.Function;
 import edu.ntnu.idatt2003.gruppe50.ui.model.OrderReceipt;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Region;
@@ -16,6 +18,8 @@ import javafx.scene.layout.VBox;
 
 /** Modal flow for entering, previewing and submitting an order. */
 public class OrderFormView extends StackPane {
+
+  private static final Logger LOG = Logger.getLogger(OrderFormView.class.getName());
 
   private final UUID gameId;
   private final OrderSide side;
@@ -102,7 +106,7 @@ public class OrderFormView extends StackPane {
       OrderReceipt receipt = onConfirmOrder.apply(draftOrder);
       showReceipt(receipt);
     } catch (RuntimeException ex) {
-      ex.printStackTrace();
+      LOG.log(Level.WARNING, "Failed to confirm order", ex);
     }
   }
 
